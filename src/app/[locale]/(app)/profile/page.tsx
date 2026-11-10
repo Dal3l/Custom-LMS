@@ -5,12 +5,11 @@ import type { Locale } from "@/i18n/routing";
 import { getUser, requireProfile } from "@/lib/auth";
 import { listTimeZones } from "@/lib/timezones";
 
-export default async function ProfilePage({ params, searchParams }: PageProps<"/[locale]/profile">) {
+export default async function ProfilePage({ params }: PageProps<"/[locale]/profile">) {
   const { locale } = (await params) as { locale: Locale };
   setRequestLocale(locale);
   const profile = await requireProfile(locale);
   const user = await getUser();
-  const { saved } = await searchParams;
   const t = await getTranslations();
 
   return (
@@ -25,10 +24,8 @@ export default async function ProfilePage({ params, searchParams }: PageProps<"/
             email={user?.email ?? ""}
             roleLabel={t(`roles.${profile.role}`)}
             fullName={profile.full_name}
-            locale={profile.locale}
             timezone={profile.timezone}
             timeZones={listTimeZones()}
-            justSaved={saved === "1"}
           />
         </CardContent>
       </Card>

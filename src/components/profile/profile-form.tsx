@@ -1,34 +1,28 @@
 "use client";
 
 import { CircleCheck } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { FieldMessage, FormError, invalidProps, SubmitButton } from "@/components/auth/form-bits";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
-import type { FormState } from "@/features/auth/errors";
+import { initialFormState } from "@/features/auth/errors";
 import { updateProfile } from "@/features/profile/actions";
-import { locales } from "@/i18n/routing";
 
 type Props = {
   email: string;
   roleLabel: string;
   fullName: string;
-  locale: string;
   timezone: string;
   timeZones: string[];
-  justSaved: boolean;
 };
 
 export function ProfileForm(props: Props) {
   const t = useTranslations();
-  const currentLocale = useLocale();
-  const initial: FormState = { status: props.justSaved ? "success" : "idle" };
-  const [state, action] = useActionState(updateProfile, initial);
+  const [state, action] = useActionState(updateProfile, initialFormState);
   const values = state.values ?? {
     fullName: props.fullName,
-    locale: props.locale,
     timezone: props.timezone,
   };
   const zones = props.timeZones.includes(props.timezone)
@@ -37,7 +31,6 @@ export function ProfileForm(props: Props) {
 
   return (
     <form action={action} noValidate>
-      <input type="hidden" name="currentLocale" value={currentLocale} />
       <FieldGroup>
         <FormError state={state} />
         <Field>
@@ -59,16 +52,6 @@ export function ProfileForm(props: Props) {
         <Field>
           <FieldLabel htmlFor="role">{t("profile.role")}</FieldLabel>
           <Input id="role" value={props.roleLabel} readOnly disabled />
-        </Field>
-        <Field>
-          <FieldLabel htmlFor="locale">{t("profile.language")}</FieldLabel>
-          <NativeSelect id="locale" name="locale" defaultValue={values.locale} className="w-full">
-            {locales.map((l) => (
-              <NativeSelectOption key={l} value={l} lang={l}>
-                {t(`language.${l}`)}
-              </NativeSelectOption>
-            ))}
-          </NativeSelect>
         </Field>
         <Field>
           <FieldLabel htmlFor="timezone">{t("profile.timezone")}</FieldLabel>

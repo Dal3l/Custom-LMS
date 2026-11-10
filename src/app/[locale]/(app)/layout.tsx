@@ -18,7 +18,7 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
       <AppSidebar role={profile.role} />
       <SidebarInset>
         <header className="sticky top-0 z-10 flex h-14 items-center gap-2 border-b bg-background/90 px-3 backdrop-blur sm:px-4">
-          <SidebarTrigger className="md:hidden" />
+          <SidebarTrigger className="size-10 md:hidden [&_svg]:size-5" />
           <div className="ml-auto flex items-center gap-1">
             <LanguageSwitcher signedIn />
             <UserMenu name={name} role={profile.role} />

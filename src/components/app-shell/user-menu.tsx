@@ -24,7 +24,7 @@ export function UserMenu({ name, role }: { name: string; role: UserRole }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full" aria-label={t("nav.account")}>
+        <Button variant="ghost" size="icon-lg" className="size-10 rounded-full" aria-label={t("nav.account")}>
           <Avatar>
             <AvatarFallback className="bg-accent text-accent-foreground">{initials(name)}</AvatarFallback>
           </Avatar>

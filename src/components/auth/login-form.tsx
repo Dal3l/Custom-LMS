@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { signIn } from "@/features/auth/actions";
 import { initialFormState } from "@/features/auth/errors";
 import { Link } from "@/i18n/navigation";
+import { PasswordInput } from "./password-input";
 import { FieldMessage, FormError, invalidProps, SubmitButton } from "./form-bits";
 
 export function LoginForm({ next }: { next?: string }) {
@@ -42,10 +43,9 @@ export function LoginForm({ next }: { next?: string }) {
               {t("forgotPassword")}
             </Link>
           </div>
-          <Input
+          <PasswordInput
             id="password"
             name="password"
-            type="password"
             autoComplete="current-password"
             required
             {...invalidProps(state, "password")}
