@@ -205,7 +205,6 @@
     "deleted": "Удалено",
     "backToCourses": "Все курсы",
     "titleField": "Название",
-    "lessonBuilderSoon": "Конструктор урока появится на следующем шаге: секции, упражнения и предпросмотр как ученик.",
     "errors": {
       "titleRequired": "Введите название",
       "titleTooLong": "Название слишком длинное",
@@ -219,5 +218,128 @@
       "invalid": "Проверьте введённые данные"
     },
     "saving": "Сохраняем…"
+  },
+  "exercises": {
+    "groups": {
+      "material": "Материалы",
+      "auto": "С автопроверкой",
+      "manual": "С ручной проверкой"
+    },
+    "soon": "скоро",
+    "types": {
+      "text": {
+        "name": "Текст",
+        "description": "Текст с заголовками, списками и выделением цветом"
+      },
+      "image": {
+        "name": "Картинка",
+        "description": "Одна или несколько картинок с подписью"
+      },
+      "video": {
+        "name": "Видео",
+        "description": "Ссылка на YouTube или Vimeo"
+      },
+      "audio": {
+        "name": "Аудио",
+        "description": "Запись с перемоткой и скоростью"
+      },
+      "file": {
+        "name": "Файл",
+        "description": "PDF или документ для просмотра"
+      },
+      "gap_input": {
+        "name": "Пропуски с вводом",
+        "description": "Ученик вписывает пропущенные слова"
+      },
+      "gap_select": {
+        "name": "Пропуски с выбором",
+        "description": "Выбор слова из списка в каждом пропуске"
+      },
+      "gap_drag": {
+        "name": "Пропуски с перетаскиванием",
+        "description": "Слова из банка перетаскиваются в пропуски"
+      },
+      "multiple_choice": {
+        "name": "Выбор ответа",
+        "description": "Один или несколько правильных вариантов"
+      },
+      "true_false": {
+        "name": "Верно / неверно",
+        "description": "Утверждения, которые нужно оценить"
+      },
+      "matching": {
+        "name": "Сопоставление",
+        "description": "Соединить пары: слово–слово, картинка–слово"
+      },
+      "ordering": {
+        "name": "Порядок",
+        "description": "Собрать предложение или расставить по порядку"
+      },
+      "categorize": {
+        "name": "Распределение по группам",
+        "description": "Разложить слова по колонкам"
+      },
+      "open_answer": {
+        "name": "Открытый ответ",
+        "description": "Короткий ответ или эссе со счётчиком слов"
+      },
+      "voice_answer": {
+        "name": "Голосовой ответ",
+        "description": "Ученик записывает аудио в браузере"
+      }
+    },
+    "text": {
+      "placeholder": "Текст упражнения",
+      "toolbar": "Оформление текста",
+      "heading": "Заголовок",
+      "subheading": "Подзаголовок",
+      "bold": "Жирный",
+      "italic": "Курсив",
+      "underline": "Подчёркнутый",
+      "bulletList": "Список",
+      "orderedList": "Нумерованный список",
+      "highlight": "Выделить цветом",
+      "noHighlight": "Убрать выделение",
+      "color1": "Жёлтый",
+      "color2": "Зелёный",
+      "color3": "Голубой",
+      "color4": "Розовый"
+    }
+  },
+  "builder": {
+    "sections": "Секции",
+    "addSection": "Секция",
+    "newSectionTitle": "Новая секция",
+    "sectionTemplates": "Выберите шаблон или впишите своё название",
+    "customSectionPlaceholder": "Своё название, например «Song time»",
+    "createSection": "Добавить",
+    "noSections": "В уроке пока нет секций. Начните с «Warm-up» или своей секции.",
+    "noExercises": "В этой секции пока нет упражнений.",
+    "addExercise": "Упражнение",
+    "chooseExercise": "Добавить упражнение",
+    "instruction": "Задание",
+    "instructionPlaceholder": "Например: Read the text and answer the questions",
+    "rename": "Переименовать",
+    "delete": "Удалить",
+    "duplicate": "Дублировать",
+    "moveTo": "Переместить в секцию",
+    "moreActions": "Ещё действия",
+    "dragHandle": "Перетащить, чтобы изменить порядок",
+    "deleteSectionTitle": "Удалить секцию «{title}»?",
+    "deleteSectionText": "Все упражнения этой секции тоже удалятся. Отменить это нельзя.",
+    "deleteExerciseTitle": "Удалить упражнение {number}?",
+    "deleteExerciseText": "Отменить это нельзя.",
+    "cancel": "Отмена",
+    "saved": "Сохранено",
+    "saving": "Сохраняем…",
+    "saveError": "Нет связи — сохраним, как только появится",
+    "unsavedWarning": "Есть несохранённые изменения",
+    "copied": "Копия создана",
+    "moved": "Перенесено",
+    "deleted": "Удалено",
+    "error": "Не получилось. Попробуйте ещё раз.",
+    "backToCourse": "К курсу",
+    "lesson": "Урок",
+    "sectionsNav": "Секции урока"
   }
 }

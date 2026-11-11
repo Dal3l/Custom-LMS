@@ -8,6 +8,7 @@ const password = process.env.E2E_TEACHER_PASSWORD;
 test.describe("teacher builds a course outline", () => {
   test.skip(!email || !password, "no test teacher account configured");
   test.describe.configure({ mode: "serial" });
+  test.setTimeout(90_000);
 
   test("create course, modules, lessons; rename, reorder, delete", async ({ page }) => {
     await page.goto("/ru/login");

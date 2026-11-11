@@ -66,6 +66,103 @@ export type Database = {
           },
         ]
       }
+      exercise_keys: {
+        Row: {
+          answer_key: Json
+          course_id: string
+          exercise_id: string
+          updated_at: string
+        }
+        Insert: {
+          answer_key?: Json
+          course_id: string
+          exercise_id: string
+          updated_at?: string
+        }
+        Update: {
+          answer_key?: Json
+          course_id?: string
+          exercise_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exercise_keys_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exercise_keys_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: true
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exercises: {
+        Row: {
+          content: Json
+          course_id: string
+          created_at: string
+          id: string
+          lesson_id: string
+          position: number
+          section_id: string
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          content?: Json
+          course_id: string
+          created_at?: string
+          id?: string
+          lesson_id: string
+          position: number
+          section_id: string
+          title?: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          content?: Json
+          course_id?: string
+          created_at?: string
+          id?: string
+          lesson_id?: string
+          position?: number
+          section_id?: string
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exercises_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exercises_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exercises_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lessons: {
         Row: {
           course_id: string
@@ -182,6 +279,51 @@ export type Database = {
         }
         Relationships: []
       }
+      sections: {
+        Row: {
+          course_id: string
+          created_at: string
+          id: string
+          lesson_id: string
+          position: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          id?: string
+          lesson_id: string
+          position: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          id?: string
+          lesson_id?: string
+          position?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sections_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sections_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -195,6 +337,7 @@ export type Database = {
         Args: { p_id: string; p_suffix: string }
         Returns: string
       }
+      duplicate_exercise: { Args: { p_id: string }; Returns: string }
       duplicate_lesson: {
         Args: { p_id: string; p_suffix: string }
         Returns: string
@@ -203,12 +346,24 @@ export type Database = {
         Args: { p_id: string; p_suffix: string }
         Returns: string
       }
+      move_exercise: {
+        Args: { p_id: string; p_section: string }
+        Returns: undefined
+      }
+      reorder_exercises: {
+        Args: { p_ids: string[]; p_section: string }
+        Returns: undefined
+      }
       reorder_lessons: {
         Args: { p_ids: string[]; p_module: string }
         Returns: undefined
       }
       reorder_modules: {
         Args: { p_course: string; p_ids: string[] }
+        Returns: undefined
+      }
+      reorder_sections: {
+        Args: { p_ids: string[]; p_lesson: string }
         Returns: undefined
       }
     }
