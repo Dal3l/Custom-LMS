@@ -217,6 +217,7 @@
       "generic": "Couldn't save. Please try again.",
       "forbidden": "You don't have access to this course",
       "invalid": "Please check what you entered"
-    }
+    },
+    "saving": "Saving…"
   }
 }

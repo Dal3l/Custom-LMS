@@ -5,12 +5,20 @@ import type { Locale } from "@/i18n/routing";
 import { createClient } from "@/lib/supabase/server";
 import type { Profile, UserRole } from "@/lib/supabase/database.types";
 
-/** The signed-in user (verified with Supabase Auth), or null. Cached per request. */
-export const getUser = cache(async () => {
+export type SessionUser = { id: string; email: string | null };
+
+/**
+ * The signed-in user, or null. Cached per request.
+ * Uses getClaims(): the project signs sessions with an asymmetric key, so the
+ * signature is verified locally against Supabase's public key (fetched once and
+ * cached) instead of asking the Auth server on every request.
+ */
+export const getUser = cache(async (): Promise<SessionUser | null> => {
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data.user) return null;
-  return data.user;
+  const { data, error } = await supabase.auth.getClaims();
+  const claims = data?.claims;
+  if (error || !claims?.sub) return null;
+  return { id: claims.sub, email: typeof claims.email === "string" ? claims.email : null };
 });
 
 /** The signed-in user's profile, or null. Cached per request. */
