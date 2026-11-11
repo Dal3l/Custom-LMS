@@ -75,3 +75,10 @@ test("password can be shown and hidden", async ({ page }) => {
   await page.getByRole("button", { name: "Скрыть пароль" }).click();
   await expect(field).toHaveAttribute("type", "password");
 });
+
+test("course pages are only for signed-in teachers", async ({ page }) => {
+  await page.goto("/ru/courses");
+  await expect(page).toHaveURL(/\/ru\/login$/);
+  await page.goto("/ru/courses/00000000-0000-4000-8000-000000000001");
+  await expect(page).toHaveURL(/\/ru\/login$/);
+});
