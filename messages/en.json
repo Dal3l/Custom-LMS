@@ -304,6 +304,48 @@
       "color2": "Green",
       "color3": "Blue",
       "color4": "Pink"
+    },
+    "media": {
+      "caption": "Caption",
+      "captionPlaceholder": "Caption (optional)",
+      "removeImage": "Remove image {name}",
+      "remove": "Remove",
+      "uploading": "Uploading…",
+      "drop": {
+        "image": "Drop images here or click to choose",
+        "audio": "Drop an audio file here or click to choose",
+        "file": "Drop a file here or click to choose"
+      },
+      "hint": {
+        "image": "JPG, PNG, WebP or GIF, up to 10 MB, several at once",
+        "audio": "MP3, M4A, WAV or OGG, up to 50 MB",
+        "file": "PDF, Word or PowerPoint, up to 50 MB"
+      },
+      "tooBig": {
+        "image": "“{name}” is larger than 10 MB — choose a smaller image",
+        "audio": "“{name}” is larger than 50 MB",
+        "file": "“{name}” is larger than 50 MB"
+      },
+      "wrongType": {
+        "image": "“{name}” is not a JPG, PNG, WebP or GIF image",
+        "audio": "“{name}” is not an MP3, M4A, WAV or OGG audio file",
+        "file": "“{name}” — please use a PDF, Word or PowerPoint file"
+      },
+      "uploadFailed": "Couldn't upload “{name}”. Check your internet connection and try again."
+    },
+    "video": {
+      "link": "Video link",
+      "add": "Add",
+      "replace": "Replace video",
+      "invalid": "This doesn't look like a YouTube or Vimeo link",
+      "hint": "Paste a YouTube or Vimeo link. The video can be “unlisted”."
+    },
+    "audio": {
+      "speed": "Playback speed"
+    },
+    "file": {
+      "open": "Open",
+      "download": "Download"
     }
   },
   "builder": {

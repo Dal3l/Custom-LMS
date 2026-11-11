@@ -8,10 +8,10 @@ export type ExerciseGroup = (typeof EXERCISE_GROUPS)[number];
 export const EXERCISE_TYPES = [
   // Materials (no checking)
   { id: "text", group: "material", icon: "text", available: true },
-  { id: "image", group: "material", icon: "image", available: false },
-  { id: "video", group: "material", icon: "video", available: false },
-  { id: "audio", group: "material", icon: "audio", available: false },
-  { id: "file", group: "material", icon: "file", available: false },
+  { id: "image", group: "material", icon: "image", available: true },
+  { id: "video", group: "material", icon: "video", available: true },
+  { id: "audio", group: "material", icon: "audio", available: true },
+  { id: "file", group: "material", icon: "file", available: true },
   // Checked automatically
   { id: "gap_input", group: "auto", icon: "gapInput", available: false },
   { id: "gap_select", group: "auto", icon: "gapSelect", available: false },

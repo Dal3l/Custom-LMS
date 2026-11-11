@@ -46,6 +46,7 @@ export default async function LessonBuilderPage({
       </div>
       <LessonBuilder
         key={lessonId}
+        userId={profile.id}
         lessonId={lessonId}
         initialSections={data.sections}
         initialSectionId={typeof section === "string" ? section : null}
