@@ -1,5 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
 
+// Local secrets for optional tests (e.g. E2E_TEACHER_EMAIL); the file is not committed.
+try {
+  process.loadEnvFile(".env.local");
+} catch {}
+
 const PORT = 3100;
 
 export default defineConfig({

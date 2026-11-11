@@ -14,6 +14,13 @@
 | `npm run lint` | проверить код |
 | `npm test` | быстрые тесты логики (Vitest) |
 | `npm run test:e2e` | проверки в браузере (Playwright, сначала `npm run build`) |
+| `node scripts/db.mjs status` | какие миграции базы применены |
+| `node scripts/db.mjs migrate` | применить новые миграции к Supabase |
+| `node scripts/db.mjs types` | обновить типы базы для TypeScript |
+
+`scripts/db.mjs` работает через Supabase Management API и нужен ключ доступа
+(`SUPABASE_ACCESS_TOKEN`, Account → Access Tokens). Применённые миграции записываются
+в `supabase_migrations.schema_migrations` — ту же таблицу, что использует Supabase CLI.
 
 Для локального запуска скопируйте `.env.example` в `.env.local` и вставьте два значения из Supabase.
 
@@ -65,6 +72,4 @@ tests/, e2e/                 тесты Vitest и Playwright
 **Безопасность профилей** (в миграции): каждый видит и меняет только свой профиль; роль выбирается один раз и больше не меняется; `is_admin` нельзя поменять из приложения — только в Supabase (Table Editor).
 
 ### Типы базы данных
-`src/lib/supabase/database.types.ts` повторяет схему. После изменения схемы обновите его:
-`npx supabase gen types typescript --project-id <id> > src/lib/supabase/database.types.ts`
-(нужен вход: `npx supabase login`).
+`src/lib/supabase/database.types.ts` генерируется из настоящей базы: `node scripts/db.mjs types`.
