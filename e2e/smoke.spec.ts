@@ -44,7 +44,7 @@ test("sign-up form explains what is missing", async ({ page }) => {
 test("login with a wrong password shows a friendly error", async ({ page }) => {
   await page.goto("/en/login");
   await page.getByLabel("Email").fill("nobody@example.com");
-  await page.getByLabel("Password").fill("wrong-password");
+  await page.getByLabel("Password", { exact: true }).fill("wrong-password");
   await page.getByRole("button", { name: "Log in", exact: true }).click();
   await expect(page.getByText("Wrong email or password")).toBeVisible();
   await expect(page.getByLabel("Email")).toHaveValue("nobody@example.com");
@@ -63,4 +63,15 @@ test("pages fit the screen without sideways scrolling", async ({ page }) => {
     );
     expect(overflow, path).toBeLessThanOrEqual(0);
   }
+});
+
+test("password can be shown and hidden", async ({ page }) => {
+  await page.goto("/ru/login");
+  const field = page.getByLabel("Пароль", { exact: true });
+  await field.fill("secret123");
+  await expect(field).toHaveAttribute("type", "password");
+  await page.getByRole("button", { name: "Показать пароль" }).click();
+  await expect(field).toHaveAttribute("type", "text");
+  await page.getByRole("button", { name: "Скрыть пароль" }).click();
+  await expect(field).toHaveAttribute("type", "password");
 });

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { signUp } from "@/features/auth/actions";
 import { initialFormState } from "@/features/auth/errors";
 import { PASSWORD_MIN_LENGTH } from "@/lib/validation/auth";
+import { PasswordInput } from "./password-input";
 import { FieldMessage, FormError, invalidProps, SubmitButton } from "./form-bits";
 import { RolePicker } from "./role-picker";
 
@@ -76,10 +77,9 @@ export function SignupForm() {
         </Field>
         <Field>
           <FieldLabel htmlFor="password">{t("password")}</FieldLabel>
-          <Input
+          <PasswordInput
             id="password"
             name="password"
-            type="password"
             autoComplete="new-password"
             minLength={PASSWORD_MIN_LENGTH}
             required

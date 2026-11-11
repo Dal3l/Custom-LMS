@@ -36,7 +36,6 @@ export const resetPasswordSchema = z
 
 export const profileSchema = z.object({
   fullName,
-  locale: localeSchema,
   timezone,
 });
 

@@ -67,7 +67,9 @@
     "resetTitle": "New password",
     "resetSubtitle": "Choose a new password to log in with",
     "resetButton": "Save password",
-    "signOut": "Log out"
+    "signOut": "Log out",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "validation": {
     "emailInvalid": "Please check the email address",
@@ -137,7 +139,6 @@
     "fullName": "Full name",
     "email": "Email",
     "role": "Role",
-    "language": "Interface language",
     "timezone": "Time zone",
     "timezoneHint": "Used to show the schedule in your local time",
     "save": "Save",

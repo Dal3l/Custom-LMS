@@ -3,10 +3,10 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { updatePassword } from "@/features/auth/actions";
 import { initialFormState } from "@/features/auth/errors";
 import { PASSWORD_MIN_LENGTH } from "@/lib/validation/auth";
+import { PasswordInput } from "./password-input";
 import { FieldMessage, FormError, invalidProps, SubmitButton } from "./form-bits";
 
 export function ResetForm() {
@@ -21,10 +21,9 @@ export function ResetForm() {
         <FormError state={state} />
         <Field>
           <FieldLabel htmlFor="password">{t("password")}</FieldLabel>
-          <Input
+          <PasswordInput
             id="password"
             name="password"
-            type="password"
             autoComplete="new-password"
             minLength={PASSWORD_MIN_LENGTH}
             required
@@ -35,10 +34,9 @@ export function ResetForm() {
         </Field>
         <Field>
           <FieldLabel htmlFor="confirm">{t("confirmPassword")}</FieldLabel>
-          <Input
+          <PasswordInput
             id="confirm"
             name="confirm"
-            type="password"
             autoComplete="new-password"
             required
             {...invalidProps(state, "confirm")}

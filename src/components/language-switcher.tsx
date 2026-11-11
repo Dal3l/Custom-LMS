@@ -35,7 +35,7 @@ export function LanguageSwitcher({ signedIn = false }: { signedIn?: boolean }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" disabled={pending} aria-label={t("label")}>
+        <Button variant="ghost" size="lg" className="h-10" disabled={pending} aria-label={t("label")}>
           <Languages aria-hidden="true" />
           <span>{t(current)}</span>
         </Button>

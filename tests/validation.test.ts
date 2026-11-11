@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   fieldErrors,
+  localeSchema,
   profileSchema,
   resetPasswordSchema,
   signInSchema,
@@ -69,14 +70,20 @@ describe("resetPasswordSchema", () => {
   });
 });
 
+describe("localeSchema", () => {
+  it("accepts only ru, en and kk", () => {
+    expect(localeSchema.safeParse("kk").success).toBe(true);
+    expect(localeSchema.safeParse("de").success).toBe(false);
+  });
+});
+
 describe("profileSchema", () => {
-  it("accepts supported locales and real time zones", () => {
-    expect(profileSchema.safeParse({ fullName: "A", locale: "kk", timezone: "UTC" }).success).toBe(true);
+  it("accepts a name and a real time zone", () => {
+    expect(profileSchema.safeParse({ fullName: "A", timezone: "Asia/Almaty" }).success).toBe(true);
   });
 
-  it("rejects unknown locales and time zones", () => {
-    expect(profileSchema.safeParse({ fullName: "A", locale: "de", timezone: "UTC" }).success).toBe(false);
-    const result = profileSchema.safeParse({ fullName: "A", locale: "ru", timezone: "Nowhere/City" });
+  it("rejects unknown time zones", () => {
+    const result = profileSchema.safeParse({ fullName: "A", timezone: "Nowhere/City" });
     expect(result.success).toBe(false);
     if (!result.success) expect(fieldErrors(result.error).timezone).toBe("timezoneInvalid");
   });
