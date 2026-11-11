@@ -36,7 +36,9 @@ test.describe("teacher builds a course outline", () => {
     await expect(page.getByRole("link", { name: "Hello" })).toBeVisible();
 
     // Lesson menu: make it a test.
-    await page.getByRole("listitem").filter({ hasText: "Hello" }).getByRole("button", { name: "Ещё действия" }).click();
+    // The innermost list item holding the lesson link is the lesson row.
+    const lessonRow = page.getByRole("listitem").filter({ has: page.getByRole("link", { name: "Hello" }) }).last();
+    await lessonRow.getByRole("button", { name: "Ещё действия" }).click();
     await page.getByRole("menuitem", { name: "Сделать тестом" }).click();
     await expect(page.getByText("Тест", { exact: true })).toBeVisible();
 

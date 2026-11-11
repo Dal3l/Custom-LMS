@@ -25,6 +25,7 @@ import {
   Copy,
   FileText,
   GripVertical,
+  Loader2,
   MoreHorizontal,
   Pencil,
   Plus,
@@ -76,6 +77,12 @@ const M = "m:";
 const L = "l:";
 const ZONE = "z:";
 const strip = (id: string | number) => String(id).slice(2);
+// Items shown right away while the server is still saving them.
+const TMP = "tmp-";
+const isTemp = (id: string) => id.startsWith(TMP);
+const tempId = () => TMP + Math.random().toString(36).slice(2);
+
+type Draft = { kind: "module" } | { kind: "lesson"; moduleId: string } | null;
 
 type Pending = { kind: "module" | "lesson"; id: string } | null;
 
@@ -90,6 +97,7 @@ export function CourseOutline({ courseId, initial }: { courseId: string; initial
   }
 
   const [editing, setEditing] = useState<string | null>(null); // id being renamed
+  const [draft, setDraft] = useState<Draft>(null); // new module/lesson whose name is being typed
   const [toDelete, setToDelete] = useState<Pending>(null);
   const [dragFrom, setDragFrom] = useState<string | null>(null); // module a lesson was dragged from
   const [, startTransition] = useTransition();
@@ -116,9 +124,11 @@ export function CourseOutline({ courseId, initial }: { courseId: string; initial
   }
 
   // --- Modules -------------------------------------------------------------
-  function addModule() {
-    const title = t("newModuleTitle", { n: modules.length + 1 });
-    run(() => createModule(courseId, title), (id) => setEditing(id));
+  // "+ Module" opens a name field at once; the module is saved when the name is confirmed.
+  function saveDraftModule(title: string) {
+    setDraft(null);
+    setModules((ms) => [...ms, { id: tempId(), title, lessons: [] }]);
+    run(() => createModule(courseId, title));
   }
 
   function renameModuleLocal(id: string, title: string) {
@@ -127,10 +137,16 @@ export function CourseOutline({ courseId, initial }: { courseId: string; initial
   }
 
   // --- Lessons -------------------------------------------------------------
-  function addLesson(moduleId: string) {
-    const count = modules.reduce((n, m) => n + m.lessons.length, 0);
-    const title = t("newLessonTitle", { n: count + 1 });
-    run(() => createLesson(moduleId, title), (id) => setEditing(id));
+  const lessonCount = modules.reduce((n, m) => n + m.lessons.length, 0);
+
+  function saveDraftLesson(moduleId: string, title: string) {
+    setDraft(null);
+    setModules((ms) =>
+      ms.map((m) =>
+        m.id === moduleId ? { ...m, lessons: [...m.lessons, { id: tempId(), title, is_test: false }] } : m,
+      ),
+    );
+    run(() => createLesson(moduleId, title));
   }
 
   function renameLessonLocal(id: string, title: string) {
@@ -259,7 +275,14 @@ export function CourseOutline({ courseId, initial }: { courseId: string; initial
                 onRename={(title) => renameModuleLocal(mod.id, title)}
                 onDuplicate={() => run(() => duplicateModule(mod.id), undefined, t("copied"))}
                 onDelete={() => setToDelete({ kind: "module", id: mod.id })}
-                onAddLesson={() => addLesson(mod.id)}
+                onAddLesson={() => setDraft({ kind: "lesson", moduleId: mod.id })}
+                draftLessonTitle={
+                  draft?.kind === "lesson" && draft.moduleId === mod.id
+                    ? t("newLessonTitle", { n: lessonCount + 1 })
+                    : null
+                }
+                onSaveDraftLesson={(title) => saveDraftLesson(mod.id, title)}
+                onCancelDraft={() => setDraft(null)}
                 onRenameLesson={renameLessonLocal}
                 onDuplicateLesson={(id) => run(() => duplicateLesson(id), undefined, t("copied"))}
                 onDeleteLesson={(id) => setToDelete({ kind: "lesson", id })}
@@ -270,8 +293,22 @@ export function CourseOutline({ courseId, initial }: { courseId: string; initial
         </SortableContext>
       </DndContext>
 
+      {draft?.kind === "module" && (
+        <Card className="flex-row items-center gap-1 rounded-2xl px-3 py-2">
+          <InlineTitle
+            value={t("newModuleTitle", { n: modules.length + 1 })}
+            editing
+            saveUnchanged
+            onEditingChange={() => {}}
+            onSave={saveDraftModule}
+            onCancel={() => setDraft(null)}
+            className="font-semibold"
+          />
+        </Card>
+      )}
+
       <div>
-        <Button variant="outline" onClick={addModule}>
+        <Button variant="outline" onClick={() => setDraft({ kind: "module" })} disabled={draft?.kind === "module"}>
           <Plus aria-hidden="true" />
           {t("addModule")}
         </Button>
@@ -316,11 +353,21 @@ function DragHandle({
   );
 }
 
-function RowMenu({ children }: { children: React.ReactNode }) {
+/** Shown instead of the drag handle while a new item is being saved. */
+function Saving() {
+  const t = useTranslations("courses");
+  return (
+    <span className="flex size-8 shrink-0 items-center justify-center" role="status" aria-label={t("saving")}>
+      <Loader2 className="size-4 animate-spin text-muted-foreground" aria-hidden="true" />
+    </span>
+  );
+}
+
+function RowMenu({ children, disabled }: { children: React.ReactNode; disabled?: boolean }) {
   const t = useTranslations("courses");
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild disabled={disabled}>
         <Button variant="ghost" size="icon" className="size-8 shrink-0" aria-label={t("moreActions")}>
           <MoreHorizontal aria-hidden="true" />
         </Button>
@@ -339,6 +386,10 @@ type ModuleCardProps = {
   onDuplicate: () => void;
   onDelete: () => void;
   onAddLesson: () => void;
+  /** Default title of the new lesson being named in this module, or null. */
+  draftLessonTitle: string | null;
+  onSaveDraftLesson: (title: string) => void;
+  onCancelDraft: () => void;
   onRenameLesson: (id: string, title: string) => void;
   onDuplicateLesson: (id: string) => void;
   onDeleteLesson: (id: string) => void;
@@ -348,8 +399,9 @@ type ModuleCardProps = {
 function ModuleCard(props: ModuleCardProps) {
   const { module: mod, editing, setEditing } = props;
   const t = useTranslations("courses");
+  const temp = isTemp(mod.id);
   const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } =
-    useSortable({ id: M + mod.id });
+    useSortable({ id: M + mod.id, disabled: temp });
   const { setNodeRef: setZoneRef, isOver } = useDroppable({ id: ZONE + mod.id });
 
   return (
@@ -360,7 +412,11 @@ function ModuleCard(props: ModuleCardProps) {
     >
       <Card className="gap-0 rounded-2xl py-0">
         <div className="flex items-center gap-1 border-b px-2 py-2 sm:px-3">
-          <DragHandle attributes={attributes} listeners={listeners} setRef={setActivatorNodeRef} />
+          {temp ? (
+            <Saving />
+          ) : (
+            <DragHandle attributes={attributes} listeners={listeners} setRef={setActivatorNodeRef} />
+          )}
           <InlineTitle
             value={mod.title}
             editing={editing === mod.id}
@@ -371,7 +427,7 @@ function ModuleCard(props: ModuleCardProps) {
           <span className="hidden shrink-0 text-sm text-muted-foreground sm:inline">
             {t("lessonsCount", { count: mod.lessons.length })}
           </span>
-          <RowMenu>
+          <RowMenu disabled={temp}>
             <DropdownMenuItem onSelect={() => setEditing(mod.id)}>
               <Pencil aria-hidden="true" />
               {t("rename")}
@@ -390,17 +446,38 @@ function ModuleCard(props: ModuleCardProps) {
 
         <SortableContext items={mod.lessons.map((l) => L + l.id)} strategy={verticalListSortingStrategy}>
           <ol ref={setZoneRef} className={cn("flex min-h-12 flex-col p-2", isOver && "bg-accent/50")}>
-            {mod.lessons.length === 0 && (
+            {mod.lessons.length === 0 && !props.draftLessonTitle && (
               <li className="px-3 py-2 text-sm text-muted-foreground">{t("noLessons")}</li>
             )}
             {mod.lessons.map((lesson) => (
               <LessonRow key={lesson.id} lesson={lesson} {...props} />
             ))}
+            {props.draftLessonTitle && (
+              <li className="flex items-center gap-1 px-1 py-1">
+                <span className="size-8 shrink-0" />
+                <FileText className="size-4 shrink-0 text-primary" aria-hidden="true" />
+                <InlineTitle
+                  value={props.draftLessonTitle}
+                  editing
+                  saveUnchanged
+                  onEditingChange={() => {}}
+                  onSave={props.onSaveDraftLesson}
+                  onCancel={props.onCancelDraft}
+                  className="px-1"
+                />
+              </li>
+            )}
           </ol>
         </SortableContext>
 
         <div className="px-2 pb-2">
-          <Button variant="ghost" size="sm" onClick={props.onAddLesson} className="text-primary">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={props.onAddLesson}
+            disabled={temp || Boolean(props.draftLessonTitle)}
+            className="text-primary"
+          >
             <Plus aria-hidden="true" />
             {t("addLesson")}
           </Button>
@@ -412,8 +489,9 @@ function ModuleCard(props: ModuleCardProps) {
 
 function LessonRow({ lesson, courseId, editing, setEditing, ...props }: ModuleCardProps & { lesson: OutlineLesson }) {
   const t = useTranslations("courses");
+  const temp = isTemp(lesson.id);
   const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } =
-    useSortable({ id: L + lesson.id });
+    useSortable({ id: L + lesson.id, disabled: temp });
   const Icon = lesson.is_test ? ClipboardCheck : FileText;
 
   return (
@@ -425,7 +503,11 @@ function LessonRow({ lesson, courseId, editing, setEditing, ...props }: ModuleCa
         isDragging && "relative z-10 bg-card shadow-md",
       )}
     >
-      <DragHandle attributes={attributes} listeners={listeners} setRef={setActivatorNodeRef} />
+      {temp ? (
+        <Saving />
+      ) : (
+        <DragHandle attributes={attributes} listeners={listeners} setRef={setActivatorNodeRef} />
+      )}
       <Icon className="size-4 shrink-0 text-primary" aria-hidden="true" />
       <InlineTitle
         value={lesson.title}
@@ -434,16 +516,20 @@ function LessonRow({ lesson, courseId, editing, setEditing, ...props }: ModuleCa
         onSave={(title) => props.onRenameLesson(lesson.id, title)}
         className="px-1"
       >
-        <Link href={`/courses/${courseId}/lessons/${lesson.id}`} className="block truncate py-1 hover:underline">
-          {lesson.title}
-        </Link>
+        {temp ? (
+          <span className="block truncate py-1 text-muted-foreground">{lesson.title}</span>
+        ) : (
+          <Link href={`/courses/${courseId}/lessons/${lesson.id}`} className="block truncate py-1 hover:underline">
+            {lesson.title}
+          </Link>
+        )}
       </InlineTitle>
       {lesson.is_test && (
         <Badge variant="secondary" title={t("testHint")}>
           {t("testBadge")}
         </Badge>
       )}
-      <RowMenu>
+      <RowMenu disabled={temp}>
         <DropdownMenuItem onSelect={() => setEditing(lesson.id)}>
           <Pencil aria-hidden="true" />
           {t("rename")}

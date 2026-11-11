@@ -26,22 +26,24 @@ export async function listMyCourses(userId: string): Promise<CourseListItem[]> {
   }));
 }
 
-/** A course with its modules and lessons in order, or null if not visible. */
+/** A course with its modules and lessons in order, or null if not visible. One request. */
 export const getCourseTree = cache(async (courseId: string): Promise<CourseTree | null> => {
   const supabase = await createClient();
-  const { data: course } = await supabase.from("courses").select("*").eq("id", courseId).maybeSingle();
-  if (!course) return null;
+  const { data } = await supabase
+    .from("courses")
+    .select("*, modules(*), lessons(*)")
+    .eq("id", courseId)
+    .maybeSingle();
+  if (!data) return null;
 
-  const [{ data: modules }, { data: lessons }] = await Promise.all([
-    supabase.from("modules").select("*").eq("course_id", courseId).order("position"),
-    supabase.from("lessons").select("*").eq("course_id", courseId).order("position"),
-  ]);
-
+  const { modules, lessons, ...course } = data;
+  const byPosition = <T extends { position: number }>(a: T, b: T) => a.position - b.position;
+  const sortedLessons = [...lessons].sort(byPosition);
   return {
     course,
-    modules: (modules ?? []).map((m) => ({
+    modules: [...modules].sort(byPosition).map((m) => ({
       ...m,
-      lessons: (lessons ?? []).filter((l) => l.module_id === m.id),
+      lessons: sortedLessons.filter((l) => l.module_id === m.id),
     })),
   };
 });
