@@ -3,6 +3,7 @@
 import { EditorContent, useEditor, useEditorState, type Editor } from "@tiptap/react";
 import {
   Bold,
+  Eraser,
   Heading2,
   Heading3,
   Highlighter,
@@ -19,6 +20,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
@@ -116,20 +119,24 @@ function Toolbar({ editor }: { editor: Editor | null }) {
             <Highlighter aria-hidden="true" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="min-w-0">
-          <div className="flex gap-1 p-1">
+        <DropdownMenuContent align="start" collisionPadding={12} className="w-auto min-w-48">
+          <DropdownMenuLabel>{t("highlight")}</DropdownMenuLabel>
+          <div className="flex gap-1 px-1 pb-1">
             {HIGHLIGHT_COLORS.map((color, i) => (
               <DropdownMenuItem
                 key={color}
-                className="size-8 justify-center p-0"
+                className="size-9 justify-center p-0"
                 aria-label={t(`color${i + 1}` as "color1")}
+                title={t(`color${i + 1}` as "color1")}
                 onSelect={() => editor?.chain().focus().setHighlight({ color }).run()}
               >
-                <span className="size-5 rounded-full border" style={{ backgroundColor: color }} />
+                <span className="size-6 rounded-full border border-foreground/10" style={{ backgroundColor: color }} />
               </DropdownMenuItem>
             ))}
           </div>
+          <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={() => editor?.chain().focus().unsetHighlight().run()}>
+            <Eraser aria-hidden="true" />
             {t("noHighlight")}
           </DropdownMenuItem>
         </DropdownMenuContent>
