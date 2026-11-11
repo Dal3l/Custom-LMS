@@ -205,7 +205,6 @@
     "deleted": "Deleted",
     "backToCourses": "All courses",
     "titleField": "Title",
-    "lessonBuilderSoon": "The lesson builder arrives in the next step: sections, exercises and a student preview.",
     "errors": {
       "titleRequired": "Enter a title",
       "titleTooLong": "The title is too long",
@@ -219,5 +218,128 @@
       "invalid": "Please check what you entered"
     },
     "saving": "Saving…"
+  },
+  "exercises": {
+    "groups": {
+      "material": "Materials",
+      "auto": "Checked automatically",
+      "manual": "Checked by the teacher"
+    },
+    "soon": "soon",
+    "types": {
+      "text": {
+        "name": "Text",
+        "description": "Text with headings, lists and highlighting"
+      },
+      "image": {
+        "name": "Image",
+        "description": "One or more pictures with a caption"
+      },
+      "video": {
+        "name": "Video",
+        "description": "A YouTube or Vimeo link"
+      },
+      "audio": {
+        "name": "Audio",
+        "description": "A recording with seeking and speed control"
+      },
+      "file": {
+        "name": "File",
+        "description": "A PDF or document to view"
+      },
+      "gap_input": {
+        "name": "Fill in the gaps",
+        "description": "The student types the missing words"
+      },
+      "gap_select": {
+        "name": "Gaps with options",
+        "description": "Pick a word from a list in each gap"
+      },
+      "gap_drag": {
+        "name": "Drag into gaps",
+        "description": "Drag words from a word bank into the gaps"
+      },
+      "multiple_choice": {
+        "name": "Multiple choice",
+        "description": "One or several correct options"
+      },
+      "true_false": {
+        "name": "True / false",
+        "description": "Statements to judge"
+      },
+      "matching": {
+        "name": "Matching",
+        "description": "Connect pairs: word–word, picture–word"
+      },
+      "ordering": {
+        "name": "Ordering",
+        "description": "Build a sentence or put items in order"
+      },
+      "categorize": {
+        "name": "Sort into groups",
+        "description": "Drag words into columns"
+      },
+      "open_answer": {
+        "name": "Open answer",
+        "description": "Short answer or essay with a word counter"
+      },
+      "voice_answer": {
+        "name": "Voice answer",
+        "description": "The student records audio in the browser"
+      }
+    },
+    "text": {
+      "placeholder": "Exercise text",
+      "toolbar": "Text formatting",
+      "heading": "Heading",
+      "subheading": "Subheading",
+      "bold": "Bold",
+      "italic": "Italic",
+      "underline": "Underline",
+      "bulletList": "Bulleted list",
+      "orderedList": "Numbered list",
+      "highlight": "Highlight",
+      "noHighlight": "Remove highlight",
+      "color1": "Yellow",
+      "color2": "Green",
+      "color3": "Blue",
+      "color4": "Pink"
+    }
+  },
+  "builder": {
+    "sections": "Sections",
+    "addSection": "Section",
+    "newSectionTitle": "New section",
+    "sectionTemplates": "Pick a template or type your own name",
+    "customSectionPlaceholder": "Your own name, e.g. “Song time”",
+    "createSection": "Add",
+    "noSections": "This lesson has no sections yet. Start with “Warm-up” or your own section.",
+    "noExercises": "This section has no exercises yet.",
+    "addExercise": "Exercise",
+    "chooseExercise": "Add an exercise",
+    "instruction": "Instruction",
+    "instructionPlaceholder": "For example: Read the text and answer the questions",
+    "rename": "Rename",
+    "delete": "Delete",
+    "duplicate": "Duplicate",
+    "moveTo": "Move to section",
+    "moreActions": "More actions",
+    "dragHandle": "Drag to change the order",
+    "deleteSectionTitle": "Delete the section “{title}”?",
+    "deleteSectionText": "All exercises in this section will be deleted too. This can't be undone.",
+    "deleteExerciseTitle": "Delete exercise {number}?",
+    "deleteExerciseText": "This can't be undone.",
+    "cancel": "Cancel",
+    "saved": "Saved",
+    "saving": "Saving…",
+    "saveError": "No connection — we'll save as soon as it's back",
+    "unsavedWarning": "You have unsaved changes",
+    "copied": "Copy created",
+    "moved": "Moved",
+    "deleted": "Deleted",
+    "error": "Something went wrong. Please try again.",
+    "backToCourse": "Back to course",
+    "lesson": "Lesson",
+    "sectionsNav": "Lesson sections"
   }
 }

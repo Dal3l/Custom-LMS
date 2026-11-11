@@ -1,0 +1,37 @@
+import {
+  ArrowDownUp,
+  AudioLines,
+  CircleCheck,
+  Columns3,
+  FileText,
+  Image,
+  Link2,
+  ListChecks,
+  Mic,
+  Move,
+  PenLine,
+  TextCursorInput,
+  ToggleLeft,
+  Type,
+  Video,
+  type LucideIcon,
+} from "lucide-react";
+import type { ExerciseIcon } from "./catalog";
+
+export const EXERCISE_ICONS: Record<ExerciseIcon, LucideIcon> = {
+  text: Type,
+  image: Image,
+  video: Video,
+  audio: AudioLines,
+  file: FileText,
+  gapInput: TextCursorInput,
+  gapSelect: ListChecks,
+  gapDrag: Move,
+  choice: CircleCheck,
+  trueFalse: ToggleLeft,
+  matching: Link2,
+  ordering: ArrowDownUp,
+  categorize: Columns3,
+  openAnswer: PenLine,
+  voice: Mic,
+};

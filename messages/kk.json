@@ -205,7 +205,6 @@
     "deleted": "Жойылды",
     "backToCourses": "Барлық курстар",
     "titleField": "Атауы",
-    "lessonBuilderSoon": "Сабақ құрастырғышы келесі қадамда пайда болады: бөлімдер, жаттығулар және оқушы ретінде алдын ала қарау.",
     "errors": {
       "titleRequired": "Атауын енгізіңіз",
       "titleTooLong": "Атауы тым ұзын",
@@ -219,5 +218,128 @@
       "invalid": "Енгізілген деректерді тексеріңіз"
     },
     "saving": "Сақталуда…"
+  },
+  "exercises": {
+    "groups": {
+      "material": "Материалдар",
+      "auto": "Автоматты тексерілетін",
+      "manual": "Мұғалім тексеретін"
+    },
+    "soon": "жақында",
+    "types": {
+      "text": {
+        "name": "Мәтін",
+        "description": "Тақырыптары, тізімдері және түспен белгілеуі бар мәтін"
+      },
+      "image": {
+        "name": "Сурет",
+        "description": "Жазуы бар бір немесе бірнеше сурет"
+      },
+      "video": {
+        "name": "Бейне",
+        "description": "YouTube немесе Vimeo сілтемесі"
+      },
+      "audio": {
+        "name": "Аудио",
+        "description": "Айналдыру және жылдамдығы бар жазба"
+      },
+      "file": {
+        "name": "Файл",
+        "description": "Қарауға арналған PDF немесе құжат"
+      },
+      "gap_input": {
+        "name": "Бос орынды толтыру",
+        "description": "Оқушы түсіп қалған сөздерді жазады"
+      },
+      "gap_select": {
+        "name": "Таңдаулы бос орындар",
+        "description": "Әр бос орынға тізімнен сөз таңдау"
+      },
+      "gap_drag": {
+        "name": "Сүйреп қою",
+        "description": "Сөздер банкінен бос орындарға сүйреу"
+      },
+      "multiple_choice": {
+        "name": "Жауап таңдау",
+        "description": "Бір немесе бірнеше дұрыс нұсқа"
+      },
+      "true_false": {
+        "name": "Дұрыс / бұрыс",
+        "description": "Бағалау керек тұжырымдар"
+      },
+      "matching": {
+        "name": "Сәйкестендіру",
+        "description": "Жұптарды қосу: сөз–сөз, сурет–сөз"
+      },
+      "ordering": {
+        "name": "Рет",
+        "description": "Сөйлем құрау немесе ретімен қою"
+      },
+      "categorize": {
+        "name": "Топтарға бөлу",
+        "description": "Сөздерді бағандарға орналастыру"
+      },
+      "open_answer": {
+        "name": "Ашық жауап",
+        "description": "Сөз санағышы бар қысқа жауап немесе эссе"
+      },
+      "voice_answer": {
+        "name": "Дауыстық жауап",
+        "description": "Оқушы браузерде аудио жазады"
+      }
+    },
+    "text": {
+      "placeholder": "Жаттығу мәтіні",
+      "toolbar": "Мәтінді безендіру",
+      "heading": "Тақырып",
+      "subheading": "Тақырыпша",
+      "bold": "Қалың",
+      "italic": "Көлбеу",
+      "underline": "Асты сызылған",
+      "bulletList": "Тізім",
+      "orderedList": "Нөмірленген тізім",
+      "highlight": "Түспен белгілеу",
+      "noHighlight": "Белгілеуді алып тастау",
+      "color1": "Сары",
+      "color2": "Жасыл",
+      "color3": "Көгілдір",
+      "color4": "Қызғылт"
+    }
+  },
+  "builder": {
+    "sections": "Бөлімдер",
+    "addSection": "Бөлім",
+    "newSectionTitle": "Жаңа бөлім",
+    "sectionTemplates": "Үлгіні таңдаңыз немесе өз атауыңызды жазыңыз",
+    "customSectionPlaceholder": "Өз атауыңыз, мысалы «Song time»",
+    "createSection": "Қосу",
+    "noSections": "Сабақта әлі бөлім жоқ. «Warm-up» немесе өз бөліміңізден бастаңыз.",
+    "noExercises": "Бұл бөлімде әлі жаттығу жоқ.",
+    "addExercise": "Жаттығу",
+    "chooseExercise": "Жаттығу қосу",
+    "instruction": "Тапсырма",
+    "instructionPlaceholder": "Мысалы: Read the text and answer the questions",
+    "rename": "Атын өзгерту",
+    "delete": "Жою",
+    "duplicate": "Көшірме жасау",
+    "moveTo": "Бөлімге ауыстыру",
+    "moreActions": "Басқа әрекеттер",
+    "dragHandle": "Ретін өзгерту үшін сүйреңіз",
+    "deleteSectionTitle": "«{title}» бөлімін жою керек пе?",
+    "deleteSectionText": "Бұл бөлімнің барлық жаттығулары да жойылады. Мұны қайтару мүмкін емес.",
+    "deleteExerciseTitle": "{number} жаттығуын жою керек пе?",
+    "deleteExerciseText": "Мұны қайтару мүмкін емес.",
+    "cancel": "Болдырмау",
+    "saved": "Сақталды",
+    "saving": "Сақталуда…",
+    "saveError": "Байланыс жоқ — байланыс болған бойда сақтаймыз",
+    "unsavedWarning": "Сақталмаған өзгерістер бар",
+    "copied": "Көшірме жасалды",
+    "moved": "Ауыстырылды",
+    "deleted": "Жойылды",
+    "error": "Сәтсіз болды. Қайталап көріңіз.",
+    "backToCourse": "Курсқа",
+    "lesson": "Сабақ",
+    "sectionsNav": "Сабақ бөлімдері"
   }
 }
