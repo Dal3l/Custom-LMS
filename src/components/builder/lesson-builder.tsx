@@ -35,6 +35,7 @@ import { SaveQueue } from "@/features/lessons/save-queue";
 import { exerciseNumber } from "@/features/lessons/sections";
 import { moveItem } from "@/features/courses/outline";
 import { AddSectionDialog } from "./add-section-dialog";
+import { BuilderContext } from "./builder-context";
 import { ExerciseCard } from "./exercise-card";
 import { ExercisePicker } from "./exercise-picker";
 import { SaveStatus } from "./save-status";
@@ -47,10 +48,13 @@ type Confirm = { kind: "section"; id: string } | { kind: "exercise"; id: string 
  * structure changes are sent right away, text edits go through the autosave queue.
  */
 export function LessonBuilder({
+  userId,
   lessonId,
   initialSections,
   initialSectionId,
 }: {
+  /** The teacher; their files are uploaded into a folder named after this id. */
+  userId: string;
   lessonId: string;
   initialSections: BuilderSection[];
   initialSectionId: string | null;
@@ -251,6 +255,7 @@ export function LessonBuilder({
   })();
 
   return (
+    <BuilderContext value={{ userId }}>
     <div className="flex flex-col gap-4">
       <div className="flex justify-end">
         <SaveStatus queue={queue} />
@@ -356,6 +361,7 @@ export function LessonBuilder({
         onConfirm={confirmDelete}
       />
     </div>
+    </BuilderContext>
   );
 }
 
