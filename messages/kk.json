@@ -331,7 +331,12 @@
         "audio": "«{name}» — MP3, M4A, WAV немесе OGG аудиофайл емес",
         "file": "«{name}» — PDF, Word немесе PowerPoint қажет"
       },
-      "uploadFailed": "«{name}» жүктелмеді. Интернетті тексеріп, қайталап көріңіз."
+      "uploadFailed": "«{name}» жүктелмеді. Интернетті тексеріп, қайталап көріңіз.",
+      "gallery": "Галерея",
+      "imageOf": "{total} суреттің {n}-сі",
+      "prevImage": "Алдыңғы сурет",
+      "nextImage": "Келесі сурет",
+      "goToImage": "{n}-сурет"
     },
     "video": {
       "link": "Бейнеге сілтеме",

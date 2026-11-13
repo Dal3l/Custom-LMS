@@ -331,7 +331,12 @@
         "audio": "“{name}” is not an MP3, M4A, WAV or OGG audio file",
         "file": "“{name}” — please use a PDF, Word or PowerPoint file"
       },
-      "uploadFailed": "Couldn't upload “{name}”. Check your internet connection and try again."
+      "uploadFailed": "Couldn't upload “{name}”. Check your internet connection and try again.",
+      "gallery": "Gallery",
+      "imageOf": "picture {n} of {total}",
+      "prevImage": "Previous picture",
+      "nextImage": "Next picture",
+      "goToImage": "Picture {n}"
     },
     "video": {
       "link": "Video link",
