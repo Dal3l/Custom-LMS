@@ -13,7 +13,10 @@ export type ExerciseEditorProps<Content, Key> = {
  */
 export type ExerciseViewerProps<Content, Answer = unknown> = {
   content: Content;
+  /** set in the student view; lets a viewer keep the student's own notes (e.g. highlights) */
+  exerciseId?: string;
   answer?: Answer | null;
-  onAnswer?: (answer: Answer, options: { check: boolean }) => void;
+  /** With check: true the answer is checked now; resolves with the verdict (null if it failed). */
+  onAnswer?: (answer: Answer, options: { check: boolean }) => Promise<CheckResult | null> | void;
   result?: CheckResult | null;
 };

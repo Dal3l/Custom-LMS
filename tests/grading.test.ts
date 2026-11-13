@@ -122,3 +122,33 @@ describe("answers are validated before checking", () => {
     expect(getDefinition("text")!.grading).toBeUndefined();
   });
 });
+
+describe("gaps with typing: three tries", () => {
+  const { content, key } = buildGapInput("Penguins [are] birds. They live in [Antarctica].", false);
+  const check = (values: Record<string, string>, attempts?: Record<string, string[]>) =>
+    checkGapInput(content, key, { values, attempts });
+
+  it("shows nothing before three wrong tries", () => {
+    expect(check({ g1: "is" }).reveal).toBeUndefined();
+    expect(check({ g1: "am" }, { g1: ["is"] }).reveal).toBeUndefined();
+  });
+
+  it("reveals the right answer on the third wrong try, for that gap only", () => {
+    const r = check({ g1: "be" }, { g1: ["is", "am"] });
+    expect(r.parts.g1).toBe(false);
+    expect(r.reveal).toEqual({ g1: "are" });
+  });
+
+  it("does not count repeats, empty tries or tries that were actually right", () => {
+    expect(check({ g1: "is" }, { g1: ["is", "IS", " is "] }).reveal).toBeUndefined();
+    expect(check({ g1: "am" }, { g1: ["", "are", "is"] }).reveal).toBeUndefined();
+  });
+
+  it("never reveals a gap the student got right", () => {
+    expect(check({ g1: "are" }, { g1: ["is", "am", "be"] }).reveal).toBeUndefined();
+  });
+
+  it("still reveals when the earlier tries were enough", () => {
+    expect(check({}, { g2: ["Arctic", "Africa", "Asia"] }).reveal).toEqual({ g2: "Antarctica" });
+  });
+});

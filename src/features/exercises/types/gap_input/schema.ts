@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { withAttachment } from "../../attachment";
-import { normalizeAnswer, summarize } from "../../checking";
+import { MAX_ATTEMPTS, normalizeAnswer, summarize } from "../../checking";
 import type { ExerciseDefinition } from "../../definition";
 import { gapIdSchema, sourceSchema, textPartSchema } from "../../gap-text";
 import { parseGaps } from "../../gaps";
@@ -20,7 +20,11 @@ export const gapInputKeySchema = z.object({
 });
 export type GapInputKey = z.infer<typeof gapInputKeySchema>;
 
-export const gapInputAnswerSchema = z.object({ values: z.record(gapIdSchema, z.string().max(200)) });
+export const gapInputAnswerSchema = z.object({
+  values: z.record(gapIdSchema, z.string().max(200)),
+  /** the student's earlier wrong tries per gap (re-checked here, never trusted) */
+  attempts: z.record(gapIdSchema, z.array(z.string().max(200)).max(MAX_ATTEMPTS)).optional(),
+});
 export type GapInputAnswer = z.infer<typeof gapInputAnswerSchema>;
 
 /** Teacher's text → what the student sees + the answer key. */
@@ -37,18 +41,32 @@ export function buildGapInput(source: string, caseSensitive: boolean): { content
 
 export function checkGapInput(content: GapInputContent, key: GapInputKey, answer: GapInputAnswer) {
   const parts: Record<string, boolean | null> = {};
+  const reveal: Record<string, string> = {};
   for (const p of content.parts) {
     if (p.t !== "gap") continue;
+    const accepted = (key.answers[p.id] ?? []).map((a) => normalizeAnswer(a, key.caseSensitive));
+    const isRight = (value: string) => accepted.includes(normalizeAnswer(value, key.caseSensitive));
+
+    // Earlier tries count only if they really were wrong; repeats count once.
+    const wrongTries = new Set(
+      (answer.attempts?.[p.id] ?? [])
+        .filter((a) => a.trim() && !isRight(a))
+        .map((a) => normalizeAnswer(a, key.caseSensitive)),
+    );
+
     const given = answer.values[p.id];
     if (given === undefined || !given.trim()) {
       parts[p.id] = null;
-      continue;
+    } else {
+      parts[p.id] = isRight(given);
+      if (!parts[p.id]) wrongTries.add(normalizeAnswer(given, key.caseSensitive));
     }
-    const accepted = key.answers[p.id] ?? [];
-    const norm = normalizeAnswer(given, key.caseSensitive);
-    parts[p.id] = accepted.some((a) => normalizeAnswer(a, key.caseSensitive) === norm);
+    // Out of tries: show the (first) right answer for this gap.
+    if (parts[p.id] !== true && wrongTries.size >= MAX_ATTEMPTS && key.answers[p.id]?.[0]) {
+      reveal[p.id] = key.answers[p.id]![0]!;
+    }
   }
-  return summarize(parts);
+  return summarize(parts, reveal);
 }
 
 export const gapInputDefinition: ExerciseDefinition<GapInputContent, GapInputKey, GapInputAnswer> = {

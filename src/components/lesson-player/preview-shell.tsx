@@ -10,10 +10,12 @@ import { LessonPlayer } from "./lesson-player";
 
 /** "Preview as student" banner with Reset and Back-to-editing, around the player. */
 export function PreviewShell({
+  language,
   editHref,
   sections,
   initialSectionId,
 }: {
+  language: string;
   editHref: string;
   sections: StudentSection[];
   initialSectionId: string | null;
@@ -40,7 +42,7 @@ export function PreviewShell({
           </Button>
         </div>
       </div>
-      <LessonPlayer sections={sections} initialSectionId={initialSectionId} resetSignal={reset} />
+      <LessonPlayer language={language} sections={sections} initialSectionId={initialSectionId} resetSignal={reset} />
     </div>
   );
 }
