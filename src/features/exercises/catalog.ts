@@ -13,9 +13,9 @@ export const EXERCISE_TYPES = [
   { id: "audio", group: "material", icon: "audio", available: true },
   { id: "file", group: "material", icon: "file", available: true },
   // Checked automatically
-  // check: "instant" = each gap is checked as soon as it is filled in (with 3 tries);
-  //        "button"  = the student picks answers, then presses "Check"
-  { id: "gap_input", group: "auto", icon: "gapInput", available: true, check: "instant" },
+  // check: "button" = the student answers, then presses "Check"
+  //        ("instant" = checked on every change; kept for types that may need it)
+  { id: "gap_input", group: "auto", icon: "gapInput", available: true, check: "button" },
   { id: "gap_select", group: "auto", icon: "gapSelect", available: true, check: "button" },
   { id: "gap_drag", group: "auto", icon: "gapDrag", available: true, check: "button" },
   { id: "multiple_choice", group: "auto", icon: "choice", available: true, check: "button" },

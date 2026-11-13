@@ -128,8 +128,11 @@ function PlayerExercise({ exercise, number }: { exercise: StudentExercise; numbe
       toast.error(t("checkFailed"));
       return null;
     }
+    // Some types update the answer after a check (typed gaps remember wrong tries).
+    const updated = ui?.afterCheck ? ui.afterCheck(next, response.result) : next;
+    if (updated !== next) setAnswer(updated);
     setResult(response.result);
-    setCheckedAnswer(next);
+    setCheckedAnswer(updated);
     return response.result;
   }
 

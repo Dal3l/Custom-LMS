@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { withAttachment } from "../../attachment";
-import { MAX_ATTEMPTS, normalizeAnswer, summarize } from "../../checking";
+import { MAX_ATTEMPTS, normalizeAnswer, summarize, type CheckResult } from "../../checking";
 import type { ExerciseDefinition } from "../../definition";
 import { gapIdSchema, sourceSchema, textPartSchema } from "../../gap-text";
 import { parseGaps } from "../../gaps";
@@ -67,6 +67,22 @@ export function checkGapInput(content: GapInputContent, key: GapInputKey, answer
     }
   }
   return summarize(parts, reveal);
+}
+
+/**
+ * After a check: remember each gap's new wrong word as a try (each different
+ * word once, at most MAX_ATTEMPTS). Runs in the browser; the server re-checks.
+ */
+export function recordAttempts(answer: GapInputAnswer, result: CheckResult): GapInputAnswer {
+  const attempts = { ...(answer.attempts ?? {}) };
+  for (const [gap, ok] of Object.entries(result.parts)) {
+    const typed = answer.values[gap] ?? "";
+    const tries = attempts[gap] ?? [];
+    if (ok === false && typed.trim() && !tries.some((a) => normalizeAnswer(a) === normalizeAnswer(typed))) {
+      attempts[gap] = [...tries, typed].slice(-MAX_ATTEMPTS);
+    }
+  }
+  return { ...answer, attempts };
 }
 
 export const gapInputDefinition: ExerciseDefinition<GapInputContent, GapInputKey, GapInputAnswer> = {

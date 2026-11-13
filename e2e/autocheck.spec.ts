@@ -93,36 +93,41 @@ test.describe("auto-checked exercises and student preview", () => {
     await expect(page.getByText("Предпросмотр: так урок увидит ученик")).toBeVisible();
     await expect(page.locator('iframe[src*="dQw4w9WgXcQ"]')).toHaveCount(1);
 
-    // Gaps with typing: a wrong try shows up in the history, the right one turns green
-    const gap1 = page.getByLabel("Пропуск 1").first();
+    // Gaps with typing: fill in, then "Проверить". Nothing is checked while typing.
+    const c1 = card("1.1");
+    const check1 = () => c1.getByRole("button", { name: "Проверить" }).click();
+    const gap1 = c1.getByLabel("Пропуск 1");
+    const gap2 = c1.getByLabel("Пропуск 2");
     await gap1.fill("is");
-    await gap1.press("Enter");
+    await gap2.fill("Arctic");
+    await expect(c1.getByRole("status").filter({ hasText: / из / })).toHaveCount(0);
+    await check1();
     await expect(gap1).toHaveAttribute("aria-invalid", "true");
-    await page.getByRole("button", { name: "Попытка 1 из 3" }).click();
+    await expect(gap2).toHaveAttribute("aria-invalid", "true");
+    // the wrong try is in the history
+    await c1.getByRole("button", { name: "Попытка 1 из 3" }).first().click();
     await expect(page.getByRole("dialog").getByText("is", { exact: true })).toBeVisible();
     await page.keyboard.press("Escape");
+
+    // Gap 1 right (case and spaces don't matter) → green and locked; gap 2 wrong again
     await gap1.fill(" ARE ");
-    await gap1.press("Enter");
+    await gap2.fill("Africa");
+    await check1();
     await expect(gap1).not.toHaveAttribute("aria-invalid", "true");
     await expect(gap1).toHaveAttribute("readonly", "");
-
-    // Gap 2: three wrong tries → the right answer is shown and locked
-    const gap2 = page.getByLabel("Пропуск 2");
-    for (const wrong of ["Arctic", "Africa"]) {
-      await gap2.fill(wrong);
-      await gap2.press("Enter");
-      await expect(gap2).toHaveAttribute("aria-invalid", "true");
-    }
+    await expect(gap2).toHaveAttribute("aria-invalid", "true");
     // Until the third wrong try, the right answer has not reached the browser at all
     await page.waitForTimeout(500);
-    expect(received.length).toBeGreaterThan(3);
+    expect(received.length).toBeGreaterThanOrEqual(3); // the page itself + two checks
     for (const body of received) expect(body).not.toContain(SECRET);
     expect(await page.content()).not.toContain(SECRET);
+
+    // Third wrong try → the right answer is shown and locked
     await gap2.fill("Asia");
-    await gap2.press("Enter");
+    await check1();
     await expect(gap2).toHaveValue(SECRET);
     await expect(gap2).toHaveAttribute("readonly", "");
-    await expect(card("1.1").getByRole("status")).toHaveText("1 из 2");
+    await expect(c1.getByRole("status").filter({ hasText: / из / })).toHaveText("1 из 2");
 
     // Choices are checked only when "Проверить" is pressed
     await card("1.2").getByLabel("Пропуск 1").selectOption({ label: "are" });
@@ -163,7 +168,6 @@ test.describe("auto-checked exercises and student preview", () => {
     await expect(card("1.5").locator('mark[data-color="#fed7aa"]')).toHaveText("Penguins");
 
     // Reset clears the answers
-    await page.getByLabel("Пропуск 1").first().fill("is");
     await page.getByRole("button", { name: "Сбросить ответы" }).click();
     await expect(page.getByLabel("Пропуск 1").first()).toHaveValue("");
     await expect(page.getByRole("status").filter({ hasText: " из " })).toHaveCount(0);

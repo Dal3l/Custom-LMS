@@ -426,7 +426,14 @@
       "replace": "Replace",
       "removePair": "Delete pair {n}",
       "addPair": "Pair",
-      "slot": "Answer for {n}"
+      "pairs": "Your pairs",
+      "pairLabel": "Pair with “{right}” — tap to separate",
+      "hint": "Tap an item in one column, then its match in the other.",
+      "leftColumn": "Left column",
+      "rightColumn": "Right column",
+      "picture": "Picture",
+      "play": "Listen",
+      "pause": "Pause"
     },
     "ordering": {
       "mode": "What to put in order",
@@ -500,7 +507,9 @@
     "backToCourse": "Back to course",
     "lesson": "Lesson",
     "sectionsNav": "Lesson sections",
-    "preview": "Preview as student"
+    "preview": "Preview as student",
+    "save": "Save",
+    "allSaved": "All saved"
   },
   "player": {
     "previewBanner": "Preview: this is how a student sees the lesson. Answers are not saved.",
