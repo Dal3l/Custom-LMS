@@ -17,12 +17,12 @@ export const EXERCISE_TYPES = [
   //        "button"  = the student picks answers, then presses "Check"
   { id: "gap_input", group: "auto", icon: "gapInput", available: true, check: "instant" },
   { id: "gap_select", group: "auto", icon: "gapSelect", available: true, check: "button" },
-  { id: "gap_drag", group: "auto", icon: "gapDrag", available: false },
+  { id: "gap_drag", group: "auto", icon: "gapDrag", available: true, check: "button" },
   { id: "multiple_choice", group: "auto", icon: "choice", available: true, check: "button" },
   { id: "true_false", group: "auto", icon: "trueFalse", available: true, check: "button" },
-  { id: "matching", group: "auto", icon: "matching", available: false },
-  { id: "ordering", group: "auto", icon: "ordering", available: false },
-  { id: "categorize", group: "auto", icon: "categorize", available: false },
+  { id: "matching", group: "auto", icon: "matching", available: true, check: "button" },
+  { id: "ordering", group: "auto", icon: "ordering", available: true, check: "button" },
+  { id: "categorize", group: "auto", icon: "categorize", available: true, check: "button" },
   // Checked by the teacher
   { id: "open_answer", group: "manual", icon: "openAnswer", available: false },
   { id: "voice_answer", group: "manual", icon: "voice", available: false },

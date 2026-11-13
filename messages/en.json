@@ -375,7 +375,11 @@
       "attempts": "Try {n} of {max}",
       "history": "Your tries",
       "revealed": "The right answer is shown after {max} tries",
-      "right": "Right"
+      "right": "Right",
+      "dragHint": "Put the words the student will drag in square brackets: [am]. All of them go into the word bank, shuffled.",
+      "distractors": "Extra words",
+      "distractorsPlaceholder": "Extra words separated by commas, e.g. is, be, were",
+      "distractorsHint": "Optional. These words also appear in the bank but fit no gap."
     },
     "choice": {
       "question": "Question {n}",
@@ -402,6 +406,63 @@
       "addStatement": "Statement",
       "right": "The answer is right",
       "wrong": "The answer is wrong"
+    },
+    "place": {
+      "placedWord": "{word} — tap to remove",
+      "bank": "Word bank",
+      "bankEmpty": "All words are placed",
+      "hint": "Tap a word, then a place — or drag it. Tap a placed word to take it back."
+    },
+    "matching": {
+      "kind": {
+        "text": "Word",
+        "image": "Picture",
+        "audio": "Audio"
+      },
+      "left": "Left side of pair {n}",
+      "leftPlaceholder": "A word, e.g. cat",
+      "right": "Match for {n}",
+      "rightPlaceholder": "Its match, e.g. кошка",
+      "replace": "Replace",
+      "removePair": "Delete pair {n}",
+      "addPair": "Pair",
+      "slot": "Answer for {n}"
+    },
+    "ordering": {
+      "mode": "What to put in order",
+      "modes": {
+        "words": "A sentence from words",
+        "lines": "Lines in order"
+      },
+      "hints": {
+        "words": "Type the sentence correctly — the student gets its words shuffled.",
+        "lines": "Each line is one item. Type them in the right order — the student gets them shuffled."
+      },
+      "sentencePlaceholder": "For example: I usually go to school by bus",
+      "linesPlaceholder": "First, …\nThen, …\nFinally, …",
+      "addSentence": "Sentence",
+      "addList": "List",
+      "answer": "Your answer",
+      "emptyWords": "Tap the words in order",
+      "emptyLines": "Tap the lines in order",
+      "right": "Right",
+      "wrong": "Wrong",
+      "pieces": "Remaining pieces",
+      "chosenPiece": "{text} — tap to remove",
+      "sentence": "Sentence {n}",
+      "list": "List {n}",
+      "removeSentence": "Delete sentence {n}",
+      "removeList": "Delete list {n}"
+    },
+    "categorize": {
+      "hint": "Name the columns and list the words for each — one per line or separated by commas. The student gets all words shuffled.",
+      "title": "Name of column {n}",
+      "titlePlaceholder": "Column {n}",
+      "removeGroup": "Delete column {n}",
+      "items": "Words of column {n}",
+      "itemsPlaceholder": "apple\nbook\nchair",
+      "count": "{count, plural, =0 {No words} one {# word} other {# words}}",
+      "addGroup": "Column"
     }
   },
   "builder": {

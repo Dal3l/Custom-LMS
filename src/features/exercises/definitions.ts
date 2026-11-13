@@ -2,11 +2,15 @@
 import type { ExerciseTypeId } from "./catalog";
 import type { ExerciseDefinition } from "./definition";
 import { audioDefinition } from "./types/audio/schema";
+import { categorizeDefinition } from "./types/categorize/schema";
 import { fileDefinition } from "./types/file/schema";
+import { gapDragDefinition } from "./types/gap_drag/schema";
 import { gapInputDefinition } from "./types/gap_input/schema";
 import { gapSelectDefinition } from "./types/gap_select/schema";
 import { imageDefinition } from "./types/image/schema";
+import { matchingDefinition } from "./types/matching/schema";
 import { multipleChoiceDefinition } from "./types/multiple_choice/schema";
+import { orderingDefinition } from "./types/ordering/schema";
 import { textDefinition } from "./types/text/schema";
 import { trueFalseDefinition } from "./types/true_false/schema";
 import { videoDefinition } from "./types/video/schema";
@@ -21,6 +25,10 @@ export const DEFINITIONS: Partial<Record<ExerciseTypeId, ExerciseDefinition>> = 
   gap_select: gapSelectDefinition as ExerciseDefinition,
   multiple_choice: multipleChoiceDefinition as ExerciseDefinition,
   true_false: trueFalseDefinition as ExerciseDefinition,
+  gap_drag: gapDragDefinition as ExerciseDefinition,
+  matching: matchingDefinition as ExerciseDefinition,
+  ordering: orderingDefinition as ExerciseDefinition,
+  categorize: categorizeDefinition as ExerciseDefinition,
 };
 
 export function getDefinition(type: string): ExerciseDefinition | null {

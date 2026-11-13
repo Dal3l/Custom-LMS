@@ -47,7 +47,7 @@ test.describe("lesson builder", () => {
 
     // Text exercise in "Song time" (section 2)
     await page.getByRole("button", { name: "Упражнение", exact: true }).click();
-    await expect(page.getByRole("button", { name: /Пропуски с перетаскиванием/ })).toBeDisabled();
+    await expect(page.getByRole("button", { name: /Открытый ответ/ })).toBeDisabled();
     await expect(page.getByRole("button", { name: /^Картинка/ })).toBeEnabled();
     await page.getByRole("button", { name: /^Текст/ }).click();
     await expect(page.getByText("2.1", { exact: true })).toBeVisible();
