@@ -29,6 +29,7 @@ export default async function LessonPreviewPage({
         {lesson.lesson.is_test && <Badge variant="secondary">{t("testBadge")}</Badge>}
       </h1>
       <PreviewShell
+        language={lesson.course.language}
         editHref={`/courses/${courseId}/lessons/${lessonId}${typeof section === "string" ? `?section=${section}` : ""}`}
         sections={lesson.sections}
         initialSectionId={typeof section === "string" ? section : null}

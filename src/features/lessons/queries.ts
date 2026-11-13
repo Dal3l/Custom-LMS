@@ -12,7 +12,7 @@ export type BuilderExercise = {
 };
 export type BuilderSection = { id: string; title: string; exercises: BuilderExercise[] };
 export type BuilderData = {
-  course: Pick<Tables<"courses">, "id" | "title" | "owner_id">;
+  course: Pick<Tables<"courses">, "id" | "title" | "owner_id" | "language">;
   module: Pick<Tables<"modules">, "id" | "title">;
   lesson: Pick<Tables<"lessons">, "id" | "title" | "is_test">;
   sections: BuilderSection[];
@@ -24,7 +24,7 @@ export async function getBuilderData(lessonId: string): Promise<BuilderData | nu
   const { data } = await supabase
     .from("lessons")
     .select(
-      "id, title, is_test, modules(id, title), courses(id, title, owner_id), sections(id, title, position), exercises(id, section_id, type, title, content, position, exercise_keys(answer_key))",
+      "id, title, is_test, modules(id, title), courses(id, title, owner_id, language), sections(id, title, position), exercises(id, section_id, type, title, content, position, exercise_keys(answer_key))",
     )
     .eq("id", lessonId)
     .maybeSingle();
@@ -55,21 +55,21 @@ export async function getBuilderData(lessonId: string): Promise<BuilderData | nu
 export type StudentExercise = { id: string; type: string; title: string; content: Json };
 export type StudentSection = { id: string; title: string; exercises: StudentExercise[] };
 export type StudentLesson = {
-  course: Pick<Tables<"courses">, "id" | "title" | "owner_id">;
+  course: Pick<Tables<"courses">, "id" | "title" | "owner_id" | "language">;
   lesson: Pick<Tables<"lessons">, "id" | "title" | "is_test">;
   sections: StudentSection[];
 };
 
 /**
  * The lesson as a student sees it. Deliberately does NOT select exercise_keys:
- * correct answers never leave the server; answers are checked by checkAnswer().
+ * correct answers never leave the server; answers are checked by gradeExercise() (POST /api/check).
  */
 export async function getStudentLesson(lessonId: string): Promise<StudentLesson | null> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("lessons")
     .select(
-      "id, title, is_test, courses(id, title, owner_id), sections(id, title, position), exercises(id, section_id, type, title, content, position)",
+      "id, title, is_test, courses(id, title, owner_id, language), sections(id, title, position), exercises(id, section_id, type, title, content, position)",
     )
     .eq("id", lessonId)
     .maybeSingle();

@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { ExerciseTypeId } from "@/features/exercises/catalog";
+import { LessonLanguageProvider } from "@/features/exercises/lesson-language";
 import {
   createExercise,
   createSection,
@@ -51,6 +52,7 @@ type Confirm = { kind: "section"; id: string } | { kind: "exercise"; id: string 
 export function LessonBuilder({
   userId,
   courseId,
+  language,
   lessonId,
   initialSections,
   initialSectionId,
@@ -58,6 +60,8 @@ export function LessonBuilder({
   /** The teacher; their files are uploaded into a folder named after this id. */
   userId: string;
   courseId: string;
+  /** the language the course teaches (some exercise words follow it) */
+  language: string;
   lessonId: string;
   initialSections: BuilderSection[];
   initialSectionId: string | null;
@@ -272,6 +276,7 @@ export function LessonBuilder({
 
   return (
     <BuilderContext value={{ userId }}>
+    <LessonLanguageProvider value={language}>
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-end gap-3">
         <SaveStatus queue={queue} />
@@ -381,6 +386,7 @@ export function LessonBuilder({
         onConfirm={confirmDelete}
       />
     </div>
+    </LessonLanguageProvider>
     </BuilderContext>
   );
 }

@@ -2,6 +2,8 @@
 
 import { Plus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useLessonLanguage } from "../../lesson-language";
+import { trueFalseLabels } from "./labels";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { ExerciseEditorProps } from "../../client-types";
@@ -9,6 +11,8 @@ import { emptyStatement, MAX_STATEMENTS, type TrueFalseContent, type TrueFalseKe
 
 export function TrueFalseEditor({ value, onChange }: ExerciseEditorProps<TrueFalseContent, TrueFalseKey>) {
   const t = useTranslations("exercises.trueFalse");
+  const lessonLabels = trueFalseLabels(useLessonLanguage());
+  const label = (v: boolean) => (lessonLabels ? lessonLabels[v ? 0 : 1] : v ? t("true") : t("false"));
   const statements = value.content.statements;
   const answers = value.key?.answers ?? {};
 
@@ -45,7 +49,7 @@ export function TrueFalseEditor({ value, onChange }: ExerciseEditorProps<TrueFal
                     variant={isTrue === v ? "default" : "outline"}
                     onClick={() => emit(statements, { ...answers, [s.id]: v })}
                   >
-                    {v ? t("true") : t("false")}
+                    {label(v)}
                   </Button>
                 ))}
                 {statements.length > 1 && (

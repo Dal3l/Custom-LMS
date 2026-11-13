@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 // Needs the test teacher account (E2E_TEACHER_EMAIL / E2E_TEACHER_PASSWORD in .env.local).
 const email = process.env.E2E_TEACHER_EMAIL;
 const password = process.env.E2E_TEACHER_PASSWORD;
-const SECRET = "Zephyrine"; // a right answer that must never reach the student's browser
+const SECRET = "Zephyrine"; // a right answer that must not reach the student's browser before 3 wrong tries
 
 test.describe("auto-checked exercises and student preview", () => {
   test.skip(!email || !password, "no test teacher account configured");
@@ -67,7 +67,13 @@ test.describe("auto-checked exercises and student preview", () => {
     // 1.4 True / false
     await add(/^Верно \/ неверно/);
     await card("1.4").getByLabel("Утверждение 1").fill("Penguins can fly.");
-    await card("1.4").getByRole("radio", { name: "Неверно", exact: true }).click();
+    // "True / False" follow the course language (English), not the interface
+    await card("1.4").getByRole("radio", { name: "False", exact: true }).click();
+
+    // 1.5 Text, for the student's own highlighter
+    await add(/^Текст/);
+    await card("1.5").locator(".ProseMirror").click();
+    await page.keyboard.type("Penguins live in the Southern Hemisphere.");
 
     await expect(page.getByRole("status").filter({ hasText: "Сохранено" })).toBeVisible({ timeout: 15000 });
     await page.waitForTimeout(1500);
@@ -87,42 +93,77 @@ test.describe("auto-checked exercises and student preview", () => {
     await expect(page.getByText("Предпросмотр: так урок увидит ученик")).toBeVisible();
     await expect(page.locator('iframe[src*="dQw4w9WgXcQ"]')).toHaveCount(1);
 
-    // Gaps with typing: wrong, then right (case and spaces don't matter)
+    // Gaps with typing: a wrong try shows up in the history, the right one turns green
     const gap1 = page.getByLabel("Пропуск 1").first();
     await gap1.fill("is");
     await gap1.press("Enter");
     await expect(gap1).toHaveAttribute("aria-invalid", "true");
+    await page.getByRole("button", { name: "Попытка 1 из 3" }).click();
+    await expect(page.getByRole("dialog").getByText("is", { exact: true })).toBeVisible();
+    await page.keyboard.press("Escape");
     await gap1.fill(" ARE ");
     await gap1.press("Enter");
     await expect(gap1).not.toHaveAttribute("aria-invalid", "true");
+    await expect(gap1).toHaveAttribute("readonly", "");
+
+    // Gap 2: three wrong tries → the right answer is shown and locked
     const gap2 = page.getByLabel("Пропуск 2");
-    await gap2.fill(SECRET.toLowerCase());
-    await gap2.press("Tab");
-    await expect(card("1.1").getByRole("status")).toHaveText("2 из 2");
-
-    // Dropdown gap
-    await card("1.2").getByLabel("Пропуск 1").selectOption({ label: "are" });
-    await expect(card("1.2").getByRole("status")).toHaveText("0 из 1");
-    await card("1.2").getByLabel("Пропуск 1").selectOption({ label: "is" });
-    await expect(card("1.2").getByRole("status")).toHaveText("1 из 1");
-
-    // Multiple choice
-    await card("1.3").getByRole("radio", { name: "Antarctica" }).click();
-    await expect(card("1.3").getByRole("status")).toHaveText("1 из 1");
-
-    // True / false
-    await card("1.4").getByRole("radio", { name: "Верно", exact: true }).click();
-    await expect(card("1.4").getByRole("status")).toHaveText("0 из 1");
-    await card("1.4").getByRole("radio", { name: "Неверно", exact: true }).click();
-    await expect(card("1.4").getByRole("status")).toHaveText("1 из 1");
-
-    // The right answer never reached the browser
+    for (const wrong of ["Arctic", "Africa"]) {
+      await gap2.fill(wrong);
+      await gap2.press("Enter");
+      await expect(gap2).toHaveAttribute("aria-invalid", "true");
+    }
+    // Until the third wrong try, the right answer has not reached the browser at all
     await page.waitForTimeout(500);
     expect(received.length).toBeGreaterThan(3);
     for (const body of received) expect(body).not.toContain(SECRET);
     expect(await page.content()).not.toContain(SECRET);
+    await gap2.fill("Asia");
+    await gap2.press("Enter");
+    await expect(gap2).toHaveValue(SECRET);
+    await expect(gap2).toHaveAttribute("readonly", "");
+    await expect(card("1.1").getByRole("status")).toHaveText("1 из 2");
 
-    // Reset clears everything
+    // Choices are checked only when "Проверить" is pressed
+    await card("1.2").getByLabel("Пропуск 1").selectOption({ label: "are" });
+    await expect(card("1.2").getByRole("status")).toHaveCount(0);
+    await card("1.2").getByRole("button", { name: "Проверить" }).click();
+    await expect(card("1.2").getByRole("status")).toHaveText("0 из 1");
+    await card("1.2").getByLabel("Пропуск 1").selectOption({ label: "is" });
+    await card("1.2").getByRole("button", { name: "Проверить" }).click();
+    await expect(card("1.2").getByRole("status")).toHaveText("1 из 1");
+    await expect(card("1.2").getByRole("button", { name: "Проверить" })).toHaveCount(0);
+
+    await card("1.3").getByRole("radio", { name: "Antarctica" }).click();
+    await card("1.3").getByRole("button", { name: "Проверить" }).click();
+    await expect(card("1.3").getByRole("status")).toHaveText("1 из 1");
+
+    await card("1.4").getByRole("radio", { name: "True", exact: true }).click();
+    await card("1.4").getByRole("button", { name: "Проверить" }).click();
+    await expect(card("1.4").getByRole("status")).toHaveText("0 из 1");
+    await card("1.4").getByRole("radio", { name: "False", exact: true }).click();
+    await card("1.4").getByRole("button", { name: "Проверить" }).click();
+    await expect(card("1.4").getByRole("status")).toHaveText("1 из 1");
+
+    // Student's own highlight in the text, remembered after a reload
+    const text = card("1.5").locator(".ProseMirror p").first();
+    await text.evaluate((p) => {
+      const node = p.firstChild!;
+      const range = document.createRange();
+      range.setStart(node, 0);
+      range.setEnd(node, 8); // "Penguins"
+      const sel = window.getSelection()!;
+      sel.removeAllRanges();
+      sel.addRange(range);
+    });
+    await card("1.5").getByRole("button", { name: "Выделить", exact: true }).click();
+    await expect(card("1.5").locator('mark[data-color="#fed7aa"]')).toHaveText("Penguins");
+
+    await page.reload();
+    await expect(card("1.5").locator('mark[data-color="#fed7aa"]')).toHaveText("Penguins");
+
+    // Reset clears the answers
+    await page.getByLabel("Пропуск 1").first().fill("is");
     await page.getByRole("button", { name: "Сбросить ответы" }).click();
     await expect(page.getByLabel("Пропуск 1").first()).toHaveValue("");
     await expect(page.getByRole("status").filter({ hasText: " из " })).toHaveCount(0);

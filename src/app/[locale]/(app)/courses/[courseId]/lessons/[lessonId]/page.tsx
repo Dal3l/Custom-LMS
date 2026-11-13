@@ -48,6 +48,7 @@ export default async function LessonBuilderPage({
         key={lessonId}
         userId={profile.id}
         courseId={courseId}
+        language={data.course.language}
         lessonId={lessonId}
         initialSections={data.sections}
         initialSectionId={typeof section === "string" ? section : null}

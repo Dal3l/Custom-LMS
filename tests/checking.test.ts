@@ -66,3 +66,25 @@ describe("wrapAsGap", () => {
     expect(wrapAsGap("a [b] c", 0, 7)).toBeNull();
   });
 });
+
+import { changedParts, hasAnyAnswer, withoutVerdicts } from "@/features/exercises/answer-diff";
+
+describe("answer changes after a check", () => {
+  it("finds parts whose answer changed", () => {
+    expect(changedParts({ values: { a: true, b: false } }, { values: { a: true, b: true, c: false } })).toEqual(["b", "c"]);
+    expect(changedParts({ selected: { q: ["x"] } }, { selected: { q: ["x"] } })).toEqual([]);
+    expect(changedParts(null, { values: { a: 1 } })).toEqual(["a"]);
+  });
+
+  it("clears only the verdicts of changed parts", () => {
+    const r = { parts: { a: true, b: false }, score: 0.5, correct: false };
+    expect(withoutVerdicts(r, ["b"])).toEqual({ parts: { a: true, b: null }, score: 0.5, correct: false });
+    expect(withoutVerdicts(r, [])).toBe(r);
+  });
+
+  it("knows when nothing is answered yet", () => {
+    expect(hasAnyAnswer(null)).toBe(false);
+    expect(hasAnyAnswer({ selected: { q: [] } })).toBe(false);
+    expect(hasAnyAnswer({ values: { s: false } })).toBe(true);
+  });
+});

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, CircleCheck } from "lucide-react";
+import { ArrowRight, Check, CircleCheck, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
@@ -9,10 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import type { Attachment } from "@/features/exercises/attachment";
 import { AttachmentViewer } from "@/features/exercises/attachment-ui";
-import { exerciseMeta } from "@/features/exercises/catalog";
+import { changedParts, hasAnyAnswer, withoutVerdicts } from "@/features/exercises/answer-diff";
+import { checkMode, exerciseMeta } from "@/features/exercises/catalog";
 import type { CheckResult } from "@/features/exercises/checking";
 import { EXERCISE_UI } from "@/features/exercises/client";
-import { checkAnswer } from "@/features/lessons/check";
+import { LessonLanguageProvider } from "@/features/exercises/lesson-language";
+import { requestCheck } from "@/features/lessons/check-client";
 import type { StudentExercise, StudentSection } from "@/features/lessons/queries";
 import { exerciseNumber } from "@/features/lessons/sections";
 import { cn } from "@/lib/utils";
@@ -22,10 +24,13 @@ import { cn } from "@/lib/utils";
  * server right away (right parts turn green, wrong ones red; the student may try again).
  */
 export function LessonPlayer({
+  language,
   sections,
   initialSectionId,
   resetSignal = 0,
 }: {
+  /** the language the course teaches */
+  language: string;
   sections: StudentSection[];
   initialSectionId?: string | null;
   /** Change it to clear all answers. */
@@ -52,6 +57,7 @@ export function LessonPlayer({
   }
 
   return (
+    <LessonLanguageProvider value={language}>
     <div className="flex flex-col gap-5">
       <nav aria-label={t("sections")} className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
         {sections.map((s, i) => (
@@ -95,6 +101,7 @@ export function LessonPlayer({
         </div>
       )}
     </div>
+    </LessonLanguageProvider>
   );
 }
 
@@ -102,24 +109,43 @@ function PlayerExercise({ exercise, number }: { exercise: StudentExercise; numbe
   const t = useTranslations("player");
   const meta = exerciseMeta(exercise.type);
   const ui = meta ? EXERCISE_UI[meta.id] : undefined;
-  const checks = meta?.group === "auto";
+  const mode = checkMode(exercise.type); // "instant", "button" or null (materials)
   const [answer, setAnswer] = useState<unknown>(null);
+  const [checkedAnswer, setCheckedAnswer] = useState<unknown>(undefined);
   const [result, setResult] = useState<CheckResult | null>(null);
-  const latest = useRef(0); // only the newest check may update the screen
+  const [pending, setPending] = useState(false);
+  const inFlight = useRef<AbortController | null>(null);
 
-  async function onAnswer(next: unknown, { check }: { check: boolean }) {
+  async function runCheck(next: unknown): Promise<CheckResult | null> {
+    inFlight.current?.abort(); // only the newest check counts
+    const controller = new AbortController();
+    inFlight.current = controller;
+    setPending(true);
+    const response = await requestCheck(exercise.id, next, controller.signal);
+    if (controller.signal.aborted) return null;
+    setPending(false);
+    if (!response.ok) {
+      toast.error(t("checkFailed"));
+      return null;
+    }
+    setResult(response.result);
+    setCheckedAnswer(next);
+    return response.result;
+  }
+
+  function onAnswer(next: unknown, { check }: { check: boolean }) {
     setAnswer(next);
-    if (!check || !checks) return;
-    const request = ++latest.current;
-    const response = await checkAnswer(exercise.id, next);
-    if (request !== latest.current) return;
-    if (response.ok) setResult(response.result);
-    else toast.error(t("checkFailed"));
+    // A changed part loses its old green/red until it is checked again.
+    setResult((r) => (r ? withoutVerdicts(r, changedParts(checkedAnswer, next)) : r));
+    if (mode === "instant" && check) return runCheck(next);
   }
 
   const content = exercise.content as Record<string, unknown>;
-  const total = result ? Object.keys(result.parts).length : 0;
-  const right = result ? Object.values(result.parts).filter((v) => v === true).length : 0;
+  const verdicts = result ? Object.values(result.parts) : [];
+  const total = verdicts.length;
+  const right = verdicts.filter((v) => v === true).length;
+  const answeredSinceCheck = changedParts(checkedAnswer, answer).length > 0;
+  const showCheckButton = mode === "button" && !(result?.correct && !answeredSinceCheck);
 
   return (
     <li className="list-none">
@@ -129,21 +155,41 @@ function PlayerExercise({ exercise, number }: { exercise: StudentExercise; numbe
             {number}
           </Badge>
           {exercise.title && <p className="flex-1 font-medium">{exercise.title}</p>}
-          {result && total > 0 && (
+          {(pending || (result && total > 0)) && (
             <span
               className={cn(
                 "ml-auto flex shrink-0 items-center gap-1 text-sm tabular-nums",
-                result.correct ? "text-emerald-700" : "text-muted-foreground",
+                result?.correct && !pending ? "text-emerald-700" : "text-muted-foreground",
               )}
               role="status"
             >
-              {result.correct && <CircleCheck className="size-4" aria-hidden="true" />}
-              {t("score", { right, total })}
+              {pending ? (
+                <>
+                  <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                  {t("checking")}
+                </>
+              ) : (
+                <>
+                  {result?.correct && <CircleCheck className="size-4" aria-hidden="true" />}
+                  {t("score", { right, total })}
+                </>
+              )}
             </span>
           )}
         </div>
         {meta?.group !== "material" && <AttachmentViewer value={content.attachment as Attachment | null | undefined} />}
-        {ui && <ui.Viewer content={exercise.content} answer={answer} onAnswer={checks ? onAnswer : undefined} result={result} />}
+        {ui && <ui.Viewer exerciseId={exercise.id} content={exercise.content} answer={answer} onAnswer={mode ? onAnswer : undefined} result={result} />}
+        {showCheckButton && (
+          <div className="flex justify-end">
+            <Button
+              onClick={() => void runCheck(answer)}
+              disabled={pending || !hasAnyAnswer(answer) || (result !== null && !answeredSinceCheck)}
+            >
+              {pending ? <Loader2 className="animate-spin" aria-hidden="true" /> : <Check aria-hidden="true" />}
+              {t("check")}
+            </Button>
+          </div>
+        )}
       </Card>
     </li>
   );

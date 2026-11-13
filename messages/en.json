@@ -366,7 +366,11 @@
         "fewOptions": "Gap {n} needs at least two options",
         "noMark": "Gap {n} has no option marked as right — the first one counts as right for now",
         "manyMarks": "Gap {n} has several options marked — keep one asterisk"
-      }
+      },
+      "attempts": "Try {n} of {max}",
+      "history": "Your tries",
+      "revealed": "The right answer is shown after {max} tries",
+      "right": "Right"
     },
     "choice": {
       "question": "Question {n}",
@@ -441,6 +445,12 @@
     "score": "{right} of {total}",
     "emptyLesson": "This lesson has no sections yet.",
     "emptySection": "This section has no tasks yet.",
-    "checkFailed": "Couldn't check the answer. Check your internet connection."
+    "checkFailed": "Couldn't check the answer. Check your internet connection.",
+    "check": "Check",
+    "checking": "Checking…",
+    "highlight": {
+      "mark": "Highlight",
+      "remove": "Remove"
+    }
   }
 }

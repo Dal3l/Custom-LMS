@@ -12,17 +12,26 @@ export type CheckResult = {
   score: number;
   /** every part answered and right */
   correct: boolean;
+  /**
+   * Right answers the rules allow to show now, per part — e.g. a gap after
+   * three wrong tries. Never filled before the student has tried.
+   */
+  reveal?: Record<string, string>;
 };
 
-export function summarize(parts: Record<string, boolean | null>): CheckResult {
+export function summarize(parts: Record<string, boolean | null>, reveal?: Record<string, string>): CheckResult {
   const values = Object.values(parts);
   const right = values.filter((v) => v === true).length;
   return {
     parts,
     score: values.length ? right / values.length : 0,
     correct: values.length > 0 && right === values.length,
+    ...(reveal && Object.keys(reveal).length ? { reveal } : {}),
   };
 }
+
+/** How many tries a student gets for a typed gap before the right answer is shown. */
+export const MAX_ATTEMPTS = 3;
 
 /**
  * Makes typed answers comparable: trims, collapses spaces, unifies apostrophes,

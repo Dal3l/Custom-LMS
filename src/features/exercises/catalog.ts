@@ -13,11 +13,13 @@ export const EXERCISE_TYPES = [
   { id: "audio", group: "material", icon: "audio", available: true },
   { id: "file", group: "material", icon: "file", available: true },
   // Checked automatically
-  { id: "gap_input", group: "auto", icon: "gapInput", available: true },
-  { id: "gap_select", group: "auto", icon: "gapSelect", available: true },
+  // check: "instant" = each gap is checked as soon as it is filled in (with 3 tries);
+  //        "button"  = the student picks answers, then presses "Check"
+  { id: "gap_input", group: "auto", icon: "gapInput", available: true, check: "instant" },
+  { id: "gap_select", group: "auto", icon: "gapSelect", available: true, check: "button" },
   { id: "gap_drag", group: "auto", icon: "gapDrag", available: false },
-  { id: "multiple_choice", group: "auto", icon: "choice", available: true },
-  { id: "true_false", group: "auto", icon: "trueFalse", available: true },
+  { id: "multiple_choice", group: "auto", icon: "choice", available: true, check: "button" },
+  { id: "true_false", group: "auto", icon: "trueFalse", available: true, check: "button" },
   { id: "matching", group: "auto", icon: "matching", available: false },
   { id: "ordering", group: "auto", icon: "ordering", available: false },
   { id: "categorize", group: "auto", icon: "categorize", available: false },
@@ -31,6 +33,12 @@ export type ExerciseIcon = (typeof EXERCISE_TYPES)[number]["icon"];
 
 export function exerciseMeta(id: string) {
   return EXERCISE_TYPES.find((t) => t.id === id);
+}
+
+/** How a type's answers are checked in the student view (null = nothing to check). */
+export function checkMode(id: string): "instant" | "button" | null {
+  const meta = exerciseMeta(id);
+  return meta && "check" in meta ? meta.check : null;
 }
 
 export function isExerciseTypeId(id: unknown): id is ExerciseTypeId {

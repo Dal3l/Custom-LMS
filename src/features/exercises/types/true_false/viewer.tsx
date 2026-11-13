@@ -2,6 +2,8 @@
 
 import { Check, X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useLessonLanguage } from "../../lesson-language";
+import { trueFalseLabels } from "./labels";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { ExerciseViewerProps } from "../../client-types";
@@ -9,6 +11,8 @@ import type { TrueFalseAnswer, TrueFalseContent } from "./schema";
 
 export function TrueFalseViewer({ content, answer, onAnswer, result }: ExerciseViewerProps<TrueFalseContent, TrueFalseAnswer>) {
   const t = useTranslations("exercises.trueFalse");
+  const lessonLabels = trueFalseLabels(useLessonLanguage());
+  const label = (v: boolean) => (lessonLabels ? lessonLabels[v ? 0 : 1] : v ? t("true") : t("false"));
   const [values, setValues] = useState<Record<string, boolean>>(answer?.values ?? {});
 
   return (
@@ -49,7 +53,7 @@ export function TrueFalseViewer({ content, answer, onAnswer, result }: ExerciseV
                     value === v && "border-primary bg-primary text-primary-foreground hover:bg-primary",
                   )}
                 >
-                  {v ? t("true") : t("false")}
+                  {label(v)}
                 </button>
               ))}
             </span>
