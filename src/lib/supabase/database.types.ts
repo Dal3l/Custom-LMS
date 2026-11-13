@@ -16,6 +16,106 @@ export type Database = {
   }
   public: {
     Tables: {
+      class_invites: {
+        Row: {
+          class_id: string
+          enabled: boolean
+          token: string
+          updated_at: string
+        }
+        Insert: {
+          class_id: string
+          enabled?: boolean
+          token: string
+          updated_at?: string
+        }
+        Update: {
+          class_id?: string
+          enabled?: boolean
+          token?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_invites_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: true
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      class_members: {
+        Row: {
+          class_id: string
+          joined_at: string
+          student_id: string
+        }
+        Insert: {
+          class_id: string
+          joined_at?: string
+          student_id: string
+        }
+        Update: {
+          class_id?: string
+          joined_at?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_members_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_members_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      classes: {
+        Row: {
+          call_url: string | null
+          created_at: string
+          id: string
+          kind: Database["public"]["Enums"]["class_kind"]
+          name: string
+          teacher_id: string
+          updated_at: string
+        }
+        Insert: {
+          call_url?: string | null
+          created_at?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["class_kind"]
+          name: string
+          teacher_id?: string
+          updated_at?: string
+        }
+        Update: {
+          call_url?: string | null
+          created_at?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["class_kind"]
+          name?: string
+          teacher_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classes_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       courses: {
         Row: {
           cover_path: string | null
@@ -368,6 +468,7 @@ export type Database = {
       }
     }
     Enums: {
+      class_kind: "individual" | "group"
       user_role: "teacher" | "student"
     }
     CompositeTypes: {
@@ -496,6 +597,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      class_kind: ["individual", "group"],
       user_role: ["teacher", "student"],
     },
   },

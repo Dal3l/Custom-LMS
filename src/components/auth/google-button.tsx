@@ -18,7 +18,8 @@ function GoogleIcon() {
   );
 }
 
-export function GoogleButton() {
+/** `next`: path (without locale) to open after signing in. */
+export function GoogleButton({ next: nextPath = "/dashboard" }: { next?: string }) {
   const t = useTranslations();
   const locale = useLocale();
   const [pending, setPending] = useState(false);
@@ -26,7 +27,7 @@ export function GoogleButton() {
   async function signIn() {
     setPending(true);
     const supabase = createClient();
-    const next = `/${locale}/dashboard`;
+    const next = `/${locale}${nextPath}`;
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {

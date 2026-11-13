@@ -12,7 +12,8 @@ import { PasswordInput } from "./password-input";
 import { FieldMessage, FormError, invalidProps, SubmitButton } from "./form-bits";
 import { RolePicker } from "./role-picker";
 
-export function SignupForm() {
+/** With `invite`, the user signs up as a student and joins that class. */
+export function SignupForm({ invite }: { invite?: string }) {
   const t = useTranslations("auth");
   const locale = useLocale();
   const [state, action] = useActionState(signUp, initialFormState);
@@ -40,13 +41,16 @@ export function SignupForm() {
     <form action={action} noValidate>
       <input type="hidden" name="locale" value={locale} />
       <input type="hidden" name="timezone" defaultValue="UTC" ref={timezoneRef} />
+      {invite && <input type="hidden" name="invite" value={invite} />}
       <FieldGroup>
         <FormError state={state} />
-        <Field>
-          <FieldLabel>{t("whoAreYou")}</FieldLabel>
-          <RolePicker defaultValue={state.values?.role} invalid={Boolean(state.fieldErrors?.role)} />
-          <FieldMessage state={state} name="role" />
-        </Field>
+        {!invite && (
+          <Field>
+            <FieldLabel>{t("whoAreYou")}</FieldLabel>
+            <RolePicker defaultValue={state.values?.role} invalid={Boolean(state.fieldErrors?.role)} />
+            <FieldMessage state={state} name="role" />
+          </Field>
+        )}
         <Field>
           <FieldLabel htmlFor="fullName">{t("fullName")}</FieldLabel>
           <Input
