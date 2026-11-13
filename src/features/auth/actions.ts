@@ -5,6 +5,7 @@ import { isLocale, routing, type Locale } from "@/i18n/routing";
 import { safeNextPath, stripLocalePrefix } from "@/lib/redirect";
 import { getOrigin } from "@/lib/site-url";
 import { createClient } from "@/lib/supabase/server";
+import { joinByInvite } from "@/features/classes/join";
 import {
   fieldErrors,
   forgotPasswordSchema,
@@ -59,10 +60,12 @@ export async function signIn(_prev: FormState, formData: FormData): Promise<Form
 
 export async function signUp(_prev: FormState, formData: FormData): Promise<FormState> {
   const locale = readLocale(formData);
+  // Sign-up from a class invite link: always a student.
+  const invite = text(formData, "invite");
   const values = {
     fullName: text(formData, "fullName"),
     email: text(formData, "email"),
-    role: text(formData, "role"),
+    role: invite ? "student" : text(formData, "role"),
   };
   const parsed = signUpSchema.safeParse({
     ...values,
@@ -75,17 +78,31 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
 
   const { email, password, fullName, role, timezone } = parsed.data;
   const supabase = await createClient();
-  const { error } = await supabase.auth.signUp({
+  const afterSignUp = invite ? `/${locale}/join/${encodeURIComponent(invite)}` : `/${locale}/dashboard`;
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      emailRedirectTo: await callbackUrl(`/${locale}/dashboard`),
+      emailRedirectTo: await callbackUrl(afterSignUp),
       // Read by the database trigger that creates the profile.
       data: { full_name: fullName, role, locale, timezone },
     },
   });
   if (error) {
     return { status: "error", formError: authErrorKey(error.code), values };
+  }
+
+  // Email confirmation is off: the user is signed in right away.
+  if (data.session && data.user) {
+    if (invite) {
+      const joined = await joinByInvite(data.user.id, invite);
+      // On failure the invite page explains what went wrong.
+      return redirect({
+        href: joined.ok ? `/classes/${joined.classId}` : `/join/${encodeURIComponent(invite)}`,
+        locale,
+      });
+    }
+    return redirect({ href: "/dashboard", locale });
   }
 
   // Same answer whether or not the email was already registered,
@@ -136,7 +153,9 @@ export async function signOut(formData: FormData) {
   const locale = readLocale(formData);
   const supabase = await createClient();
   await supabase.auth.signOut();
-  return redirect({ href: "/", locale });
+  // e.g. a teacher on a class invite page signs out to sign up as a student.
+  const next = stripLocalePrefix(safeNextPath(text(formData, "next"), "/"));
+  return redirect({ href: next, locale });
 }
 
 /** Onboarding: the user picks a role once (used after Google sign-up). */

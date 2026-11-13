@@ -8,6 +8,7 @@ export type AuthErrorKey =
   | "weakPassword"
   | "samePassword"
   | "sessionExpired"
+  | "emailTaken"
   | "generic";
 
 export type FormState = {
@@ -34,6 +35,9 @@ export function authErrorKey(code: string | undefined): AuthErrorKey {
       return "weakPassword";
     case "same_password":
       return "samePassword";
+    case "user_already_exists":
+    case "email_exists":
+      return "emailTaken";
     case "session_not_found":
     case "session_expired":
       return "sessionExpired";
