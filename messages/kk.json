@@ -346,6 +346,53 @@
     "file": {
       "open": "Ашу",
       "download": "Жүктеп алу"
+    },
+    "attachment": {
+      "add": "Жоғарыдағы медиа",
+      "title": "Тапсырма үстіндегі медиа",
+      "remove": "Алып тастау"
+    },
+    "gaps": {
+      "text": "Бос орындары бар мәтін",
+      "makeGap": "Бос орын жасау",
+      "inputHint": "Сөзді белгілеп, «Бос орын жасау» батырмасын басыңыз — немесе жауапты төртбұрышты жақшаға алыңыз: [are]. Бірнеше дұрыс нұсқа «/» арқылы: [don't/do not].",
+      "inputExample": "Penguins [are] birds. They [don't/do not] fly.",
+      "selectHint": "Төртбұрышты жақшада нұсқаларды «/» арқылы жазып, дұрысын жұлдызшамен белгілеңіз: [*is/are/am].",
+      "selectExample": "She [*is/are/am] happy. They [were/*was] at home.",
+      "caseSensitive": "Бас әріптерді ескеру",
+      "preview": "Оқушы былай көреді ({count, plural, one {# бос орын} other {# бос орын}}):",
+      "gapLabel": "{n}-бос орын",
+      "problems": {
+        "fewOptions": "{n}-бос орынға кемінде екі нұсқа керек",
+        "noMark": "{n}-бос орында дұрыс нұсқа белгіленбеген — әзірге біріншісі дұрыс саналады",
+        "manyMarks": "{n}-бос орында бірнеше нұсқа белгіленген — бір жұлдызша қалдырыңыз"
+      }
+    },
+    "choice": {
+      "question": "{n}-сұрақ",
+      "questionPlaceholder": "Сұрақ, мысалы: Where do penguins live?",
+      "option": "{n}-нұсқа",
+      "optionPlaceholder": "{n}-нұсқа",
+      "markRight": "{n}-нұсқа дұрыс",
+      "removeQuestion": "{n}-сұрақты жою",
+      "removeOption": "{n}-нұсқаны жою",
+      "addOption": "Нұсқа",
+      "addQuestion": "Сұрақ",
+      "markHint": "Дұрыс жауапты белгілеңіз",
+      "severalRight": "Барлық дұрыс жауапты таңдаңыз",
+      "right": "Дұрыс",
+      "wrong": "Бұрыс"
+    },
+    "trueFalse": {
+      "statement": "{n}-тұжырым",
+      "statementPlaceholder": "Тұжырым, мысалы: Penguins can fly.",
+      "rightAnswer": "{n}-тұжырымның дұрыс жауабы",
+      "true": "Дұрыс",
+      "false": "Бұрыс",
+      "removeStatement": "{n}-тұжырымды жою",
+      "addStatement": "Тұжырым",
+      "right": "Жауап дұрыс",
+      "wrong": "Жауап бұрыс"
     }
   },
   "builder": {
@@ -382,6 +429,18 @@
     "error": "Сәтсіз болды. Қайталап көріңіз.",
     "backToCourse": "Курсқа",
     "lesson": "Сабақ",
-    "sectionsNav": "Сабақ бөлімдері"
+    "sectionsNav": "Сабақ бөлімдері",
+    "preview": "Оқушы ретінде қарау"
+  },
+  "player": {
+    "previewBanner": "Алдын ала қарау: оқушы сабақты осылай көреді. Жауаптар сақталмайды.",
+    "reset": "Жауаптарды тазалау",
+    "backToEditor": "Өңдеуге оралу",
+    "sections": "Сабақ бөлімдері",
+    "next": "Келесі: {title}",
+    "score": "{total} ішінен {right}",
+    "emptyLesson": "Сабақта әлі бөлім жоқ.",
+    "emptySection": "Бұл бөлімде әлі тапсырма жоқ.",
+    "checkFailed": "Жауапты тексеру мүмкін болмады. Интернетті тексеріңіз."
   }
 }

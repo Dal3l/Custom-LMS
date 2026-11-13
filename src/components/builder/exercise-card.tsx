@@ -18,11 +18,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import type { Attachment } from "@/features/exercises/attachment";
+import { AttachmentEditor } from "@/features/exercises/attachment-ui";
 import { exerciseMeta } from "@/features/exercises/catalog";
 import { EXERCISE_UI } from "@/features/exercises/client";
 import { EXERCISE_ICONS } from "@/features/exercises/icons";
 import type { BuilderExercise } from "@/features/lessons/queries";
 import { cn } from "@/lib/utils";
+
+type JsonObject = Record<string, unknown>;
 
 export function ExerciseCard({
   exercise,
@@ -37,7 +41,12 @@ export function ExerciseCard({
   exercise: BuilderExercise;
   number: string;
   otherSections: { id: string; title: string }[];
-  onChange: (patch: Partial<Pick<BuilderExercise, "title" | "content" | "key">>) => void;
+  /** A plain patch, or a function that builds the patch from the newest version. */
+  onChange: (
+    patch:
+      | Partial<Pick<BuilderExercise, "title" | "content" | "key">>
+      | ((current: BuilderExercise) => Partial<Pick<BuilderExercise, "title" | "content" | "key">>),
+  ) => void;
   /** Save right away when the teacher leaves the exercise. */
   onBlur: () => void;
   onDuplicate: () => void;
@@ -49,6 +58,9 @@ export function ExerciseCard({
   const meta = exerciseMeta(exercise.type);
   const ui = EXERCISE_UI[meta?.id ?? "text"];
   const Icon = meta ? EXERCISE_ICONS[meta.icon] : EXERCISE_ICONS.text;
+  // Exercises with answers can show a picture / audio / video above the questions.
+  const withAttachment = meta !== undefined && meta.group !== "material";
+  const attachment = withAttachment ? ((exercise.content as JsonObject).attachment as Attachment | null | undefined) : null;
   const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } = useSortable({
     id: exercise.id,
   });
@@ -124,10 +136,29 @@ export function ExerciseCard({
           className="font-medium"
         />
 
+        {withAttachment && (
+          <AttachmentEditor
+            value={attachment}
+            onChange={(next) =>
+              onChange((current) => ({
+                content: { ...(current.content as JsonObject), attachment: next } as BuilderExercise["content"],
+              }))
+            }
+          />
+        )}
+
         {ui && (
           <ui.Editor
             value={{ content: exercise.content, key: exercise.key }}
-            onChange={(v) => onChange({ content: v.content as BuilderExercise["content"], key: v.key as BuilderExercise["key"] })}
+            onChange={(v) =>
+              onChange((current) => ({
+                // The type's editor knows nothing about "media on top": keep the newest one.
+                content: (withAttachment
+                  ? { ...(v.content as JsonObject), attachment: (current.content as JsonObject).attachment ?? null }
+                  : v.content) as BuilderExercise["content"],
+                key: v.key as BuilderExercise["key"],
+              }))
+            }
           />
         )}
       </Card>

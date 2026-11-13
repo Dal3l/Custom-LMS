@@ -346,6 +346,53 @@
     "file": {
       "open": "Открыть",
       "download": "Скачать"
+    },
+    "attachment": {
+      "add": "Медиа сверху",
+      "title": "Медиа над заданием",
+      "remove": "Убрать"
+    },
+    "gaps": {
+      "text": "Текст с пропусками",
+      "makeGap": "Сделать пропуском",
+      "inputHint": "Выделите слово и нажмите «Сделать пропуском» — или возьмите ответ в квадратные скобки: [are]. Несколько правильных вариантов — через «/»: [don't/do not].",
+      "inputExample": "Penguins [are] birds. They [don't/do not] fly.",
+      "selectHint": "В квадратных скобках перечислите варианты через «/» и отметьте правильный звёздочкой: [*is/are/am].",
+      "selectExample": "She [*is/are/am] happy. They [were/*was] at home.",
+      "caseSensitive": "Учитывать заглавные буквы",
+      "preview": "Так увидит ученик ({count, plural, one {# пропуск} few {# пропуска} many {# пропусков} other {# пропуска}}):",
+      "gapLabel": "Пропуск {n}",
+      "problems": {
+        "fewOptions": "В пропуске {n} нужно хотя бы два варианта",
+        "noMark": "В пропуске {n} не отмечен правильный вариант — сейчас правильным считается первый",
+        "manyMarks": "В пропуске {n} отмечено несколько вариантов — оставьте одну звёздочку"
+      }
+    },
+    "choice": {
+      "question": "Вопрос {n}",
+      "questionPlaceholder": "Вопрос, например: Where do penguins live?",
+      "option": "Вариант {n}",
+      "optionPlaceholder": "Вариант {n}",
+      "markRight": "Вариант {n} — правильный",
+      "removeQuestion": "Удалить вопрос {n}",
+      "removeOption": "Удалить вариант {n}",
+      "addOption": "Вариант",
+      "addQuestion": "Вопрос",
+      "markHint": "Отметьте галочкой правильный ответ",
+      "severalRight": "Выберите все правильные ответы",
+      "right": "Верно",
+      "wrong": "Неверно"
+    },
+    "trueFalse": {
+      "statement": "Утверждение {n}",
+      "statementPlaceholder": "Утверждение, например: Penguins can fly.",
+      "rightAnswer": "Правильный ответ для утверждения {n}",
+      "true": "Верно",
+      "false": "Неверно",
+      "removeStatement": "Удалить утверждение {n}",
+      "addStatement": "Утверждение",
+      "right": "Ответ правильный",
+      "wrong": "Ответ неправильный"
     }
   },
   "builder": {
@@ -382,6 +429,18 @@
     "error": "Не получилось. Попробуйте ещё раз.",
     "backToCourse": "К курсу",
     "lesson": "Урок",
-    "sectionsNav": "Секции урока"
+    "sectionsNav": "Секции урока",
+    "preview": "Предпросмотр как ученик"
+  },
+  "player": {
+    "previewBanner": "Предпросмотр: так урок увидит ученик. Ответы не сохраняются.",
+    "reset": "Сбросить ответы",
+    "backToEditor": "К редактированию",
+    "sections": "Секции урока",
+    "next": "Дальше: {title}",
+    "score": "{right} из {total}",
+    "emptyLesson": "В уроке пока нет секций.",
+    "emptySection": "В этой секции пока нет заданий.",
+    "checkFailed": "Не получилось проверить ответ. Проверьте интернет."
   }
 }

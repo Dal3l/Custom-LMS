@@ -346,6 +346,53 @@
     "file": {
       "open": "Open",
       "download": "Download"
+    },
+    "attachment": {
+      "add": "Media on top",
+      "title": "Media above the task",
+      "remove": "Remove"
+    },
+    "gaps": {
+      "text": "Text with gaps",
+      "makeGap": "Make it a gap",
+      "inputHint": "Select a word and press “Make it a gap” — or put the answer in square brackets: [are]. Several right answers go with “/”: [don't/do not].",
+      "inputExample": "Penguins [are] birds. They [don't/do not] fly.",
+      "selectHint": "List the options in square brackets with “/” and mark the right one with an asterisk: [*is/are/am].",
+      "selectExample": "She [*is/are/am] happy. They [were/*was] at home.",
+      "caseSensitive": "Capital letters matter",
+      "preview": "What the student sees ({count, plural, one {# gap} other {# gaps}}):",
+      "gapLabel": "Gap {n}",
+      "problems": {
+        "fewOptions": "Gap {n} needs at least two options",
+        "noMark": "Gap {n} has no option marked as right — the first one counts as right for now",
+        "manyMarks": "Gap {n} has several options marked — keep one asterisk"
+      }
+    },
+    "choice": {
+      "question": "Question {n}",
+      "questionPlaceholder": "Question, e.g. Where do penguins live?",
+      "option": "Option {n}",
+      "optionPlaceholder": "Option {n}",
+      "markRight": "Option {n} is right",
+      "removeQuestion": "Delete question {n}",
+      "removeOption": "Delete option {n}",
+      "addOption": "Option",
+      "addQuestion": "Question",
+      "markHint": "Tick the right answer",
+      "severalRight": "Choose all the right answers",
+      "right": "Right",
+      "wrong": "Wrong"
+    },
+    "trueFalse": {
+      "statement": "Statement {n}",
+      "statementPlaceholder": "Statement, e.g. Penguins can fly.",
+      "rightAnswer": "Right answer for statement {n}",
+      "true": "True",
+      "false": "False",
+      "removeStatement": "Delete statement {n}",
+      "addStatement": "Statement",
+      "right": "The answer is right",
+      "wrong": "The answer is wrong"
     }
   },
   "builder": {
@@ -382,6 +429,18 @@
     "error": "Something went wrong. Please try again.",
     "backToCourse": "Back to course",
     "lesson": "Lesson",
-    "sectionsNav": "Lesson sections"
+    "sectionsNav": "Lesson sections",
+    "preview": "Preview as student"
+  },
+  "player": {
+    "previewBanner": "Preview: this is how a student sees the lesson. Answers are not saved.",
+    "reset": "Reset answers",
+    "backToEditor": "Back to editing",
+    "sections": "Lesson sections",
+    "next": "Next: {title}",
+    "score": "{right} of {total}",
+    "emptyLesson": "This lesson has no sections yet.",
+    "emptySection": "This section has no tasks yet.",
+    "checkFailed": "Couldn't check the answer. Check your internet connection."
   }
 }

@@ -51,3 +51,41 @@ export async function getBuilderData(lessonId: string): Promise<BuilderData | nu
     })),
   };
 }
+
+export type StudentExercise = { id: string; type: string; title: string; content: Json };
+export type StudentSection = { id: string; title: string; exercises: StudentExercise[] };
+export type StudentLesson = {
+  course: Pick<Tables<"courses">, "id" | "title" | "owner_id">;
+  lesson: Pick<Tables<"lessons">, "id" | "title" | "is_test">;
+  sections: StudentSection[];
+};
+
+/**
+ * The lesson as a student sees it. Deliberately does NOT select exercise_keys:
+ * correct answers never leave the server; answers are checked by checkAnswer().
+ */
+export async function getStudentLesson(lessonId: string): Promise<StudentLesson | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("lessons")
+    .select(
+      "id, title, is_test, courses(id, title, owner_id), sections(id, title, position), exercises(id, section_id, type, title, content, position)",
+    )
+    .eq("id", lessonId)
+    .maybeSingle();
+  if (!data || !data.courses) return null;
+
+  const byPosition = <T extends { position: number }>(a: T, b: T) => a.position - b.position;
+  const exercises = [...data.exercises].sort(byPosition);
+  return {
+    course: data.courses,
+    lesson: { id: data.id, title: data.title, is_test: data.is_test },
+    sections: [...data.sections].sort(byPosition).map((s) => ({
+      id: s.id,
+      title: s.title,
+      exercises: exercises
+        .filter((e) => e.section_id === s.id)
+        .map(({ id, type, title, content }) => ({ id, type, title, content })),
+    })),
+  };
+}

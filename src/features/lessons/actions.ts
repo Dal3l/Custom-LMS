@@ -125,10 +125,19 @@ export async function saveExercise(
   if (!data?.length) return fail("forbidden");
 
   if (key?.success) {
-    const { error: keyError } = await supabase
+    // Update in place (users may change only answer_key, so no upsert); create if missing.
+    const { data: updated, error: keyError } = await supabase
       .from("exercise_keys")
-      .upsert({ exercise_id: exerciseId, answer_key: key.data as Json } as TablesInsert<"exercise_keys">);
+      .update({ answer_key: key.data as Json })
+      .eq("exercise_id", exerciseId)
+      .select("exercise_id");
     if (keyError) return fail();
+    if (!updated?.length) {
+      const { error: insertError } = await supabase
+        .from("exercise_keys")
+        .insert({ exercise_id: exerciseId, answer_key: key.data as Json } as TablesInsert<"exercise_keys">);
+      if (insertError) return fail();
+    }
   }
   return ok(undefined);
 }

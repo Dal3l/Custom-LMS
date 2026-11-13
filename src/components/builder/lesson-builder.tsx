@@ -2,7 +2,7 @@
 
 import { closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { Loader2, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
+import { Eye, Loader2, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useId, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -34,6 +34,7 @@ import type { BuilderExercise, BuilderSection } from "@/features/lessons/queries
 import { SaveQueue } from "@/features/lessons/save-queue";
 import { exerciseNumber } from "@/features/lessons/sections";
 import { moveItem } from "@/features/courses/outline";
+import { useRouter } from "@/i18n/navigation";
 import { AddSectionDialog } from "./add-section-dialog";
 import { BuilderContext } from "./builder-context";
 import { ExerciseCard } from "./exercise-card";
@@ -49,12 +50,14 @@ type Confirm = { kind: "section"; id: string } | { kind: "exercise"; id: string 
  */
 export function LessonBuilder({
   userId,
+  courseId,
   lessonId,
   initialSections,
   initialSectionId,
 }: {
   /** The teacher; their files are uploaded into a folder named after this id. */
   userId: string;
+  courseId: string;
   lessonId: string;
   initialSections: BuilderSection[];
   initialSectionId: string | null;
@@ -99,6 +102,16 @@ export function LessonBuilder({
       void queue.flushAll();
     };
   }, [queue]);
+
+  // Save everything first, then open the student view of the current section.
+  const router = useRouter();
+  const [opening, setOpening] = useState(false);
+  async function openPreview() {
+    setOpening(true);
+    await queue.flushAll();
+    const section = activeId ? `?section=${activeId}` : "";
+    router.push(`/courses/${courseId}/lessons/${lessonId}/preview${section}`);
+  }
 
   // Remember the open section in the address, so a reload opens the same place.
   function select(id: string) {
@@ -155,7 +168,9 @@ export function LessonBuilder({
   }
 
   // Finds the exercise by id in any section (it may have been moved meanwhile).
-  function updateExercise(exerciseId: string, patch: Partial<BuilderExercise>) {
+  type Patch = Partial<BuilderExercise> | ((current: BuilderExercise) => Partial<BuilderExercise>);
+
+  function updateExercise(exerciseId: string, patch: Patch) {
     setSections((ss) =>
       ss.map((s) =>
         s.exercises.some((e) => e.id === exerciseId)
@@ -163,7 +178,8 @@ export function LessonBuilder({
               ...s,
               exercises: s.exercises.map((e) => {
                 if (e.id !== exerciseId) return e;
-                const next = { ...e, ...patch };
+                // A function patch is applied to the newest version (e.g. after a slow upload).
+                const next = { ...e, ...(typeof patch === "function" ? patch(e) : patch) };
                 latest.current.set(exerciseId, next);
                 return next;
               }),
@@ -257,8 +273,12 @@ export function LessonBuilder({
   return (
     <BuilderContext value={{ userId }}>
     <div className="flex flex-col gap-4">
-      <div className="flex justify-end">
+      <div className="flex flex-wrap items-center justify-end gap-3">
         <SaveStatus queue={queue} />
+        <Button variant="outline" size="sm" onClick={openPreview} disabled={opening}>
+          {opening ? <Loader2 className="animate-spin" aria-hidden="true" /> : <Eye aria-hidden="true" />}
+          {t("preview")}
+        </Button>
       </div>
 
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 md:grid-cols-[14rem_minmax(0,1fr)] md:items-start lg:grid-cols-[16rem_minmax(0,1fr)]">
