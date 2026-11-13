@@ -11,7 +11,11 @@ import { CaptionInput } from "../../caption-input";
 import { parseVideoUrl, type VideoContent } from "./schema";
 import { VideoFrame } from "./viewer";
 
-export function VideoEditor({ value, onChange }: ExerciseEditorProps<VideoContent, null>) {
+export function VideoEditor({
+  value,
+  onChange,
+  withCaption = true,
+}: ExerciseEditorProps<VideoContent, null> & { withCaption?: boolean }) {
   const t = useTranslations("exercises.video");
   const tn = useTranslations("exercises.types.video");
   const { video, caption } = value.content;
@@ -67,7 +71,7 @@ export function VideoEditor({ value, onChange }: ExerciseEditorProps<VideoConten
           {invalid ? <FieldError>{t("invalid")}</FieldError> : <FieldDescription>{t("hint")}</FieldDescription>}
         </form>
       )}
-      <CaptionInput value={caption} onChange={(caption) => set({ caption })} />
+      {withCaption && <CaptionInput value={caption} onChange={(caption) => set({ caption })} />}
     </div>
   );
 }

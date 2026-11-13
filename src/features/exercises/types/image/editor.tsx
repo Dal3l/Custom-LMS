@@ -12,7 +12,11 @@ import type { ImageContent } from "./schema";
 
 const MAX = 10;
 
-export function ImageEditor({ value, onChange }: ExerciseEditorProps<ImageContent, null>) {
+export function ImageEditor({
+  value,
+  onChange,
+  withCaption = true,
+}: ExerciseEditorProps<ImageContent, null> & { withCaption?: boolean }) {
   const t = useTranslations("exercises.media");
   const { images, caption } = value.content;
   const set = (patch: Partial<ImageContent>) => onChange({ content: { ...value.content, ...patch }, key: null });
@@ -54,7 +58,7 @@ export function ImageEditor({ value, onChange }: ExerciseEditorProps<ImageConten
           onUploaded={(files) => set({ images: [...images, ...files].slice(0, MAX) })}
         />
       )}
-      <CaptionInput value={caption} onChange={(caption) => set({ caption })} />
+      {withCaption && <CaptionInput value={caption} onChange={(caption) => set({ caption })} />}
     </div>
   );
 }

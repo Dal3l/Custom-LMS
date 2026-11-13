@@ -9,7 +9,11 @@ import { MediaDropzone } from "../../media-dropzone";
 import type { AudioContent } from "./schema";
 import { AudioPlayer } from "./viewer";
 
-export function AudioEditor({ value, onChange }: ExerciseEditorProps<AudioContent, null>) {
+export function AudioEditor({
+  value,
+  onChange,
+  withCaption = true,
+}: ExerciseEditorProps<AudioContent, null> & { withCaption?: boolean }) {
   const t = useTranslations("exercises.media");
   const { file, caption } = value.content;
   const set = (patch: Partial<AudioContent>) => onChange({ content: { ...value.content, ...patch }, key: null });
@@ -30,7 +34,7 @@ export function AudioEditor({ value, onChange }: ExerciseEditorProps<AudioConten
       ) : (
         <MediaDropzone kind="audio" onUploaded={([uploaded]) => uploaded && set({ file: uploaded })} />
       )}
-      <CaptionInput value={caption} onChange={(caption) => set({ caption })} />
+      {withCaption && <CaptionInput value={caption} onChange={(caption) => set({ caption })} />}
     </div>
   );
 }

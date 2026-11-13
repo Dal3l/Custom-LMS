@@ -23,7 +23,12 @@ export function ImageViewer({ content }: ExerciseViewerProps<ImageContent>) {
             // Served straight from storage: lessons may have many pictures, and the free
             // Vercel plan limits how many images its optimiser processes per month.
             unoptimized
-            className="h-auto w-full rounded-xl border object-contain"
+            className={
+              images.length > 1
+                ? "h-auto w-full rounded-xl border object-contain"
+                : // one picture: never blown up past its real size, never taller than the screen
+                  "mx-auto h-auto max-h-[70vh] w-auto max-w-full rounded-xl border object-contain"
+            }
           />
         ))}
       </div>
