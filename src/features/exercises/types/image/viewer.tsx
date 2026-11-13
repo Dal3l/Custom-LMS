@@ -4,34 +4,31 @@ import Image from "next/image";
 import type { ExerciseViewerProps } from "../../client-types";
 import { Caption } from "../../caption-input";
 import { mediaUrl } from "../../media";
+import { ImageGallery } from "./gallery";
 import type { ImageContent } from "./schema";
 
 export function ImageViewer({ content }: ExerciseViewerProps<ImageContent>) {
   const { images, caption } = content;
   if (!images.length) return null;
+  const single = images[0]!;
   return (
     <figure className="flex flex-col gap-2">
-      <div className={images.length > 1 ? "grid gap-2 sm:grid-cols-2" : ""}>
-        {images.map((img) => (
-          <Image
-            key={img.path}
-            src={mediaUrl(img.path)}
-            alt={caption || img.name}
-            width={img.width ?? 1200}
-            height={img.height ?? 800}
-            sizes={images.length > 1 ? "(min-width: 640px) 40vw, 100vw" : "(min-width: 1024px) 50rem, 100vw"}
-            // Served straight from storage: lessons may have many pictures, and the free
-            // Vercel plan limits how many images its optimiser processes per month.
-            unoptimized
-            className={
-              images.length > 1
-                ? "h-auto w-full rounded-xl border object-contain"
-                : // one picture: never blown up past its real size, never taller than the screen
-                  "mx-auto h-auto max-h-[70vh] w-auto max-w-full rounded-xl border object-contain"
-            }
-          />
-        ))}
-      </div>
+      {images.length > 1 ? (
+        <ImageGallery images={images} alt={caption || single.name} />
+      ) : (
+        <Image
+          src={mediaUrl(single.path)}
+          alt={caption || single.name}
+          width={single.width ?? 1200}
+          height={single.height ?? 800}
+          sizes="(min-width: 1024px) 50rem, 100vw"
+          // Served straight from storage: lessons may have many pictures, and the free
+          // Vercel plan limits how many images its optimiser processes per month.
+          unoptimized
+          // Never blown up past its real size, never taller than the screen.
+          className="mx-auto h-auto max-h-[70vh] w-auto max-w-full rounded-xl border object-contain"
+        />
+      )}
       {caption && (
         <figcaption>
           <Caption text={caption} />
