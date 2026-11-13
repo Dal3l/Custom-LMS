@@ -1,60 +1,26 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { MAX_ATTEMPTS, normalizeAnswer } from "../../checking";
+import { MAX_ATTEMPTS } from "../../checking";
 import type { ExerciseViewerProps } from "../../client-types";
 import { verdictClass } from "../../result-styles";
 import type { GapInputAnswer, GapInputContent } from "./schema";
 
 /**
- * Text with typing gaps. A gap is checked when the student presses Enter or
- * leaves it. Each gap has MAX_ATTEMPTS tries; after that the server shows the
- * right answer. Right and revealed gaps are locked.
+ * Text with typing gaps. The student fills them in and presses "Check" (below).
+ * Each gap has MAX_ATTEMPTS tries; then the server shows the right answer.
+ * Right and revealed gaps are locked. The answer (words + earlier tries) is
+ * kept by the lesson player, so this view just shows it.
  */
 export function GapInputViewer({ content, answer, onAnswer, result }: ExerciseViewerProps<GapInputContent, GapInputAnswer>) {
   const t = useTranslations("exercises.gaps");
-  const [values, setValues] = useState<Record<string, string>>(answer?.values ?? {});
-  // Earlier wrong tries per gap (what the student typed).
-  const [attempts, setAttempts] = useState<Record<string, string[]>>(answer?.attempts ?? {});
-  const [revealed, setRevealed] = useState<Record<string, string>>({});
-  const [lastChecked, setLastChecked] = useState<Record<string, string>>({});
-
-  const same = (a: string, b: string) => normalizeAnswer(a) === normalizeAnswer(b);
+  const values = answer?.values ?? {};
+  const attempts = answer?.attempts ?? {};
 
   function type(id: string, text: string) {
-    const next = { ...values, [id]: text.slice(0, 200) };
-    setValues(next);
-    onAnswer?.({ values: next, attempts }, { check: false });
-  }
-
-  async function check(id: string) {
-    const value = values[id] ?? "";
-    if (!onAnswer || revealed[id] || result?.parts[id] === true) return;
-    if (!value.trim() || (lastChecked[id] !== undefined && same(lastChecked[id]!, value))) return;
-    setLastChecked((prev) => ({ ...prev, [id]: value }));
-
-    const verdict = await onAnswer({ values, attempts }, { check: true });
-    if (!verdict) {
-      // Not checked (e.g. no internet): let the same word be tried again.
-      setLastChecked(({ [id]: _drop, ...rest }) => (void _drop, rest));
-      return;
-    }
-
-    // Remember wrong tries (each different word once).
-    setAttempts((prev) => {
-      const next = { ...prev };
-      for (const [gap, ok] of Object.entries(verdict.parts)) {
-        const typed = values[gap] ?? "";
-        if (ok === false && typed.trim() && !(next[gap] ?? []).some((a) => same(a, typed))) {
-          next[gap] = [...(next[gap] ?? []), typed].slice(-MAX_ATTEMPTS);
-        }
-      }
-      return next;
-    });
-    if (verdict.reveal) setRevealed((prev) => ({ ...prev, ...verdict.reveal }));
+    onAnswer?.({ values: { ...values, [id]: text.slice(0, 200) }, attempts }, { check: false });
   }
 
   return (
@@ -62,7 +28,7 @@ export function GapInputViewer({ content, answer, onAnswer, result }: ExerciseVi
       {content.parts.map((part, i) => {
         if (part.t === "text") return <span key={i}>{part.text}</span>;
         const n = Number(part.id.slice(1));
-        const shown = revealed[part.id];
+        const shown = result?.reveal?.[part.id];
         const verdict = result?.parts[part.id];
         const right = verdict === true;
         const tries = attempts[part.id] ?? [];
@@ -75,13 +41,6 @@ export function GapInputViewer({ content, answer, onAnswer, result }: ExerciseVi
               readOnly={Boolean(shown) || right}
               disabled={!onAnswer}
               onChange={(e) => type(part.id, e.target.value)}
-              onBlur={() => void check(part.id)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  void check(part.id);
-                }
-              }}
               aria-label={t("gapLabel", { n })}
               aria-invalid={verdict === false || undefined}
               title={shown ? t("revealed", { max: MAX_ATTEMPTS }) : undefined}

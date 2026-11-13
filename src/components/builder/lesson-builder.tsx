@@ -40,6 +40,7 @@ import { AddSectionDialog } from "./add-section-dialog";
 import { BuilderContext } from "./builder-context";
 import { ExerciseCard } from "./exercise-card";
 import { ExercisePicker } from "./exercise-picker";
+import { SaveButton } from "./save-button";
 import { SaveStatus } from "./save-status";
 import { SectionNav } from "./section-nav";
 
@@ -365,11 +366,12 @@ export function LessonBuilder({
                 </SortableContext>
               </DndContext>
 
-              <div>
+              <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-4">
                 <Button variant="outline" onClick={() => setPicking(true)} disabled={creating}>
                   {creating ? <Loader2 className="animate-spin" aria-hidden="true" /> : <Plus aria-hidden="true" />}
                   {t("addExercise")}
                 </Button>
+                <SaveButton queue={queue} />
               </div>
             </>
           )}

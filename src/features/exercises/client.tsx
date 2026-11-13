@@ -3,6 +3,7 @@
 // Browser-side registry: editor and student view of every implemented type.
 import type { ComponentType } from "react";
 import type { ExerciseTypeId } from "./catalog";
+import type { CheckResult } from "./checking";
 import type { ExerciseEditorProps, ExerciseViewerProps } from "./client-types";
 import { AudioEditor } from "./types/audio/editor";
 import { AudioViewer } from "./types/audio/viewer";
@@ -13,6 +14,7 @@ import { FileViewer } from "./types/file/viewer";
 import { GapDragEditor } from "./types/gap_drag/editor";
 import { GapDragViewer } from "./types/gap_drag/viewer";
 import { GapInputEditor } from "./types/gap_input/editor";
+import { recordAttempts, type GapInputAnswer } from "./types/gap_input/schema";
 import { GapInputViewer } from "./types/gap_input/viewer";
 import { GapSelectEditor } from "./types/gap_select/editor";
 import { GapSelectViewer } from "./types/gap_select/viewer";
@@ -35,13 +37,24 @@ import { VideoViewer } from "./types/video/viewer";
 export type AnyEditor = ComponentType<ExerciseEditorProps<unknown, unknown>>;
 export type AnyViewer = ComponentType<ExerciseViewerProps<unknown, unknown>>;
 
-export const EXERCISE_UI: Partial<Record<ExerciseTypeId, { Editor: AnyEditor; Viewer: AnyViewer }>> = {
+type ExerciseUI = {
+  Editor: AnyEditor;
+  Viewer: AnyViewer;
+  /** Optional: update the answer after a check (e.g. remember wrong tries). */
+  afterCheck?: (answer: unknown, result: CheckResult) => unknown;
+};
+
+export const EXERCISE_UI: Partial<Record<ExerciseTypeId, ExerciseUI>> = {
   text: { Editor: TextEditor as unknown as AnyEditor, Viewer: TextViewer as unknown as AnyViewer },
   image: { Editor: ImageEditor as unknown as AnyEditor, Viewer: ImageViewer as unknown as AnyViewer },
   video: { Editor: VideoEditor as unknown as AnyEditor, Viewer: VideoViewer as unknown as AnyViewer },
   audio: { Editor: AudioEditor as unknown as AnyEditor, Viewer: AudioViewer as unknown as AnyViewer },
   file: { Editor: FileEditor as unknown as AnyEditor, Viewer: FileViewer as unknown as AnyViewer },
-  gap_input: { Editor: GapInputEditor as unknown as AnyEditor, Viewer: GapInputViewer as unknown as AnyViewer },
+  gap_input: {
+    Editor: GapInputEditor as unknown as AnyEditor,
+    Viewer: GapInputViewer as unknown as AnyViewer,
+    afterCheck: (answer, result) => recordAttempts(answer as GapInputAnswer, result),
+  },
   gap_select: { Editor: GapSelectEditor as unknown as AnyEditor, Viewer: GapSelectViewer as unknown as AnyViewer },
   multiple_choice: { Editor: MultipleChoiceEditor as unknown as AnyEditor, Viewer: MultipleChoiceViewer as unknown as AnyViewer },
   true_false: { Editor: TrueFalseEditor as unknown as AnyEditor, Viewer: TrueFalseViewer as unknown as AnyViewer },

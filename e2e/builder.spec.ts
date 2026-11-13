@@ -57,6 +57,9 @@ test.describe("lesson builder", () => {
     await page.keyboard.type("Twinkle twinkle ");
     await page.getByRole("button", { name: "Жирный" }).click();
     await page.keyboard.type("little star");
+    // The "Save" button saves at once and then says everything is saved
+    await page.getByRole("button", { name: "Сохранить", exact: true }).click();
+    await expect(page.getByRole("button", { name: "Всё сохранено" })).toBeVisible({ timeout: 15000 });
     await expect(page.getByRole("status").filter({ hasText: "Сохранено" })).toBeVisible({ timeout: 15000 });
 
     // Survives a reload, and the same section opens

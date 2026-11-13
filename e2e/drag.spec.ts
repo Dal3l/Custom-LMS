@@ -107,19 +107,21 @@ test.describe("drag-and-place exercises", () => {
     await c1.getByRole("button", { name: "Проверить" }).click();
     await expect(c1.getByRole("status").filter({ hasText: / из / })).toHaveText("2 из 2");
 
-    // 1.2: matching — first swapped, then right
+    // 1.2: matching — two columns, tap one side then the other; tap a pair to separate it
     const c2 = card("1.2");
-    await c2.getByRole("button", { name: "собака", exact: true }).click();
-    await tapPlace(c2.getByRole("group", { name: "Ответ к 1" }));
-    await c2.getByRole("button", { name: "кошка", exact: true }).click();
-    await tapPlace(c2.getByRole("group", { name: "Ответ к 2" }));
+    await c2.getByRole("button", { name: "cat", exact: true }).click();
+    await c2.getByRole("button", { name: "собака", exact: true }).click(); // wrong pair
+    await c2.getByRole("button", { name: "кошка", exact: true }).click(); // right side first also works
+    await c2.getByRole("button", { name: "dog", exact: true }).click();
+    await expect(c2.getByRole("list", { name: "Ваши пары" }).getByRole("listitem")).toHaveCount(2);
     await c2.getByRole("button", { name: "Проверить" }).click();
     await expect(c2.getByRole("status").filter({ hasText: / из / })).toHaveText("0 из 2");
-    await c2.getByRole("button", { name: /^кошка — / }).click(); // back to the bank
+    await c2.getByRole("button", { name: /^Пара с «собака»/ }).click(); // separate both
+    await c2.getByRole("button", { name: /^Пара с «кошка»/ }).click();
+    await c2.getByRole("button", { name: "cat", exact: true }).click();
     await c2.getByRole("button", { name: "кошка", exact: true }).click();
-    await tapPlace(c2.getByRole("group", { name: "Ответ к 1" })); // "собака" there goes back
     await c2.getByRole("button", { name: "собака", exact: true }).click();
-    await tapPlace(c2.getByRole("group", { name: "Ответ к 2" }));
+    await c2.getByRole("button", { name: "dog", exact: true }).click();
     await c2.getByRole("button", { name: "Проверить" }).click();
     await expect(c2.getByRole("status").filter({ hasText: / из / })).toHaveText("2 из 2");
 

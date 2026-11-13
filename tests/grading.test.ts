@@ -152,3 +152,23 @@ describe("gaps with typing: three tries", () => {
     expect(check({}, { g2: ["Arctic", "Africa", "Asia"] }).reveal).toEqual({ g2: "Antarctica" });
   });
 });
+
+import { recordAttempts } from "@/features/exercises/types/gap_input/schema";
+
+describe("typed gaps: remembering tries after a check", () => {
+  const result = { parts: { g1: false, g2: true, g3: null }, score: 0.33, correct: false };
+
+  it("adds each new wrong word once, only for wrong gaps", () => {
+    const a = recordAttempts({ values: { g1: "is", g2: "are", g3: "" } }, result);
+    expect(a.attempts).toEqual({ g1: ["is"] });
+    const b = recordAttempts({ values: { g1: "IS " }, attempts: a.attempts }, result);
+    expect(b.attempts).toEqual({ g1: ["is"] });
+    const c = recordAttempts({ values: { g1: "am" }, attempts: b.attempts }, result);
+    expect(c.attempts).toEqual({ g1: ["is", "am"] });
+  });
+
+  it("keeps at most three", () => {
+    const d = recordAttempts({ values: { g1: "be" }, attempts: { g1: ["is", "am", "was"] } }, result);
+    expect(d.attempts?.g1).toHaveLength(3);
+  });
+});
