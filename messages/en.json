@@ -588,7 +588,7 @@
     "accountCreated": "Account created",
     "accountCreatedHint": "Copy the message and send it to the student. The password isn't shown anywhere else — the student can change it later.",
     "messageForStudent": "Message for the student",
-    "credentialsMessage": "Hello, {name}! Your LinguaRoom account is ready.\nLogin: {email}\nPassword: {password}\nSign-in link: {url}",
+    "credentialsMessage": "Hello, {name}! Your LinguaRoom account is ready.\n\nLogin: {email}\n\nPassword: {password}\n\nSign-in link: {url}",
     "copyMessage": "Copy message",
     "done": "Done",
     "noStudents": "No students yet. Send the invite link or register a student yourself.",

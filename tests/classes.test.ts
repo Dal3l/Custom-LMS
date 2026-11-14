@@ -1,32 +1,30 @@
 import { describe, expect, it } from "vitest";
-import { generateInviteToken, generatePassword, INVITE_TOKEN_RE } from "@/features/classes/credentials";
+import { generateInviteToken, generatePassword, INVITE_TOKEN_RE, PASSWORD_WORDS } from "@/features/classes/credentials";
 import { classSchema, registerStudentSchema } from "@/features/classes/schemas";
 
 describe("generatePassword", () => {
-  it("makes three groups of four readable characters", () => {
+  it("is a simple word and four digits", () => {
     for (let i = 0; i < 200; i++) {
-      expect(generatePassword()).toMatch(/^[a-hjkmnp-z2-9]{4}-[a-hjkmnp-z2-9]{4}-[a-hjkmnp-z2-9]{4}$/);
+      const password = generatePassword();
+      const match = /^([a-z]+)(\d{4})$/.exec(password);
+      expect(match).not.toBeNull();
+      expect(PASSWORD_WORDS).toContain(match![1]);
     }
   });
 
-  it("never uses look-alike characters", () => {
-    const all = Array.from({ length: 300 }, () => generatePassword()).join("");
-    expect(all).not.toMatch(/[01ilo]/);
+  it("is long enough for sign-in rules (at least 8 characters)", () => {
+    for (let i = 0; i < 200; i++) expect(generatePassword().length).toBeGreaterThanOrEqual(8);
   });
 
-  it("is random", () => {
-    const set = new Set(Array.from({ length: 100 }, () => generatePassword()));
-    expect(set.size).toBe(100);
+  it("varies", () => {
+    const set = new Set(Array.from({ length: 50 }, () => generatePassword()));
+    expect(set.size).toBeGreaterThan(40);
   });
 
   it("skips biased bytes (rejection sampling)", () => {
-    // 248..255 would wrap around unevenly and must be skipped; 0 maps to "a".
-    const random = (n: number) => new Uint8Array(n).fill(0).map((_, i) => (i % 2 === 0 ? 255 : 0));
-    expect(generatePassword(random)).toBe("aaaa-aaaa-aaaa");
-  });
-
-  it("is long enough for Supabase (at least 8 characters)", () => {
-    expect(generatePassword().length).toBeGreaterThanOrEqual(8);
+    // 255 is above the fair limit for both choices and must be skipped; 0 picks the first word and digit 0.
+    const random = (n: number) => new Uint8Array(n).map((_, i) => (i % 2 === 0 ? 255 : 0));
+    expect(generatePassword(random)).toBe(`${PASSWORD_WORDS[0]}0000`);
   });
 });
 
