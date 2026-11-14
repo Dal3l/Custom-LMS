@@ -172,3 +172,30 @@ describe("typed gaps: remembering tries after a check", () => {
     expect(d.attempts?.g1).toHaveLength(3);
   });
 });
+
+describe("typed gaps in a class lesson: saved tries count, not the browser's", () => {
+  const { content, key } = buildGapInput("Penguins [are] birds.", false);
+  const grading = getDefinition("gap_input")!.grading!;
+  type A = { values: Record<string, string>; attempts?: Record<string, string[]> };
+  const prepare = grading.prepare as (answer: A, saved: A | null) => A;
+  const afterCheck = grading.afterCheck as (answer: A, result: ReturnType<typeof checkGapInput>) => A;
+
+  it("ignores tries sent from the browser and uses the saved ones", () => {
+    const forged = { values: { g1: "is" }, attempts: { g1: ["x", "y"] } };
+    const prepared = prepare(forged, null);
+    expect(prepared.attempts).toEqual({});
+    expect(checkGapInput(content, key, prepared).reveal).toBeUndefined();
+  });
+
+  it("keeps counting with the saved tries and reveals on the third", () => {
+    let saved: A | null = null;
+    for (const word of ["is", "am", "be"]) {
+      const answer = prepare({ values: { g1: word } }, saved);
+      const result = checkGapInput(content, key, answer);
+      saved = afterCheck(answer, result);
+      if (word === "be") expect(result.reveal).toEqual({ g1: "are" });
+      else expect(result.reveal).toBeUndefined();
+    }
+    expect(saved?.attempts?.g1).toEqual(["is", "am", "be"]);
+  });
+});

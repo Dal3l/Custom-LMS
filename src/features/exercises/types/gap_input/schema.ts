@@ -90,5 +90,11 @@ export const gapInputDefinition: ExerciseDefinition<GapInputContent, GapInputKey
   contentSchema: gapInputContentSchema,
   keySchema: gapInputKeySchema,
   create: () => buildGapInput("", false),
-  grading: { answerSchema: gapInputAnswerSchema, check: checkGapInput },
+  grading: {
+    answerSchema: gapInputAnswerSchema,
+    check: checkGapInput,
+    // The tries count toward revealing the answer, so the saved ones are used, not the browser's.
+    prepare: (answer, saved) => ({ ...answer, attempts: saved?.attempts ?? {} }),
+    afterCheck: recordAttempts,
+  },
 };

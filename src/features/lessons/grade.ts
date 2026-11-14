@@ -31,17 +31,45 @@ export async function gradeExercise(exerciseId: unknown, answer: unknown): Promi
   // Not visible to this user (or not signed in) → not allowed.
   if (!data) return { ok: false, error: "forbidden" };
 
-  const def = getDefinition(data.type);
+  const graded = await gradeLoaded(
+    { id: id.data, type: data.type, content: data.content, key: data.exercise_keys?.answer_key },
+    answer,
+    undefined,
+  );
+  return graded.ok ? { ok: true, result: graded.result } : graded;
+}
+
+export type LoadedExercise = { id: string; type: string; content: unknown; key?: unknown };
+export type GradeResult =
+  | { ok: true; result: CheckResult; answer: unknown }
+  | { ok: false; error: "invalid" | "generic" };
+
+/**
+ * Checks an answer for an exercise the caller has ALREADY confirmed the user
+ * may see. `key` is the answer key if the user could read it; otherwise it is
+ * read with server-only rights. `saved` is the saved answer in a class lesson
+ * (null if none yet); undefined outside a class (teacher's preview).
+ * Returns the verdict and the answer as it should be kept after the check.
+ */
+export async function gradeLoaded(exercise: LoadedExercise, answer: unknown, saved: unknown): Promise<GradeResult> {
+  const def = getDefinition(exercise.type);
   if (!def?.grading || !def.keySchema) return { ok: false, error: "invalid" };
-  const parsedAnswer = def.grading.answerSchema.safeParse(answer);
+  const grading = def.grading;
+  const parsedAnswer = grading.answerSchema.safeParse(answer);
   if (!parsedAnswer.success) return { ok: false, error: "invalid" };
-  const content = def.contentSchema.safeParse(data.content);
-  const rawKey = data.exercise_keys ? data.exercise_keys.answer_key : await readKey(id.data);
+  const content = def.contentSchema.safeParse(exercise.content);
+  const rawKey = exercise.key !== undefined && exercise.key !== null ? exercise.key : await readKey(exercise.id);
   if (rawKey === undefined) return { ok: false, error: "generic" };
   const key = def.keySchema.safeParse(rawKey);
   if (!content.success || !key.success) return { ok: false, error: "generic" };
 
-  return { ok: true, result: def.grading.check(content.data, key.data, parsedAnswer.data) };
+  let given = parsedAnswer.data;
+  if (grading.prepare && saved !== undefined) {
+    const previous = saved === null ? null : grading.answerSchema.safeParse(saved);
+    given = grading.prepare(given, previous?.success ? previous.data : null);
+  }
+  const result = grading.check(content.data, key.data, given);
+  return { ok: true, result, answer: grading.afterCheck ? grading.afterCheck(given, result) : given };
 }
 
 /** The answer key, read with server-only rights. Call only after an access check. */

@@ -16,6 +16,68 @@ export type Database = {
   }
   public: {
     Tables: {
+      class_answers: {
+        Row: {
+          answer: Json
+          checked_answer: Json | null
+          class_id: string
+          exercise_id: string
+          lesson_id: string
+          result: Json | null
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          answer: Json
+          checked_answer?: Json | null
+          class_id: string
+          exercise_id: string
+          lesson_id: string
+          result?: Json | null
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          answer?: Json
+          checked_answer?: Json | null
+          class_id?: string
+          exercise_id?: string
+          lesson_id?: string
+          result?: Json | null
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_answers_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_answers_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_answers_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_answers_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       class_invites: {
         Row: {
           class_id: string

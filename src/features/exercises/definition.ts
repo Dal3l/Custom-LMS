@@ -17,6 +17,13 @@ export type ExerciseDefinition<Content = unknown, Key = unknown, Answer = unknow
   grading?: {
     answerSchema: z.ZodType<Answer>;
     check: (content: Content, key: Key, answer: Answer) => CheckResult;
+    /**
+     * Saved answers only: replaces what the browser must not decide with the
+     * saved version before checking (e.g. the record of wrong tries).
+     */
+    prepare?: (answer: Answer, saved: Answer | null) => Answer;
+    /** Updates the answer after a check (e.g. remembers a wrong try). */
+    afterCheck?: (answer: Answer, result: CheckResult) => Answer;
   };
 };
 

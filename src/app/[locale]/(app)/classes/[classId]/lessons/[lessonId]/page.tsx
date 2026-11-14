@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { getClassLessonState } from "@/features/classes/lesson-queries";
 import { getClassPage } from "@/features/classes/queries";
 import { idSchema } from "@/features/classes/schemas";
+import { getMyClassAnswers } from "@/features/lessons/answers";
 import { getStudentLesson } from "@/features/lessons/queries";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -23,12 +24,13 @@ export default async function ClassLessonPage({
   setRequestLocale(locale);
   const profile = await requireProfile(locale);
   if (!idSchema.safeParse(classId).success || !idSchema.safeParse(lessonId).success) notFound();
-  const [cls, state, lesson, t, tc] = await Promise.all([
+  const [cls, state, lesson, t, tc, savedAnswers] = await Promise.all([
     getClassPage(classId, profile),
     getClassLessonState(classId, lessonId),
     getStudentLesson(lessonId),
     getTranslations("classLessons"),
     getTranslations("courses"),
+    profile.role === "student" ? getMyClassAnswers(classId, lessonId, profile.id) : Promise.resolve(undefined),
   ]);
   // Only lessons opened in this class; students see nothing else (RLS too).
   if (!cls || !state || !lesson) notFound();
@@ -101,6 +103,7 @@ export default async function ClassLessonPage({
         isTeacher={cls.isTeacher}
         doneSections={state.doneSections}
         finished={finished}
+        savedAnswers={cls.isTeacher ? undefined : savedAnswers}
       />
     </div>
   );

@@ -1,8 +1,8 @@
 "use client";
 
-import { ArrowRight, Check, CircleCheck, Loader2 } from "lucide-react";
+import { ArrowRight, Check, CircleCheck, CloudOff, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,10 @@ import { checkMode, exerciseMeta } from "@/features/exercises/catalog";
 import type { CheckResult } from "@/features/exercises/checking";
 import { EXERCISE_UI } from "@/features/exercises/client";
 import { LessonLanguageProvider } from "@/features/exercises/lesson-language";
+import { requestSaveAnswer } from "@/features/lessons/answer-client";
+import type { SavedAnswer } from "@/features/lessons/answers";
 import { requestCheck } from "@/features/lessons/check-client";
+import { SaveQueue } from "@/features/lessons/save-queue";
 import type { StudentExercise, StudentSection } from "@/features/lessons/queries";
 import { exerciseNumber } from "@/features/lessons/sections";
 import { cn } from "@/lib/utils";
@@ -30,6 +33,7 @@ export function LessonPlayer({
   resetSignal = 0,
   completedSectionIds,
   sectionFooter,
+  classAnswers,
 }: {
   /** the language the course teaches */
   language: string;
@@ -41,8 +45,25 @@ export function LessonPlayer({
   completedSectionIds?: readonly string[];
   /** Extra controls under a section (the teacher's "Finish section" in class). */
   sectionFooter?: (section: StudentSection, isLast: boolean) => React.ReactNode;
+  /** A student in a class lesson: answers are saved (and restored from `saved`). */
+  classAnswers?: { classId: string; saved: Record<string, SavedAnswer> };
 }) {
   const t = useTranslations("player");
+  const [queue] = useState(() => new SaveQueue());
+
+  // Leaving the page or hiding the app: send what is still waiting.
+  useEffect(() => {
+    if (!classAnswers) return;
+    const flush = () => {
+      if (document.visibilityState === "hidden") void queue.flushAll();
+    };
+    document.addEventListener("visibilitychange", flush);
+    window.addEventListener("pagehide", flush);
+    return () => {
+      document.removeEventListener("visibilitychange", flush);
+      window.removeEventListener("pagehide", flush);
+    };
+  }, [classAnswers, queue]);
   const [activeId, setActiveId] = useState(
     sections.find((s) => s.id === initialSectionId)?.id ?? sections[0]?.id ?? null,
   );
@@ -65,6 +86,7 @@ export function LessonPlayer({
   return (
     <LessonLanguageProvider value={language}>
     <div className="flex flex-col gap-5">
+      {classAnswers && <AnswersStatus queue={queue} />}
       <nav aria-label={t("sections")} className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
         {sections.map((s, i) => (
           <Button
@@ -96,6 +118,11 @@ export function LessonPlayer({
               key={`${exercise.id}:${resetSignal}`}
               exercise={exercise}
               number={exerciseNumber(index, i)}
+              persist={
+                classAnswers
+                  ? { classId: classAnswers.classId, saved: classAnswers.saved[exercise.id], queue }
+                  : undefined
+              }
             />
           ))}
         </ol>
@@ -117,18 +144,75 @@ export function LessonPlayer({
   );
 }
 
-function PlayerExercise({ exercise, number }: { exercise: StudentExercise; number: string }) {
+/** "Answers saved ✓" / "Saving…" / "Not saved: no connection" for a student in a class lesson. */
+function AnswersStatus({ queue }: { queue: SaveQueue }) {
+  const t = useTranslations("player");
+  const status = useSyncExternalStore(queue.subscribe, queue.getStatus, () => "saved" as const);
+  const map = {
+    saved: { Icon: CircleCheck, text: t("answersSaved"), cls: "text-muted-foreground" },
+    saving: { Icon: Loader2, text: t("answersSaving"), cls: "text-muted-foreground [&_svg]:animate-spin" },
+    error: { Icon: CloudOff, text: t("answersError"), cls: "text-destructive" },
+  } as const;
+  const { Icon, text, cls } = map[status];
+  return (
+    <p className={cn("flex items-center gap-1.5 text-sm", cls)} role="status" aria-live="polite">
+      <Icon className="size-4 shrink-0" aria-hidden="true" />
+      {text}
+    </p>
+  );
+}
+
+type Persist = { classId: string; saved: SavedAnswer | undefined; queue: SaveQueue };
+
+/** Restores a saved answer; parts changed since the last check lose their old verdict. */
+function restored(saved: SavedAnswer | undefined) {
+  if (!saved) return { answer: null, checkedAnswer: undefined, result: null };
+  const result = saved.result ? withoutVerdicts(saved.result, changedParts(saved.checkedAnswer, saved.answer)) : null;
+  return { answer: saved.answer, checkedAnswer: saved.checkedAnswer, result };
+}
+
+function PlayerExercise({ exercise, number, persist }: { exercise: StudentExercise; number: string; persist?: Persist }) {
   const t = useTranslations("player");
   const meta = exerciseMeta(exercise.type);
   const ui = meta ? EXERCISE_UI[meta.id] : undefined;
   const mode = checkMode(exercise.type); // "instant", "button" or null (materials)
-  const [answer, setAnswer] = useState<unknown>(null);
-  const [checkedAnswer, setCheckedAnswer] = useState<unknown>(undefined);
-  const [result, setResult] = useState<CheckResult | null>(null);
+  const [initial] = useState(() => restored(persist?.saved));
+  const [answer, setAnswer] = useState<unknown>(initial.answer);
+  const [checkedAnswer, setCheckedAnswer] = useState<unknown>(initial.checkedAnswer);
+  const [result, setResult] = useState<CheckResult | null>(initial.result);
   const [pending, setPending] = useState(false);
   const inFlight = useRef<AbortController | null>(null);
 
+  /** Class lesson: the check goes through the save queue, after earlier saves of this exercise. */
+  async function runSavedCheck(next: unknown, p: Persist): Promise<CheckResult | null> {
+    setPending(true);
+    let response: Awaited<ReturnType<typeof requestSaveAnswer>> | null = null;
+    p.queue.schedule(exercise.id, async () => {
+      response = await requestSaveAnswer({ classId: p.classId, exerciseId: exercise.id, answer: next, check: true });
+      return true; // a failed check is not retried silently; the answer is saved with the next change
+    });
+    await p.queue.flush(exercise.id);
+    setPending(false);
+    const r = response as Awaited<ReturnType<typeof requestSaveAnswer>> | null;
+    if (!r?.ok || !r.result) {
+      toast.error(t("checkFailed"));
+      return null;
+    }
+    setAnswer(r.answer);
+    setResult(r.result);
+    setCheckedAnswer(r.answer);
+    return r.result;
+  }
+
+  function scheduleSave(next: unknown, p: Persist) {
+    p.queue.schedule(exercise.id, async () => {
+      const r = await requestSaveAnswer({ classId: p.classId, exerciseId: exercise.id, answer: next });
+      return r.ok;
+    });
+  }
+
   async function runCheck(next: unknown): Promise<CheckResult | null> {
+    if (persist) return runSavedCheck(next, persist);
     inFlight.current?.abort(); // only the newest check counts
     const controller = new AbortController();
     inFlight.current = controller;
@@ -150,6 +234,7 @@ function PlayerExercise({ exercise, number }: { exercise: StudentExercise; numbe
 
   function onAnswer(next: unknown, { check }: { check: boolean }) {
     setAnswer(next);
+    if (persist && !(mode === "instant" && check)) scheduleSave(next, persist);
     // A changed part loses its old green/red until it is checked again.
     setResult((r) => (r ? withoutVerdicts(r, changedParts(checkedAnswer, next)) : r));
     if (mode === "instant" && check) return runCheck(next);
@@ -193,7 +278,15 @@ function PlayerExercise({ exercise, number }: { exercise: StudentExercise; numbe
           )}
         </div>
         {meta?.group !== "material" && <AttachmentViewer value={content.attachment as Attachment | null | undefined} />}
-        {ui && <ui.Viewer exerciseId={exercise.id} content={exercise.content} answer={answer} onAnswer={mode ? onAnswer : undefined} result={result} />}
+        {ui && (
+          <ui.Viewer
+            exerciseId={exercise.id}
+            content={exercise.content}
+            answer={answer}
+            onAnswer={mode ? onAnswer : undefined}
+            result={result}
+          />
+        )}
         {showCheckButton && (
           <div className="flex justify-end">
             <Button
