@@ -218,7 +218,12 @@
       "forbidden": "You don't have access to this course",
       "invalid": "Please check what you entered"
     },
-    "saving": "Saving…"
+    "saving": "Saving…",
+    "publishToLibrary": "Publish to the library",
+    "removeFromLibrary": "Remove from the library",
+    "publishedToLibrary": "The course is in the library now",
+    "removedFromLibrary": "The course was removed from the library",
+    "inLibrary": "In the library"
   },
   "exercises": {
     "groups": {
@@ -527,7 +532,8 @@
     "highlight": {
       "mark": "Highlight",
       "remove": "Remove"
-    }
+    },
+    "backToCourse": "Back to course"
   },
   "classes": {
     "title": "Classes",
@@ -563,7 +569,7 @@
     "lessonsTab": "Lessons",
     "studentsTab": "Students",
     "noLessonsTitle": "Finished lessons will appear here",
-    "noLessonsTeacher": "Soon there will be an “Open lesson” button here: pick a lesson from your courses or the library and teach it together with your students.",
+    "noLessonsTeacher": "Press “Open lesson”, pick a lesson from your courses or the library, and teach it with your students.",
     "noLessonsStudent": "Lessons will appear here after classes with your teacher.",
     "inviteTitle": "Invite link",
     "inviteHint": "Send it to a student: they sign up and land in this class right away.",
@@ -629,6 +635,45 @@
       "teacherAccount": "A teacher can't join a class as a student.",
       "classFull": "This one-to-one class already has a student. Please contact your teacher.",
       "generic": "Something went wrong. Please try again."
+    }
+  },
+  "library": {
+    "title": "Library",
+    "subtitle": "Ready-made platform courses: teach their lessons or copy a course to your own",
+    "emptyTitle": "The library is empty for now",
+    "emptyText": "Ready-made courses by level will appear here soon.",
+    "backToLibrary": "Library",
+    "copyToMine": "Copy to my courses",
+    "copied": "The course was copied to “My courses”",
+    "copyFailed": "Couldn't copy the course. Please try again.",
+    "preview": "View as a student"
+  },
+  "classLessons": {
+    "openLesson": "Open lesson",
+    "pickCourseHint": "Pick a course, then a lesson.",
+    "myCourses": "My courses",
+    "library": "Library",
+    "allCourses": "All courses",
+    "pickLesson": "Pick a lesson",
+    "pickLessonHint": "Lessons already done in this class have a check mark.",
+    "noMyCourses": "You have no courses yet. Create one in “Courses” or pick a course from the library.",
+    "noLibraryCourses": "The library has no courses yet.",
+    "noLessonsInCourse": "This course has no lessons yet.",
+    "lessonsCount": "{count, plural, one {# lesson} other {# lessons}}",
+    "loading": "Loading…",
+    "loadFailed": "Couldn't load. Please try again.",
+    "live": "Going on now",
+    "done": "Done",
+    "listLabel": "Class lessons",
+    "lessonActions": "Lesson actions",
+    "finish": "Finish lesson",
+    "finished": "Lesson finished",
+    "reopen": "Open the lesson again",
+    "nextLesson": "Next lesson",
+    "nextLessonHint": "Finished? Pick the next lesson — this one will be marked as done.",
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "forbidden": "No access to this lesson or class."
     }
   }
 }
