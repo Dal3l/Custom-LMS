@@ -534,7 +534,10 @@
       "remove": "Remove"
     },
     "backToCourse": "Back to course",
-    "sectionDone": "Section finished"
+    "sectionDone": "Section finished",
+    "answersSaved": "Your answers are saved",
+    "answersSaving": "Saving your answers…",
+    "answersError": "No connection — your answers will be saved when the internet is back"
   },
   "classes": {
     "title": "Classes",

@@ -56,6 +56,7 @@ test.describe("lessons in a class", () => {
     cleanup.courses.push(course!.id);
     const { data: mod } = await db.from("modules").insert({ course_id: course!.id, title: "Unit 1", position: 0 }).select("id").single();
     const lessonIds: string[] = [];
+    const exerciseIds: string[] = [];
     for (const [i, title] of ["Greetings", "Numbers", "Colours"].entries()) {
       const { data: lesson } = await db
         .from("lessons")
@@ -76,6 +77,7 @@ test.describe("lessons in a class", () => {
         })
         .select("id, course_id")
         .single();
+      exerciseIds.push(ex!.id);
       await db.from("exercise_keys").insert({ exercise_id: ex!.id, course_id: ex!.course_id, answer_key: { answers: { st000001: false } } });
     }
     const className = `E2E класс уроков ${stamp}`;
@@ -90,6 +92,19 @@ test.describe("lessons in a class", () => {
     await expect(studentPage.getByText("Уроки появятся здесь после занятий с учителем.")).toBeVisible();
     await studentPage.goto(`/ru/classes/${cls!.id}/lessons/${lessonIds[0]}`);
     await expect(studentPage.getByRole("heading", { name: "Страница не найдена" })).toBeVisible();
+    // Saving an answer for a lesson that was not opened is refused by the server.
+    const refused = await studentPage.evaluate(
+      async ([classId, exerciseId]) => {
+        const res = await fetch("/api/answers", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ classId, exerciseId, answer: { values: { st000001: false } }, check: true }),
+        });
+        return res.status;
+      },
+      [cls!.id, exerciseIds[0]!],
+    );
+    expect(refused).toBe(403);
 
     // --- Teacher: Open lesson → My courses → course → lesson.
     await login(page, teacher.email!, teacher.password!);
@@ -110,6 +125,11 @@ test.describe("lessons in a class", () => {
     await expect(studentPage.getByLabel("Ответ неправильный")).toBeVisible();
     await studentPage.getByRole("radio", { name: "False", exact: true }).click();
     await studentPage.getByRole("button", { name: "Проверить" }).click();
+    await expect(studentPage.getByLabel("Ответ правильный")).toBeVisible();
+    await expect(studentPage.getByText("Ответы сохраняются")).toBeVisible();
+    // The answer and its verdict are kept after reloading the page.
+    await studentPage.reload();
+    await expect(studentPage.getByRole("radio", { name: "False", exact: true })).toHaveAttribute("aria-checked", "true");
     await expect(studentPage.getByLabel("Ответ правильный")).toBeVisible();
     // The other lessons stay hidden.
     await studentPage.goto(`/ru/classes/${cls!.id}/lessons/${lessonIds[1]}`);
@@ -152,6 +172,18 @@ test.describe("lessons in a class", () => {
     await studentPage.getByRole("link", { name: /Greetings/ }).click();
     await expect(studentPage.getByRole("navigation").getByLabel("Секция завершена")).toHaveCount(1);
     await expect(studentPage.getByRole("button", { name: "Завершить секцию" })).toHaveCount(0);
+
+    // A choice made without pressing "Check" is saved as well.
+    await studentPage.goto(`/ru/classes/${cls!.id}/lessons/${lessonIds[1]}`);
+    await studentPage.getByRole("radio", { name: "True", exact: true }).click();
+    await expect(studentPage.getByText("Ответы сохраняются")).toBeVisible();
+    await expect.poll(async () => {
+      const { data } = await db.from("class_answers").select("answer").eq("class_id", cls!.id).eq("exercise_id", exerciseIds[1]!);
+      return JSON.stringify(data?.[0]?.answer ?? null);
+    }).toContain('"st000001":true');
+    await studentPage.reload();
+    await expect(studentPage.getByRole("radio", { name: "True", exact: true })).toHaveAttribute("aria-checked", "true");
+    await expect(studentPage.getByLabel("Ответ правильный")).toHaveCount(0);
     await studentPage.context().close();
   });
 

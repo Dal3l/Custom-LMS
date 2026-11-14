@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { LessonPlayer } from "@/components/lesson-player/lesson-player";
 import { Button } from "@/components/ui/button";
 import { setClassLessonFinished, setSectionFinished } from "@/features/classes/lesson-actions";
+import type { SavedAnswer } from "@/features/lessons/answers";
 import type { StudentSection } from "@/features/lessons/queries";
 import { useRouter } from "@/i18n/navigation";
 import { LessonPicker } from "./lesson-picker";
@@ -26,6 +27,7 @@ export function ClassLessonView({
   isTeacher,
   doneSections: initialDone,
   finished,
+  savedAnswers,
 }: {
   classId: string;
   lessonId: string;
@@ -36,6 +38,8 @@ export function ClassLessonView({
   isTeacher: boolean;
   doneSections: string[];
   finished: boolean;
+  /** Students: their saved answers in this lesson (answers are saved as they go). */
+  savedAnswers?: Record<string, SavedAnswer>;
 }) {
   const t = useTranslations("classLessons");
   const router = useRouter();
@@ -105,6 +109,7 @@ export function ClassLessonView({
       initialSectionId={initialSectionId}
       completedSectionIds={done}
       sectionFooter={isTeacher ? footer : undefined}
+      classAnswers={!isTeacher && savedAnswers ? { classId, saved: savedAnswers } : undefined}
     />
   );
 }

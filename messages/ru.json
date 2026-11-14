@@ -534,7 +534,10 @@
       "remove": "Убрать"
     },
     "backToCourse": "К курсу",
-    "sectionDone": "Секция завершена"
+    "sectionDone": "Секция завершена",
+    "answersSaved": "Ответы сохраняются",
+    "answersSaving": "Сохраняем ответы…",
+    "answersError": "Нет связи — ответы сохранятся, когда интернет вернётся"
   },
   "classes": {
     "title": "Классы",
