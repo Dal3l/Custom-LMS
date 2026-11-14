@@ -86,7 +86,17 @@ export function useTeacherLive({
     const online = () => update("browser", "online");
     window.addEventListener("offline", offline);
     window.addEventListener("online", online);
+    // Back to the tab after a while (laptop slept, other app): fetch the answers again.
+    let hiddenAt = 0;
+    const visibility = () => {
+      if (document.visibilityState === "hidden") hiddenAt = Date.now();
+      else if (hiddenAt && Date.now() - hiddenAt > 20_000) {
+        void fetchLessonAnswers(classId, lessonId).then((r) => r.ok && setAnswers(r.data));
+      }
+    };
+    document.addEventListener("visibilitychange", visibility);
     return () => {
+      document.removeEventListener("visibilitychange", visibility);
       cancelled = true;
       window.removeEventListener("offline", offline);
       window.removeEventListener("online", online);

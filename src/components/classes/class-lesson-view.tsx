@@ -1,8 +1,8 @@
 "use client";
 
-import { Check, CircleCheck, Eye, EyeOff, Loader2, MoreHorizontal, RotateCcw, ScanEye, Undo2 } from "lucide-react";
+import { Check, CircleCheck, CloudOff, Eye, EyeOff, Loader2, MoreHorizontal, RotateCcw, ScanEye, Undo2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { LessonPlayer } from "@/components/lesson-player/lesson-player";
 import { Button } from "@/components/ui/button";
@@ -79,6 +79,23 @@ export function TeacherClassLesson({
   // Whose answers are shown (the teacher always looks at a student's work).
   const [viewing, setViewing] = useState<string | null>(students[0]?.id ?? null);
   const [pointerOn, setPointerOn] = useState(false);
+  const [focus, setFocus] = useState<{ sectionId: string; exerciseId: string; nonce: number } | null>(null);
+
+  // Switching students keeps the same place on the page: the exercise at the top
+  // of the screen stays where it was, even if the answers above change height.
+  const anchor = useRef<{ id: string; top: number } | null>(null);
+  function switchTo(studentId: string | null) {
+    const cards = [...document.querySelectorAll<HTMLElement>('[id^="exercise-"]')];
+    const first = cards.find((c) => c.getBoundingClientRect().bottom > 160);
+    anchor.current = first ? { id: first.id, top: first.getBoundingClientRect().top } : null;
+    setViewing(studentId);
+  }
+  useLayoutEffect(() => {
+    const a = anchor.current;
+    anchor.current = null;
+    const el = a && document.getElementById(a.id);
+    if (a && el) window.scrollBy(0, el.getBoundingClientRect().top - a.top);
+  }, [viewing]);
 
   function toggleSection(sectionId: string, value: boolean) {
     setBusy(sectionId);
@@ -191,9 +208,13 @@ export function TeacherClassLesson({
           status={live.status}
           answers={live.answers}
           viewing={viewing}
-          onView={setViewing}
+          onView={switchTo}
           pointerOn={pointerOn}
           onPointerToggle={setPointerOn}
+          onPick={(studentId, sectionId, exerciseId) => {
+            setViewing(studentId);
+            setFocus({ sectionId, exerciseId, nonce: Date.now() });
+          }}
         />
         <div
           onPointerMove={pointerOn ? onPointerMove : undefined}
@@ -208,6 +229,7 @@ export function TeacherClassLesson({
             sectionFooter={footer}
             review={viewing ? (live.answers[viewing] ?? {}) : undefined}
             solutions={props.solutions}
+            focus={focus}
             exerciseMenu={(exercise, sectionId) => {
               const checkable = checkMode(exercise.type) !== null;
               const isRevealed = props.revealed.includes(exercise.id);
@@ -253,6 +275,17 @@ export function TeacherClassLesson({
 }
 
 /** The student's side: answers are saved; the screen follows the teacher's "Show", pointer and reset. */
+/** A thin notice for the student while the live connection is down. */
+function StudentOffline() {
+  const t = useTranslations("live");
+  return (
+    <p className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive" role="status">
+      <CloudOff className="size-4 shrink-0" aria-hidden="true" />
+      {t("studentOffline")}
+    </p>
+  );
+}
+
 export function StudentClassLesson({
   savedAnswers,
   initialShow,
@@ -306,6 +339,7 @@ export function StudentClassLesson({
 
   return (
     <ClassMarksProvider classId={classId} userId={userId} otherUserId={teacherId} isTeacher={false} initial={props.marks}>
+      {studentLive?.status === "offline" && <StudentOffline />}
       <LessonPlayer
         language={props.language}
         sections={props.sections}

@@ -718,6 +718,19 @@
     "revealAnswers": "Show the right answers",
     "hideAnswers": "Hide the right answers",
     "resetAnswers": "Reset answers",
-    "pointer": "Pointer"
+    "pointer": "Pointer",
+    "overview": "Overview",
+    "overviewTitle": "Group overview",
+    "overviewHint": "How everyone did in each exercise. Tap a cell to open that student's answer.",
+    "overviewEmpty": "This lesson has no exercises to check.",
+    "total": "Right",
+    "cell": {
+      "none": "no answer",
+      "unchecked": "answered, not checked",
+      "correct": "right",
+      "wrong": "wrong",
+      "partial": "{right} of {total} right"
+    },
+    "studentOffline": "No connection — reconnecting… Your answers will be saved when the internet is back."
   }
 }

@@ -3,7 +3,7 @@
 import { EditorContent, useEditor, type Editor } from "@tiptap/react";
 import { Eraser, Highlighter } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { ExerciseViewerProps } from "../../client-types";
 import { textExtensions } from "./extensions";
@@ -62,28 +62,39 @@ export function TextViewer({ content, exerciseId }: ExerciseViewerProps<TextCont
 
 type Selected = { from: number; to: number; top: number; left: number };
 
-/** Small "Highlight / Remove" bar under the student's text selection. */
+/**
+ * Small "Highlight / Remove" bar under the selected words. On phones (iPhone
+ * especially) tapping the bar can clear the selection before the tap arrives,
+ * so the last selection is remembered and the bar stays a moment longer.
+ */
 function HighlightBar({ editor, exerciseId, shared }: { editor: Editor; exerciseId: string; shared: SharedMarks | null }) {
   const t = useTranslations("player.highlight");
   const [selected, setSelected] = useState<Selected | null>(null);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const root = editor.view.dom;
+    function later() {
+      if (hideTimer.current) clearTimeout(hideTimer.current);
+      hideTimer.current = setTimeout(() => setSelected(null), 400);
+    }
     function update() {
       const sel = window.getSelection();
-      if (!sel || sel.isCollapsed || sel.rangeCount === 0) return setSelected(null);
+      if (!sel || sel.isCollapsed || sel.rangeCount === 0) return later();
       const range = sel.getRangeAt(0);
-      if (!root.contains(range.startContainer) || !root.contains(range.endContainer)) return setSelected(null);
+      if (!root.contains(range.startContainer) || !root.contains(range.endContainer)) return later();
       try {
         const from = editor.view.posAtDOM(range.startContainer, range.startOffset);
         const to = editor.view.posAtDOM(range.endContainer, range.endOffset);
         // Fixed to the screen (cards clip their contents), kept inside its width.
         const rect = range.getBoundingClientRect();
         const left = Math.min(Math.max(8, rect.left), window.innerWidth - 240);
-        if (to > from) setSelected({ from, to, top: rect.bottom + 8, left });
-        else setSelected(null);
+        if (to > from) {
+          if (hideTimer.current) clearTimeout(hideTimer.current);
+          setSelected({ from, to, top: rect.bottom + 8, left });
+        } else later();
       } catch {
-        setSelected(null);
+        later();
       }
     }
     const hide = () => setSelected(null);
@@ -92,6 +103,7 @@ function HighlightBar({ editor, exerciseId, shared }: { editor: Editor; exercise
     return () => {
       document.removeEventListener("selectionchange", update);
       window.removeEventListener("scroll", hide);
+      if (hideTimer.current) clearTimeout(hideTimer.current);
     };
   }, [editor]);
 
@@ -111,8 +123,10 @@ function HighlightBar({ editor, exerciseId, shared }: { editor: Editor; exercise
     <div
       className="fixed z-50 flex gap-1 rounded-lg border bg-popover p-1 shadow-md"
       style={{ top: selected.top, left: selected.left }}
-      // Keep the text selected while pressing the buttons.
+      // Keep the text selected while pressing the buttons (mouse and touch).
       onMouseDown={(e) => e.preventDefault()}
+      onPointerDown={(e) => e.preventDefault()}
+      onTouchStart={() => hideTimer.current && clearTimeout(hideTimer.current)}
     >
       <Button type="button" size="sm" variant="ghost" onClick={() => apply(true)}>
         <Highlighter aria-hidden="true" className={shared?.ownColor === TEACHER_COLOR ? "text-blue-500" : "text-orange-500"} />

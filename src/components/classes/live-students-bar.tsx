@@ -8,6 +8,7 @@ import type { StudentAnswers } from "@/features/lessons/answers-shared";
 import type { StudentSection } from "@/features/lessons/queries";
 import type { LiveStatus, StudentPresence } from "@/features/live/types";
 import { initials } from "@/lib/initials";
+import { GroupOverview } from "./group-overview";
 import { cn } from "@/lib/utils";
 
 /**
@@ -26,6 +27,7 @@ export function LiveStudentsBar({
   onView,
   pointerOn,
   onPointerToggle,
+  onPick,
 }: {
   students: ClassStudent[];
   sections: StudentSection[];
@@ -37,6 +39,8 @@ export function LiveStudentsBar({
   onView: (studentId: string | null) => void;
   pointerOn: boolean;
   onPointerToggle: (on: boolean) => void;
+  /** From the overview: show this student's answer at this exercise. */
+  onPick: (studentId: string, sectionId: string, exerciseId: string) => void;
 }) {
   const t = useTranslations("live");
   const sectionNumber = (id: string | null) => {
@@ -45,11 +49,18 @@ export function LiveStudentsBar({
   };
 
   return (
-    <section className="flex flex-col gap-2 rounded-2xl border bg-card p-3" aria-label={t("studentsLabel")}>
+    // Stays at the top while scrolling, so students and tools are always at hand.
+    <section
+      className="sticky top-14 z-[9] -mx-1 flex flex-col gap-2 rounded-2xl border bg-card/95 p-2 shadow-sm backdrop-blur sm:p-3"
+      aria-label={t("studentsLabel")}
+    >
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-sm font-medium">{t("studentsTitle")}</h2>
         <div className="flex items-center gap-2">
           <ConnectionBadge status={status} />
+          {students.length > 0 && (
+            <GroupOverview students={students} sections={sections} answers={answers} onPick={onPick} />
+          )}
           {students.length > 0 && (
             <Button
               type="button"
@@ -59,7 +70,7 @@ export function LiveStudentsBar({
               onClick={() => onPointerToggle(!pointerOn)}
             >
               <MousePointer2 aria-hidden="true" />
-              {t("pointer")}
+              <span className="max-sm:sr-only">{t("pointer")}</span>
             </Button>
           )}
         </div>
@@ -67,7 +78,7 @@ export function LiveStudentsBar({
       {students.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t("noStudents")}</p>
       ) : (
-        <div className="-mx-3 flex gap-2 overflow-x-auto px-3 pb-1" role="group" aria-label={t("whoseAnswers")}>
+        <div className="-mx-2 flex gap-2 overflow-x-auto px-2 pb-0.5 sm:-mx-3 sm:px-3" role="group" aria-label={t("whoseAnswers")}>
           {students.map((s) => {
             const p = online.get(s.id);
             const here = p?.lessonId === lessonId;
