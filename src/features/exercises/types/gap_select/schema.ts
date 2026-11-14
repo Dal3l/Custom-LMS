@@ -56,6 +56,11 @@ export function checkGapSelect(content: GapSelectContent, key: GapSelectKey, ans
   return summarize(parts);
 }
 
+/** The right answers, shown when the teacher reveals them. */
+export function solveGapSelect(_content: GapSelectContent, key: GapSelectKey): GapSelectAnswer {
+  return { values: { ...key.answers } };
+}
+
 export const gapSelectDefinition: ExerciseDefinition<GapSelectContent, GapSelectKey, GapSelectAnswer> = {
   id: "gap_select",
   contentSchema: gapSelectContentSchema,
@@ -64,5 +69,5 @@ export const gapSelectDefinition: ExerciseDefinition<GapSelectContent, GapSelect
     const { content, key } = buildGapSelect("");
     return { content, key };
   },
-  grading: { answerSchema: gapSelectAnswerSchema, check: checkGapSelect },
+  grading: { answerSchema: gapSelectAnswerSchema, check: checkGapSelect, solution: solveGapSelect },
 };

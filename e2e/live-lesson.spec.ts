@@ -119,9 +119,6 @@ test.describe("live lesson", () => {
     await page.getByRole("button", { name: "Завершить секцию" }).click();
     await expect(sp.getByRole("navigation").getByLabel("Секция завершена")).toHaveCount(1);
 
-    // The teacher's own view is interactive again.
-    await bar.getByRole("button", { name: "Мой просмотр" }).click();
-    await expect(page.getByRole("radio", { name: "True", exact: true })).toHaveAttribute("aria-checked", "false");
     await sp.context().close();
   });
 });

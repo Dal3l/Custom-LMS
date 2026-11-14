@@ -83,10 +83,26 @@ export function checkOrdering(content: OrderingContent, key: OrderingKey, answer
   return summarize(parts);
 }
 
+/** The right order of pieces for each task (identical pieces are interchangeable). */
+export function solveOrdering(content: OrderingContent, key: OrderingKey): OrderingAnswer {
+  const sources = new Map(key.tasks.map((t) => [t.id, t.source]));
+  const values: Record<string, string[]> = {};
+  for (const task of content.tasks) {
+    const free = [...task.pieces];
+    const order: string[] = [];
+    for (const piece of piecesOf(sources.get(task.id) ?? "", key.mode)) {
+      const i = free.findIndex((p) => normalizeAnswer(p.text) === normalizeAnswer(piece));
+      if (i >= 0) order.push(free.splice(i, 1)[0]!.id);
+    }
+    values[task.id] = order;
+  }
+  return { values };
+}
+
 export const orderingDefinition: ExerciseDefinition<OrderingContent, OrderingKey, OrderingAnswer> = {
   id: "ordering",
   contentSchema: orderingContentSchema,
   keySchema: orderingKeySchema,
   create: () => buildOrdering({ salt: newItemId(), mode: "words", tasks: [{ id: newItemId(), source: "" }] }),
-  grading: { answerSchema: orderingAnswerSchema, check: checkOrdering },
+  grading: { answerSchema: orderingAnswerSchema, check: checkOrdering, solution: solveOrdering },
 };

@@ -6,10 +6,11 @@ import { ClassLessonControls } from "@/components/classes/class-lesson-controls"
 import { StudentClassLesson, TeacherClassLesson } from "@/components/classes/class-lesson-view";
 import { LessonPicker } from "@/components/classes/lesson-picker";
 import { Badge } from "@/components/ui/badge";
-import { getClassLessonState } from "@/features/classes/lesson-queries";
+import { getClassLessonState, listClassMarks } from "@/features/classes/lesson-queries";
 import { getClassPage } from "@/features/classes/queries";
 import { idSchema } from "@/features/classes/schemas";
 import { getClassLessonAnswers, getMyClassAnswers } from "@/features/lessons/answers";
+import { revealedSolutions } from "@/features/lessons/grade";
 import { getStudentLesson } from "@/features/lessons/queries";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -37,6 +38,12 @@ export default async function ClassLessonPage({
   const { section, show } = await searchParams;
   const live = state.status === "live";
   const finished = Boolean(state.finishedAt);
+  const exerciseIds = lesson.sections.flatMap((s) => s.exercises.map((e) => e.id));
+  // Access to this lesson in the class is confirmed above (RLS + class lesson).
+  const [solutions, marks] = await Promise.all([
+    revealedSolutions(lessonId, state.revealed),
+    listClassMarks(classId, exerciseIds),
+  ]);
   const common = {
     classId,
     lessonId,
@@ -46,6 +53,10 @@ export default async function ClassLessonPage({
     initialSectionId: typeof section === "string" ? section : null,
     doneSections: state.doneSections,
     finished,
+    revealed: state.revealed,
+    solutions,
+    marks,
+    userId: profile.id,
   };
 
   return (
@@ -106,7 +117,6 @@ export default async function ClassLessonPage({
       {cls.isTeacher ? (
         <TeacherClassLesson
           {...common}
-          teacherId={profile.id}
           students={cls.students}
           initialAnswers={savedAnswers as Awaited<ReturnType<typeof getClassLessonAnswers>>}
         />
@@ -115,6 +125,7 @@ export default async function ClassLessonPage({
           {...common}
           savedAnswers={savedAnswers as Awaited<ReturnType<typeof getMyClassAnswers>>}
           initialShow={typeof show === "string" ? show : null}
+          teacherId={cls.teacherId}
         />
       )}
     </div>

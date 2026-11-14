@@ -22,6 +22,8 @@ export type ExerciseDefinition<Content = unknown, Key = unknown, Answer = unknow
      * saved version before checking (e.g. the record of wrong tries).
      */
     prepare?: (answer: Answer, saved: Answer | null) => Answer;
+    /** A complete right answer, shown when the teacher reveals the answers. */
+    solution: (content: Content, key: Key) => Answer;
     /** Updates the answer after a check (e.g. remembers a wrong try). */
     afterCheck?: (answer: Answer, result: CheckResult) => Answer;
   };

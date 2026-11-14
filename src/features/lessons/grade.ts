@@ -81,3 +81,29 @@ async function readKey(exerciseId: string) {
     .maybeSingle();
   return data?.answer_key;
 }
+
+/**
+ * Right answers of exercises the teacher revealed, as answers ready to show.
+ * Call only after checking that the user may see this lesson in the class.
+ */
+export type Solution = { answer: unknown; result: CheckResult };
+
+export async function revealedSolutions(lessonId: string, exerciseIds: string[]): Promise<Record<string, Solution>> {
+  if (exerciseIds.length === 0) return {};
+  const { data } = await createAdminClient()
+    .from("exercises")
+    .select("id, type, content, exercise_keys(answer_key)")
+    .eq("lesson_id", lessonId)
+    .in("id", exerciseIds);
+  const out: Record<string, Solution> = {};
+  for (const e of data ?? []) {
+    const def = getDefinition(e.type);
+    if (!def?.grading || !def.keySchema || !e.exercise_keys) continue;
+    const content = def.contentSchema.safeParse(e.content);
+    const key = def.keySchema.safeParse(e.exercise_keys.answer_key);
+    if (!content.success || !key.success) continue;
+    const answer = def.grading.solution(content.data, key.data);
+    out[e.id] = { answer, result: def.grading.check(content.data, key.data, answer) };
+  }
+  return out;
+}

@@ -1,6 +1,7 @@
 "use client";
 
-import { CloudOff, Loader2, UserRound } from "lucide-react";
+import { CloudOff, Loader2, MousePointer2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import type { ClassStudent } from "@/features/classes/queries";
 import type { StudentAnswers } from "@/features/lessons/answers-shared";
@@ -12,7 +13,7 @@ import { cn } from "@/lib/utils";
 /**
  * Above the lesson for the teacher: connection state and the class's students —
  * who is online, in which section, how many exercises they answered. Picking a
- * student shows their answers live; "My view" lets the teacher try the lesson.
+ * student shows their answers live. The pointer is switched on here.
  */
 export function LiveStudentsBar({
   students,
@@ -23,6 +24,8 @@ export function LiveStudentsBar({
   answers,
   viewing,
   onView,
+  pointerOn,
+  onPointerToggle,
 }: {
   students: ClassStudent[];
   sections: StudentSection[];
@@ -32,6 +35,8 @@ export function LiveStudentsBar({
   answers: StudentAnswers;
   viewing: string | null;
   onView: (studentId: string | null) => void;
+  pointerOn: boolean;
+  onPointerToggle: (on: boolean) => void;
 }) {
   const t = useTranslations("live");
   const sectionNumber = (id: string | null) => {
@@ -43,18 +48,26 @@ export function LiveStudentsBar({
     <section className="flex flex-col gap-2 rounded-2xl border bg-card p-3" aria-label={t("studentsLabel")}>
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-sm font-medium">{t("studentsTitle")}</h2>
-        <ConnectionBadge status={status} />
+        <div className="flex items-center gap-2">
+          <ConnectionBadge status={status} />
+          {students.length > 0 && (
+            <Button
+              type="button"
+              size="sm"
+              variant={pointerOn ? "default" : "outline"}
+              aria-pressed={pointerOn}
+              onClick={() => onPointerToggle(!pointerOn)}
+            >
+              <MousePointer2 aria-hidden="true" />
+              {t("pointer")}
+            </Button>
+          )}
+        </div>
       </div>
       {students.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t("noStudents")}</p>
       ) : (
         <div className="-mx-3 flex gap-2 overflow-x-auto px-3 pb-1" role="group" aria-label={t("whoseAnswers")}>
-          <Chip active={viewing === null} onClick={() => onView(null)} label={t("myView")}>
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted">
-              <UserRound className="size-4" aria-hidden="true" />
-            </span>
-            <span className="text-sm font-medium">{t("myView")}</span>
-          </Chip>
           {students.map((s) => {
             const p = online.get(s.id);
             const here = p?.lessonId === lessonId;

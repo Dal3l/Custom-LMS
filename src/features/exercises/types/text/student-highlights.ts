@@ -1,19 +1,26 @@
 import type { Editor } from "@tiptap/react";
 
-// The student's own highlights in a text. Kept apart from the teacher's colours.
-// Until students have accounts (stage 2) they are remembered on this device only.
+// Highlights that readers add on top of a text (kept apart from the teacher's
+// own colours in the lesson builder). In a class they are shared: the teacher
+// sees a student's, students see the teacher's (see marks.tsx). Elsewhere
+// (the teacher's preview) they are remembered on this device only.
 
+/** The student's highlight colour. */
 export const STUDENT_COLOR = "#fed7aa";
-type Range = { from: number; to: number; text: string };
+/** The teacher's highlight colour (in a class lesson). */
+export const TEACHER_COLOR = "#bfdbfe";
+const READER_COLORS = [STUDENT_COLOR, TEACHER_COLOR];
+
+export type Range = { from: number; to: number; text: string };
 
 const storageKey = (exerciseId: string) => `linguaroom:highlights:${exerciseId}`;
 
-/** Ranges of text carrying the student's highlight, merged. */
-export function studentRanges(editor: Editor): Range[] {
+/** Ranges of text carrying a highlight of this colour, merged. */
+export function rangesOf(editor: Editor, color: string): Range[] {
   const ranges: Range[] = [];
   editor.state.doc.descendants((node, pos) => {
     if (!node.isText) return;
-    const marked = node.marks.some((m) => m.type.name === "highlight" && m.attrs.color === STUDENT_COLOR);
+    const marked = node.marks.some((m) => m.type.name === "highlight" && m.attrs.color === color);
     if (!marked) return;
     const last = ranges[ranges.length - 1];
     if (last && last.to === pos) last.to = pos + node.nodeSize;
@@ -22,34 +29,53 @@ export function studentRanges(editor: Editor): Range[] {
   return ranges.map((r) => ({ ...r, text: editor.state.doc.textBetween(r.from, r.to) }));
 }
 
-export function applyStudentHighlight(editor: Editor, from: number, to: number, on: boolean) {
+export function applyHighlight(editor: Editor, from: number, to: number, color: string, on: boolean) {
   const type = editor.schema.marks.highlight;
   if (!type || from >= to) return;
-  const mark = type.create({ color: STUDENT_COLOR });
+  const mark = type.create({ color });
   const tr = on ? editor.state.tr.addMark(from, to, mark) : editor.state.tr.removeMark(from, to, mark);
   editor.view.dispatch(tr);
 }
 
-export function saveHighlights(exerciseId: string, editor: Editor) {
+/** Only well-formed ranges whose text is still the same (the teacher may have edited the text since). */
+export function validRanges(editor: Editor, value: unknown): Range[] {
+  const size = editor.state.doc.content.size;
+  return (Array.isArray(value) ? value : []).filter(
+    (r): r is Range =>
+      typeof r?.from === "number" &&
+      typeof r?.to === "number" &&
+      r.from >= 0 &&
+      r.to <= size &&
+      r.from < r.to &&
+      editor.state.doc.textBetween(r.from, r.to) === r.text,
+  );
+}
+
+/** Replaces all readers' highlights with these (own and others', each in its colour). */
+export function showHighlights(editor: Editor, layers: { color: string; ranges: unknown }[]) {
+  const type = editor.schema.marks.highlight;
+  if (!type) return;
+  let tr = editor.state.tr;
+  const size = editor.state.doc.content.size;
+  for (const color of READER_COLORS) tr = tr.removeMark(0, size, type.create({ color }));
+  editor.view.dispatch(tr);
+  for (const layer of layers) {
+    for (const r of validRanges(editor, layer.ranges)) applyHighlight(editor, r.from, r.to, layer.color, true);
+  }
+}
+
+export function saveLocalHighlights(exerciseId: string, editor: Editor) {
   try {
-    localStorage.setItem(storageKey(exerciseId), JSON.stringify(studentRanges(editor)));
+    localStorage.setItem(storageKey(exerciseId), JSON.stringify(rangesOf(editor, STUDENT_COLOR)));
   } catch {
     /* private mode or storage blocked: highlights just won't be remembered */
   }
 }
 
-/** Puts saved highlights back, skipping any whose text changed since. */
-export function restoreHighlights(exerciseId: string, editor: Editor) {
-  let saved: Range[] = [];
+export function loadLocalHighlights(exerciseId: string): unknown {
   try {
-    saved = JSON.parse(localStorage.getItem(storageKey(exerciseId)) ?? "[]") as Range[];
+    return JSON.parse(localStorage.getItem(storageKey(exerciseId)) ?? "[]");
   } catch {
-    return;
-  }
-  const size = editor.state.doc.content.size;
-  for (const r of Array.isArray(saved) ? saved : []) {
-    if (typeof r?.from !== "number" || typeof r?.to !== "number" || r.to > size || r.from < 0) continue;
-    if (editor.state.doc.textBetween(r.from, r.to) !== r.text) continue;
-    applyStudentHighlight(editor, r.from, r.to, true);
+    return [];
   }
 }

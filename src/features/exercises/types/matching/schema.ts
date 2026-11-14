@@ -67,10 +67,22 @@ export function emptyPair(): MatchingKey["pairs"][number] {
   return { id: newItemId(), left: { kind: "text", text: "" }, right: "" };
 }
 
+/** The right pairs: each left item with a right card of the right text (each card used once). */
+export function solveMatching(content: MatchingContent, key: MatchingKey): MatchingAnswer {
+  const free = [...content.right];
+  const expected = new Map(key.pairs.map((p) => [p.id, p.right]));
+  const values: Record<string, string> = {};
+  for (const l of content.left) {
+    const i = free.findIndex((r) => normalizeAnswer(r.text) === normalizeAnswer(expected.get(l.id) ?? ""));
+    if (i >= 0) values[l.id] = free.splice(i, 1)[0]!.id;
+  }
+  return { values };
+}
+
 export const matchingDefinition: ExerciseDefinition<MatchingContent, MatchingKey, MatchingAnswer> = {
   id: "matching",
   contentSchema: matchingContentSchema,
   keySchema: matchingKeySchema,
   create: () => buildMatching({ salt: newItemId(), pairs: [emptyPair(), emptyPair(), emptyPair()] }),
-  grading: { answerSchema: matchingAnswerSchema, check: checkMatching },
+  grading: { answerSchema: matchingAnswerSchema, check: checkMatching, solution: solveMatching },
 };

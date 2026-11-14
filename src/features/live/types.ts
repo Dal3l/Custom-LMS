@@ -3,6 +3,18 @@
 /** The teacher's "Show to students": open this section and scroll to this exercise. */
 export type ShowMessage = { lessonId: string; sectionId: string; exerciseId: string };
 
+/** The teacher's pointer over an exercise (x, y: 0…1 of the exercise card), or hidden. */
+export type PointerMessage = { lessonId: string; exerciseId: string; x: number; y: number } | { lessonId: string; hide: true };
+
+/** "Reset answers": the exercise starts over for every student. */
+export type ResetMessage = { lessonId: string; exerciseId: string };
+
+/** Messages a student's lesson page receives from the teacher. */
+export type LiveMessage =
+  | ({ kind: "show"; classId: string } & ShowMessage)
+  | ({ kind: "pointer"; classId: string } & PointerMessage)
+  | ({ kind: "reset"; classId: string } & ResetMessage);
+
 /** What a student shares about themselves in a class channel (presence). */
 export type StudentPresence = {
   userId: string;
