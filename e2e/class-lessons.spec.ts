@@ -64,6 +64,7 @@ test.describe("lessons in a class", () => {
         .single();
       lessonIds.push(lesson!.id);
       const { data: section } = await db.from("sections").insert({ lesson_id: lesson!.id, title: "Warm-up", position: 0 }).select("id").single();
+      await db.from("sections").insert({ lesson_id: lesson!.id, title: "Practice", position: 1 });
       const { data: ex } = await db
         .from("exercises")
         .insert({
@@ -114,34 +115,43 @@ test.describe("lessons in a class", () => {
     await studentPage.goto(`/ru/classes/${cls!.id}/lessons/${lessonIds[1]}`);
     await expect(studentPage.getByRole("heading", { name: "Страница не найдена" })).toBeVisible();
 
-    // --- Teacher: "Next lesson" starts on this course; Greetings has a check mark? Not yet: it is live.
+    // --- Teacher: finish section 1, then the lesson at the end of the last section.
+    await page.getByRole("button", { name: "Завершить секцию" }).click();
+    await expect(page.getByRole("button", { name: /Секция завершена/ }).first()).toBeVisible();
+    await expect(page.getByRole("navigation").getByLabel("Секция завершена")).toHaveCount(1);
+    await expect(page.getByRole("button", { name: "Завершить урок" })).toHaveCount(0); // only in the last section
+    await page.getByRole("button", { name: /Дальше/ }).click();
+    await page.getByRole("button", { name: "Завершить урок" }).click();
+    await expect(page.getByText("Урок завершён")).toBeVisible();
+
+    // "Next lesson" appears and starts on this course; Greetings has a check mark.
     await page.getByRole("button", { name: "Следующий урок" }).click();
     const dialog = page.getByRole("dialog");
     await expect(dialog.getByRole("heading", { name: `E2E уроки ${stamp}` })).toBeVisible();
+    await expect(dialog.getByRole("button", { name: /Greetings/ }).getByLabel("Пройден")).toBeVisible();
     await dialog.getByRole("button", { name: /Numbers/ }).click();
     await expect(page.getByRole("heading", { level: 1, name: "Numbers" })).toBeVisible();
 
-    // The picker now shows Greetings as done.
-    await page.getByRole("button", { name: "Следующий урок" }).click();
-    await expect(dialog.getByRole("button", { name: /Greetings/ }).getByLabel("Пройден")).toBeVisible();
-    await expect(dialog.getByRole("button", { name: /Colours/ }).getByLabel("Пройден")).toHaveCount(0);
-    await page.keyboard.press("Escape");
+    // "Course lessons" shows all lessons; opening another one does NOT finish Numbers.
+    await page.getByRole("button", { name: "Уроки курса" }).click();
+    await expect(dialog.getByRole("button", { name: /Colours/ })).toBeVisible();
+    await dialog.getByRole("button", { name: /Colours/ }).click();
+    await expect(page.getByRole("heading", { level: 1, name: "Colours" })).toBeVisible();
 
-    // Finish the lesson from the "…" menu.
-    await page.getByRole("button", { name: "Действия с уроком" }).click();
-    await page.getByRole("menuitem", { name: "Завершить урок" }).click();
-    await expect(page.getByText("Урок завершён")).toBeVisible();
-
-    // --- Class page: both lessons, done, newest first.
+    // --- Class page: Colours going on, Numbers not finished, Greetings finished.
     await page.goto(`/ru/classes/${cls!.id}`);
     const list = page.getByRole("list", { name: "Уроки класса" });
-    await expect(list.getByRole("link")).toHaveCount(2);
-    await expect(list.getByRole("link").first()).toContainText("Numbers");
-    await expect(page.getByText("Идёт сейчас")).toHaveCount(0);
+    await expect(list.getByRole("link")).toHaveCount(3);
+    await expect(list.getByRole("link").first()).toContainText("Colours");
+    await expect(list.getByRole("link", { name: /Numbers/ }).getByLabel("Не завершён")).toBeVisible();
+    await expect(list.getByRole("link", { name: /Greetings/ }).getByLabel("Пройден")).toBeVisible();
 
-    // --- Student sees both done lessons.
+    // --- Student sees the three lessons and the finished section of Greetings.
     await studentPage.goto(`/ru/classes/${cls!.id}`);
-    await expect(studentPage.getByRole("list", { name: "Уроки класса" }).getByRole("link")).toHaveCount(2);
+    await expect(studentPage.getByRole("list", { name: "Уроки класса" }).getByRole("link")).toHaveCount(3);
+    await studentPage.getByRole("link", { name: /Greetings/ }).click();
+    await expect(studentPage.getByRole("navigation").getByLabel("Секция завершена")).toHaveCount(1);
+    await expect(studentPage.getByRole("button", { name: "Завершить секцию" })).toHaveCount(0);
     await studentPage.context().close();
   });
 

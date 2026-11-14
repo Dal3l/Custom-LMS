@@ -1,6 +1,18 @@
 "use client";
 
-import { BookOpen, Check, ChevronLeft, ChevronRight, ClipboardCheck, FileText, Loader2, Play, Radio } from "lucide-react";
+import {
+  BookOpen,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  CircleDashed,
+  ClipboardCheck,
+  FileText,
+  ListOrdered,
+  Loader2,
+  Play,
+  Radio,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -29,19 +41,22 @@ export function LessonPicker({
   label,
   variant = "default",
   size = "default",
+  icon = "play",
 }: {
   classId: string;
   courseId?: string;
   label: string;
   variant?: "default" | "outline";
   size?: "default" | "lg";
+  /** "list": the course's lessons ("Lessons of the course"). */
+  icon?: "play" | "list";
 }) {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant={variant} size={size}>
-          <Play aria-hidden="true" />
+          {icon === "list" ? <ListOrdered aria-hidden="true" /> : <Play aria-hidden="true" />}
           {label}
         </Button>
       </DialogTrigger>
@@ -147,17 +162,19 @@ function PickerBody({ classId, initialCourseId }: { classId: string; initialCour
                             onClick={() => open(l.id)}
                             className="flex min-h-12 w-full items-center gap-3 rounded-xl border px-3 py-2 text-left transition-colors hover:border-primary/60 hover:bg-accent disabled:opacity-60"
                           >
-                            {l.status === "done" ? (
+                            {l.finished ? (
                               <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
                                 <Check className="size-4" aria-label={t("done")} />
                               </span>
+                            ) : l.started ? (
+                              <CircleDashed className="size-5 shrink-0 text-amber-600" aria-label={t("notFinished")} />
                             ) : l.isTest ? (
                               <ClipboardCheck className="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
                             ) : (
                               <FileText className="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
                             )}
                             <span className="min-w-0 flex-1 break-words">{l.title}</span>
-                            {l.status === "live" && (
+                            {l.live && (
                               <Badge>
                                 <Radio aria-hidden="true" />
                                 {t("live")}

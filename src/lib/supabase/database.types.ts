@@ -48,6 +48,7 @@ export type Database = {
       class_lessons: {
         Row: {
           class_id: string
+          done_sections: string[]
           finished_at: string | null
           id: string
           lesson_id: string
@@ -56,6 +57,7 @@ export type Database = {
         }
         Insert: {
           class_id: string
+          done_sections?: string[]
           finished_at?: string | null
           id?: string
           lesson_id: string
@@ -64,6 +66,7 @@ export type Database = {
         }
         Update: {
           class_id?: string
+          done_sections?: string[]
           finished_at?: string | null
           id?: string
           lesson_id?: string
