@@ -11,6 +11,7 @@ export type ClassLessonItem = {
   courseTitle: string;
   status: ClassLessonStatus;
   openedAt: string;
+  /** Set when the teacher finished the lesson. */
   finishedAt: string | null;
 };
 
@@ -41,14 +42,28 @@ export async function listClassLessons(classId: string): Promise<ClassLessonItem
   return sortClassLessons(items);
 }
 
-/** The status of one lesson in a class, or null if it was never opened there. */
-export async function getClassLessonStatus(classId: string, lessonId: string) {
+export type ClassLessonState = {
+  status: ClassLessonStatus;
+  openedAt: string;
+  finishedAt: string | null;
+  doneSections: string[];
+};
+
+/** The state of one lesson in a class, or null if it was never opened there. */
+export async function getClassLessonState(classId: string, lessonId: string): Promise<ClassLessonState | null> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("class_lessons")
-    .select("status, opened_at, finished_at")
+    .select("status, opened_at, finished_at, done_sections")
     .eq("class_id", classId)
     .eq("lesson_id", lessonId)
     .maybeSingle();
-  return data ? { status: data.status as ClassLessonStatus, openedAt: data.opened_at, finishedAt: data.finished_at } : null;
+  return data
+    ? {
+        status: data.status as ClassLessonStatus,
+        openedAt: data.opened_at,
+        finishedAt: data.finished_at,
+        doneSections: data.done_sections,
+      }
+    : null;
 }

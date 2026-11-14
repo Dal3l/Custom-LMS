@@ -533,7 +533,8 @@
       "mark": "Highlight",
       "remove": "Remove"
     },
-    "backToCourse": "Back to course"
+    "backToCourse": "Back to course",
+    "sectionDone": "Section finished"
   },
   "classes": {
     "title": "Classes",
@@ -655,7 +656,7 @@
     "library": "Library",
     "allCourses": "All courses",
     "pickLesson": "Pick a lesson",
-    "pickLessonHint": "Lessons already done in this class have a check mark.",
+    "pickLessonHint": "Check mark — finished in this class; dashed circle — started but not finished.",
     "noMyCourses": "You have no courses yet. Create one in “Courses” or pick a course from the library.",
     "noLibraryCourses": "The library has no courses yet.",
     "noLessonsInCourse": "This course has no lessons yet.",
@@ -668,12 +669,18 @@
     "lessonActions": "Lesson actions",
     "finish": "Finish lesson",
     "finished": "Lesson finished",
-    "reopen": "Open the lesson again",
     "nextLesson": "Next lesson",
-    "nextLessonHint": "Finished? Pick the next lesson — this one will be marked as done.",
     "errors": {
       "generic": "Something went wrong. Please try again.",
       "forbidden": "No access to this lesson or class."
-    }
+    },
+    "notFinished": "Not finished",
+    "finishSection": "Finish section",
+    "sectionFinished": "Section finished",
+    "undo": "Undo",
+    "unfinished": "The lesson is no longer marked as finished",
+    "markUnfinished": "Mark as not finished",
+    "makeCurrent": "Make it the current lesson",
+    "courseLessons": "Course lessons"
   }
 }

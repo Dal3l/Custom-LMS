@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleCheck, MoreHorizontal, RotateCcw } from "lucide-react";
+import { CircleCheck, CircleDashed, MoreHorizontal, Radio } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTransition } from "react";
 import { toast } from "sonner";
@@ -11,26 +11,36 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { finishClassLesson, openClassLesson } from "@/features/classes/lesson-actions";
+import { openClassLesson, setClassLessonFinished } from "@/features/classes/lesson-actions";
 import { useRouter } from "@/i18n/navigation";
 
-/** Teacher's "…" menu on a class lesson: finish it, or open it again. */
-export function ClassLessonControls({ classId, lessonId, live }: { classId: string; lessonId: string; live: boolean }) {
+/** Teacher's "…" menu on a class lesson: finish / un-finish it, make it the current lesson. */
+export function ClassLessonControls({
+  classId,
+  lessonId,
+  live,
+  finished,
+}: {
+  classId: string;
+  lessonId: string;
+  live: boolean;
+  finished: boolean;
+}) {
   const t = useTranslations("classLessons");
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
-  function finish() {
+  function setFinished(value: boolean) {
     startTransition(async () => {
-      const result = await finishClassLesson(classId, lessonId);
+      const result = await setClassLessonFinished(classId, lessonId, value);
       if (result.ok) {
-        toast.success(t("finished"));
+        toast.success(value ? t("finished") : t("unfinished"));
         router.refresh();
       } else toast.error(t(`errors.${result.error}`));
     });
   }
 
-  function reopen() {
+  function makeCurrent() {
     startTransition(async () => {
       const result = await openClassLesson(classId, lessonId);
       if (result && !result.ok) toast.error(t(`errors.${result.error}`));
@@ -46,15 +56,21 @@ export function ClassLessonControls({ classId, lessonId, live }: { classId: stri
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {live ? (
-          <DropdownMenuItem onSelect={finish}>
+        {finished ? (
+          <DropdownMenuItem onSelect={() => setFinished(false)}>
+            <CircleDashed aria-hidden="true" />
+            {t("markUnfinished")}
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem onSelect={() => setFinished(true)}>
             <CircleCheck aria-hidden="true" />
             {t("finish")}
           </DropdownMenuItem>
-        ) : (
-          <DropdownMenuItem onSelect={reopen}>
-            <RotateCcw aria-hidden="true" />
-            {t("reopen")}
+        )}
+        {!live && (
+          <DropdownMenuItem onSelect={makeCurrent}>
+            <Radio aria-hidden="true" />
+            {t("makeCurrent")}
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>

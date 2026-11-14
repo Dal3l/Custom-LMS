@@ -28,6 +28,8 @@ export function LessonPlayer({
   sections,
   initialSectionId,
   resetSignal = 0,
+  completedSectionIds,
+  sectionFooter,
 }: {
   /** the language the course teaches */
   language: string;
@@ -35,6 +37,10 @@ export function LessonPlayer({
   initialSectionId?: string | null;
   /** Change it to clear all answers. */
   resetSignal?: number;
+  /** Sections the teacher finished in class: shown with a check mark. */
+  completedSectionIds?: readonly string[];
+  /** Extra controls under a section (the teacher's "Finish section" in class). */
+  sectionFooter?: (section: StudentSection, isLast: boolean) => React.ReactNode;
 }) {
   const t = useTranslations("player");
   const [activeId, setActiveId] = useState(
@@ -68,6 +74,9 @@ export function LessonPlayer({
             aria-current={s.id === activeId ? "true" : undefined}
             onClick={() => select(s.id)}
           >
+            {completedSectionIds?.includes(s.id) && (
+              <Check aria-label={t("sectionDone")} />
+            )}
             {i + 1}. {s.title}
           </Button>
         ))}
@@ -92,12 +101,15 @@ export function LessonPlayer({
         </ol>
       )}
 
-      {next && (
-        <div className="flex justify-end">
-          <Button size="lg" onClick={() => select(next.id)}>
-            {t("next", { title: next.title })}
-            <ArrowRight aria-hidden="true" />
-          </Button>
+      {(next || sectionFooter) && (
+        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap gap-2">{sectionFooter?.(active, !next)}</div>
+          {next && (
+            <Button size="lg" onClick={() => select(next.id)}>
+              {t("next", { title: next.title })}
+              <ArrowRight aria-hidden="true" />
+            </Button>
+          )}
         </div>
       )}
     </div>

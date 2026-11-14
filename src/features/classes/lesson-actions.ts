@@ -6,14 +6,15 @@ import { z } from "zod";
 import { redirect } from "@/i18n/navigation";
 import { getProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import type { ClassLessonStatus } from "./class-lessons";
+import { toggleDoneSection } from "./class-lessons";
 import { idSchema } from "./schemas";
 
 // Choosing and running lessons in a class. Teacher only; RLS checks that the
 // class is theirs and the lesson is from their own or a library course.
 
 export type PickerCourse = { id: string; title: string; language: string; level: string | null; lessonCount: number };
-export type PickerLesson = { id: string; title: string; isTest: boolean; status: ClassLessonStatus | null };
+/** live: going on now; finished: the teacher finished it; started: opened, not finished. */
+export type PickerLesson = { id: string; title: string; isTest: boolean; live: boolean; finished: boolean; started: boolean };
 export type PickerModule = { id: string; title: string; lessons: PickerLesson[] };
 export type PickerOutline = { course: { id: string; title: string }; modules: PickerModule[] };
 
@@ -53,11 +54,11 @@ export async function getPickerOutline(classId: string, courseId: string): Promi
       .select("id, title, modules(id, title, position), lessons(id, module_id, title, is_test, position)")
       .eq("id", ids.data.courseId)
       .maybeSingle(),
-    ctx.supabase.from("class_lessons").select("lesson_id, status").eq("class_id", ids.data.classId),
+    ctx.supabase.from("class_lessons").select("lesson_id, status, finished_at").eq("class_id", ids.data.classId),
   ]);
   if (course.error || history.error) return { ok: false, error: "generic" };
   if (!course.data) return { ok: false, error: "forbidden" };
-  const status = new Map(history.data.map((h) => [h.lesson_id, h.status as ClassLessonStatus]));
+  const opened = new Map(history.data.map((h) => [h.lesson_id, h]));
   const byPosition = <T extends { position: number }>(a: T, b: T) => a.position - b.position;
   const lessons = [...course.data.lessons].sort(byPosition);
   return {
@@ -69,7 +70,17 @@ export async function getPickerOutline(classId: string, courseId: string): Promi
         title: m.title,
         lessons: lessons
           .filter((l) => l.module_id === m.id)
-          .map((l) => ({ id: l.id, title: l.title, isTest: l.is_test, status: status.get(l.id) ?? null })),
+          .map((l) => {
+            const h = opened.get(l.id);
+            return {
+              id: l.id,
+              title: l.title,
+              isTest: l.is_test,
+              live: h?.status === "live",
+              finished: Boolean(h?.finished_at),
+              started: Boolean(h),
+            };
+          }),
       })),
     },
   };
@@ -80,8 +91,8 @@ function refresh(classId: string) {
 }
 
 /**
- * Opens a lesson in the class: the lesson going on so far is finished, this one
- * becomes the current lesson (again, if it was done before). Then goes to it.
+ * Opens a lesson in the class: it becomes the current lesson. The previous one
+ * stays as it was (finished only if the teacher finished it). Then goes to it.
  */
 export async function openClassLesson(classId: string, lessonId: string): Promise<Result<never>> {
   const ctx = await teacherContext();
@@ -90,17 +101,17 @@ export async function openClassLesson(classId: string, lessonId: string): Promis
   const { supabase } = ctx;
   const now = new Date().toISOString();
 
-  const { error: finishError } = await supabase
+  const { error: pauseError } = await supabase
     .from("class_lessons")
-    .update({ status: "done", finished_at: now })
+    .update({ status: "open" })
     .eq("class_id", ids.data.classId)
     .eq("status", "live")
     .neq("lesson_id", ids.data.lessonId);
-  if (finishError) return { ok: false, error: "generic" };
+  if (pauseError) return { ok: false, error: "generic" };
 
   const { data: reopened, error: reopenError } = await supabase
     .from("class_lessons")
-    .update({ status: "live", opened_at: now, finished_at: null })
+    .update({ status: "live", opened_at: now })
     .eq("class_id", ids.data.classId)
     .eq("lesson_id", ids.data.lessonId)
     .select("lesson_id");
@@ -117,20 +128,53 @@ export async function openClassLesson(classId: string, lessonId: string): Promis
   return redirect({ href: `/classes/${ids.data.classId}/lessons/${ids.data.lessonId}`, locale: await getLocale() });
 }
 
-/** Marks the lesson as done (it stays in the class's list with a check mark). */
-export async function finishClassLesson(classId: string, lessonId: string): Promise<Result<undefined>> {
+/** "Finish lesson" (or undo it): a finished lesson has a check mark in the class. */
+export async function setClassLessonFinished(
+  classId: string,
+  lessonId: string,
+  finished: boolean,
+): Promise<Result<undefined>> {
   const ctx = await teacherContext();
   const ids = z.object({ classId: idSchema, lessonId: idSchema }).safeParse({ classId, lessonId });
   if (!ctx || !ids.success) return { ok: false, error: "forbidden" };
   const { data, error } = await ctx.supabase
     .from("class_lessons")
-    .update({ status: "done", finished_at: new Date().toISOString() })
+    .update({ finished_at: finished ? new Date().toISOString() : null })
     .eq("class_id", ids.data.classId)
     .eq("lesson_id", ids.data.lessonId)
-    .eq("status", "live")
     .select("lesson_id");
   if (error) return { ok: false, error: "generic" };
   if (!data.length) return { ok: false, error: "forbidden" };
   refresh(ids.data.classId);
   return { ok: true, data: undefined };
+}
+
+/** "Finish section" (or undo it). Returns the finished sections. */
+export async function setSectionFinished(
+  classId: string,
+  lessonId: string,
+  sectionId: string,
+  finished: boolean,
+): Promise<Result<string[]>> {
+  const ctx = await teacherContext();
+  const ids = z
+    .object({ classId: idSchema, lessonId: idSchema, sectionId: idSchema })
+    .safeParse({ classId, lessonId, sectionId });
+  if (!ctx || !ids.success) return { ok: false, error: "forbidden" };
+  const { supabase } = ctx;
+  const { data: row } = await supabase
+    .from("class_lessons")
+    .select("done_sections, lesson:lessons(sections(id))")
+    .eq("class_id", ids.data.classId)
+    .eq("lesson_id", ids.data.lessonId)
+    .maybeSingle();
+  if (!row?.lesson?.sections.some((s) => s.id === ids.data.sectionId)) return { ok: false, error: "forbidden" };
+  const next = toggleDoneSection(row.done_sections, ids.data.sectionId, finished);
+  const { error } = await supabase
+    .from("class_lessons")
+    .update({ done_sections: next })
+    .eq("class_id", ids.data.classId)
+    .eq("lesson_id", ids.data.lessonId);
+  if (error) return { ok: false, error: "generic" };
+  return { ok: true, data: next };
 }

@@ -1,11 +1,11 @@
-import { Check, ChevronRight, Radio } from "lucide-react";
+import { Check, ChevronRight, CircleDashed, Radio } from "lucide-react";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import type { ClassLessonItem } from "@/features/classes/lesson-queries";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
-/** Lessons of a class: the current one on top (highlighted), then done ones with a check mark. */
+/** Lessons of a class: the current one on top (highlighted), then the rest; finished ones have a check mark. */
 export async function ClassLessonsList({ classId, lessons }: { classId: string; lessons: ClassLessonItem[] }) {
   const [t, format] = await Promise.all([getTranslations("classLessons"), getFormatter()]);
   return (
@@ -25,9 +25,13 @@ export async function ClassLessonsList({ classId, lessons }: { classId: string; 
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
                   <Radio className="size-4" aria-hidden="true" />
                 </span>
-              ) : (
+              ) : l.finishedAt ? (
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
                   <Check className="size-4" aria-label={t("done")} />
+                </span>
+              ) : (
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700">
+                  <CircleDashed className="size-4" aria-label={t("notFinished")} />
                 </span>
               )}
               <span className="flex min-w-0 flex-1 flex-col">
@@ -38,6 +42,7 @@ export async function ClassLessonsList({ classId, lessons }: { classId: string; 
                 </span>
               </span>
               {live && <Badge>{t("live")}</Badge>}
+              {live && l.finishedAt && <Check className="size-4 shrink-0 text-emerald-600" aria-label={t("done")} />}
               <ChevronRight className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
             </Link>
           </li>
