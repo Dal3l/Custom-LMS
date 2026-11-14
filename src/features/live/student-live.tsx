@@ -191,6 +191,13 @@ export function StudentLiveProvider({
     const online = () => update("browser", "online");
     window.addEventListener("offline", offline);
     window.addEventListener("online", online);
+    // A phone that slept may have missed messages: reload the page data on waking up.
+    let hiddenAt = 0;
+    const visibility = () => {
+      if (document.visibilityState === "hidden") hiddenAt = Date.now();
+      else if (hiddenAt && Date.now() - hiddenAt > 20_000) router.refresh();
+    };
+    document.addEventListener("visibilitychange", visibility);
     const map = channels.current;
     const joinedSet = joined.current;
     return () => {
@@ -198,6 +205,7 @@ export function StudentLiveProvider({
       cancelled = true;
       window.removeEventListener("offline", offline);
       window.removeEventListener("online", online);
+      document.removeEventListener("visibilitychange", visibility);
       created.forEach((c) => void supabase.removeChannel(c));
       map.clear();
     };

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { generateInviteToken, generatePassword, INVITE_TOKEN_RE, PASSWORD_WORDS } from "@/features/classes/credentials";
 import { sortClassLessons, toggleDoneSection } from "@/features/classes/class-lessons";
+import { cellStatus, correctCount } from "@/features/live/overview";
 import { combineStatus, isNewlyOpened, onlineStudents } from "@/features/live/types";
 import { classSchema, registerStudentSchema } from "@/features/classes/schemas";
 
@@ -126,5 +127,25 @@ describe("live lesson helpers", () => {
     expect(combineStatus(["online", "online"])).toBe("online");
     expect(combineStatus(["online", "connecting"])).toBe("connecting");
     expect(combineStatus(["connecting", "offline"])).toBe("offline");
+  });
+});
+
+describe("group overview cells", () => {
+  const saved = (result: { parts: Record<string, boolean | null>; correct: boolean } | null) => ({
+    answer: {},
+    checkedAnswer: {},
+    result: result && { ...result, score: 0 },
+  });
+  it("tells none / unchecked / right / wrong / partly right apart", () => {
+    expect(cellStatus(undefined)).toEqual({ kind: "none" });
+    expect(cellStatus(saved(null))).toEqual({ kind: "unchecked" });
+    expect(cellStatus(saved({ parts: { a: true, b: true }, correct: true }))).toEqual({ kind: "correct" });
+    expect(cellStatus(saved({ parts: { a: false, b: null }, correct: false }))).toEqual({ kind: "wrong" });
+    expect(cellStatus(saved({ parts: { a: true, b: false, c: null }, correct: false }))).toEqual({ kind: "partial", right: 1, total: 3 });
+    expect(cellStatus(saved({ parts: { a: null }, correct: false }))).toEqual({ kind: "unchecked" });
+  });
+  it("counts fully right exercises", () => {
+    expect(correctCount({ x: saved({ parts: { a: true }, correct: true }), y: saved(null) })).toBe(1);
+    expect(correctCount(undefined)).toBe(0);
   });
 });

@@ -74,19 +74,25 @@ export function ClassMarksProvider({
         if (old) clearTimeout(old);
         timers.current.set(
           key,
-          setTimeout(() => {
+          setTimeout(function run(attempt = 0) {
             timers.current.delete(key);
             void (async () => {
               // Update first; the first highlight in this exercise creates the row.
-              const { data } = await supabase
+              const updated = await supabase
                 .from("class_marks")
                 .update({ ranges })
                 .eq("class_id", classId)
                 .eq("exercise_id", exerciseId)
                 .eq("user_id", userId)
                 .select("exercise_id");
-              if (!data?.length) {
-                await supabase.from("class_marks").insert({ class_id: classId, exercise_id: exerciseId, ranges });
+              let failed = Boolean(updated.error);
+              if (!failed && !updated.data?.length) {
+                const inserted = await supabase.from("class_marks").insert({ class_id: classId, exercise_id: exerciseId, ranges });
+                failed = Boolean(inserted.error);
+              }
+              // No connection: try again a little later (unless a newer save replaced this one).
+              if (failed && attempt < 5 && !timers.current.has(key)) {
+                timers.current.set(key, setTimeout(() => run(attempt + 1), 3000));
               }
             })();
           }, 400),
