@@ -34,6 +34,10 @@ export function LessonPlayer({
   completedSectionIds,
   sectionFooter,
   classAnswers,
+  review,
+  focus,
+  onSectionChange,
+  exerciseMenu,
 }: {
   /** the language the course teaches */
   language: string;
@@ -47,6 +51,14 @@ export function LessonPlayer({
   sectionFooter?: (section: StudentSection, isLast: boolean) => React.ReactNode;
   /** A student in a class lesson: answers are saved (and restored from `saved`). */
   classAnswers?: { classId: string; saved: Record<string, SavedAnswer> };
+  /** The teacher looks at a student's answers (read-only, updated live). */
+  review?: Record<string, SavedAnswer>;
+  /** "Show to students": open this section and scroll to this exercise (a new nonce repeats it). */
+  focus?: { sectionId: string; exerciseId: string; nonce: number } | null;
+  /** Called when the open section changes (shared with the teacher). */
+  onSectionChange?: (sectionId: string) => void;
+  /** Extra "…" menu on each exercise (the teacher's "Show to students"). */
+  exerciseMenu?: (exercise: StudentExercise, sectionId: string) => React.ReactNode;
 }) {
   const t = useTranslations("player");
   const [queue] = useState(() => new SaveQueue());
@@ -70,6 +82,32 @@ export function LessonPlayer({
   const index = sections.findIndex((s) => s.id === activeId);
   const active = index >= 0 ? sections[index]! : null;
   const next = index >= 0 ? sections[index + 1] : undefined;
+
+  // Report the open section (also the first one).
+  useEffect(() => {
+    if (activeId) onSectionChange?.(activeId);
+  }, [activeId, onSectionChange]);
+
+  // "Show to students": switch section, then scroll to the exercise and flash it.
+  const [pendingFocus, setPendingFocus] = useState<string | null>(null);
+  const [lastFocus, setLastFocus] = useState<number | null>(null);
+  if (focus && focus.nonce !== lastFocus && sections.some((s) => s.id === focus.sectionId)) {
+    setLastFocus(focus.nonce);
+    setActiveId(focus.sectionId);
+    setPendingFocus(focus.exerciseId);
+  }
+  useEffect(() => {
+    if (!pendingFocus) return;
+    const el = document.getElementById(`exercise-${pendingFocus}`);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.dataset.flash = "true";
+    const timer = setTimeout(() => {
+      delete el.dataset.flash;
+      setPendingFocus(null);
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, [pendingFocus, activeId]);
 
   function select(id: string) {
     setActiveId(id);
@@ -118,6 +156,8 @@ export function LessonPlayer({
               key={`${exercise.id}:${resetSignal}`}
               exercise={exercise}
               number={exerciseNumber(index, i)}
+              review={review ? { saved: review[exercise.id] } : undefined}
+              menu={exerciseMenu?.(exercise, active.id)}
               persist={
                 classAnswers
                   ? { classId: classAnswers.classId, saved: classAnswers.saved[exercise.id], queue }
@@ -171,7 +211,88 @@ function restored(saved: SavedAnswer | undefined) {
   return { answer: saved.answer, checkedAnswer: saved.checkedAnswer, result };
 }
 
-function PlayerExercise({ exercise, number, persist }: { exercise: StudentExercise; number: string; persist?: Persist }) {
+function PlayerExercise({
+  exercise,
+  number,
+  persist,
+  review,
+  menu,
+}: {
+  exercise: StudentExercise;
+  number: string;
+  persist?: Persist;
+  /** read-only: a student's saved answer, shown to the teacher */
+  review?: { saved: SavedAnswer | undefined };
+  menu?: React.ReactNode;
+}) {
+  if (review) return <ReviewExercise exercise={exercise} number={number} saved={review.saved} menu={menu} />;
+  return <AnswerExercise exercise={exercise} number={number} persist={persist} menu={menu} />;
+}
+
+/** A student's answer as the teacher sees it: read-only, refreshed whenever it changes. */
+function ReviewExercise({
+  exercise,
+  number,
+  saved,
+  menu,
+}: {
+  exercise: StudentExercise;
+  number: string;
+  saved: SavedAnswer | undefined;
+  menu?: React.ReactNode;
+}) {
+  const t = useTranslations("player");
+  const meta = exerciseMeta(exercise.type);
+  const ui = meta ? EXERCISE_UI[meta.id] : undefined;
+  const mode = checkMode(exercise.type);
+  const { answer, result } = restored(saved);
+  const verdicts = result ? Object.values(result.parts) : [];
+  const right = verdicts.filter((v) => v === true).length;
+  const content = exercise.content as Record<string, unknown>;
+  return (
+    <li className="group list-none" id={`exercise-${exercise.id}`}>
+      <Card className={cn("gap-3 rounded-2xl px-4 py-4 transition-shadow group-data-[flash=true]:ring-4 group-data-[flash=true]:ring-primary/50", result?.correct && "border-emerald-500")}>
+        <div className="flex items-start gap-2">
+          <Badge variant="secondary" className="mt-0.5 shrink-0 tabular-nums">
+            {number}
+          </Badge>
+          {exercise.title && <p className="flex-1 font-medium">{exercise.title}</p>}
+          {mode && (
+            <span className="ml-auto shrink-0 text-sm text-muted-foreground tabular-nums">
+              {!saved ? t("noAnswerYet") : result ? t("score", { right, total: verdicts.length }) : t("notChecked")}
+            </span>
+          )}
+          {menu}
+        </div>
+        {meta?.group !== "material" && <AttachmentViewer value={content.attachment as Attachment | null | undefined} />}
+        {ui && (
+          <div className={cn(mode && "pointer-events-none")}>
+            <ui.Viewer
+              // Viewers keep their own copy of the answer: remount when it changes.
+              key={JSON.stringify(answer)}
+              exerciseId={exercise.id}
+              content={exercise.content}
+              answer={answer}
+              result={result}
+            />
+          </div>
+        )}
+      </Card>
+    </li>
+  );
+}
+
+function AnswerExercise({
+  exercise,
+  number,
+  persist,
+  menu,
+}: {
+  exercise: StudentExercise;
+  number: string;
+  persist?: Persist;
+  menu?: React.ReactNode;
+}) {
   const t = useTranslations("player");
   const meta = exerciseMeta(exercise.type);
   const ui = meta ? EXERCISE_UI[meta.id] : undefined;
@@ -248,8 +369,13 @@ function PlayerExercise({ exercise, number, persist }: { exercise: StudentExerci
   const showCheckButton = mode === "button" && !(result?.correct && !answeredSinceCheck);
 
   return (
-    <li className="list-none">
-      <Card className={cn("gap-3 rounded-2xl px-4 py-4", result?.correct && "border-emerald-500")}>
+    <li className="group list-none" id={`exercise-${exercise.id}`}>
+      <Card
+        className={cn(
+          "gap-3 rounded-2xl px-4 py-4 transition-shadow group-data-[flash=true]:ring-4 group-data-[flash=true]:ring-primary/50",
+          result?.correct && "border-emerald-500",
+        )}
+      >
         <div className="flex items-start gap-2">
           <Badge variant="secondary" className="mt-0.5 shrink-0 tabular-nums">
             {number}
@@ -276,6 +402,7 @@ function PlayerExercise({ exercise, number, persist }: { exercise: StudentExerci
               )}
             </span>
           )}
+          {menu}
         </div>
         {meta?.group !== "material" && <AttachmentViewer value={content.attachment as Attachment | null | undefined} />}
         {ui && (

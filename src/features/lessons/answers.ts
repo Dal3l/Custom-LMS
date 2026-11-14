@@ -5,7 +5,10 @@ import type { Json } from "@/lib/supabase/database.types";
 import { getUser } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { toSavedAnswer, type SavedAnswer, type StudentAnswers } from "./answers-shared";
 import { gradeLoaded } from "./grade";
+
+export type { SavedAnswer, StudentAnswers };
 
 // Saving a student's answer in a class lesson (and checking it on request).
 // Access is checked with the student's own rights first; only then the row is
@@ -97,7 +100,6 @@ export async function saveClassAnswer(body: unknown): Promise<SaveAnswerResponse
   return { ok: true, result, answer: kept };
 }
 
-export type SavedAnswer = { answer: unknown; checkedAnswer: unknown; result: CheckResult | null };
 
 /** The signed-in student's saved answers for one lesson in a class, by exercise. */
 export async function getMyClassAnswers(classId: string, lessonId: string, userId: string) {
@@ -109,12 +111,21 @@ export async function getMyClassAnswers(classId: string, lessonId: string, userI
     .eq("lesson_id", lessonId)
     .eq("student_id", userId);
   const out: Record<string, SavedAnswer> = {};
+  for (const row of data ?? []) out[row.exercise_id] = toSavedAnswer(row);
+  return out;
+}
+
+/** Teacher: every student's saved answers for one lesson in their class (RLS: own classes only). */
+export async function getClassLessonAnswers(classId: string, lessonId: string): Promise<StudentAnswers> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("class_answers")
+    .select("student_id, exercise_id, answer, checked_answer, result")
+    .eq("class_id", classId)
+    .eq("lesson_id", lessonId);
+  const out: StudentAnswers = {};
   for (const row of data ?? []) {
-    out[row.exercise_id] = {
-      answer: row.answer,
-      checkedAnswer: row.checked_answer ?? undefined,
-      result: (row.result as unknown as CheckResult | null) ?? null,
-    };
+    (out[row.student_id] ??= {})[row.exercise_id] = toSavedAnswer(row);
   }
   return out;
 }

@@ -537,7 +537,9 @@
     "sectionDone": "Section finished",
     "answersSaved": "Your answers are saved",
     "answersSaving": "Saving your answers…",
-    "answersError": "No connection — your answers will be saved when the internet is back"
+    "answersError": "No connection — your answers will be saved when the internet is back",
+    "noAnswerYet": "No answer yet",
+    "notChecked": "Not checked"
   },
   "classes": {
     "title": "Classes",
@@ -685,5 +687,29 @@
     "markUnfinished": "Mark as not finished",
     "makeCurrent": "Make it the current lesson",
     "courseLessons": "Course lessons"
+  },
+  "live": {
+    "lessonOpened": "Your teacher opened a lesson",
+    "lessonStarted": "A lesson has started in “{name}”",
+    "open": "Open",
+    "teacherShows": "Your teacher is showing an exercise in “{name}”",
+    "shown": "Shown to students",
+    "showFailed": "Couldn't show it: no connection",
+    "exerciseActions": "Exercise actions",
+    "showToStudents": "Show to students",
+    "studentsLabel": "Students in the lesson",
+    "studentsTitle": "Students",
+    "whoseAnswers": "Whose answers to show",
+    "noStudents": "No students in the class yet.",
+    "myView": "My view",
+    "offline": "offline",
+    "inSection": "section {n}",
+    "inLesson": "in the lesson",
+    "elsewhere": "not in this lesson",
+    "answered": "{count, plural, =0 {no answers} one {# answer} other {# answers}}",
+    "noName": "No name",
+    "offlineStatus": "No connection — reconnecting…",
+    "connecting": "Connecting…",
+    "online": "Connected"
   }
 }

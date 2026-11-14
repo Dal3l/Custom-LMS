@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { generateInviteToken, generatePassword, INVITE_TOKEN_RE, PASSWORD_WORDS } from "@/features/classes/credentials";
 import { sortClassLessons, toggleDoneSection } from "@/features/classes/class-lessons";
+import { combineStatus, isNewlyOpened, onlineStudents } from "@/features/live/types";
 import { classSchema, registerStudentSchema } from "@/features/classes/schemas";
 
 describe("generatePassword", () => {
@@ -100,5 +101,30 @@ describe("toggleDoneSection", () => {
     expect(toggleDoneSection(["a"], "a", true)).toEqual(["a"]);
     expect(toggleDoneSection(["a", "b"], "a", false)).toEqual(["b"]);
     expect(toggleDoneSection(["b"], "a", false)).toEqual(["b"]);
+  });
+});
+
+describe("live lesson helpers", () => {
+  it("knows who is online and where (newest meta wins)", () => {
+    const state = {
+      s1: [{ userId: "s1", lessonId: null, sectionId: null }, { userId: "s1", lessonId: "L", sectionId: "S2" }],
+      t1: [{ presence_ref: "x" }],
+    };
+    const online = onlineStudents(state);
+    expect([...online.keys()]).toEqual(["s1"]);
+    expect(online.get("s1")).toEqual({ userId: "s1", lessonId: "L", sectionId: "S2" });
+  });
+
+  it("follows the teacher only when a lesson was really (re)opened", () => {
+    const row = { status: "live", lesson_id: "L1", opened_at: "2026-11-18T10:00:00Z" };
+    expect(isNewlyOpened(row, null)).toBe("L1@2026-11-18T10:00:00Z");
+    expect(isNewlyOpened(row, "L1@2026-11-18T10:00:00Z")).toBeNull(); // e.g. a section was finished
+    expect(isNewlyOpened({ ...row, status: "open" }, null)).toBeNull();
+  });
+
+  it("is online only when every connection is", () => {
+    expect(combineStatus(["online", "online"])).toBe("online");
+    expect(combineStatus(["online", "connecting"])).toBe("connecting");
+    expect(combineStatus(["connecting", "offline"])).toBe("offline");
   });
 });

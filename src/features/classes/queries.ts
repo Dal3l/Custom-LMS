@@ -70,3 +70,17 @@ export async function getClassPage(classId: string, profile: ProfileWithRole): P
     invite: isTeacher && invite ? { token: invite.token, enabled: invite.enabled } : null,
   };
 }
+
+/** Student: their classes with the lesson going on now, for following lessons live. */
+export async function listStudentLiveClasses(studentId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("class_members")
+    .select("class:classes(id, name, class_lessons(lesson_id, status, opened_at))")
+    .eq("student_id", studentId);
+  return (data ?? []).flatMap(({ class: c }) => {
+    if (!c) return [];
+    const live = c.class_lessons.find((l) => l.status === "live");
+    return [{ id: c.id, name: c.name, live: live ? { lessonId: live.lesson_id, openedAt: live.opened_at } : null }];
+  });
+}
