@@ -81,11 +81,11 @@ test.describe("classes, invite links and student accounts", () => {
     await page.getByLabel("Часовой пояс ученика").selectOption("Asia/Almaty");
     await page.getByRole("button", { name: "Создать аккаунт" }).click();
     await expect(page.getByText("Аккаунт создан")).toBeVisible();
-    const message = await page.getByRole("textbox", { name: "Сообщение для ученика" }).inputValue();
+    const message = (await page.getByRole("textbox", { name: "Сообщение для ученика" }).textContent()) ?? "";
     expect(message).toContain(`Логин: ${registered.email}`);
     expect(message).toMatch(/Ссылка для входа: http.*\/ru\/login/);
     const generated = /Пароль: (\S+)/.exec(message)?.[1];
-    expect(generated).toMatch(/^[a-z2-9]{4}-[a-z2-9]{4}-[a-z2-9]{4}$/);
+    expect(generated).toMatch(/^[a-z]+\d{4}$/);
     await page.getByRole("button", { name: "Готово" }).click();
     await expect(page.getByText(registered.name)).toBeVisible();
 

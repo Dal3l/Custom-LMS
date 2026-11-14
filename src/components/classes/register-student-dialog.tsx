@@ -18,7 +18,6 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
-import { Textarea } from "@/components/ui/textarea";
 import { registerStudent, type Credentials, type RegisterStudentState } from "@/features/classes/actions";
 import { CopyButton } from "./copy-button";
 
@@ -170,14 +169,14 @@ function CredentialsView({ credentials, onClose }: { credentials: Credentials; o
         </DialogTitle>
         <DialogDescription>{t("accountCreatedHint")}</DialogDescription>
       </DialogHeader>
-      <Textarea
-        readOnly
-        value={message}
-        rows={5}
+      <div
+        role="textbox"
+        aria-readonly="true"
         aria-label={t("messageForStudent")}
-        onFocus={(e) => e.currentTarget.select()}
-        className="resize-none font-mono text-sm"
-      />
+        className="rounded-xl border bg-muted/50 p-4 text-base leading-relaxed break-words whitespace-pre-line select-text"
+      >
+        {message}
+      </div>
       <DialogFooter>
         <Button type="button" variant="outline" onClick={onClose}>
           {t("done")}

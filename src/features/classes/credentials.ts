@@ -1,23 +1,25 @@
 // Helpers for accounts a teacher creates for a student. Pure functions: tested in tests/.
 
-// No look-alike characters (0/o, 1/l/i), so the password is easy to retype from a phone.
-const ALPHABET = "abcdefghjkmnpqrstuvwxyz23456789";
+// Short, familiar words: easy to read out, type on a phone and remember.
+export const PASSWORD_WORDS = [
+  "apple", "berry", "cloud", "lemon", "mango", "ocean", "panda", "river", "smile", "sunny",
+  "tiger", "happy", "light", "green", "star", "moon", "bird", "fish", "book", "cake",
+  "rain", "snow", "lion", "bear", "rose", "tree", "wolf", "kiwi", "plum", "zebra",
+];
 
-/** A readable random password like "hx7k-p3mw-9tbq" (3 groups of 4). */
+/** An easy password: a word and four digits, like "panda4827". */
 export function generatePassword(random: (n: number) => Uint8Array = randomBytes): string {
-  const groups: string[] = [];
-  for (let g = 0; g < 3; g++) {
-    let group = "";
-    // Rejection sampling keeps every character equally likely.
-    while (group.length < 4) {
-      for (const byte of random(8)) {
-        if (group.length === 4) break;
-        if (byte < 256 - (256 % ALPHABET.length)) group += ALPHABET[byte % ALPHABET.length];
-      }
+  const pick = (max: number) => {
+    // Rejection sampling keeps every choice equally likely.
+    const limit = 256 - (256 % max);
+    for (;;) {
+      for (const byte of random(8)) if (byte < limit) return byte % max;
     }
-    groups.push(group);
-  }
-  return groups.join("-");
+  };
+  const word = PASSWORD_WORDS[pick(PASSWORD_WORDS.length)]!;
+  let digits = "";
+  for (let i = 0; i < 4; i++) digits += String(pick(10));
+  return word + digits;
 }
 
 function randomBytes(n: number): Uint8Array {
