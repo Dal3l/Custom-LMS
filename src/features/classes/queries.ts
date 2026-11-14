@@ -36,6 +36,7 @@ export type ClassInvite = { token: string; enabled: boolean };
 
 export type ClassPageData = ClassRow & {
   isTeacher: boolean;
+  teacherId: string;
   teacherName: string;
   students: ClassStudent[];
   invite: ClassInvite | null;
@@ -61,6 +62,7 @@ export async function getClassPage(classId: string, profile: ProfileWithRole): P
     kind: data.kind,
     call_url: data.call_url,
     isTeacher,
+    teacherId: data.teacher_id,
     teacherName: data.teacher?.full_name ?? "",
     students: isTeacher
       ? data.class_members

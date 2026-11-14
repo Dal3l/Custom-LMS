@@ -95,6 +95,41 @@ export function useTeacherLive({
     };
   }, [supabase, classId, lessonId, teacherId]);
 
+  // The pointer is sent at most ~15 times a second.
+  const lastPointer = useRef(0);
+  const sendPointer = useCallback(
+    (pointer: { exerciseId: string; x: number; y: number } | null) => {
+      const room = channel.current;
+      if (!room || room.state !== "joined") return;
+      const now = Date.now();
+      if (pointer && now - lastPointer.current < 66) return;
+      lastPointer.current = now;
+      void room.send({
+        type: "broadcast",
+        event: "pointer",
+        payload: pointer ? { ...pointer, lessonId } : { lessonId, hide: true },
+      });
+    },
+    [lessonId],
+  );
+
+  /** After "Reset answers": clear them here and on the students' screens. */
+  const resetExercise = useCallback(
+    (exerciseId: string) => {
+      setAnswers((prev) =>
+        Object.fromEntries(
+          Object.entries(prev).map(([student, byExercise]) => {
+            const rest = { ...byExercise };
+            delete rest[exerciseId];
+            return [student, rest];
+          }),
+        ),
+      );
+      void channel.current?.send({ type: "broadcast", event: "reset", payload: { lessonId, exerciseId } });
+    },
+    [lessonId],
+  );
+
   const show = useCallback(
     async (message: Omit<ShowMessage, "lessonId">) => {
       const room = channel.current;
@@ -105,5 +140,5 @@ export function useTeacherLive({
     [lessonId],
   );
 
-  return { answers, online, status, show };
+  return { answers, online, status, show, sendPointer, resetExercise };
 }

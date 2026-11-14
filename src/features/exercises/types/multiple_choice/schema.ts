@@ -53,10 +53,15 @@ export function emptyQuestion() {
   return { id: newItemId(), text: "", multiple: false, options: [{ id: newItemId(), text: "" }, { id: newItemId(), text: "" }] };
 }
 
+/** The right answers, shown when the teacher reveals them. */
+export function solveMultipleChoice(content: MultipleChoiceContent, key: MultipleChoiceKey): MultipleChoiceAnswer {
+  return { selected: Object.fromEntries(content.questions.map((q) => [q.id, key.correct[q.id] ?? []])) };
+}
+
 export const multipleChoiceDefinition: ExerciseDefinition<MultipleChoiceContent, MultipleChoiceKey, MultipleChoiceAnswer> = {
   id: "multiple_choice",
   contentSchema: multipleChoiceContentSchema,
   keySchema: multipleChoiceKeySchema,
   create: () => ({ content: { questions: [emptyQuestion()] }, key: { correct: {} } }),
-  grading: { answerSchema: multipleChoiceAnswerSchema, check: checkMultipleChoice },
+  grading: { answerSchema: multipleChoiceAnswerSchema, check: checkMultipleChoice, solution: solveMultipleChoice },
 };

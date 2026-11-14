@@ -64,6 +64,17 @@ export function checkCategorize(content: CategorizeContent, key: CategorizeKey, 
   return summarize(parts);
 }
 
+/** The right group for every card. */
+export function solveCategorize(content: CategorizeContent, key: CategorizeKey): CategorizeAnswer {
+  const right = cardGroups(key);
+  const values: Record<string, string> = {};
+  for (const card of content.cards) {
+    const group = right.get(card.id);
+    if (group) values[card.id] = group;
+  }
+  return { values };
+}
+
 export const categorizeDefinition: ExerciseDefinition<CategorizeContent, CategorizeKey, CategorizeAnswer> = {
   id: "categorize",
   contentSchema: categorizeContentSchema,
@@ -76,5 +87,5 @@ export const categorizeDefinition: ExerciseDefinition<CategorizeContent, Categor
         { id: newItemId(), title: "", items: "" },
       ],
     }),
-  grading: { answerSchema: categorizeAnswerSchema, check: checkCategorize },
+  grading: { answerSchema: categorizeAnswerSchema, check: checkCategorize, solution: solveCategorize },
 };

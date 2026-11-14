@@ -10,7 +10,7 @@ export function sortClassLessons<T extends { status: ClassLessonStatus; openedAt
   );
 }
 
-/** Adds or removes a finished section, keeping the list free of duplicates. */
+/** Adds or removes an id (a finished section, a revealed exercise), without duplicates. */
 export function toggleDoneSection(done: readonly string[], sectionId: string, finished: boolean): string[] {
   const rest = done.filter((id) => id !== sectionId);
   return finished ? [...rest, sectionId] : rest;

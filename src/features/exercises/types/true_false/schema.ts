@@ -31,6 +31,11 @@ export function emptyStatement() {
   return { id: newItemId(), text: "" };
 }
 
+/** The right answers, shown when the teacher reveals them. */
+export function solveTrueFalse(content: TrueFalseContent, key: TrueFalseKey): TrueFalseAnswer {
+  return { values: Object.fromEntries(content.statements.map((s) => [s.id, key.answers[s.id] ?? true])) };
+}
+
 export const trueFalseDefinition: ExerciseDefinition<TrueFalseContent, TrueFalseKey, TrueFalseAnswer> = {
   id: "true_false",
   contentSchema: trueFalseContentSchema,
@@ -39,5 +44,5 @@ export const trueFalseDefinition: ExerciseDefinition<TrueFalseContent, TrueFalse
     const s = emptyStatement();
     return { content: { statements: [s] }, key: { answers: { [s.id]: true } } };
   },
-  grading: { answerSchema: trueFalseAnswerSchema, check: checkTrueFalse },
+  grading: { answerSchema: trueFalseAnswerSchema, check: checkTrueFalse, solution: solveTrueFalse },
 };

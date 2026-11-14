@@ -85,6 +85,11 @@ export function recordAttempts(answer: GapInputAnswer, result: CheckResult): Gap
   return { ...answer, attempts };
 }
 
+/** The right answers (the first accepted one per gap), shown when the teacher reveals them. */
+export function solveGapInput(_content: GapInputContent, key: GapInputKey): GapInputAnswer {
+  return { values: Object.fromEntries(Object.entries(key.answers).map(([gap, list]) => [gap, list[0] ?? ""])) };
+}
+
 export const gapInputDefinition: ExerciseDefinition<GapInputContent, GapInputKey, GapInputAnswer> = {
   id: "gap_input",
   contentSchema: gapInputContentSchema,
@@ -93,6 +98,7 @@ export const gapInputDefinition: ExerciseDefinition<GapInputContent, GapInputKey
   grading: {
     answerSchema: gapInputAnswerSchema,
     check: checkGapInput,
+    solution: solveGapInput,
     // The tries count toward revealing the answer, so the saved ones are used, not the browser's.
     prepare: (answer, saved) => ({ ...answer, attempts: saved?.attempts ?? {} }),
     afterCheck: recordAttempts,

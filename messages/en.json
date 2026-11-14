@@ -539,7 +539,9 @@
     "answersSaving": "Saving your answers…",
     "answersError": "No connection — your answers will be saved when the internet is back",
     "noAnswerYet": "No answer yet",
-    "notChecked": "Not checked"
+    "notChecked": "Not checked",
+    "rightAnswers": "Right answers",
+    "teacherPointer": "Teacher's pointer"
   },
   "classes": {
     "title": "Classes",
@@ -701,7 +703,6 @@
     "studentsTitle": "Students",
     "whoseAnswers": "Whose answers to show",
     "noStudents": "No students in the class yet.",
-    "myView": "My view",
     "offline": "offline",
     "inSection": "section {n}",
     "inLesson": "in the lesson",
@@ -710,6 +711,13 @@
     "noName": "No name",
     "offlineStatus": "No connection — reconnecting…",
     "connecting": "Connecting…",
-    "online": "Connected"
+    "online": "Connected",
+    "answersRevealed": "The right answers are shown to students",
+    "answersHidden": "The right answers are hidden",
+    "answersReset": "Answers reset — students can do the exercise again",
+    "revealAnswers": "Show the right answers",
+    "hideAnswers": "Hide the right answers",
+    "resetAnswers": "Reset answers",
+    "pointer": "Pointer"
   }
 }

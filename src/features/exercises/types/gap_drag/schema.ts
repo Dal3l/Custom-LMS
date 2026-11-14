@@ -70,10 +70,22 @@ export function checkGapDrag(content: GapDragContent, key: GapDragKey, answer: G
   return summarize(parts);
 }
 
+/** The right answers: for each gap a bank word with the right text (each word used once). */
+export function solveGapDrag(content: GapDragContent, key: GapDragKey): GapDragAnswer {
+  const free = [...content.bank];
+  const values: Record<string, string> = {};
+  for (const p of content.parts) {
+    if (p.t !== "gap") continue;
+    const i = free.findIndex((w) => normalizeAnswer(w.text) === normalizeAnswer(key.answers[p.id] ?? ""));
+    if (i >= 0) values[p.id] = free.splice(i, 1)[0]!.id;
+  }
+  return { values };
+}
+
 export const gapDragDefinition: ExerciseDefinition<GapDragContent, GapDragKey, GapDragAnswer> = {
   id: "gap_drag",
   contentSchema: gapDragContentSchema,
   keySchema: gapDragKeySchema,
   create: () => buildGapDrag("", "", newItemId()),
-  grading: { answerSchema: gapDragAnswerSchema, check: checkGapDrag },
+  grading: { answerSchema: gapDragAnswerSchema, check: checkGapDrag, solution: solveGapDrag },
 };

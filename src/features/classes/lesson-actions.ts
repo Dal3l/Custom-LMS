@@ -6,6 +6,7 @@ import { z } from "zod";
 import { redirect } from "@/i18n/navigation";
 import { getProfile } from "@/lib/auth";
 import { getClassLessonAnswers, type StudentAnswers } from "@/features/lessons/answers";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { toggleDoneSection } from "./class-lessons";
 import { idSchema } from "./schemas";
@@ -186,4 +187,66 @@ export async function fetchLessonAnswers(classId: string, lessonId: string): Pro
   const ids = z.object({ classId: idSchema, lessonId: idSchema }).safeParse({ classId, lessonId });
   if (!ctx || !ids.success) return { ok: false, error: "forbidden" };
   return { ok: true, data: await getClassLessonAnswers(ids.data.classId, ids.data.lessonId) };
+}
+
+/** The exercise belongs to a lesson opened in this teacher's class. */
+async function teacherExercise(classId: string, lessonId: string, exerciseId: string) {
+  const ctx = await teacherContext();
+  const ids = z
+    .object({ classId: idSchema, lessonId: idSchema, exerciseId: idSchema })
+    .safeParse({ classId, lessonId, exerciseId });
+  if (!ctx || !ids.success) return null;
+  const [row, exercise] = await Promise.all([
+    ctx.supabase
+      .from("class_lessons")
+      .select("revealed")
+      .eq("class_id", ids.data.classId)
+      .eq("lesson_id", ids.data.lessonId)
+      .maybeSingle(),
+    ctx.supabase.from("exercises").select("id").eq("id", ids.data.exerciseId).eq("lesson_id", ids.data.lessonId).maybeSingle(),
+  ]);
+  if (!row.data || !exercise.data) return null;
+  return { ...ctx, ids: ids.data, revealed: row.data.revealed };
+}
+
+/** "Show the right answers" (or hide them again) for one exercise in the class. */
+export async function setExerciseRevealed(
+  classId: string,
+  lessonId: string,
+  exerciseId: string,
+  revealed: boolean,
+): Promise<Result<string[]>> {
+  const ctx = await teacherExercise(classId, lessonId, exerciseId);
+  if (!ctx) return { ok: false, error: "forbidden" };
+  const next = toggleDoneSection(ctx.revealed, ctx.ids.exerciseId, revealed);
+  const { error } = await ctx.supabase
+    .from("class_lessons")
+    .update({ revealed: next })
+    .eq("class_id", ctx.ids.classId)
+    .eq("lesson_id", ctx.ids.lessonId);
+  if (error) return { ok: false, error: "generic" };
+  refresh(ctx.ids.classId);
+  return { ok: true, data: next };
+}
+
+/** "Reset answers": every student of the class does the exercise again. Hides revealed answers too. */
+export async function resetExerciseAnswers(classId: string, lessonId: string, exerciseId: string): Promise<Result<undefined>> {
+  const ctx = await teacherExercise(classId, lessonId, exerciseId);
+  if (!ctx) return { ok: false, error: "forbidden" };
+  // Answers are written only by the server, so they are removed with server rights.
+  const { error } = await createAdminClient()
+    .from("class_answers")
+    .delete()
+    .eq("class_id", ctx.ids.classId)
+    .eq("exercise_id", ctx.ids.exerciseId);
+  if (error) return { ok: false, error: "generic" };
+  if (ctx.revealed.includes(ctx.ids.exerciseId)) {
+    await ctx.supabase
+      .from("class_lessons")
+      .update({ revealed: toggleDoneSection(ctx.revealed, ctx.ids.exerciseId, false) })
+      .eq("class_id", ctx.ids.classId)
+      .eq("lesson_id", ctx.ids.lessonId);
+  }
+  refresh(ctx.ids.classId);
+  return { ok: true, data: undefined };
 }

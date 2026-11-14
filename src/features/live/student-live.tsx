@@ -6,7 +6,16 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { toast } from "sonner";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { classTopic, combineStatus, isNewlyOpened, type LiveStatus, type ShowMessage } from "./types";
+import {
+  classTopic,
+  combineStatus,
+  isNewlyOpened,
+  type LiveMessage,
+  type LiveStatus,
+  type PointerMessage,
+  type ResetMessage,
+  type ShowMessage,
+} from "./types";
 
 export type StudentClass = { id: string; name: string; live: { lessonId: string; openedAt: string } | null };
 type Location = { classId: string; lessonId: string | null; sectionId: string | null } | null;
@@ -15,8 +24,8 @@ type StudentLive = {
   status: LiveStatus;
   /** The lesson page reports where the student is (shared with the teacher). */
   setLocation: (location: Location) => void;
-  /** The lesson page listens for "Show to students". */
-  onShow: (listener: (message: ShowMessage & { classId: string }) => void) => () => void;
+  /** The lesson page listens for the teacher's messages ("Show", pointer, reset). */
+  onMessage: (listener: (message: LiveMessage) => void) => () => void;
 };
 
 const Ctx = createContext<StudentLive | null>(null);
@@ -52,7 +61,8 @@ export function StudentLiveProvider({
   const path = useRef(pathname);
   const location = useRef<Location>(null);
   const channels = useRef(new Map<string, RealtimeChannel>());
-  const listeners = useRef(new Set<(m: ShowMessage & { classId: string }) => void>());
+  const joined = useRef(new Set<string>());
+  const listeners = useRef(new Set<(m: LiveMessage) => void>());
   const seen = useRef(new Map<string, string | null>());
   const names = useRef(new Map<string, string>());
   useEffect(() => {
@@ -111,7 +121,7 @@ export function StudentLiveProvider({
       const target = lessonPath(classId, message.lessonId);
       const here = path.current;
       if (here === target) {
-        listeners.current.forEach((l) => l({ ...message, classId }));
+        listeners.current.forEach((l) => l({ kind: "show", ...message, classId }));
       } else if (here.startsWith(`/classes/${classId}`)) {
         router.push(`${target}?section=${message.sectionId}&show=${message.exerciseId}`);
       } else {
@@ -133,9 +143,24 @@ export function StudentLiveProvider({
       for (const classId of ids) {
         const channel = supabase.channel(classTopic(classId), { config: { private: true, presence: { key: userId } } });
         channel.on("broadcast", { event: "show" }, ({ payload }) => show(classId, payload as ShowMessage));
+        // Pointer and reset matter only on that lesson's page.
+        const onLesson = (lessonId: string) => path.current === lessonPath(classId, lessonId);
+        channel.on("broadcast", { event: "pointer" }, ({ payload }) => {
+          const m = payload as PointerMessage;
+          if (onLesson(m.lessonId)) listeners.current.forEach((l) => l({ kind: "pointer", ...m, classId }));
+        });
+        channel.on("broadcast", { event: "reset" }, ({ payload }) => {
+          const m = payload as ResetMessage;
+          if (onLesson(m.lessonId)) listeners.current.forEach((l) => l({ kind: "reset", ...m, classId }));
+        });
         channel.subscribe((s) => {
           update(classId, toStatus(s));
-          if (s === "SUBSCRIBED") void channel.track(presence(classId));
+          if (s === "SUBSCRIBED") {
+            joined.current.add(classId);
+            void channel.track(presence(classId));
+          } else {
+            joined.current.delete(classId);
+          }
         });
         channels.current.set(classId, channel);
         created.push(channel);
@@ -167,7 +192,9 @@ export function StudentLiveProvider({
     window.addEventListener("offline", offline);
     window.addEventListener("online", online);
     const map = channels.current;
+    const joinedSet = joined.current;
     return () => {
+      joinedSet.clear();
       cancelled = true;
       window.removeEventListener("offline", offline);
       window.removeEventListener("online", online);
@@ -184,20 +211,21 @@ export function StudentLiveProvider({
       location.current = loc;
       for (const classId of new Set([prev?.classId, loc?.classId])) {
         if (!classId) continue;
+        // Not joined yet: the join itself shares the latest location.
         const channel = channels.current.get(classId);
-        if (channel?.state === "joined") void channel.track(presence(classId));
+        if (channel && joined.current.has(classId)) void channel.track(presence(classId));
       }
     },
     [presence],
   );
 
-  const onShow = useCallback((listener: (m: ShowMessage & { classId: string }) => void) => {
+  const onMessage = useCallback((listener: (m: LiveMessage) => void) => {
     listeners.current.add(listener);
     return () => {
       listeners.current.delete(listener);
     };
   }, []);
 
-  const value = useMemo(() => ({ status, setLocation, onShow }), [status, setLocation, onShow]);
+  const value = useMemo(() => ({ status, setLocation, onMessage }), [status, setLocation, onMessage]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

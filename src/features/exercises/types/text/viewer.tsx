@@ -8,25 +8,54 @@ import { Button } from "@/components/ui/button";
 import type { ExerciseViewerProps } from "../../client-types";
 import { textExtensions } from "./extensions";
 import type { TextContent } from "./schema";
-import { applyStudentHighlight, restoreHighlights, saveHighlights } from "./student-highlights";
+import { useSharedMarks, type SharedMarks } from "./marks";
+import {
+  applyHighlight,
+  loadLocalHighlights,
+  rangesOf,
+  saveLocalHighlights,
+  showHighlights,
+  STUDENT_COLOR,
+  TEACHER_COLOR,
+} from "./student-highlights";
 
-/** Read-only text. In the student view, selected words can be highlighted for oneself. */
+/**
+ * Read-only text. Selected words can be highlighted: in a class lesson the
+ * highlights are shared (the teacher sees the student's and the other way round),
+ * elsewhere they are kept on this device.
+ */
 export function TextViewer({ content, exerciseId }: ExerciseViewerProps<TextContent>) {
+  const shared = useSharedMarks();
   const editor = useEditor({
     extensions: textExtensions,
     content: content.doc,
     editable: false,
     immediatelyRender: false,
     editorProps: { attributes: { class: "rich-text outline-none" } },
-    onCreate: ({ editor }) => {
-      if (exerciseId) restoreHighlights(exerciseId, editor);
-    },
   });
+
+  // Show highlights, again whenever someone changes theirs.
+  const own = exerciseId && shared ? shared.own(exerciseId) : null;
+  const other = exerciseId && shared ? shared.other(exerciseId) : null;
+  const signature = JSON.stringify([own, other]);
+  useEffect(() => {
+    if (!editor || !exerciseId) return;
+    if (shared) {
+      showHighlights(editor, [
+        { color: shared.otherColor, ranges: other },
+        { color: shared.ownColor, ranges: own },
+      ]);
+    } else {
+      showHighlights(editor, [{ color: STUDENT_COLOR, ranges: loadLocalHighlights(exerciseId) }]);
+    }
+    // `signature` stands for own/other.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editor, exerciseId, signature, shared]);
 
   return (
     <div>
       <EditorContent editor={editor} />
-      {exerciseId && editor && <HighlightBar editor={editor} exerciseId={exerciseId} />}
+      {exerciseId && editor && <HighlightBar editor={editor} exerciseId={exerciseId} shared={shared} />}
     </div>
   );
 }
@@ -34,7 +63,7 @@ export function TextViewer({ content, exerciseId }: ExerciseViewerProps<TextCont
 type Selected = { from: number; to: number; top: number; left: number };
 
 /** Small "Highlight / Remove" bar under the student's text selection. */
-function HighlightBar({ editor, exerciseId }: { editor: Editor; exerciseId: string }) {
+function HighlightBar({ editor, exerciseId, shared }: { editor: Editor; exerciseId: string; shared: SharedMarks | null }) {
   const t = useTranslations("player.highlight");
   const [selected, setSelected] = useState<Selected | null>(null);
 
@@ -70,8 +99,10 @@ function HighlightBar({ editor, exerciseId }: { editor: Editor; exerciseId: stri
 
   function apply(on: boolean) {
     if (!selected) return;
-    applyStudentHighlight(editor, selected.from, selected.to, on);
-    saveHighlights(exerciseId, editor);
+    const color = shared?.ownColor ?? STUDENT_COLOR;
+    applyHighlight(editor, selected.from, selected.to, color, on);
+    if (shared) shared.save(exerciseId, rangesOf(editor, color));
+    else saveLocalHighlights(exerciseId, editor);
     window.getSelection()?.removeAllRanges();
     setSelected(null);
   }
@@ -84,7 +115,7 @@ function HighlightBar({ editor, exerciseId }: { editor: Editor; exerciseId: stri
       onMouseDown={(e) => e.preventDefault()}
     >
       <Button type="button" size="sm" variant="ghost" onClick={() => apply(true)}>
-        <Highlighter aria-hidden="true" className="text-orange-500" />
+        <Highlighter aria-hidden="true" className={shared?.ownColor === TEACHER_COLOR ? "text-blue-500" : "text-orange-500"} />
         {t("mark")}
       </Button>
       <Button type="button" size="sm" variant="ghost" onClick={() => apply(false)}>

@@ -1,8 +1,8 @@
 "use client";
 
-import { Check, CircleCheck, Loader2, MoreHorizontal, ScanEye, Undo2 } from "lucide-react";
+import { Check, CircleCheck, Eye, EyeOff, Loader2, MoreHorizontal, RotateCcw, ScanEye, Undo2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { LessonPlayer } from "@/components/lesson-player/lesson-player";
 import { Button } from "@/components/ui/button";
@@ -10,14 +10,24 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { setClassLessonFinished, setSectionFinished } from "@/features/classes/lesson-actions";
+import {
+  resetExerciseAnswers,
+  setClassLessonFinished,
+  setExerciseRevealed,
+  setSectionFinished,
+} from "@/features/classes/lesson-actions";
+import type { ClassMark } from "@/features/classes/lesson-queries";
 import type { ClassStudent } from "@/features/classes/queries";
+import { checkMode } from "@/features/exercises/catalog";
 import type { SavedAnswer, StudentAnswers } from "@/features/lessons/answers-shared";
+import type { Solution } from "@/features/lessons/grade";
+import type { StudentSection } from "@/features/lessons/queries";
+import { ClassMarksProvider } from "@/features/live/class-marks";
 import { useStudentLive } from "@/features/live/student-live";
 import { useTeacherLive } from "@/features/live/teacher-live";
-import type { StudentSection } from "@/features/lessons/queries";
 import { useRouter } from "@/i18n/navigation";
 import { LessonPicker } from "./lesson-picker";
 import { LiveStudentsBar } from "./live-students-bar";
@@ -31,41 +41,44 @@ type CommonProps = {
   initialSectionId: string | null;
   doneSections: string[];
   finished: boolean;
+  revealed: string[];
+  solutions: Record<string, Solution>;
+  marks: ClassMark[];
+  userId: string;
 };
 
 /** Finished sections, kept in sync when the page data is reloaded. */
-function useDoneSections(initial: string[]) {
-  const [done, setDone] = useState(initial);
+function useSynced<T>(initial: T) {
+  const [value, setValue] = useState(initial);
   const [prev, setPrev] = useState(initial);
   if (initial !== prev) {
     setPrev(initial);
-    setDone(initial);
+    setValue(initial);
   }
-  return [done, setDone] as const;
+  return [value, setValue] as const;
 }
 
 /**
- * A lesson in a class, live. The teacher sees who is online and where, looks at
- * each student's answers as they type, sends "Show to students", and finishes
- * sections and the lesson. The student's answers are saved; the student's screen
- * follows the teacher's "Show".
+ * A lesson in a class, live, for the teacher: who is online and where, each
+ * student's answers as they type, and the tools — "Show to students", pointer,
+ * "Show the right answers", "Reset answers", finishing sections and the lesson.
  */
 export function TeacherClassLesson({
-  teacherId,
   students,
   initialAnswers,
   ...props
-}: CommonProps & { teacherId: string; students: ClassStudent[]; initialAnswers: StudentAnswers }) {
-  const { classId, lessonId, courseId, finished } = props;
+}: CommonProps & { students: ClassStudent[]; initialAnswers: StudentAnswers }) {
+  const { classId, lessonId, courseId, finished, userId } = props;
   const t = useTranslations("classLessons");
   const tl = useTranslations("live");
   const router = useRouter();
-  const [done, setDone] = useDoneSections(props.doneSections);
+  const [done, setDone] = useSynced(props.doneSections);
   const [pending, startTransition] = useTransition();
   const [busy, setBusy] = useState<string | null>(null);
-  const live = useTeacherLive({ classId, lessonId, teacherId, initialAnswers });
-  // Whose answers are shown: a student's (read-only, live) or null = the teacher's own try.
+  const live = useTeacherLive({ classId, lessonId, teacherId: userId, initialAnswers });
+  // Whose answers are shown (the teacher always looks at a student's work).
   const [viewing, setViewing] = useState<string | null>(students[0]?.id ?? null);
+  const [pointerOn, setPointerOn] = useState(false);
 
   function toggleSection(sectionId: string, value: boolean) {
     setBusy(sectionId);
@@ -94,6 +107,46 @@ export function TeacherClassLesson({
     if (ok) toast.success(tl("shown"));
     else toast.error(tl("showFailed"));
   }
+
+  function reveal(exerciseId: string, value: boolean) {
+    startTransition(async () => {
+      const result = await setExerciseRevealed(classId, lessonId, exerciseId, value);
+      if (result.ok) {
+        toast.success(value ? tl("answersRevealed") : tl("answersHidden"));
+        router.refresh();
+      } else toast.error(t(`errors.${result.error}`));
+    });
+  }
+
+  function reset(exerciseId: string) {
+    startTransition(async () => {
+      const result = await resetExerciseAnswers(classId, lessonId, exerciseId);
+      if (result.ok) {
+        live.resetExercise(exerciseId);
+        toast.success(tl("answersReset"));
+        router.refresh();
+      } else toast.error(t(`errors.${result.error}`));
+    });
+  }
+
+  // The pointer: where the mouse (or finger) is over an exercise, as a share of its card.
+  const sendPointer = live.sendPointer;
+  const onPointerMove = useCallback(
+    (e: React.PointerEvent) => {
+      const card = (e.target as HTMLElement).closest<HTMLElement>('[id^="exercise-"]');
+      if (!card) return sendPointer(null);
+      const box = card.firstElementChild?.getBoundingClientRect() ?? card.getBoundingClientRect();
+      sendPointer({
+        exerciseId: card.id.slice("exercise-".length),
+        x: (e.clientX - box.left) / box.width,
+        y: (e.clientY - box.top) / box.height,
+      });
+    },
+    [sendPointer],
+  );
+  useEffect(() => {
+    if (!pointerOn) sendPointer(null);
+  }, [pointerOn, sendPointer]);
 
   const spinner = <Loader2 className="animate-spin" aria-hidden="true" />;
 
@@ -128,66 +181,117 @@ export function TeacherClassLesson({
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <LiveStudentsBar
-        students={students}
-        sections={props.sections}
-        lessonId={lessonId}
-        online={live.online}
-        status={live.status}
-        answers={live.answers}
-        viewing={viewing}
-        onView={setViewing}
-      />
-      <LessonPlayer
-        language={props.language}
-        sections={props.sections}
-        initialSectionId={props.initialSectionId}
-        completedSectionIds={done}
-        sectionFooter={footer}
-        review={viewing ? (live.answers[viewing] ?? {}) : undefined}
-        exerciseMenu={(exercise, sectionId) =>
-          students.length > 0 ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon-sm" className="-my-1 shrink-0" aria-label={tl("exerciseActions")}>
-                  <MoreHorizontal aria-hidden="true" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onSelect={() => void showToStudents(sectionId, exercise.id)}>
-                  <ScanEye aria-hidden="true" />
-                  {tl("showToStudents")}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : null
-        }
-      />
-    </div>
+    <ClassMarksProvider classId={classId} userId={userId} otherUserId={viewing} isTeacher initial={props.marks}>
+      <div className="flex flex-col gap-4">
+        <LiveStudentsBar
+          students={students}
+          sections={props.sections}
+          lessonId={lessonId}
+          online={live.online}
+          status={live.status}
+          answers={live.answers}
+          viewing={viewing}
+          onView={setViewing}
+          pointerOn={pointerOn}
+          onPointerToggle={setPointerOn}
+        />
+        <div
+          onPointerMove={pointerOn ? onPointerMove : undefined}
+          onPointerLeave={pointerOn ? () => sendPointer(null) : undefined}
+          className={pointerOn ? "cursor-crosshair" : undefined}
+        >
+          <LessonPlayer
+            language={props.language}
+            sections={props.sections}
+            initialSectionId={props.initialSectionId}
+            completedSectionIds={done}
+            sectionFooter={footer}
+            review={viewing ? (live.answers[viewing] ?? {}) : undefined}
+            solutions={props.solutions}
+            exerciseMenu={(exercise, sectionId) => {
+              const checkable = checkMode(exercise.type) !== null;
+              const isRevealed = props.revealed.includes(exercise.id);
+              if (students.length === 0 && !checkable) return null;
+              return (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon-sm" className="-my-1 shrink-0" aria-label={tl("exerciseActions")} disabled={pending}>
+                      <MoreHorizontal aria-hidden="true" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    {students.length > 0 && (
+                      <DropdownMenuItem onSelect={() => void showToStudents(sectionId, exercise.id)}>
+                        <ScanEye aria-hidden="true" />
+                        {tl("showToStudents")}
+                      </DropdownMenuItem>
+                    )}
+                    {checkable && (
+                      <DropdownMenuItem onSelect={() => reveal(exercise.id, !isRevealed)}>
+                        {isRevealed ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
+                        {isRevealed ? tl("hideAnswers") : tl("revealAnswers")}
+                      </DropdownMenuItem>
+                    )}
+                    {checkable && students.length > 0 && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem variant="destructive" onSelect={() => reset(exercise.id)}>
+                          <RotateCcw aria-hidden="true" />
+                          {tl("resetAnswers")}
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              );
+            }}
+          />
+        </div>
+      </div>
+    </ClassMarksProvider>
   );
 }
 
+/** The student's side: answers are saved; the screen follows the teacher's "Show", pointer and reset. */
 export function StudentClassLesson({
   savedAnswers,
   initialShow,
+  teacherId,
   ...props
-}: CommonProps & { savedAnswers: Record<string, SavedAnswer>; initialShow: string | null }) {
-  const { classId, lessonId } = props;
+}: CommonProps & { savedAnswers: Record<string, SavedAnswer>; initialShow: string | null; teacherId: string }) {
+  const { classId, lessonId, userId } = props;
   const studentLive = useStudentLive();
-  const [done] = useDoneSections(props.doneSections);
+  const [done] = useSynced(props.doneSections);
+  const [saved, setSaved] = useState(savedAnswers);
+  const [resets, setResets] = useState<Record<string, number>>({});
+  const [pointer, setPointer] = useState<{ exerciseId: string; x: number; y: number } | null>(null);
+  const pointerTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [focus, setFocus] = useState(() =>
     initialShow && props.initialSectionId
       ? { sectionId: props.initialSectionId, exerciseId: initialShow, nonce: 0 }
       : null,
   );
 
-  // "Show to students" from the teacher while this lesson is open.
+  // Messages from the teacher while this lesson is open.
   useEffect(() => {
     if (!studentLive) return;
-    return studentLive.onShow((m) => {
-      if (m.classId === classId && m.lessonId === lessonId) {
-        setFocus({ sectionId: m.sectionId, exerciseId: m.exerciseId, nonce: Date.now() });
+    return studentLive.onMessage((m) => {
+      if (m.classId !== classId || m.lessonId !== lessonId) return;
+      if (m.kind === "show") setFocus({ sectionId: m.sectionId, exerciseId: m.exerciseId, nonce: Date.now() });
+      if (m.kind === "reset") {
+        setSaved((prev) => {
+          const next = { ...prev };
+          delete next[m.exerciseId];
+          return next;
+        });
+        setResets((prev) => ({ ...prev, [m.exerciseId]: (prev[m.exerciseId] ?? 0) + 1 }));
+      }
+      if (m.kind === "pointer") {
+        if (pointerTimer.current) clearTimeout(pointerTimer.current);
+        if ("hide" in m) return setPointer(null);
+        setPointer({ exerciseId: m.exerciseId, x: m.x, y: m.y });
+        // Hide it if the teacher's pointer stops coming (e.g. the connection dropped).
+        pointerTimer.current = setTimeout(() => setPointer(null), 4000);
       }
     });
   }, [studentLive, classId, lessonId]);
@@ -201,14 +305,19 @@ export function StudentClassLesson({
   useEffect(() => () => setLocation?.({ classId, lessonId: null, sectionId: null }), [setLocation, classId]);
 
   return (
-    <LessonPlayer
-      language={props.language}
-      sections={props.sections}
-      initialSectionId={props.initialSectionId}
-      completedSectionIds={done}
-      classAnswers={{ classId, saved: savedAnswers }}
-      focus={focus}
-      onSectionChange={onSectionChange}
-    />
+    <ClassMarksProvider classId={classId} userId={userId} otherUserId={teacherId} isTeacher={false} initial={props.marks}>
+      <LessonPlayer
+        language={props.language}
+        sections={props.sections}
+        initialSectionId={props.initialSectionId}
+        completedSectionIds={done}
+        classAnswers={{ classId, saved }}
+        focus={focus}
+        onSectionChange={onSectionChange}
+        solutions={props.solutions}
+        pointer={pointer}
+        resets={resets}
+      />
+    </ClassMarksProvider>
   );
 }

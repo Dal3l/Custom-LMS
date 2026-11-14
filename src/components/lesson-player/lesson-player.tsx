@@ -15,7 +15,8 @@ import type { CheckResult } from "@/features/exercises/checking";
 import { EXERCISE_UI } from "@/features/exercises/client";
 import { LessonLanguageProvider } from "@/features/exercises/lesson-language";
 import { requestSaveAnswer } from "@/features/lessons/answer-client";
-import type { SavedAnswer } from "@/features/lessons/answers";
+import type { SavedAnswer } from "@/features/lessons/answers-shared";
+import type { Solution } from "@/features/lessons/grade";
 import { requestCheck } from "@/features/lessons/check-client";
 import { SaveQueue } from "@/features/lessons/save-queue";
 import type { StudentExercise, StudentSection } from "@/features/lessons/queries";
@@ -38,6 +39,9 @@ export function LessonPlayer({
   focus,
   onSectionChange,
   exerciseMenu,
+  solutions,
+  pointer,
+  resets,
 }: {
   /** the language the course teaches */
   language: string;
@@ -59,6 +63,12 @@ export function LessonPlayer({
   onSectionChange?: (sectionId: string) => void;
   /** Extra "…" menu on each exercise (the teacher's "Show to students"). */
   exerciseMenu?: (exercise: StudentExercise, sectionId: string) => React.ReactNode;
+  /** Right answers the teacher revealed, by exercise. */
+  solutions?: Record<string, Solution>;
+  /** The teacher's pointer (students' view). */
+  pointer?: { exerciseId: string; x: number; y: number } | null;
+  /** "Reset answers": a new number for an exercise clears it (and drops its waiting save). */
+  resets?: Record<string, number>;
 }) {
   const t = useTranslations("player");
   const [queue] = useState(() => new SaveQueue());
@@ -82,6 +92,14 @@ export function LessonPlayer({
   const index = sections.findIndex((s) => s.id === activeId);
   const active = index >= 0 ? sections[index]! : null;
   const next = index >= 0 ? sections[index + 1] : undefined;
+
+  // A reset exercise must not save its old answer after all.
+  const resetKey = JSON.stringify(resets ?? {});
+  useEffect(() => {
+    for (const id of Object.keys(resets ?? {})) queue.drop(id);
+    // resetKey stands for resets.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resetKey, queue]);
 
   // Report the open section (also the first one).
   useEffect(() => {
@@ -153,11 +171,13 @@ export function LessonPlayer({
           {active.exercises.map((exercise, i) => (
             <PlayerExercise
               // Remounting clears typed answers when the teacher presses "Reset".
-              key={`${exercise.id}:${resetSignal}`}
+              key={`${exercise.id}:${resetSignal}:${resets?.[exercise.id] ?? 0}`}
               exercise={exercise}
               number={exerciseNumber(index, i)}
               review={review ? { saved: review[exercise.id] } : undefined}
               menu={exerciseMenu?.(exercise, active.id)}
+              solution={solutions?.[exercise.id]}
+              pointer={pointer?.exerciseId === exercise.id ? pointer : null}
               persist={
                 classAnswers
                   ? { classId: classAnswers.classId, saved: classAnswers.saved[exercise.id], queue }
@@ -217,6 +237,8 @@ function PlayerExercise({
   persist,
   review,
   menu,
+  solution,
+  pointer,
 }: {
   exercise: StudentExercise;
   number: string;
@@ -224,9 +246,49 @@ function PlayerExercise({
   /** read-only: a student's saved answer, shown to the teacher */
   review?: { saved: SavedAnswer | undefined };
   menu?: React.ReactNode;
+  solution?: Solution;
+  pointer?: { x: number; y: number } | null;
 }) {
-  if (review) return <ReviewExercise exercise={exercise} number={number} saved={review.saved} menu={menu} />;
-  return <AnswerExercise exercise={exercise} number={number} persist={persist} menu={menu} />;
+  const extra = (
+    <>
+      {solution && <SolutionBlock exercise={exercise} solution={solution} />}
+      {pointer && <PointerDot x={pointer.x} y={pointer.y} />}
+    </>
+  );
+  if (review) return <ReviewExercise exercise={exercise} number={number} saved={review.saved} menu={menu} extra={extra} />;
+  return <AnswerExercise exercise={exercise} number={number} persist={persist} menu={menu} extra={extra} />;
+}
+
+/** "Right answers", revealed by the teacher: the exercise filled in correctly. */
+function SolutionBlock({ exercise, solution }: { exercise: StudentExercise; solution: Solution }) {
+  const t = useTranslations("player");
+  const meta = exerciseMeta(exercise.type);
+  const ui = meta ? EXERCISE_UI[meta.id] : undefined;
+  if (!ui) return null;
+  return (
+    <section className="flex flex-col gap-2 rounded-xl border border-emerald-300 bg-emerald-50/60 p-3" aria-label={t("rightAnswers")}>
+      <h3 className="flex items-center gap-1.5 text-sm font-medium text-emerald-800">
+        <CircleCheck className="size-4" aria-hidden="true" />
+        {t("rightAnswers")}
+      </h3>
+      <div className="pointer-events-none">
+        <ui.Viewer content={exercise.content} answer={solution.answer} result={solution.result} />
+      </div>
+    </section>
+  );
+}
+
+/** The teacher's pointer, on top of the exercise. */
+function PointerDot({ x, y }: { x: number; y: number }) {
+  const t = useTranslations("player");
+  return (
+    <span
+      className="pointer-events-none absolute z-10 size-5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-rose-500/80 ring-4 ring-rose-300/60 transition-[left,top] duration-75"
+      style={{ left: `${Math.min(Math.max(x, 0), 1) * 100}%`, top: `${Math.min(Math.max(y, 0), 1) * 100}%` }}
+      role="img"
+      aria-label={t("teacherPointer")}
+    />
+  );
 }
 
 /** A student's answer as the teacher sees it: read-only, refreshed whenever it changes. */
@@ -235,11 +297,13 @@ function ReviewExercise({
   number,
   saved,
   menu,
+  extra,
 }: {
   exercise: StudentExercise;
   number: string;
   saved: SavedAnswer | undefined;
   menu?: React.ReactNode;
+  extra?: React.ReactNode;
 }) {
   const t = useTranslations("player");
   const meta = exerciseMeta(exercise.type);
@@ -251,7 +315,7 @@ function ReviewExercise({
   const content = exercise.content as Record<string, unknown>;
   return (
     <li className="group list-none" id={`exercise-${exercise.id}`}>
-      <Card className={cn("gap-3 rounded-2xl px-4 py-4 transition-shadow group-data-[flash=true]:ring-4 group-data-[flash=true]:ring-primary/50", result?.correct && "border-emerald-500")}>
+      <Card className={cn("relative gap-3 rounded-2xl px-4 py-4 transition-shadow group-data-[flash=true]:ring-4 group-data-[flash=true]:ring-primary/50", result?.correct && "border-emerald-500")}>
         <div className="flex items-start gap-2">
           <Badge variant="secondary" className="mt-0.5 shrink-0 tabular-nums">
             {number}
@@ -277,6 +341,7 @@ function ReviewExercise({
             />
           </div>
         )}
+        {extra}
       </Card>
     </li>
   );
@@ -287,11 +352,13 @@ function AnswerExercise({
   number,
   persist,
   menu,
+  extra,
 }: {
   exercise: StudentExercise;
   number: string;
   persist?: Persist;
   menu?: React.ReactNode;
+  extra?: React.ReactNode;
 }) {
   const t = useTranslations("player");
   const meta = exerciseMeta(exercise.type);
@@ -372,7 +439,7 @@ function AnswerExercise({
     <li className="group list-none" id={`exercise-${exercise.id}`}>
       <Card
         className={cn(
-          "gap-3 rounded-2xl px-4 py-4 transition-shadow group-data-[flash=true]:ring-4 group-data-[flash=true]:ring-primary/50",
+          "relative gap-3 rounded-2xl px-4 py-4 transition-shadow group-data-[flash=true]:ring-4 group-data-[flash=true]:ring-primary/50",
           result?.correct && "border-emerald-500",
         )}
       >
@@ -425,6 +492,7 @@ function AnswerExercise({
             </Button>
           </div>
         )}
+        {extra}
       </Card>
     </li>
   );

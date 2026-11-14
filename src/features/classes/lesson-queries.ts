@@ -47,6 +47,8 @@ export type ClassLessonState = {
   openedAt: string;
   finishedAt: string | null;
   doneSections: string[];
+  /** exercises whose right answers the teacher revealed */
+  revealed: string[];
 };
 
 /** The state of one lesson in a class, or null if it was never opened there. */
@@ -54,7 +56,7 @@ export async function getClassLessonState(classId: string, lessonId: string): Pr
   const supabase = await createClient();
   const { data } = await supabase
     .from("class_lessons")
-    .select("status, opened_at, finished_at, done_sections")
+    .select("status, opened_at, finished_at, done_sections, revealed")
     .eq("class_id", classId)
     .eq("lesson_id", lessonId)
     .maybeSingle();
@@ -64,6 +66,21 @@ export async function getClassLessonState(classId: string, lessonId: string): Pr
         openedAt: data.opened_at,
         finishedAt: data.finished_at,
         doneSections: data.done_sections,
+        revealed: data.revealed,
       }
     : null;
+}
+
+export type ClassMark = { exerciseId: string; userId: string; ranges: unknown };
+
+/** Shared text highlights in a lesson of the class that this user may see (RLS). */
+export async function listClassMarks(classId: string, exerciseIds: string[]): Promise<ClassMark[]> {
+  if (exerciseIds.length === 0) return [];
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("class_marks")
+    .select("exercise_id, user_id, ranges")
+    .eq("class_id", classId)
+    .in("exercise_id", exerciseIds);
+  return (data ?? []).map((m) => ({ exerciseId: m.exercise_id, userId: m.user_id, ranges: m.ranges }));
 }
