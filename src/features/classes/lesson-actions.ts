@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { redirect } from "@/i18n/navigation";
 import { getProfile } from "@/lib/auth";
+import { getClassLessonAnswers, type StudentAnswers } from "@/features/lessons/answers";
 import { createClient } from "@/lib/supabase/server";
 import { toggleDoneSection } from "./class-lessons";
 import { idSchema } from "./schemas";
@@ -177,4 +178,12 @@ export async function setSectionFinished(
     .eq("lesson_id", ids.data.lessonId);
   if (error) return { ok: false, error: "generic" };
   return { ok: true, data: next };
+}
+
+/** Teacher, after the connection comes back: the students' answers again, so nothing is missed. */
+export async function fetchLessonAnswers(classId: string, lessonId: string): Promise<Result<StudentAnswers>> {
+  const ctx = await teacherContext();
+  const ids = z.object({ classId: idSchema, lessonId: idSchema }).safeParse({ classId, lessonId });
+  if (!ctx || !ids.success) return { ok: false, error: "forbidden" };
+  return { ok: true, data: await getClassLessonAnswers(ids.data.classId, ids.data.lessonId) };
 }

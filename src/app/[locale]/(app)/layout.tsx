@@ -4,13 +4,18 @@ import { UserMenu } from "@/components/app-shell/user-menu";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import type { Locale } from "@/i18n/routing";
+import { listStudentLiveClasses } from "@/features/classes/queries";
+import { StudentLiveProvider } from "@/features/live/student-live";
 import { getUser, requireProfile } from "@/lib/auth";
 
 export default async function AppLayout({ children, params }: LayoutProps<"/[locale]">) {
   const { locale } = (await params) as { locale: Locale };
   setRequestLocale(locale);
   const profile = await requireProfile(locale);
-  const user = await getUser();
+  const [user, liveClasses] = await Promise.all([
+    getUser(),
+    profile.role === "student" ? listStudentLiveClasses(profile.id) : Promise.resolve(null),
+  ]);
   const name = profile.full_name || user?.email || "";
 
   return (
@@ -24,7 +29,16 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
             <UserMenu name={name} role={profile.role} />
           </div>
         </header>
-        <div className="mx-auto w-full max-w-5xl flex-1 p-4 sm:p-6">{children}</div>
+        <div className="mx-auto w-full max-w-5xl flex-1 p-4 sm:p-6">
+          {liveClasses ? (
+            // Students follow their classes live: lessons open by themselves, "Show to students".
+            <StudentLiveProvider userId={profile.id} classes={liveClasses}>
+              {children}
+            </StudentLiveProvider>
+          ) : (
+            children
+          )}
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

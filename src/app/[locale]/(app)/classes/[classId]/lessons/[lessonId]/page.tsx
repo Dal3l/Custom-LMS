@@ -3,13 +3,13 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { CallButton } from "@/components/classes/call-button";
 import { ClassLessonControls } from "@/components/classes/class-lesson-controls";
-import { ClassLessonView } from "@/components/classes/class-lesson-view";
+import { StudentClassLesson, TeacherClassLesson } from "@/components/classes/class-lesson-view";
 import { LessonPicker } from "@/components/classes/lesson-picker";
 import { Badge } from "@/components/ui/badge";
 import { getClassLessonState } from "@/features/classes/lesson-queries";
 import { getClassPage } from "@/features/classes/queries";
 import { idSchema } from "@/features/classes/schemas";
-import { getMyClassAnswers } from "@/features/lessons/answers";
+import { getClassLessonAnswers, getMyClassAnswers } from "@/features/lessons/answers";
 import { getStudentLesson } from "@/features/lessons/queries";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -30,13 +30,23 @@ export default async function ClassLessonPage({
     getStudentLesson(lessonId),
     getTranslations("classLessons"),
     getTranslations("courses"),
-    profile.role === "student" ? getMyClassAnswers(classId, lessonId, profile.id) : Promise.resolve(undefined),
+    profile.role === "student" ? getMyClassAnswers(classId, lessonId, profile.id) : getClassLessonAnswers(classId, lessonId),
   ]);
   // Only lessons opened in this class; students see nothing else (RLS too).
   if (!cls || !state || !lesson) notFound();
-  const { section } = await searchParams;
+  const { section, show } = await searchParams;
   const live = state.status === "live";
   const finished = Boolean(state.finishedAt);
+  const common = {
+    classId,
+    lessonId,
+    courseId: lesson.course.id,
+    language: lesson.course.language,
+    sections: lesson.sections,
+    initialSectionId: typeof section === "string" ? section : null,
+    doneSections: state.doneSections,
+    finished,
+  };
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
@@ -93,18 +103,20 @@ export default async function ClassLessonPage({
         </div>
       </header>
 
-      <ClassLessonView
-        classId={classId}
-        lessonId={lessonId}
-        courseId={lesson.course.id}
-        language={lesson.course.language}
-        sections={lesson.sections}
-        initialSectionId={typeof section === "string" ? section : null}
-        isTeacher={cls.isTeacher}
-        doneSections={state.doneSections}
-        finished={finished}
-        savedAnswers={cls.isTeacher ? undefined : savedAnswers}
-      />
+      {cls.isTeacher ? (
+        <TeacherClassLesson
+          {...common}
+          teacherId={profile.id}
+          students={cls.students}
+          initialAnswers={savedAnswers as Awaited<ReturnType<typeof getClassLessonAnswers>>}
+        />
+      ) : (
+        <StudentClassLesson
+          {...common}
+          savedAnswers={savedAnswers as Awaited<ReturnType<typeof getMyClassAnswers>>}
+          initialShow={typeof show === "string" ? show : null}
+        />
+      )}
     </div>
   );
 }
