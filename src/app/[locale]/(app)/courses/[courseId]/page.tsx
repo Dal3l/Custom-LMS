@@ -16,7 +16,7 @@ export default async function CoursePage({ params }: PageProps<"/[locale]/course
   const profile = await requireRole(locale, "teacher");
   if (!idSchema.safeParse(courseId).success) notFound();
   const tree = await getCourseTree(courseId);
-  // Library courses are read-only and get their own page later; only owners edit here.
+  // Library courses are read-only (/library/…); only owners edit here.
   if (!tree || tree.course.owner_id !== profile.id) notFound();
   const t = await getTranslations("courses");
 
@@ -32,7 +32,12 @@ export default async function CoursePage({ params }: PageProps<"/[locale]/course
         <ChevronLeft className="size-4" aria-hidden="true" />
         {t("backToCourses")}
       </Link>
-      <CourseHeader course={tree.course} userId={profile.id} languages={sortedLanguages(locale)} />
+      <CourseHeader
+        course={tree.course}
+        userId={profile.id}
+        languages={sortedLanguages(locale)}
+        isAdmin={profile.is_admin}
+      />
       <CourseOutline courseId={courseId} initial={outline} />
     </div>
   );

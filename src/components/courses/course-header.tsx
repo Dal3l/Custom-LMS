@@ -1,6 +1,6 @@
 "use client";
 
-import { Copy, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Copy, Library, LibraryBig, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useActionState, useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -19,6 +19,7 @@ import {
 import {
   deleteCourse,
   duplicateCourse,
+  setCourseInLibrary,
   updateCourse,
   type CourseFormState,
 } from "@/features/courses/actions";
@@ -36,9 +37,12 @@ export function CourseHeader({
   course,
   userId,
   languages,
+  isAdmin = false,
 }: {
   course: Course;
   userId: string;
+  /** Admins can put their courses into the shared library. */
+  isAdmin?: boolean;
   /** Prepared on the server: device language-name dictionaries differ (e.g. Kazakh). */
   languages: LanguageOption[];
 }) {
@@ -55,6 +59,19 @@ export function CourseHeader({
       if (result.ok) {
         toast.success(t("copied"));
         router.push(`/courses/${result.data}`);
+      } else {
+        toast.error(t(`errors.${result.error}`));
+      }
+    });
+  }
+
+  function toggleLibrary() {
+    const next = !course.is_library;
+    startTransition(async () => {
+      const result = await setCourseInLibrary(course.id, next);
+      if (result.ok) {
+        toast.success(next ? t("publishedToLibrary") : t("removedFromLibrary"));
+        router.refresh();
       } else {
         toast.error(t(`errors.${result.error}`));
       }
@@ -100,6 +117,12 @@ export function CourseHeader({
                 <Copy aria-hidden="true" />
                 {t("duplicateCourse")}
               </DropdownMenuItem>
+              {isAdmin && (
+                <DropdownMenuItem onSelect={toggleLibrary}>
+                  {course.is_library ? <LibraryBig aria-hidden="true" /> : <Library aria-hidden="true" />}
+                  {course.is_library ? t("removeFromLibrary") : t("publishToLibrary")}
+                </DropdownMenuItem>
+              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem variant="destructive" onSelect={() => setConfirming(true)}>
                 <Trash2 aria-hidden="true" />
@@ -111,6 +134,7 @@ export function CourseHeader({
         <div className="flex flex-wrap gap-2">
           <Badge variant="secondary">{languageLabel}</Badge>
           {course.level && <Badge variant="outline">{course.level}</Badge>}
+          {course.is_library && <Badge>{t("inLibrary")}</Badge>}
         </div>
         {course.description && (
           <p className="whitespace-pre-line text-muted-foreground">{course.description}</p>

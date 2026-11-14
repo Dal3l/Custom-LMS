@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "@/i18n/navigation";
 import { getProfile } from "@/lib/auth";
 import type { TablesInsert } from "@/lib/supabase/database.types";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import {
   courseSchema,
@@ -288,4 +289,43 @@ async function deleteRow(table: "modules" | "lessons", id: string): Promise<Acti
   if (!data?.length) return fail("forbidden");
   refresh();
   return ok(undefined);
+}
+
+// ---------------------------------------------------------------------------
+// Library
+// ---------------------------------------------------------------------------
+
+/**
+ * Admin only: puts one of their own courses into the shared library (visible to
+ * every teacher) or takes it out. The flags are not writable from the app, so
+ * this uses the secret key after checking the admin flag and the owner.
+ */
+export async function setCourseInLibrary(courseId: string, inLibrary: boolean): Promise<ActionResult> {
+  const ctx = await teacherClient();
+  if (!ctx?.profile.is_admin || !idSchema.safeParse(courseId).success) return fail("forbidden");
+  const { data: own } = await ctx.supabase
+    .from("courses")
+    .select("id")
+    .eq("id", courseId)
+    .eq("owner_id", ctx.profile.id)
+    .maybeSingle();
+  if (!own) return fail("forbidden");
+  const { error } = await createAdminClient()
+    .from("courses")
+    .update({ is_library: inLibrary, is_published: inLibrary })
+    .eq("id", courseId);
+  if (error) return fail();
+  refresh();
+  revalidatePath("/[locale]/library", "layout");
+  return ok(undefined);
+}
+
+/** Copies a library course into the teacher's own courses, to edit freely. */
+export async function copyLibraryCourse(courseId: string): Promise<ActionResult<string>> {
+  const ctx = await teacherClient();
+  if (!ctx || !idSchema.safeParse(courseId).success) return fail("forbidden");
+  const { data, error } = await ctx.supabase.rpc("duplicate_course", { p_id: courseId, p_suffix: "" });
+  if (error || !data) return fail();
+  refresh();
+  return ok(data);
 }

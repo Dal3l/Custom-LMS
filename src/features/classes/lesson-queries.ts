@@ -1,0 +1,54 @@
+import "server-only";
+import { createClient } from "@/lib/supabase/server";
+import { sortClassLessons, type ClassLessonStatus } from "./class-lessons";
+
+export type { ClassLessonStatus };
+
+export type ClassLessonItem = {
+  lessonId: string;
+  title: string;
+  isTest: boolean;
+  courseTitle: string;
+  status: ClassLessonStatus;
+  openedAt: string;
+  finishedAt: string | null;
+};
+
+/** Lessons opened in a class: the one going on first, then the rest, newest first. */
+export async function listClassLessons(classId: string): Promise<ClassLessonItem[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("class_lessons")
+    .select("status, opened_at, finished_at, lesson:lessons(id, title, is_test, course:courses(title))")
+    .eq("class_id", classId)
+    .order("opened_at", { ascending: false });
+  if (error) throw new Error(`class lessons query failed: ${error.message}`);
+  const items = (data ?? []).flatMap((row) =>
+    row.lesson
+      ? [
+          {
+            lessonId: row.lesson.id,
+            title: row.lesson.title,
+            isTest: row.lesson.is_test,
+            courseTitle: row.lesson.course?.title ?? "",
+            status: row.status as ClassLessonStatus,
+            openedAt: row.opened_at,
+            finishedAt: row.finished_at,
+          },
+        ]
+      : [],
+  );
+  return sortClassLessons(items);
+}
+
+/** The status of one lesson in a class, or null if it was never opened there. */
+export async function getClassLessonStatus(classId: string, lessonId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("class_lessons")
+    .select("status, opened_at, finished_at")
+    .eq("class_id", classId)
+    .eq("lesson_id", lessonId)
+    .maybeSingle();
+  return data ? { status: data.status as ClassLessonStatus, openedAt: data.opened_at, finishedAt: data.finished_at } : null;
+}

@@ -45,6 +45,48 @@ export type Database = {
           },
         ]
       }
+      class_lessons: {
+        Row: {
+          class_id: string
+          finished_at: string | null
+          id: string
+          lesson_id: string
+          opened_at: string
+          status: string
+        }
+        Insert: {
+          class_id: string
+          finished_at?: string | null
+          id?: string
+          lesson_id: string
+          opened_at?: string
+          status?: string
+        }
+        Update: {
+          class_id?: string
+          finished_at?: string | null
+          id?: string
+          lesson_id?: string
+          opened_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_lessons_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_lessons_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       class_members: {
         Row: {
           class_id: string

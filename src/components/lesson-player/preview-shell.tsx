@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, Pencil, RotateCcw } from "lucide-react";
+import { ChevronLeft, Eye, Pencil, RotateCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -8,15 +8,19 @@ import type { StudentSection } from "@/features/lessons/queries";
 import { Link } from "@/i18n/navigation";
 import { LessonPlayer } from "./lesson-player";
 
-/** "Preview as student" banner with Reset and Back-to-editing, around the player. */
+/** "Preview as student" banner with Reset and Back-to-editing (or Back), around the player. */
 export function PreviewShell({
   language,
   editHref,
+  backHref,
   sections,
   initialSectionId,
 }: {
   language: string;
-  editHref: string;
+  /** Own course: back to the lesson builder. */
+  editHref?: string;
+  /** Library course: back to the course page. */
+  backHref?: string;
   sections: StudentSection[];
   initialSectionId: string | null;
 }) {
@@ -34,12 +38,22 @@ export function PreviewShell({
             <RotateCcw aria-hidden="true" />
             {t("reset")}
           </Button>
-          <Button asChild size="sm">
-            <Link href={editHref}>
-              <Pencil aria-hidden="true" />
-              {t("backToEditor")}
-            </Link>
-          </Button>
+          {editHref && (
+            <Button asChild size="sm">
+              <Link href={editHref}>
+                <Pencil aria-hidden="true" />
+                {t("backToEditor")}
+              </Link>
+            </Button>
+          )}
+          {backHref && (
+            <Button asChild size="sm">
+              <Link href={backHref}>
+                <ChevronLeft aria-hidden="true" />
+                {t("backToCourse")}
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
       <LessonPlayer language={language} sections={sections} initialSectionId={initialSectionId} resetSignal={reset} />

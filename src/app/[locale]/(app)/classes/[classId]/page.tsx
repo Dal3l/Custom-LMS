@@ -2,10 +2,13 @@ import { BookOpen } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { ClassHeader } from "@/components/classes/class-header";
+import { ClassLessonsList } from "@/components/classes/class-lessons-list";
+import { LessonPicker } from "@/components/classes/lesson-picker";
 import { InvitePanel } from "@/components/classes/invite-panel";
 import { RegisterStudentDialog } from "@/components/classes/register-student-dialog";
 import { StudentsList } from "@/components/classes/students-panel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { listClassLessons } from "@/features/classes/lesson-queries";
 import { getClassPage } from "@/features/classes/queries";
 import { idSchema } from "@/features/classes/schemas";
 import type { Locale } from "@/i18n/routing";
@@ -18,18 +21,34 @@ export default async function ClassPage({ params }: PageProps<"/[locale]/classes
   setRequestLocale(locale);
   const profile = await requireProfile(locale);
   if (!idSchema.safeParse(classId).success) notFound();
-  const [t, cls] = await Promise.all([getTranslations("classes"), getClassPage(classId, profile)]);
+  const [t, tl, cls, classLessons] = await Promise.all([
+    getTranslations("classes"),
+    getTranslations("classLessons"),
+    getClassPage(classId, profile),
+    listClassLessons(classId),
+  ]);
   if (!cls) notFound();
 
-  const lessons = (
-    <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed px-6 py-12 text-center">
-      <span className="flex size-12 items-center justify-center rounded-2xl bg-accent text-primary">
-        <BookOpen className="size-6" aria-hidden="true" />
-      </span>
-      <h2 className="font-medium">{t("noLessonsTitle")}</h2>
-      <p className="max-w-md text-muted-foreground">{cls.isTeacher ? t("noLessonsTeacher") : t("noLessonsStudent")}</p>
-    </div>
-  );
+  const lessons =
+    classLessons.length === 0 ? (
+      <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed px-6 py-12 text-center">
+        <span className="flex size-12 items-center justify-center rounded-2xl bg-accent text-primary">
+          <BookOpen className="size-6" aria-hidden="true" />
+        </span>
+        <h2 className="font-medium">{t("noLessonsTitle")}</h2>
+        <p className="max-w-md text-muted-foreground">{cls.isTeacher ? t("noLessonsTeacher") : t("noLessonsStudent")}</p>
+        {cls.isTeacher && <LessonPicker classId={cls.id} label={tl("openLesson")} size="lg" />}
+      </div>
+    ) : (
+      <div className="flex flex-col gap-3">
+        {cls.isTeacher && (
+          <div className="flex justify-end">
+            <LessonPicker classId={cls.id} label={tl("openLesson")} />
+          </div>
+        )}
+        <ClassLessonsList classId={cls.id} lessons={classLessons} />
+      </div>
+    );
 
   return (
     <div className="flex flex-col gap-6">

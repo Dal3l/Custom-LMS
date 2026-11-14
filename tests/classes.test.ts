@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { generateInviteToken, generatePassword, INVITE_TOKEN_RE, PASSWORD_WORDS } from "@/features/classes/credentials";
+import { sortClassLessons } from "@/features/classes/class-lessons";
 import { classSchema, registerStudentSchema } from "@/features/classes/schemas";
 
 describe("generatePassword", () => {
@@ -78,5 +79,17 @@ describe("registerStudentSchema", () => {
     ).toEqual({ fullName: "Адель", email: "adel@mail.kz", timezone: "Asia/Almaty" });
     const bad = registerStudentSchema.safeParse({ fullName: "A", email: "nope", timezone: "Mars/Base" });
     expect(bad.error?.issues.map((i) => i.message)).toEqual(["emailInvalid", "timezoneInvalid"]);
+  });
+});
+
+describe("sortClassLessons", () => {
+  it("puts the lesson going on first, then the newest", () => {
+    const items = [
+      { id: "a", status: "done" as const, openedAt: "2026-11-01T10:00:00Z" },
+      { id: "b", status: "done" as const, openedAt: "2026-11-05T10:00:00Z" },
+      { id: "c", status: "live" as const, openedAt: "2026-10-01T10:00:00Z" },
+    ];
+    expect(sortClassLessons(items).map((i) => i.id)).toEqual(["c", "b", "a"]);
+    expect(items.map((i) => i.id)).toEqual(["a", "b", "c"]); // not changed in place
   });
 });

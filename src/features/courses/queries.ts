@@ -47,3 +47,20 @@ export const getCourseTree = cache(async (courseId: string): Promise<CourseTree 
     })),
   };
 });
+
+/** Published library courses, for every teacher. */
+export async function listLibraryCourses(): Promise<CourseListItem[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("courses")
+    .select("*, modules(count), lessons(count)")
+    .eq("is_library", true)
+    .eq("is_published", true)
+    .order("title");
+  if (error) throw error;
+  return (data ?? []).map(({ modules, lessons, ...course }) => ({
+    ...course,
+    moduleCount: modules[0]?.count ?? 0,
+    lessonCount: lessons[0]?.count ?? 0,
+  }));
+}
