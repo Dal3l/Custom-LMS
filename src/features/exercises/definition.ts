@@ -14,6 +14,8 @@ export type ExerciseDefinition<Content = unknown, Key = unknown, Answer = unknow
   /** null for materials that have nothing to check */
   keySchema: z.ZodType<Key> | null;
   create: () => { content: Content; key: Key | null };
+  /** Answers checked by the teacher: only their shape is checked on the server. */
+  manual?: { answerSchema: z.ZodType<Answer> };
   grading?: {
     answerSchema: z.ZodType<Answer>;
     check: (content: Content, key: Key, answer: Answer) => CheckResult;

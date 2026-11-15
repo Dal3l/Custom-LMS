@@ -24,9 +24,9 @@ export const EXERCISE_TYPES = [
   { id: "matching", group: "auto", icon: "matching", available: true, check: "button" },
   { id: "ordering", group: "auto", icon: "ordering", available: true, check: "button" },
   { id: "categorize", group: "auto", icon: "categorize", available: true, check: "button" },
-  // Checked by the teacher
-  { id: "open_answer", group: "manual", icon: "openAnswer", available: false },
-  { id: "voice_answer", group: "manual", icon: "voice", available: false },
+  // Checked by the teacher (check: "manual" = the answer is saved, the teacher reviews it)
+  { id: "open_answer", group: "manual", icon: "openAnswer", available: true, check: "manual" },
+  { id: "voice_answer", group: "manual", icon: "voice", available: true, check: "manual" },
 ] as const;
 
 export type ExerciseTypeId = (typeof EXERCISE_TYPES)[number]["id"];
@@ -36,12 +36,21 @@ export function exerciseMeta(id: string) {
   return EXERCISE_TYPES.find((t) => t.id === id);
 }
 
-/** How a type's answers are checked in the student view (null = nothing to check). */
-export function checkMode(id: string): "instant" | "button" | null {
+/**
+ * How a type's answers are checked in the student view:
+ * "button" / "instant" automatically, "manual" by the teacher, null = nothing to answer.
+ */
+export function checkMode(id: string): "instant" | "button" | "manual" | null {
   const meta = exerciseMeta(id);
   return meta && "check" in meta ? meta.check : null;
 }
 
 export function isExerciseTypeId(id: unknown): id is ExerciseTypeId {
   return typeof id === "string" && EXERCISE_TYPES.some((t) => t.id === id);
+}
+
+/** Checked automatically on the server (has right answers). */
+export function isAutoChecked(id: string): boolean {
+  const mode = checkMode(id);
+  return mode === "button" || mode === "instant";
 }

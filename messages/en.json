@@ -496,6 +496,35 @@
     "whiteboard": {
       "label": "Whiteboard",
       "editorHint": "An empty board to draw on. In a class lesson everyone draws on it together, and the drawing is kept."
+    },
+    "openAnswer": {
+      "minWords": "Minimum words",
+      "minWordsPlaceholder": "any",
+      "editorHint": "Write the task in the title. The student sees an answer box and a word counter.",
+      "label": "Your answer",
+      "placeholder": "Write your answer…",
+      "words": "{count, plural, one {# word} other {# words}}",
+      "wordsOfMin": "Words: {count} of {min}",
+      "empty": "No answer yet."
+    },
+    "voiceAnswer": {
+      "maxSeconds": "Longest recording",
+      "seconds": "{s} sec",
+      "minutes": "{m} min",
+      "editorHint": "Write the task in the title. The student records the answer in the browser, can listen and record again.",
+      "record": "Record the answer",
+      "recordAgain": "Record again",
+      "stop": "Stop",
+      "recordingNow": "Recording",
+      "saving": "Saving…",
+      "limit": "up to {time}",
+      "recording": "Recorded answer",
+      "noRecording": "No recording yet.",
+      "loading": "Loading the recording…",
+      "notSupported": "This browser can't record sound. Try Chrome or Safari.",
+      "noMicrophone": "No access to the microphone. Allow it in the browser settings.",
+      "tooLong": "The recording is too big.",
+      "uploadFailed": "Couldn't save the recording. Check the internet and record again."
     }
   },
   "builder": {
@@ -562,7 +591,8 @@
     "notChecked": "Not checked",
     "rightAnswers": "Right answers",
     "teacherPointer": "Teacher's pointer",
-    "toolsLabel": "Lesson tools"
+    "toolsLabel": "Lesson tools",
+    "awaitingTeacher": "Waiting for the teacher"
   },
   "classes": {
     "title": "Classes",

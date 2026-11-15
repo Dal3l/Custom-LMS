@@ -2,7 +2,7 @@
 
 import { ArrowRight, Check, CircleCheck, CloudOff, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,8 @@ import { Card } from "@/components/ui/card";
 import type { Attachment } from "@/features/exercises/attachment";
 import { AttachmentViewer } from "@/features/exercises/attachment-ui";
 import { changedParts, hasAnyAnswer, withoutVerdicts } from "@/features/exercises/answer-diff";
-import { checkMode, exerciseMeta } from "@/features/exercises/catalog";
+import { AnswerPlaceContext } from "@/features/exercises/answer-context";
+import { checkMode, exerciseMeta, isAutoChecked } from "@/features/exercises/catalog";
 import type { CheckResult } from "@/features/exercises/checking";
 import { EXERCISE_UI } from "@/features/exercises/client";
 import { LessonLanguageProvider } from "@/features/exercises/lesson-language";
@@ -56,7 +57,7 @@ export function LessonPlayer({
   /** Extra controls under a section (the teacher's "Finish section" in class). */
   sectionFooter?: (section: StudentSection, isLast: boolean) => React.ReactNode;
   /** A student in a class lesson: answers are saved (and restored from `saved`). */
-  classAnswers?: { classId: string; saved: Record<string, SavedAnswer> };
+  classAnswers?: { classId: string; userId: string; saved: Record<string, SavedAnswer> };
   /** The teacher looks at a student's answers (read-only, updated live). */
   review?: Record<string, SavedAnswer>;
   /** "Show to students": open this section and scroll to this exercise (a new nonce repeats it). */
@@ -78,6 +79,10 @@ export function LessonPlayer({
 }) {
   const t = useTranslations("player");
   const [queue] = useState(() => new SaveQueue());
+  const answerPlace = useMemo(
+    () => (classAnswers ? { classId: classAnswers.classId, userId: classAnswers.userId } : null),
+    [classAnswers],
+  );
 
   // Leaving the page or hiding the app: send what is still waiting.
   useEffect(() => {
@@ -147,6 +152,7 @@ export function LessonPlayer({
 
   return (
     <LessonLanguageProvider value={language}>
+    <AnswerPlaceContext.Provider value={answerPlace}>
     {/* Wide screens: tools on the left, sections on the right, both always in view. */}
     <div className="xl:grid xl:grid-cols-[3rem_minmax(0,1fr)_12rem] xl:items-start xl:gap-6">
       <aside className="hidden xl:sticky xl:top-20 xl:flex xl:flex-col xl:items-center xl:gap-2" aria-label={t("toolsLabel")}>
@@ -249,8 +255,16 @@ export function LessonPlayer({
         </nav>
       </aside>
     </div>
+    </AnswerPlaceContext.Provider>
     </LessonLanguageProvider>
   );
+}
+
+/** Something written or recorded (teacher-checked types). */
+function hasManualAnswer(answer: unknown): boolean {
+  if (!answer || typeof answer !== "object") return false;
+  const a = answer as { text?: unknown; file?: unknown };
+  return (typeof a.text === "string" && a.text.trim() !== "") || Boolean(a.file);
 }
 
 /** "Answers saved ✓" / "Saving…" / "Not saved: no connection" for a student in a class lesson. */
@@ -372,14 +386,20 @@ function ReviewExercise({
           {exercise.title && <p className="flex-1 font-medium">{exercise.title}</p>}
           {mode && (
             <span className="ml-auto shrink-0 text-sm text-muted-foreground tabular-nums">
-              {!saved ? t("noAnswerYet") : result ? t("score", { right, total: verdicts.length }) : t("notChecked")}
+              {!saved
+                ? t("noAnswerYet")
+                : mode === "manual"
+                  ? t("awaitingTeacher")
+                  : result
+                    ? t("score", { right, total: verdicts.length })
+                    : t("notChecked")}
             </span>
           )}
           {menu}
         </div>
         {meta?.group !== "material" && <AttachmentViewer value={content.attachment as Attachment | null | undefined} />}
         {ui && (
-          <div className={cn(mode && "pointer-events-none")}>
+          <div className={cn(isAutoChecked(exercise.type) && "pointer-events-none")}>
             <ui.Viewer
               // Viewers keep their own copy of the answer: remount when it changes.
               key={JSON.stringify(answer)}
@@ -516,6 +536,11 @@ function AnswerExercise({
                   {t("score", { right, total })}
                 </>
               )}
+            </span>
+          )}
+          {mode === "manual" && persist && hasManualAnswer(answer) && (
+            <span className="ml-auto shrink-0 text-sm text-muted-foreground" role="status">
+              {t("awaitingTeacher")}
             </span>
           )}
           {menu}
