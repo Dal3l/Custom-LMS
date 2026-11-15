@@ -59,7 +59,7 @@ test.describe("lesson extras", () => {
 
     // A PDF in storage.
     const pdfPath = `${teacherId}/${crypto.randomUUID()}.pdf`;
-    const pdfBytes = readFileSync("e2e/fixtures/worksheet.pdf");
+    const pdfBytes = readFileSync("e2e/fixtures/worksheet-3pages.pdf");
     await db.storage.from("lesson-media").upload(pdfPath, pdfBytes, { contentType: "application/pdf" });
     cleanup.files.push(pdfPath);
 
@@ -110,22 +110,63 @@ test.describe("lesson extras", () => {
 
     // The timer: the teacher starts 5 minutes; the student sees the countdown.
     await tools.getByRole("button", { name: "Таймер" }).click();
-    await page.getByRole("button", { name: "5 мин", exact: true }).click();
+    await page.getByRole("spinbutton", { name: "Минуты" }).fill("0");
+    await page.getByRole("spinbutton", { name: "Секунды" }).fill("40");
+    await page.getByRole("button", { name: "Старт" }).click();
     await page.keyboard.press("Escape");
-    await expect(sp.getByRole("button", { name: /Таймер: осталось 4:/ }).first()).toBeVisible();
+    await expect(sp.getByRole("button", { name: /Таймер: осталось 0:\d\d/ }).first()).toBeVisible();
 
     // The whiteboard: the teacher opens it (it opens for the student too) and draws.
     await tools.getByRole("button", { name: "Доска урока" }).click();
     const teacherBoard = page.getByRole("dialog", { name: "Доска урока" });
     await expect(sp.getByRole("dialog", { name: "Доска урока" })).toBeVisible();
     await scribble(page, teacherBoard.getByRole("img", { name: "Доска урока" }));
-    await expect(sp.locator(`[data-board="lesson:${lesson!.id}"] path`)).toHaveCount(1);
+    const studentBoard = sp.locator(`[data-board="lesson:${lesson!.id}"]`);
+    await expect(studentBoard.locator("path")).toHaveCount(1);
+
+    // Text: click on the board, type, Enter.
+    const surface = teacherBoard.getByRole("img", { name: "Доска урока" });
+    const box = (await surface.boundingBox())!;
+    await teacherBoard.getByRole("button", { name: "Текст" }).click();
+    await page.mouse.click(box.x + box.width * 0.2, box.y + box.height * 0.2);
+    await page.keyboard.type("Hello board");
+    await page.keyboard.press("Enter");
+    await expect(studentBoard.locator("text")).toHaveText("Hello board");
+
+    // Eraser: rubbing across the middle of the line leaves two pieces.
+    await teacherBoard.getByRole("button", { name: "Ластик" }).click();
+    const midX = box.x + box.width * 0.44;
+    await page.mouse.move(midX, box.y + box.height * 0.5);
+    await page.mouse.down();
+    await page.mouse.move(midX, box.y + box.height * 0.7, { steps: 6 });
+    await page.mouse.up();
+    await expect(studentBoard.locator("path")).toHaveCount(2);
+    // …and kept: after reopening the student sees the same.
+    await sp.keyboard.press("Escape");
+    await sp.reload();
+    await sp.getByRole("button", { name: "Доска урока" }).first().click();
+    await expect(studentBoard.locator("path")).toHaveCount(2);
+    await expect(studentBoard.locator("text")).toHaveText("Hello board");
+
+    // Hand: drag the text somewhere else; the student sees it move.
+    const before = Number(await studentBoard.locator("text").getAttribute("x"));
+    await teacherBoard.getByRole("button", { name: /Рука/ }).click();
+    await page.mouse.move(box.x + box.width * 0.22, box.y + box.height * 0.21);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width * 0.6, box.y + box.height * 0.3, { steps: 6 });
+    await page.mouse.up();
+    await expect.poll(async () => Number(await studentBoard.locator("text").getAttribute("x"))).toBeGreaterThan(before + 200);
     await page.keyboard.press("Escape");
     await sp.keyboard.press("Escape");
 
     // The PDF is shown in the lesson; the student writes on page 1 with the pen;
     // the teacher sees it.
     await expect(sp.getByRole("img", { name: "Страница 1" })).toBeVisible();
+    // Every page keeps its full height (A4: taller than wide).
+    for (const n of [1, 2, 3]) {
+      const pageBox = (await page.getByRole("img", { name: `Страница ${n}` }).boundingBox())!;
+      expect(pageBox.height).toBeGreaterThan(pageBox.width);
+    }
     await sp.getByRole("button", { name: "Ручка" }).first().click();
     await scribble(sp, sp.getByRole("img", { name: "Страница 1" }));
     await expect(page.locator(`[data-board="file:${pdfEx!.id}:1"] path`)).toHaveCount(1);

@@ -20,11 +20,24 @@ type BoardsApi = {
   load: (board: string) => void;
   add: (board: string, data: BoardItemData) => void;
   remove: (board: string, id: string) => void;
+  /** moved with the hand tool */
+  update: (board: string, id: string, data: BoardItemData) => void;
   clear: (board: string) => void;
 };
 
 const Ctx = createContext<BoardsApi | null>(null);
 export const useBoards = () => useContext(Ctx);
+
+/**
+ * Sends a query. Supabase queries only run when awaited (`then`), so a
+ * fire-and-forget call must still call `then`.
+ */
+function run(query: PromiseLike<unknown>) {
+  query.then(undefined, () => undefined);
+}
+
+/** What an erased item becomes (never drawn: it is not valid item data). */
+const ERASED = { kind: "erased" };
 
 type Row = { id: string; board: string; author_id: string; data: unknown; created_at: string };
 const toItem = (r: Row): BoardItem | null =>
@@ -74,12 +87,33 @@ export function BoardsProvider({
         )
         .on(
           "postgres_changes",
-          { event: "DELETE", schema: "public", table: "board_items", filter: `class_id=eq.${classId}` },
+          { event: "UPDATE", schema: "public", table: "board_items", filter: `class_id=eq.${classId}` },
           (change) => {
-            const old = change.old as Partial<Row>;
-            if (old.board && old.id) put(old.board, (items) => items.filter((i) => i.id !== old.id));
+            const row = change.new as Row;
+            const item = toItem(row);
+            // An erased item comes as an update to "erased": take it off the board.
+            put(row.board, (items) =>
+              item ? items.map((i) => (i.id === item.id ? item : i)) : items.filter((i) => i.id !== row.id),
+            );
           },
         )
+        // Deletions can't be filtered, and only the item's id arrives (the table is
+        // protected by RLS): remove that id wherever it is shown.
+        .on("postgres_changes", { event: "DELETE", schema: "public", table: "board_items" }, (change) => {
+          const id = (change.old as Partial<Row>).id;
+          if (!id) return;
+          setBoards((prev) => {
+            let changed = false;
+            const next = new Map(prev);
+            for (const [board, items] of prev) {
+              if (items.some((i) => i.id === id)) {
+                next.set(board, items.filter((i) => i.id !== id));
+                changed = true;
+              }
+            }
+            return changed ? next : prev;
+          });
+        })
         .subscribe((status) => {
           // Back after a break: boards on screen are loaded again.
           if (status === "SUBSCRIBED") {
@@ -133,13 +167,19 @@ export function BoardsProvider({
             });
           });
       },
+      // Erasing marks the item as erased (an update reaches everyone reliably;
+      // deletions can't be filtered by class and sometimes don't arrive).
       remove: (board, id) => {
         put(board, (items) => items.filter((i) => i.id !== id));
-        if (!id.startsWith("local-")) void supabase.from("board_items").delete().eq("id", id);
+        if (!id.startsWith("local-")) run(supabase.from("board_items").update({ data: ERASED }).eq("id", id));
+      },
+      update: (board, id, data) => {
+        put(board, (items) => items.map((i) => (i.id === id ? { ...i, data } : i)));
+        if (!id.startsWith("local-")) run(supabase.from("board_items").update({ data }).eq("id", id));
       },
       clear: (board) => {
         put(board, () => []);
-        void supabase.from("board_items").delete().eq("class_id", classId).eq("board", board);
+        run(supabase.from("board_items").update({ data: ERASED }).eq("class_id", classId).eq("board", board));
       },
     }),
     [boards, supabase, classId, userId, isTeacher, otherUserId, put],
