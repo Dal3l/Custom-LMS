@@ -6,6 +6,7 @@ import { getUser } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { toSavedAnswer, type SavedAnswer, type StudentAnswers } from "./answers-shared";
+import { getDefinition } from "@/features/exercises/definitions";
 import { gradeLoaded } from "./grade";
 
 export type { SavedAnswer, StudentAnswers };
@@ -69,6 +70,12 @@ export async function saveClassAnswer(body: unknown): Promise<SaveAnswerResponse
   if (!exercise.data || !member.data || !lessonId || !opened.data.some((l) => l.lesson_id === lessonId)) {
     return { ok: false, error: "forbidden" };
   }
+
+  // The answer must have the exercise type's shape (teacher-checked types too).
+  const def = getDefinition(exercise.data.type);
+  const shape = def?.manual?.answerSchema ?? def?.grading?.answerSchema;
+  if (!shape || !shape.safeParse(answer).success) return { ok: false, error: "invalid" };
+  if (check && !def?.grading) return { ok: false, error: "invalid" };
 
   let result: CheckResult | null = null;
   let kept: unknown = answer;

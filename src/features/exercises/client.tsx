@@ -11,6 +11,10 @@ import { CategorizeEditor } from "./types/categorize/editor";
 import { CategorizeViewer } from "./types/categorize/viewer";
 import { FileEditor } from "./types/file/editor";
 import { FileViewer } from "./types/file/viewer";
+import { OpenAnswerEditor } from "./types/open_answer/editor";
+import { OpenAnswerViewer } from "./types/open_answer/viewer";
+import { VoiceAnswerEditor } from "./types/voice_answer/editor";
+import { VoiceAnswerViewer } from "./types/voice_answer/viewer";
 import { WhiteboardEditor } from "./types/whiteboard/editor";
 import { WhiteboardViewer } from "./types/whiteboard/viewer";
 import { GapDragEditor } from "./types/gap_drag/editor";
@@ -65,4 +69,6 @@ export const EXERCISE_UI: Partial<Record<ExerciseTypeId, ExerciseUI>> = {
   matching: { Editor: MatchingEditor as unknown as AnyEditor, Viewer: MatchingViewer as unknown as AnyViewer },
   ordering: { Editor: OrderingEditor as unknown as AnyEditor, Viewer: OrderingViewer as unknown as AnyViewer },
   categorize: { Editor: CategorizeEditor as unknown as AnyEditor, Viewer: CategorizeViewer as unknown as AnyViewer },
+  open_answer: { Editor: OpenAnswerEditor as unknown as AnyEditor, Viewer: OpenAnswerViewer as unknown as AnyViewer },
+  voice_answer: { Editor: VoiceAnswerEditor as unknown as AnyEditor, Viewer: VoiceAnswerViewer as unknown as AnyViewer },
 };

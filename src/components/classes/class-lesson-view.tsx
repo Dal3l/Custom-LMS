@@ -33,7 +33,7 @@ import {
 } from "@/features/classes/lesson-actions";
 import type { ClassMark } from "@/features/classes/lesson-queries";
 import type { ClassStudent } from "@/features/classes/queries";
-import { checkMode } from "@/features/exercises/catalog";
+import { checkMode, isAutoChecked } from "@/features/exercises/catalog";
 import type { SavedAnswer, StudentAnswers } from "@/features/lessons/answers-shared";
 import type { Solution } from "@/features/lessons/grade";
 import type { StudentSection } from "@/features/lessons/queries";
@@ -283,7 +283,9 @@ export function TeacherClassLesson({
             exerciseMenu={(exercise, sectionId) => {
               // Tools act on the class, so only in a lesson the class has (not while looking ahead).
               if (!inClass) return null;
-              const checkable = checkMode(exercise.type) !== null;
+              // Right answers exist only for automatically checked types; answers to reset for any answerable one.
+              const checkable = isAutoChecked(exercise.type);
+              const answerable = checkMode(exercise.type) !== null;
               const isRevealed = props.revealed.includes(exercise.id);
               if (students.length === 0 && !checkable) return null;
               return (
@@ -306,7 +308,7 @@ export function TeacherClassLesson({
                         {isRevealed ? tl("hideAnswers") : tl("revealAnswers")}
                       </DropdownMenuItem>
                     )}
-                    {checkable && students.length > 0 && (
+                    {answerable && students.length > 0 && (
                       <>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem variant="destructive" onSelect={() => reset(exercise.id)}>
@@ -402,7 +404,7 @@ export function StudentClassLesson({
         sections={props.sections}
         initialSectionId={props.initialSectionId}
         completedSectionIds={done}
-        classAnswers={{ classId, saved }}
+        classAnswers={{ classId, userId, saved }}
         focus={focus}
         onSectionChange={onSectionChange}
         solutions={props.solutions}

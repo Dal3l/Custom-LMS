@@ -92,6 +92,7 @@ test.describe("lesson materials", () => {
 
     // Clean up
     await page.getByRole("link", { name: courseTitle }).click();
+    await expect(page.getByRole("heading", { level: 1, name: courseTitle })).toBeVisible();
     await page.getByRole("button", { name: "Ещё действия" }).first().click();
     await page.getByRole("menuitem", { name: "Удалить курс" }).click();
     await page.getByRole("button", { name: "Удалить" }).click();
@@ -157,6 +158,7 @@ test.describe("picture gallery", () => {
 
     await page.getByRole("link", { name: "К редактированию" }).click();
     await page.getByRole("link", { name: courseTitle }).click();
+    await expect(page.getByRole("heading", { level: 1, name: courseTitle })).toBeVisible();
     await page.getByRole("button", { name: "Ещё действия" }).first().click();
     await page.getByRole("menuitem", { name: "Удалить курс" }).click();
     await page.getByRole("button", { name: "Удалить" }).click();
