@@ -167,7 +167,8 @@ function PdfPage({
 
   const pageCanvas = <canvas ref={canvas} className="absolute inset-0 size-full" aria-hidden="true" />;
   return (
-    <div ref={box} className="w-full overflow-hidden rounded-md bg-white shadow-sm" onPointerUp={onDraw}>
+    // shrink-0: in the scrolling column a page must keep its full height.
+    <div ref={box} className="w-full shrink-0 overflow-hidden rounded-md bg-white shadow-sm" onPointerUp={onDraw}>
       {exerciseId ? (
         <NotesLayer board={fileBoard(exerciseId, page)} aspect={aspect} tool={tool} color={color} label={label}>
           {pageCanvas}

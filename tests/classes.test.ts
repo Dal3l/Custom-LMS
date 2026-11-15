@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { generateInviteToken, generatePassword, INVITE_TOKEN_RE, PASSWORD_WORDS } from "@/features/classes/credentials";
 import { sortClassLessons, toggleDoneSection } from "@/features/classes/class-lessons";
-import { blockBoard, fileBoard, isItemData, isPersonalBoard, lessonBoard, thinPoints, toPoint } from "@/features/board/items";
+import { blockBoard, eraseStroke, fileBoard, isItemData, isPersonalBoard, lessonBoard, moveItem, thinPoints, toPoint, touches } from "@/features/board/items";
 import { cellStatus, correctCount } from "@/features/live/overview";
 import { combineStatus, isNewlyOpened, onlineStudents } from "@/features/live/types";
 import { classSchema, registerStudentSchema } from "@/features/classes/schemas";
@@ -176,5 +176,43 @@ describe("whiteboard items", () => {
     expect(isPersonalBoard(fileBoard(id, 3))).toBe(true);
     expect(isPersonalBoard(lessonBoard(id))).toBe(false);
     expect(isPersonalBoard(blockBoard(id))).toBe(false);
+  });
+});
+
+describe("whiteboard eraser and hand", () => {
+  const line: [number, number][] = Array.from({ length: 11 }, (_, i) => [i / 10, 0.5]);
+
+  it("erases only the part of a line under the eraser", () => {
+    const pieces = eraseStroke(line, [[0.5, 0.5]], 0.06, 0.625);
+    expect(pieces).toHaveLength(2);
+    expect(pieces[0]!.at(-1)![0]).toBeLessThan(0.5);
+    expect(pieces[1]![0]![0]).toBeGreaterThan(0.5);
+  });
+
+  it("catches a quick stroke whose points are far apart", () => {
+    const quick: [number, number][] = [[0.1, 0.5], [0.5, 0.5], [0.9, 0.5]];
+    const pieces = eraseStroke(quick, [[0.3, 0.45], [0.3, 0.55]], 0.02, 0.625);
+    expect(pieces).toHaveLength(2);
+  });
+
+  it("keeps a line the eraser did not touch, removes one it covered", () => {
+    expect(eraseStroke(line, [[0.5, 0.9]], 0.05, 0.625)).toEqual([line]);
+    expect(eraseStroke([[0.5, 0.5], [0.51, 0.5]], [[0.505, 0.5]], 0.05, 0.625)).toEqual([]);
+  });
+
+  it("finds shapes and text under a point", () => {
+    expect(touches({ kind: "rect", color: "#111827", from: [0.2, 0.2], to: [0.4, 0.4] }, [0.2, 0.3], 0.01, 0.625)).toBe(true);
+    expect(touches({ kind: "rect", color: "#111827", from: [0.2, 0.2], to: [0.4, 0.4] }, [0.3, 0.3], 0.01, 0.625)).toBe(false);
+    expect(touches({ kind: "text", color: "#111827", at: [0.1, 0.1], text: "Hello" }, [0.12, 0.11], 0.01, 0.625)).toBe(true);
+    expect(touches({ kind: "pen", color: "#111827", points: line }, [0.33, 0.5], 0.01, 0.625)).toBe(true);
+  });
+
+  it("moves an item, staying on the board", () => {
+    expect(moveItem({ kind: "text", color: "#111827", at: [0.9, 0.5], text: "Hi" }, 0.2, -0.1)).toEqual({
+      kind: "text",
+      color: "#111827",
+      at: [1, 0.4],
+      text: "Hi",
+    });
   });
 });

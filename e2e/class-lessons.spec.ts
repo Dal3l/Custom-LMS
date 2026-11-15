@@ -89,7 +89,7 @@ test.describe("lessons in a class", () => {
     const studentPage = await (await browser.newContext(options)).newPage();
     await login(studentPage, student.email!, student.password!);
     await studentPage.goto(`/ru/classes/${cls!.id}`);
-    await expect(studentPage.getByText("Уроки появятся здесь после занятий с учителем.")).toBeVisible();
+    await expect(studentPage.getByText("Уроки появятся здесь после занятий с учителем.").first()).toBeVisible();
     await studentPage.goto(`/ru/classes/${cls!.id}/lessons/${lessonIds[0]}`);
     await expect(studentPage.getByRole("heading", { name: "Страница не найдена" })).toBeVisible();
     // Saving an answer for a lesson that was not opened is refused by the server.

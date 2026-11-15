@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { forwardRef, useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Whiteboard } from "@/features/board/board-surface";
@@ -72,7 +73,8 @@ export function BoardDialog({
   );
 }
 
-const PRESETS = [1, 3, 5, 10, 15, 20];
+/** Ready-made times, in seconds. */
+const PRESETS = [15, 30, 45, 60, 120, 180, 300, 600, 900];
 
 /** Seconds left until `endsAt` (updated every second), or null. */
 function useSecondsLeft(endsAt: string | null) {
@@ -87,9 +89,11 @@ function useSecondsLeft(endsAt: string | null) {
 }
 
 export function formatSeconds(total: number) {
-  const m = Math.floor(total / 60);
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
   const s = total % 60;
-  return `${m}:${String(s).padStart(2, "0")}`;
+  const mm = h ? String(m).padStart(2, "0") : String(m);
+  return `${h ? `${h}:` : ""}${mm}:${String(s).padStart(2, "0")}`;
 }
 
 /** The lesson timer: the teacher starts and stops it; everybody sees the countdown. */
@@ -124,10 +128,14 @@ export function TimerTool({
     }
   }
 
-  function set(minutes: number | null) {
+  const [customMin, setCustomMin] = useState("");
+  const [customSec, setCustomSec] = useState("");
+  const custom = (Number(customMin) || 0) * 60 + (Number(customSec) || 0);
+
+  function set(seconds: number | null) {
     if (!teacher) return;
     startTransition(async () => {
-      const r = await setLessonTimer(teacher.classId, teacher.lessonId, minutes);
+      const r = await setLessonTimer(teacher.classId, teacher.lessonId, seconds);
       if (r.ok) router.refresh();
       else toast.error(t("failed"));
     });
@@ -164,12 +172,48 @@ export function TimerTool({
           {teacher && (
             <>
               <div className="grid grid-cols-3 gap-2">
-                {PRESETS.map((m) => (
-                  <Button key={m} type="button" variant="outline" size="sm" onClick={() => set(m)} disabled={pending}>
-                    {t("minutes", { m })}
+                {PRESETS.map((sec) => (
+                  <Button key={sec} type="button" variant="outline" size="sm" onClick={() => set(sec)} disabled={pending}>
+                    {sec < 60 ? t("seconds", { s: sec }) : t("minutes", { m: sec / 60 })}
                   </Button>
                 ))}
               </div>
+              {/* Any time: minutes and seconds. */}
+              <form
+                className="flex items-end gap-2"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (custom >= 5) set(custom);
+                }}
+              >
+                <label className="flex flex-1 flex-col gap-1 text-xs text-muted-foreground">
+                  {t("min")}
+                  <Input
+                    type="number"
+                    inputMode="numeric"
+                    min={0}
+                    max={180}
+                    value={customMin}
+                    onChange={(e) => setCustomMin(e.target.value.slice(0, 3))}
+                    className="h-8"
+                  />
+                </label>
+                <label className="flex flex-1 flex-col gap-1 text-xs text-muted-foreground">
+                  {t("sec")}
+                  <Input
+                    type="number"
+                    inputMode="numeric"
+                    min={0}
+                    max={59}
+                    value={customSec}
+                    onChange={(e) => setCustomSec(e.target.value.slice(0, 2))}
+                    className="h-8"
+                  />
+                </label>
+                <Button type="submit" size="sm" disabled={pending || custom < 5 || custom > 3 * 60 * 60}>
+                  {t("start")}
+                </Button>
+              </form>
               {left !== null && (
                 <Button type="button" variant="ghost" size="sm" onClick={() => set(null)} disabled={pending}>
                   <TimerOff aria-hidden="true" />

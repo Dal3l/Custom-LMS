@@ -777,7 +777,8 @@
       "rect": "Rectangle",
       "ellipse": "Oval",
       "text": "Text",
-      "eraser": "Eraser"
+      "eraser": "Eraser",
+      "hand": "Hand: move drawings and the board"
     },
     "colors": {
       "111827": "Black",
@@ -785,7 +786,10 @@
       "dc2626": "Red",
       "16a34a": "Green",
       "f59e0b": "Orange"
-    }
+    },
+    "zoom": "Zoom",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out"
   },
   "timer": {
     "title": "Timer",
@@ -793,7 +797,11 @@
     "over": "Time's up!",
     "minutes": "{m} min",
     "stop": "Stop",
-    "failed": "Couldn't start the timer. Please try again."
+    "failed": "Couldn't start the timer. Please try again.",
+    "seconds": "{s} sec",
+    "min": "Minutes",
+    "sec": "Seconds",
+    "start": "Start"
   },
   "tools": {
     "dictionary": "Words and trainer",
