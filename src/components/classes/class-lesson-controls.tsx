@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleCheck, CircleDashed, MoreHorizontal, Radio } from "lucide-react";
+import { CircleCheck, CircleDashed, MoreHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTransition } from "react";
 import { toast } from "sonner";
@@ -11,19 +11,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { openClassLesson, setClassLessonFinished } from "@/features/classes/lesson-actions";
+import { setClassLessonFinished } from "@/features/classes/lesson-actions";
 import { useRouter } from "@/i18n/navigation";
 
-/** Teacher's "…" menu on a class lesson: finish / un-finish it, make it the current lesson. */
+/** Teacher's "…" menu on a class lesson: finish it or take the mark back. */
 export function ClassLessonControls({
   classId,
   lessonId,
-  live,
   finished,
 }: {
   classId: string;
   lessonId: string;
-  live: boolean;
   finished: boolean;
 }) {
   const t = useTranslations("classLessons");
@@ -37,14 +35,6 @@ export function ClassLessonControls({
         toast.success(value ? t("finished") : t("unfinished"));
         router.refresh();
       } else toast.error(t(`errors.${result.error}`));
-    });
-  }
-
-  function makeCurrent() {
-    startTransition(async () => {
-      const result = await openClassLesson(classId, lessonId);
-      if (result && !result.ok) toast.error(t(`errors.${result.error}`));
-      else router.refresh();
     });
   }
 
@@ -65,12 +55,6 @@ export function ClassLessonControls({
           <DropdownMenuItem onSelect={() => setFinished(true)}>
             <CircleCheck aria-hidden="true" />
             {t("finish")}
-          </DropdownMenuItem>
-        )}
-        {!live && (
-          <DropdownMenuItem onSelect={makeCurrent}>
-            <Radio aria-hidden="true" />
-            {t("makeCurrent")}
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>

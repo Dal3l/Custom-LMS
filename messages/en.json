@@ -687,8 +687,10 @@
     "undo": "Undo",
     "unfinished": "The lesson is no longer marked as finished",
     "markUnfinished": "Mark as not finished",
-    "makeCurrent": "Make it the current lesson",
-    "courseLessons": "Course lessons"
+    "makeCurrent": "Make it current",
+    "courseLessons": "Course lessons",
+    "onlyYouSee": "Only you see this lesson now. It opens for your students when you make it current.",
+    "backToClasses": "All classes"
   },
   "live": {
     "lessonOpened": "Your teacher opened a lesson",

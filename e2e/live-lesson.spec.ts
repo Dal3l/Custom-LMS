@@ -79,6 +79,8 @@ test.describe("live lesson", () => {
     await page.getByRole("dialog").getByRole("button", { name: new RegExp(`E2E живой ${stamp}`) }).click();
     await page.getByRole("dialog").getByRole("button", { name: /Live one/ }).click();
     await expect(page.getByRole("heading", { level: 1, name: "Live one" })).toBeVisible();
+    // Only the teacher has it now; "Make it current" opens it for the class.
+    await page.getByRole("button", { name: "Сделать текущим" }).click();
     await expect(sp.getByRole("heading", { level: 1, name: "Live one" })).toBeVisible();
 
     // The teacher sees the student online, in section 1, and connected.

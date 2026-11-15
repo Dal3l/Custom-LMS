@@ -45,6 +45,8 @@ type CommonProps = {
   solutions: Record<string, Solution>;
   marks: ClassMark[];
   userId: string;
+  /** opened in the class before (false: the teacher is only looking at it) */
+  inClass: boolean;
 };
 
 /** Finished sections, kept in sync when the page data is reloaded. */
@@ -68,7 +70,7 @@ export function TeacherClassLesson({
   initialAnswers,
   ...props
 }: CommonProps & { students: ClassStudent[]; initialAnswers: StudentAnswers }) {
-  const { classId, lessonId, courseId, finished, userId } = props;
+  const { classId, lessonId, courseId, finished, userId, inClass } = props;
   const t = useTranslations("classLessons");
   const tl = useTranslations("live");
   const router = useRouter();
@@ -86,7 +88,9 @@ export function TeacherClassLesson({
   const anchor = useRef<{ id: string; top: number } | null>(null);
   function switchTo(studentId: string | null) {
     const cards = [...document.querySelectorAll<HTMLElement>('[id^="exercise-"]')];
-    const first = cards.find((c) => c.getBoundingClientRect().bottom > 160);
+    // The first exercise below the part that stays at the top.
+    const covered = document.querySelector("[data-sticky-lesson]")?.getBoundingClientRect().bottom ?? 160;
+    const first = cards.find((c) => c.getBoundingClientRect().bottom > covered + 8);
     anchor.current = first ? { id: first.id, top: first.getBoundingClientRect().top } : null;
     setViewing(studentId);
   }
@@ -200,22 +204,7 @@ export function TeacherClassLesson({
   return (
     <ClassMarksProvider classId={classId} userId={userId} otherUserId={viewing} isTeacher initial={props.marks}>
       <div className="flex flex-col gap-4">
-        <LiveStudentsBar
-          students={students}
-          sections={props.sections}
-          lessonId={lessonId}
-          online={live.online}
-          status={live.status}
-          answers={live.answers}
-          viewing={viewing}
-          onView={switchTo}
-          pointerOn={pointerOn}
-          onPointerToggle={setPointerOn}
-          onPick={(studentId, sectionId, exerciseId) => {
-            setViewing(studentId);
-            setFocus({ sectionId, exerciseId, nonce: Date.now() });
-          }}
-        />
+
         <div
           onPointerMove={pointerOn ? onPointerMove : undefined}
           onPointerLeave={pointerOn ? () => sendPointer(null) : undefined}
@@ -226,11 +215,31 @@ export function TeacherClassLesson({
             sections={props.sections}
             initialSectionId={props.initialSectionId}
             completedSectionIds={done}
-            sectionFooter={footer}
+            sectionFooter={inClass ? footer : undefined}
             review={viewing ? (live.answers[viewing] ?? {}) : undefined}
             solutions={props.solutions}
             focus={focus}
+            stickyTop={
+              <LiveStudentsBar
+                students={students}
+                sections={props.sections}
+                lessonId={lessonId}
+                online={live.online}
+                status={live.status}
+                answers={live.answers}
+                viewing={viewing}
+                onView={switchTo}
+                pointerOn={pointerOn}
+                onPointerToggle={setPointerOn}
+                onPick={(studentId, sectionId, exerciseId) => {
+                  setViewing(studentId);
+                  setFocus({ sectionId, exerciseId, nonce: Date.now() });
+                }}
+              />
+            }
             exerciseMenu={(exercise, sectionId) => {
+              // Tools act on the class, so only in a lesson the class has (not while looking ahead).
+              if (!inClass) return null;
               const checkable = checkMode(exercise.type) !== null;
               const isRevealed = props.revealed.includes(exercise.id);
               if (students.length === 0 && !checkable) return null;

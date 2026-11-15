@@ -1,4 +1,4 @@
-import { BookOpen } from "lucide-react";
+import { BookOpen, ChevronLeft } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { ClassHeader } from "@/components/classes/class-header";
@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { listClassLessons } from "@/features/classes/lesson-queries";
 import { getClassPage } from "@/features/classes/queries";
 import { idSchema } from "@/features/classes/schemas";
+import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { requireProfile } from "@/lib/auth";
 import { getOrigin } from "@/lib/site-url";
@@ -52,6 +53,10 @@ export default async function ClassPage({ params }: PageProps<"/[locale]/classes
 
   return (
     <div className="flex flex-col gap-6">
+      <Link href="/classes" className="-mb-3 flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+        <ChevronLeft className="size-4" aria-hidden="true" />
+        {tl("backToClasses")}
+      </Link>
       <ClassHeader
         cls={{ id: cls.id, name: cls.name, kind: cls.kind, call_url: cls.call_url }}
         isTeacher={cls.isTeacher}

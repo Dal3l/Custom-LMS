@@ -11,7 +11,8 @@ export async function ClassCard({ item, isTeacher }: { item: ClassListItem; isTe
   const Icon = item.kind === "group" ? Users : User;
   return (
     <Card className="h-full gap-3 rounded-2xl p-4 transition-shadow hover:shadow-md">
-      <Link href={`/classes/${item.id}`} className="flex items-start gap-3 rounded-xl focus-visible:outline-2 focus-visible:outline-ring">
+      {/* Straight into the lesson going on now, if there is one. */}
+      <Link href={item.liveLessonId ? `/classes/${item.id}/lessons/${item.liveLessonId}` : `/classes/${item.id}`} className="flex items-start gap-3 rounded-xl focus-visible:outline-2 focus-visible:outline-ring">
         <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-accent text-primary">
           <Icon className="size-5" aria-hidden="true" />
         </span>

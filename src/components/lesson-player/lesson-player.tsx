@@ -42,6 +42,7 @@ export function LessonPlayer({
   solutions,
   pointer,
   resets,
+  stickyTop,
 }: {
   /** the language the course teaches */
   language: string;
@@ -69,6 +70,8 @@ export function LessonPlayer({
   pointer?: { exerciseId: string; x: number; y: number } | null;
   /** "Reset answers": a new number for an exercise clears it (and drops its waiting save). */
   resets?: Record<string, number>;
+  /** Shown above the sections, staying at the top too (the teacher's students bar). */
+  stickyTop?: React.ReactNode;
 }) {
   const t = useTranslations("player");
   const [queue] = useState(() => new SaveQueue());
@@ -143,7 +146,13 @@ export function LessonPlayer({
     <LessonLanguageProvider value={language}>
     <div className="flex flex-col gap-5">
       {classAnswers && <AnswersStatus queue={queue} />}
-      <nav aria-label={t("sections")} className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
+      {/* Sections (and the teacher's students bar) stay at the top while scrolling. */}
+      <div
+        data-sticky-lesson
+        className="sticky top-14 z-[9] -mx-4 flex flex-col gap-2 border-b bg-background/95 px-4 py-2 backdrop-blur sm:-mx-6 sm:px-6"
+      >
+      {stickyTop}
+      <nav aria-label={t("sections")} className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6">
         {sections.map((s, i) => (
           <Button
             key={s.id}
@@ -159,6 +168,7 @@ export function LessonPlayer({
           </Button>
         ))}
       </nav>
+      </div>
 
       <h2 className="text-xl font-semibold">
         <span className="text-muted-foreground tabular-nums">{index + 1}.</span> {active.title}
