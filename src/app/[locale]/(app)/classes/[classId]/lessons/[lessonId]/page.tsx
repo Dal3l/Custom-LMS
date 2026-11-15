@@ -1,6 +1,7 @@
 import { Check, ChevronLeft, CircleDashed, Radio } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { HeaderPortal } from "@/components/app-shell/header-portal";
 import { CallButton } from "@/components/classes/call-button";
 import { ClassLessonControls } from "@/components/classes/class-lesson-controls";
 import { StudentClassLesson, TeacherClassLesson } from "@/components/classes/class-lesson-view";
@@ -60,6 +61,7 @@ export default async function ClassLessonPage({
     doneSections: state?.doneSections ?? [],
     finished,
     revealed,
+    timerEndsAt: state?.timerEndsAt ?? null,
     inClass: Boolean(state),
     solutions,
     marks,
@@ -67,46 +69,29 @@ export default async function ClassLessonPage({
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
-      {cls.isTeacher && !live && <MakeCurrentBanner classId={classId} lessonId={lessonId} />}
-      <Link
-        href={`/classes/${classId}`}
-        className="flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
-      >
-        <ChevronLeft className="size-4" aria-hidden="true" />
-        {cls.name}
-      </Link>
-      <header className="flex flex-col gap-3 sm:flex-row sm:items-start">
-        <div className="flex min-w-0 flex-1 flex-col gap-2">
-          <h1 className="flex flex-wrap items-center gap-2 text-2xl font-semibold break-words">
-            {lesson.lesson.title}
-            {lesson.lesson.is_test && <Badge variant="secondary">{tc("testBadge")}</Badge>}
-          </h1>
-          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-            {live && (
-              <Badge>
-                <Radio aria-hidden="true" />
-                {t("live")}
-              </Badge>
-            )}
-            {finished ? (
-              <Badge variant="secondary">
-                <Check aria-hidden="true" />
-                {t("done")}
-              </Badge>
-            ) : (
-              state && !live && (
-                <Badge variant="outline">
-                  <CircleDashed aria-hidden="true" />
-                  {t("notFinished")}
-                </Badge>
-              )
-            )}
-            <span>{lesson.course.title}</span>
-          </div>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          {cls.call_url && <CallButton url={cls.call_url} />}
+    <div className="flex w-full flex-col gap-4">
+      {/* Title and buttons live in the app's top bar, leaving the page for the lesson. */}
+      <HeaderPortal>
+        <Link
+          href={`/classes/${classId}`}
+          className="flex shrink-0 items-center gap-0.5 text-sm text-muted-foreground hover:text-foreground"
+          aria-label={t("backToClass", { name: cls.name })}
+          title={cls.name}
+        >
+          <ChevronLeft className="size-4" aria-hidden="true" />
+          <span className="max-w-28 truncate max-md:sr-only">{cls.name}</span>
+        </Link>
+        <h1 className="min-w-0 truncate text-base font-semibold sm:text-lg" title={lesson.lesson.title}>
+          {lesson.lesson.title}
+        </h1>
+        {live && (
+          <Badge className="shrink-0 max-sm:hidden">
+            <Radio aria-hidden="true" />
+            {t("live")}
+          </Badge>
+        )}
+        <div className="ml-auto flex shrink-0 items-center gap-1">
+          {cls.call_url && <CallButton url={cls.call_url} size="sm" compact />}
           {cls.isTeacher && (
             <>
               <LessonPicker
@@ -114,13 +99,41 @@ export default async function ClassLessonPage({
                 courseId={lesson.course.id}
                 label={t("courseLessons")}
                 variant="outline"
+                size="sm"
                 icon="list"
+                compact
               />
               {state && <ClassLessonControls classId={classId} lessonId={lessonId} finished={finished} />}
             </>
           )}
         </div>
-      </header>
+      </HeaderPortal>
+
+      {cls.isTeacher && !live && <MakeCurrentBanner classId={classId} lessonId={lessonId} />}
+      <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+        {live && (
+          <Badge className="sm:hidden">
+            <Radio aria-hidden="true" />
+            {t("live")}
+          </Badge>
+        )}
+        {lesson.lesson.is_test && <Badge variant="secondary">{tc("testBadge")}</Badge>}
+        {finished ? (
+          <Badge variant="secondary">
+            <Check aria-hidden="true" />
+            {t("done")}
+          </Badge>
+        ) : (
+          state &&
+          !live && (
+            <Badge variant="outline">
+              <CircleDashed aria-hidden="true" />
+              {t("notFinished")}
+            </Badge>
+          )
+        )}
+        <span>{lesson.course.title}</span>
+      </div>
 
       {cls.isTeacher ? (
         <TeacherClassLesson

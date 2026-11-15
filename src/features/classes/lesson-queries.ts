@@ -49,6 +49,8 @@ export type ClassLessonState = {
   doneSections: string[];
   /** exercises whose right answers the teacher revealed */
   revealed: string[];
+  /** when the lesson timer ends (null: no timer) */
+  timerEndsAt: string | null;
 };
 
 /** The state of one lesson in a class, or null if it was never opened there. */
@@ -56,7 +58,7 @@ export async function getClassLessonState(classId: string, lessonId: string): Pr
   const supabase = await createClient();
   const { data } = await supabase
     .from("class_lessons")
-    .select("status, opened_at, finished_at, done_sections, revealed")
+    .select("status, opened_at, finished_at, done_sections, revealed, timer_ends_at")
     .eq("class_id", classId)
     .eq("lesson_id", lessonId)
     .maybeSingle();
@@ -67,6 +69,7 @@ export async function getClassLessonState(classId: string, lessonId: string): Pr
         finishedAt: data.finished_at,
         doneSections: data.done_sections,
         revealed: data.revealed,
+        timerEndsAt: data.timer_ends_at,
       }
     : null;
 }

@@ -114,7 +114,7 @@ test.describe("teacher tools", () => {
     await expect(sp.locator('mark[data-color="#fed7aa"]')).toHaveText("fish");
 
     // The pointer: the student sees it over the exercise the teacher points at.
-    await bar.getByRole("button", { name: "Указка" }).click();
+    await page.getByRole("button", { name: "Указка" }).click();
     const card = page.locator(`#exercise-${ex!.id}`);
     // Below the part of the page that stays at the top.
     await card.evaluate((el) => el.scrollIntoView({ block: "end" }));

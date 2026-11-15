@@ -250,3 +250,23 @@ export async function resetExerciseAnswers(classId: string, lessonId: string, ex
   refresh(ctx.ids.classId);
   return { ok: true, data: undefined };
 }
+
+/** The lesson timer: every student of the class sees the same countdown. null stops it. */
+export async function setLessonTimer(classId: string, lessonId: string, minutes: number | null): Promise<Result<string | null>> {
+  const ctx = await teacherContext();
+  const ids = z
+    .object({ classId: idSchema, lessonId: idSchema, minutes: z.number().int().min(1).max(180).nullable() })
+    .safeParse({ classId, lessonId, minutes });
+  if (!ctx || !ids.success) return { ok: false, error: "forbidden" };
+  const endsAt = ids.data.minutes ? new Date(Date.now() + ids.data.minutes * 60_000).toISOString() : null;
+  const { data, error } = await ctx.supabase
+    .from("class_lessons")
+    .update({ timer_ends_at: endsAt })
+    .eq("class_id", ids.data.classId)
+    .eq("lesson_id", ids.data.lessonId)
+    .select("lesson_id");
+  if (error) return { ok: false, error: "generic" };
+  if (!data.length) return { ok: false, error: "forbidden" };
+  refresh(ids.data.classId);
+  return { ok: true, data: endsAt };
+}

@@ -1,6 +1,18 @@
 "use client";
 
-import { Check, CircleCheck, CloudOff, Eye, EyeOff, Loader2, MoreHorizontal, RotateCcw, ScanEye, Undo2 } from "lucide-react";
+import {
+  Check,
+  CircleCheck,
+  CloudOff,
+  Eye,
+  EyeOff,
+  Loader2,
+  MoreHorizontal,
+  MousePointer2,
+  RotateCcw,
+  ScanEye,
+  Undo2,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -25,11 +37,14 @@ import { checkMode } from "@/features/exercises/catalog";
 import type { SavedAnswer, StudentAnswers } from "@/features/lessons/answers-shared";
 import type { Solution } from "@/features/lessons/grade";
 import type { StudentSection } from "@/features/lessons/queries";
+import { BoardsProvider } from "@/features/board/boards";
 import { ClassMarksProvider } from "@/features/live/class-marks";
 import { useStudentLive } from "@/features/live/student-live";
 import { useTeacherLive } from "@/features/live/teacher-live";
 import { useRouter } from "@/i18n/navigation";
 import { LessonPicker } from "./lesson-picker";
+import { GroupOverview } from "./group-overview";
+import { BoardDialog, BoardTool, DictionaryTool, TimerTool, ToolButton } from "./lesson-tools";
 import { LiveStudentsBar } from "./live-students-bar";
 
 type CommonProps = {
@@ -42,6 +57,7 @@ type CommonProps = {
   doneSections: string[];
   finished: boolean;
   revealed: string[];
+  timerEndsAt: string | null;
   solutions: Record<string, Solution>;
   marks: ClassMark[];
   userId: string;
@@ -81,6 +97,7 @@ export function TeacherClassLesson({
   // Whose answers are shown (the teacher always looks at a student's work).
   const [viewing, setViewing] = useState<string | null>(students[0]?.id ?? null);
   const [pointerOn, setPointerOn] = useState(false);
+  const [boardOpen, setBoardOpen] = useState(false);
   const [focus, setFocus] = useState<{ sectionId: string; exerciseId: string; nonce: number } | null>(null);
 
   // Switching students keeps the same place on the page: the exercise at the top
@@ -203,6 +220,7 @@ export function TeacherClassLesson({
 
   return (
     <ClassMarksProvider classId={classId} userId={userId} otherUserId={viewing} isTeacher initial={props.marks}>
+    <BoardsProvider classId={classId} userId={userId} isTeacher otherUserId={viewing}>
       <div className="flex flex-col gap-4">
 
         <div
@@ -219,6 +237,37 @@ export function TeacherClassLesson({
             review={viewing ? (live.answers[viewing] ?? {}) : undefined}
             solutions={props.solutions}
             focus={focus}
+            tools={
+              <>
+                {students.length > 0 && (
+                  <ToolButton label={tl("pointer")} pressed={pointerOn} onClick={() => setPointerOn(!pointerOn)}>
+                    <MousePointer2 aria-hidden="true" />
+                  </ToolButton>
+                )}
+                {students.length > 0 && (
+                  <GroupOverview
+                    students={students}
+                    sections={props.sections}
+                    answers={live.answers}
+                    onPick={(studentId, sectionId, exerciseId) => {
+                      setViewing(studentId);
+                      setFocus({ sectionId, exerciseId, nonce: Date.now() });
+                    }}
+                  />
+                )}
+                {inClass && (
+                  <BoardTool
+                    open={boardOpen}
+                    onOpen={() => {
+                      setBoardOpen(true);
+                      live.openBoardForAll();
+                    }}
+                  />
+                )}
+                {inClass && <TimerTool endsAt={props.timerEndsAt} teacher={{ classId, lessonId }} />}
+                <DictionaryTool />
+              </>
+            }
             stickyTop={
               <LiveStudentsBar
                 students={students}
@@ -229,12 +278,6 @@ export function TeacherClassLesson({
                 answers={live.answers}
                 viewing={viewing}
                 onView={switchTo}
-                pointerOn={pointerOn}
-                onPointerToggle={setPointerOn}
-                onPick={(studentId, sectionId, exerciseId) => {
-                  setViewing(studentId);
-                  setFocus({ sectionId, exerciseId, nonce: Date.now() });
-                }}
               />
             }
             exerciseMenu={(exercise, sectionId) => {
@@ -279,6 +322,8 @@ export function TeacherClassLesson({
           />
         </div>
       </div>
+      <BoardDialog lessonId={lessonId} open={boardOpen} onOpenChange={setBoardOpen} />
+    </BoardsProvider>
     </ClassMarksProvider>
   );
 }
@@ -308,6 +353,7 @@ export function StudentClassLesson({
   const [resets, setResets] = useState<Record<string, number>>({});
   const [pointer, setPointer] = useState<{ exerciseId: string; x: number; y: number } | null>(null);
   const pointerTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [boardOpen, setBoardOpen] = useState(false);
   const [focus, setFocus] = useState(() =>
     initialShow && props.initialSectionId
       ? { sectionId: props.initialSectionId, exerciseId: initialShow, nonce: 0 }
@@ -320,6 +366,7 @@ export function StudentClassLesson({
     return studentLive.onMessage((m) => {
       if (m.classId !== classId || m.lessonId !== lessonId) return;
       if (m.kind === "show") setFocus({ sectionId: m.sectionId, exerciseId: m.exerciseId, nonce: Date.now() });
+      if (m.kind === "board") setBoardOpen(true);
       if (m.kind === "reset") {
         setSaved((prev) => {
           const next = { ...prev };
@@ -348,6 +395,7 @@ export function StudentClassLesson({
 
   return (
     <ClassMarksProvider classId={classId} userId={userId} otherUserId={teacherId} isTeacher={false} initial={props.marks}>
+    <BoardsProvider classId={classId} userId={userId} isTeacher={false} otherUserId={teacherId}>
       {studentLive?.status === "offline" && <StudentOffline />}
       <LessonPlayer
         language={props.language}
@@ -360,7 +408,16 @@ export function StudentClassLesson({
         solutions={props.solutions}
         pointer={pointer}
         resets={resets}
+        tools={
+          <>
+            <BoardTool open={boardOpen} onOpen={() => setBoardOpen(true)} />
+            <TimerTool endsAt={props.timerEndsAt} />
+            <DictionaryTool />
+          </>
+        }
       />
+      <BoardDialog lessonId={lessonId} open={boardOpen} onOpenChange={setBoardOpen} />
+    </BoardsProvider>
     </ClassMarksProvider>
   );
 }

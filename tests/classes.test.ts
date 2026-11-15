@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { generateInviteToken, generatePassword, INVITE_TOKEN_RE, PASSWORD_WORDS } from "@/features/classes/credentials";
 import { sortClassLessons, toggleDoneSection } from "@/features/classes/class-lessons";
+import { blockBoard, fileBoard, isItemData, isPersonalBoard, lessonBoard, thinPoints, toPoint } from "@/features/board/items";
 import { cellStatus, correctCount } from "@/features/live/overview";
 import { combineStatus, isNewlyOpened, onlineStudents } from "@/features/live/types";
 import { classSchema, registerStudentSchema } from "@/features/classes/schemas";
@@ -147,5 +148,33 @@ describe("group overview cells", () => {
   it("counts fully right exercises", () => {
     expect(correctCount({ x: saved({ parts: { a: true }, correct: true }), y: saved(null) })).toBe(1);
     expect(correctCount(undefined)).toBe(0);
+  });
+});
+
+describe("whiteboard items", () => {
+  it("keeps points inside the board and rounds them", () => {
+    expect(toPoint(-0.2, 1.7)).toEqual([0, 1]);
+    expect(toPoint(0.123456, 0.5)).toEqual([0.1235, 0.5]);
+  });
+
+  it("thins a stroke but keeps its ends", () => {
+    const pts = [toPoint(0, 0), toPoint(0.0001, 0), toPoint(0.0002, 0), toPoint(0.5, 0.5)];
+    expect(thinPoints(pts)).toEqual([[0, 0], [0.5, 0.5]]);
+  });
+
+  it("draws only well-formed items", () => {
+    expect(isItemData({ kind: "pen", color: "#2563eb", points: [[0.1, 0.2]] })).toBe(true);
+    expect(isItemData({ kind: "rect", color: "#2563eb", from: [0, 0], to: [1, 1] })).toBe(true);
+    expect(isItemData({ kind: "text", color: "#111827", at: [0.5, 0.5], text: "Hi" })).toBe(true);
+    expect(isItemData({ kind: "pen", color: "red", points: [[0, 0]] })).toBe(false);
+    expect(isItemData({ kind: "text", color: "#111827", at: [0, 0], text: "" })).toBe(false);
+    expect(isItemData({ kind: "script", color: "#111827" })).toBe(false);
+  });
+
+  it("names boards and knows which are personal", () => {
+    const id = "aaaaaaaa-0000-0000-0000-000000000001";
+    expect(isPersonalBoard(fileBoard(id, 3))).toBe(true);
+    expect(isPersonalBoard(lessonBoard(id))).toBe(false);
+    expect(isPersonalBoard(blockBoard(id))).toBe(false);
   });
 });

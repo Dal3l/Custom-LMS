@@ -1,20 +1,18 @@
 "use client";
 
-import { CloudOff, Loader2, MousePointer2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { CloudOff, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ClassStudent } from "@/features/classes/queries";
 import type { StudentAnswers } from "@/features/lessons/answers-shared";
 import type { StudentSection } from "@/features/lessons/queries";
 import type { LiveStatus, StudentPresence } from "@/features/live/types";
 import { initials } from "@/lib/initials";
-import { GroupOverview } from "./group-overview";
 import { cn } from "@/lib/utils";
 
 /**
  * Above the lesson for the teacher: connection state and the class's students —
  * who is online, in which section, how many exercises they answered. Picking a
- * student shows their answers live. The pointer is switched on here.
+ * student shows their answers live. (The tools are in the lesson's tools column.)
  */
 export function LiveStudentsBar({
   students,
@@ -25,9 +23,6 @@ export function LiveStudentsBar({
   answers,
   viewing,
   onView,
-  pointerOn,
-  onPointerToggle,
-  onPick,
 }: {
   students: ClassStudent[];
   sections: StudentSection[];
@@ -37,10 +32,6 @@ export function LiveStudentsBar({
   answers: StudentAnswers;
   viewing: string | null;
   onView: (studentId: string | null) => void;
-  pointerOn: boolean;
-  onPointerToggle: (on: boolean) => void;
-  /** From the overview: show this student's answer at this exercise. */
-  onPick: (studentId: string, sectionId: string, exerciseId: string) => void;
 }) {
   const t = useTranslations("live");
   const sectionNumber = (id: string | null) => {
@@ -50,32 +41,13 @@ export function LiveStudentsBar({
 
   return (
     // Kept at the top with the sections while scrolling (see LessonPlayer's stickyTop).
-    <section className="flex flex-col gap-2 rounded-2xl border bg-card p-2 sm:p-3" aria-label={t("studentsLabel")}>
-      <div className="flex items-center justify-between gap-2">
-        <h2 className="text-sm font-medium">{t("studentsTitle")}</h2>
-        <div className="flex items-center gap-2">
-          <ConnectionBadge status={status} />
-          {students.length > 0 && (
-            <GroupOverview students={students} sections={sections} answers={answers} onPick={onPick} />
-          )}
-          {students.length > 0 && (
-            <Button
-              type="button"
-              size="sm"
-              variant={pointerOn ? "default" : "outline"}
-              aria-pressed={pointerOn}
-              onClick={() => onPointerToggle(!pointerOn)}
-            >
-              <MousePointer2 aria-hidden="true" />
-              <span className="max-sm:sr-only">{t("pointer")}</span>
-            </Button>
-          )}
-        </div>
-      </div>
+    // One slim row: connection state and the students.
+    <section className="flex items-center gap-2" aria-label={t("studentsLabel")}>
+      <ConnectionBadge status={status} />
       {students.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t("noStudents")}</p>
       ) : (
-        <div className="-mx-2 flex gap-2 overflow-x-auto px-2 pb-0.5 sm:-mx-3 sm:px-3" role="group" aria-label={t("whoseAnswers")}>
+        <div className="flex min-w-0 flex-1 gap-2 overflow-x-auto pb-0.5" role="group" aria-label={t("whoseAnswers")}>
           {students.map((s) => {
             const p = online.get(s.id);
             const here = p?.lessonId === lessonId;
@@ -85,7 +57,7 @@ export function LiveStudentsBar({
             const name = s.fullName || t("noName");
             return (
               <Chip key={s.id} active={viewing === s.id} onClick={() => onView(s.id)} label={`${name}: ${where}`}>
-                <span className="relative flex size-8 shrink-0 items-center justify-center rounded-full bg-accent text-xs font-medium text-primary">
+                <span className="relative flex size-7 shrink-0 items-center justify-center rounded-full bg-accent text-xs font-medium text-primary">
                   {initials(s.fullName)}
                   <span
                     className={cn(
@@ -128,7 +100,7 @@ function Chip({
       aria-label={label}
       onClick={onClick}
       className={cn(
-        "flex min-h-12 shrink-0 items-center gap-2 rounded-xl border px-2 py-1.5 transition-colors hover:bg-accent",
+        "flex min-h-10 shrink-0 items-center gap-2 rounded-xl border bg-card px-2 py-1 transition-colors hover:bg-accent",
         active && "border-primary bg-primary/5 ring-2 ring-primary/30",
       )}
     >
@@ -156,9 +128,9 @@ export function ConnectionBadge({ status }: { status: LiveStatus }) {
     );
   }
   return (
-    <span className="flex items-center gap-1.5 text-xs text-muted-foreground" role="status">
+    <span className="flex shrink-0 items-center gap-1.5 text-xs text-muted-foreground" role="status">
       <span className="size-2 rounded-full bg-emerald-500" aria-hidden="true" />
-      {t("online")}
+      <span className="max-sm:sr-only">{t("online")}</span>
     </span>
   );
 }

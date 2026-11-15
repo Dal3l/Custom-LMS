@@ -24,7 +24,9 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
       <SidebarInset>
         <header className="sticky top-0 z-10 flex h-14 items-center gap-2 border-b bg-background/90 px-3 backdrop-blur sm:px-4">
           <SidebarTrigger className="size-10 md:hidden [&_svg]:size-5" />
-          <div className="ml-auto flex items-center gap-1">
+          {/* Pages can put their own title and buttons here (e.g. a lesson). */}
+          <div id="page-header-slot" className="flex min-w-0 flex-1 items-center gap-2" />
+          <div className="ml-auto flex shrink-0 items-center gap-1">
             <LanguageSwitcher signedIn />
             <UserMenu name={name} role={profile.role} />
           </div>

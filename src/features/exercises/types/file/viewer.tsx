@@ -6,10 +6,30 @@ import { Button } from "@/components/ui/button";
 import type { ExerciseViewerProps } from "../../client-types";
 import { Caption } from "../../caption-input";
 import { formatBytes, mediaUrl, type MediaFile } from "../../media";
+import { PdfViewer } from "./pdf-viewer";
 import type { FileContent } from "./schema";
 
-/** File name, size, "Open" and "Download"; PDFs are also shown on the page (wide screens). */
-export function FileCard({ file, preview = true }: { file: MediaFile; preview?: boolean }) {
+const OFFICE_TYPES = new Set([
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+]);
+
+/**
+ * File name, size, "Open" and "Download". With `preview` the file is also shown
+ * on the page: PDFs page by page (with pen and marker notes in a lesson), Word
+ * and PowerPoint files through Microsoft's free online viewer (read-only).
+ */
+export function FileCard({
+  file,
+  preview = true,
+  exerciseId,
+}: {
+  file: MediaFile;
+  preview?: boolean;
+  exerciseId?: string;
+}) {
   const t = useTranslations("exercises.file");
   const locale = useLocale();
   const url = mediaUrl(file.path);
@@ -17,11 +37,12 @@ export function FileCard({ file, preview = true }: { file: MediaFile; preview?: 
 
   return (
     <div className="flex flex-col gap-2">
-      {preview && isPdf && (
+      {preview && isPdf && <PdfViewer url={url} title={file.name} exerciseId={exerciseId} />}
+      {preview && OFFICE_TYPES.has(file.mime) && (
         <iframe
-          src={`${url}#view=FitH`}
+          src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`}
           title={file.name}
-          className="hidden h-[70vh] max-h-[50rem] w-full rounded-xl border bg-muted md:block"
+          className="h-[70vh] max-h-[50rem] w-full rounded-xl border bg-muted"
           loading="lazy"
         />
       )}
@@ -55,11 +76,11 @@ export function FileCard({ file, preview = true }: { file: MediaFile; preview?: 
   );
 }
 
-export function FileViewer({ content }: ExerciseViewerProps<FileContent>) {
+export function FileViewer({ content, exerciseId }: ExerciseViewerProps<FileContent>) {
   if (!content.file) return null;
   return (
     <div className="flex flex-col gap-2">
-      <FileCard file={content.file} />
+      <FileCard file={content.file} exerciseId={exerciseId} />
       <Caption text={content.caption} />
     </div>
   );

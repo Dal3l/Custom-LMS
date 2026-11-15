@@ -140,6 +140,11 @@ export function useTeacherLive({
     [lessonId],
   );
 
+  /** Opens the lesson whiteboard on the students' screens too. */
+  const openBoardForAll = useCallback(() => {
+    void channel.current?.send({ type: "broadcast", event: "board", payload: { lessonId } });
+  }, [lessonId]);
+
   const show = useCallback(
     async (message: Omit<ShowMessage, "lessonId">) => {
       const room = channel.current;
@@ -150,5 +155,5 @@ export function useTeacherLive({
     [lessonId],
   );
 
-  return { answers, online, status, show, sendPointer, resetExercise };
+  return { answers, online, status, show, sendPointer, resetExercise, openBoardForAll };
 }

@@ -142,7 +142,7 @@ test.describe("group lesson", () => {
     await q2.scrollIntoViewIfNeeded();
     await page.mouse.wheel(0, 400);
     await expect(bar).toBeInViewport();
-    await expect(bar.getByRole("button", { name: "Указка" })).toBeInViewport();
+    await expect(page.getByRole("button", { name: "Указка" })).toBeInViewport();
     // The sections stay on screen too.
     await expect(page.getByRole("navigation", { name: "Секции урока" })).toBeInViewport();
     const before = (await q2.boundingBox())!.y;
@@ -152,7 +152,7 @@ test.describe("group lesson", () => {
     expect(Math.abs(after - before)).toBeLessThan(40);
 
     // Overview: who did what; a cell opens that student's answer.
-    await bar.getByRole("button", { name: "Обзор" }).click();
+    await page.getByRole("button", { name: "Обзор" }).click();
     const sheet = page.getByRole("dialog", { name: "Обзор группы" });
     await expect(sheet.getByRole("button", { name: "Первый Ученик, 1.2: неверно" })).toBeVisible();
     await expect(sheet.getByRole("button", { name: "Второй Ученик, 1.2: нет ответа" })).toBeVisible();

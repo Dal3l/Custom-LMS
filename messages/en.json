@@ -292,6 +292,10 @@
       "voice_answer": {
         "name": "Voice answer",
         "description": "The student records audio in the browser"
+      },
+      "whiteboard": {
+        "name": "Whiteboard",
+        "description": "A shared board for drawings and diagrams"
       }
     },
     "text": {
@@ -356,7 +360,19 @@
     },
     "file": {
       "open": "Open",
-      "download": "Download"
+      "download": "Download",
+      "loading": "Loading the PDF…",
+      "previewFailed": "Couldn't show the file here. Open or download it with the buttons below.",
+      "page": "Page {n}",
+      "notes": {
+        "tools": "Notes on the pages",
+        "view": "Scroll",
+        "pen": "Pen",
+        "marker": "Marker",
+        "eraser": "Eraser",
+        "undo": "Undo the last note",
+        "color": "Pen colour"
+      }
     },
     "attachment": {
       "add": "Media on top",
@@ -476,6 +492,10 @@
       "itemsPlaceholder": "apple\nbook\nchair",
       "count": "{count, plural, =0 {No words} one {# word} other {# words}}",
       "addGroup": "Column"
+    },
+    "whiteboard": {
+      "label": "Whiteboard",
+      "editorHint": "An empty board to draw on. In a class lesson everyone draws on it together, and the drawing is kept."
     }
   },
   "builder": {
@@ -541,7 +561,8 @@
     "noAnswerYet": "No answer yet",
     "notChecked": "Not checked",
     "rightAnswers": "Right answers",
-    "teacherPointer": "Teacher's pointer"
+    "teacherPointer": "Teacher's pointer",
+    "toolsLabel": "Lesson tools"
   },
   "classes": {
     "title": "Classes",
@@ -690,7 +711,8 @@
     "makeCurrent": "Make it current",
     "courseLessons": "Course lessons",
     "onlyYouSee": "Only you see this lesson now. It opens for your students when you make it current.",
-    "backToClasses": "All classes"
+    "backToClasses": "All classes",
+    "backToClass": "Back to “{name}”"
   },
   "live": {
     "lessonOpened": "Your teacher opened a lesson",
@@ -733,6 +755,48 @@
       "wrong": "wrong",
       "partial": "{right} of {total} right"
     },
-    "studentOffline": "No connection — reconnecting… Your answers will be saved when the internet is back."
+    "studentOffline": "No connection — reconnecting… Your answers will be saved when the internet is back.",
+    "lessonOn": "A lesson is on in “{name}”",
+    "join": "Join",
+    "hide": "Hide"
+  },
+  "board": {
+    "lessonBoard": "Lesson whiteboard",
+    "lessonBoardHint": "A shared board: everyone in the lesson sees it and can draw.",
+    "textPlaceholder": "Text, then Enter",
+    "loading": "Loading the board…",
+    "tools": "Board tools",
+    "color": "Colour",
+    "undo": "Undo my last",
+    "clear": "Clear the board",
+    "tool": {
+      "view": "Just look",
+      "pen": "Pen",
+      "marker": "Marker",
+      "line": "Line",
+      "rect": "Rectangle",
+      "ellipse": "Oval",
+      "text": "Text",
+      "eraser": "Eraser"
+    },
+    "colors": {
+      "111827": "Black",
+      "2563eb": "Blue",
+      "dc2626": "Red",
+      "16a34a": "Green",
+      "f59e0b": "Orange"
+    }
+  },
+  "timer": {
+    "title": "Timer",
+    "running": "Timer: {time} left",
+    "over": "Time's up!",
+    "minutes": "{m} min",
+    "stop": "Stop",
+    "failed": "Couldn't start the timer. Please try again."
+  },
+  "tools": {
+    "dictionary": "Words and trainer",
+    "dictionarySoon": "Lesson words and the flash-card trainer come in stage 4."
   }
 }

@@ -9,8 +9,12 @@ export type PointerMessage = { lessonId: string; exerciseId: string; x: number; 
 /** "Reset answers": the exercise starts over for every student. */
 export type ResetMessage = { lessonId: string; exerciseId: string };
 
+/** The teacher opened the lesson whiteboard for everyone. */
+export type BoardMessage = { lessonId: string };
+
 /** Messages a student's lesson page receives from the teacher. */
 export type LiveMessage =
+  | ({ kind: "board"; classId: string } & BoardMessage)
   | ({ kind: "show"; classId: string } & ShowMessage)
   | ({ kind: "pointer"; classId: string } & PointerMessage)
   | ({ kind: "reset"; classId: string } & ResetMessage);
