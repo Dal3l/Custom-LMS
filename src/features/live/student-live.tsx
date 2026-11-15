@@ -4,12 +4,15 @@ import type { RealtimeChannel } from "@supabase/supabase-js";
 import { useTranslations } from "next-intl";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import { usePathname, useRouter } from "@/i18n/navigation";
+import { Radio, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
   classTopic,
   combineStatus,
   isNewlyOpened,
+  type BoardMessage,
   type LiveMessage,
   type LiveStatus,
   type PointerMessage,
@@ -36,6 +39,26 @@ export function useStudentLive() {
 
 const lessonPath = (classId: string, lessonId: string) => `/classes/${classId}/lessons/${lessonId}`;
 
+/** Opened within the last 3 hours (a lesson stays "current" until the next one). */
+const isRecent = (openedAt: string) => Date.now() - new Date(openedAt).getTime() < 3 * 60 * 60 * 1000;
+
+/** "A lesson is on in … — Join": for a student who came in after the lesson began. */
+function JoinBanner({ name, href, onClose }: { name: string; href: string; onClose: () => void }) {
+  const t = useTranslations("live");
+  return (
+    <div className="mb-4 flex items-center gap-3 rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3" role="status">
+      <Radio className="size-5 shrink-0 text-primary" aria-hidden="true" />
+      <p className="min-w-0 flex-1 text-sm font-medium">{t("lessonOn", { name })}</p>
+      <Button asChild size="sm">
+        <Link href={href}>{t("join")}</Link>
+      </Button>
+      <Button type="button" variant="ghost" size="icon-sm" aria-label={t("hide")} onClick={onClose}>
+        <X aria-hidden="true" />
+      </Button>
+    </div>
+  );
+}
+
 /**
  * For students, on every page of the app: follows their classes live.
  *  - the teacher opens a lesson → it opens here too (or a notice with "Open");
@@ -57,6 +80,11 @@ export function StudentLiveProvider({
   const pathname = usePathname();
   const [supabase] = useState(() => createClient());
   const [status, setStatus] = useState<LiveStatus>("connecting");
+  // The lesson going on in each class (for "A lesson is on — join").
+  const [liveNow, setLiveNow] = useState(
+    () => new Map(classes.filter((c) => c.live).map((c) => [c.id, c.live!])),
+  );
+  const [dismissed, setDismissed] = useState<string | null>(null);
 
   const path = useRef(pathname);
   const location = useRef<Location>(null);
@@ -149,6 +177,10 @@ export function StudentLiveProvider({
           const m = payload as PointerMessage;
           if (onLesson(m.lessonId)) listeners.current.forEach((l) => l({ kind: "pointer", ...m, classId }));
         });
+        channel.on("broadcast", { event: "board" }, ({ payload }) => {
+          const m = payload as BoardMessage;
+          if (onLesson(m.lessonId)) listeners.current.forEach((l) => l({ kind: "board", ...m, classId }));
+        });
         channel.on("broadcast", { event: "reset" }, ({ payload }) => {
           const m = payload as ResetMessage;
           if (onLesson(m.lessonId)) listeners.current.forEach((l) => l({ kind: "reset", ...m, classId }));
@@ -174,6 +206,9 @@ export function StudentLiveProvider({
             const row = change.new as { class_id?: string; lesson_id?: string; status?: string; opened_at?: string };
             if (!row?.class_id || !row.lesson_id) return;
             const signature = isNewlyOpened(row, seen.current.get(row.class_id) ?? null);
+            if (row.status === "live" && row.opened_at) {
+              setLiveNow((prev) => new Map(prev).set(row.class_id!, { lessonId: row.lesson_id!, openedAt: row.opened_at! }));
+            }
             if (signature) {
               seen.current.set(row.class_id, signature);
               openLesson(row.class_id, row.lesson_id);
@@ -235,5 +270,24 @@ export function StudentLiveProvider({
   }, []);
 
   const value = useMemo(() => ({ status, setLocation, onMessage }), [status, setLocation, onMessage]);
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+
+  // A lesson opened in the last hours that the student is not in yet.
+  const join = [...liveNow.entries()].find(
+    ([classId, l]) =>
+      isRecent(l.openedAt) &&
+      `${l.lessonId}@${l.openedAt}` !== dismissed &&
+      !pathname.startsWith(lessonPath(classId, l.lessonId)),
+  );
+  return (
+    <Ctx.Provider value={value}>
+      {join && (
+        <JoinBanner
+          name={classes.find((c) => c.id === join[0])?.name ?? ""}
+          href={lessonPath(join[0], join[1].lessonId)}
+          onClose={() => setDismissed(`${join[1].lessonId}@${join[1].openedAt}`)}
+        />
+      )}
+      {children}
+    </Ctx.Provider>
+  );
 }

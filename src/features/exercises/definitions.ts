@@ -4,6 +4,7 @@ import type { ExerciseDefinition } from "./definition";
 import { audioDefinition } from "./types/audio/schema";
 import { categorizeDefinition } from "./types/categorize/schema";
 import { fileDefinition } from "./types/file/schema";
+import { whiteboardDefinition } from "./types/whiteboard/schema";
 import { gapDragDefinition } from "./types/gap_drag/schema";
 import { gapInputDefinition } from "./types/gap_input/schema";
 import { gapSelectDefinition } from "./types/gap_select/schema";
@@ -21,6 +22,7 @@ export const DEFINITIONS: Partial<Record<ExerciseTypeId, ExerciseDefinition>> = 
   video: videoDefinition as ExerciseDefinition,
   audio: audioDefinition as ExerciseDefinition,
   file: fileDefinition as ExerciseDefinition,
+  whiteboard: whiteboardDefinition as ExerciseDefinition,
   gap_input: gapInputDefinition as ExerciseDefinition,
   gap_select: gapSelectDefinition as ExerciseDefinition,
   multiple_choice: multipleChoiceDefinition as ExerciseDefinition,

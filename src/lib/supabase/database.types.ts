@@ -16,6 +16,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      board_items: {
+        Row: {
+          author_id: string
+          board: string
+          class_id: string
+          created_at: string
+          data: Json
+          id: string
+        }
+        Insert: {
+          author_id?: string
+          board: string
+          class_id: string
+          created_at?: string
+          data: Json
+          id?: string
+        }
+        Update: {
+          author_id?: string
+          board?: string
+          class_id?: string
+          created_at?: string
+          data?: Json
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "board_items_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "board_items_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       class_answers: {
         Row: {
           answer: Json
@@ -117,6 +159,7 @@ export type Database = {
           opened_at: string
           revealed: string[]
           status: string
+          timer_ends_at: string | null
         }
         Insert: {
           class_id: string
@@ -127,6 +170,7 @@ export type Database = {
           opened_at?: string
           revealed?: string[]
           status?: string
+          timer_ends_at?: string | null
         }
         Update: {
           class_id?: string
@@ -137,6 +181,7 @@ export type Database = {
           opened_at?: string
           revealed?: string[]
           status?: string
+          timer_ends_at?: string | null
         }
         Relationships: [
           {

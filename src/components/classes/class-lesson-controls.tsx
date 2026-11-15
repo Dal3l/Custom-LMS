@@ -41,7 +41,7 @@ export function ClassLessonControls({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon-lg" aria-label={t("lessonActions")} disabled={pending}>
+        <Button variant="ghost" size="icon-sm" aria-label={t("lessonActions")} disabled={pending}>
           <MoreHorizontal aria-hidden="true" />
         </Button>
       </DropdownMenuTrigger>

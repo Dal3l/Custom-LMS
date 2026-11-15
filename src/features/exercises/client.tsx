@@ -11,6 +11,8 @@ import { CategorizeEditor } from "./types/categorize/editor";
 import { CategorizeViewer } from "./types/categorize/viewer";
 import { FileEditor } from "./types/file/editor";
 import { FileViewer } from "./types/file/viewer";
+import { WhiteboardEditor } from "./types/whiteboard/editor";
+import { WhiteboardViewer } from "./types/whiteboard/viewer";
 import { GapDragEditor } from "./types/gap_drag/editor";
 import { GapDragViewer } from "./types/gap_drag/viewer";
 import { GapInputEditor } from "./types/gap_input/editor";
@@ -50,6 +52,7 @@ export const EXERCISE_UI: Partial<Record<ExerciseTypeId, ExerciseUI>> = {
   video: { Editor: VideoEditor as unknown as AnyEditor, Viewer: VideoViewer as unknown as AnyViewer },
   audio: { Editor: AudioEditor as unknown as AnyEditor, Viewer: AudioViewer as unknown as AnyViewer },
   file: { Editor: FileEditor as unknown as AnyEditor, Viewer: FileViewer as unknown as AnyViewer },
+  whiteboard: { Editor: WhiteboardEditor as unknown as AnyEditor, Viewer: WhiteboardViewer as unknown as AnyViewer },
   gap_input: {
     Editor: GapInputEditor as unknown as AnyEditor,
     Viewer: GapInputViewer as unknown as AnyViewer,

@@ -43,6 +43,7 @@ export function LessonPlayer({
   pointer,
   resets,
   stickyTop,
+  tools,
 }: {
   /** the language the course teaches */
   language: string;
@@ -72,6 +73,8 @@ export function LessonPlayer({
   resets?: Record<string, number>;
   /** Shown above the sections, staying at the top too (the teacher's students bar). */
   stickyTop?: React.ReactNode;
+  /** Lesson tools (pointer, board, timer…): a column on the left on wide screens. */
+  tools?: React.ReactNode;
 }) {
   const t = useTranslations("player");
   const [queue] = useState(() => new SaveQueue());
@@ -144,30 +147,44 @@ export function LessonPlayer({
 
   return (
     <LessonLanguageProvider value={language}>
-    <div className="flex flex-col gap-5">
+    {/* Wide screens: tools on the left, sections on the right, both always in view. */}
+    <div className="xl:grid xl:grid-cols-[3rem_minmax(0,1fr)_12rem] xl:items-start xl:gap-6">
+      <aside className="hidden xl:sticky xl:top-20 xl:flex xl:flex-col xl:items-center xl:gap-2" aria-label={t("toolsLabel")}>
+        {tools}
+      </aside>
+    <div className="flex min-w-0 flex-col gap-5">
       {classAnswers && <AnswersStatus queue={queue} />}
-      {/* Sections (and the teacher's students bar) stay at the top while scrolling. */}
+      {/* Narrower screens: the same things in one strip that stays at the top. */}
       <div
         data-sticky-lesson
-        className="sticky top-14 z-[9] -mx-4 flex flex-col gap-2 border-b bg-background/95 px-4 py-2 backdrop-blur sm:-mx-6 sm:px-6"
+        className={cn(
+          "sticky top-14 z-[9] -mx-4 flex flex-col gap-2 border-b bg-background/95 px-4 py-2 backdrop-blur sm:-mx-6 sm:px-6 xl:mx-0 xl:rounded-2xl xl:border xl:px-2",
+          !stickyTop && "xl:hidden",
+        )}
       >
-      {stickyTop}
-      <nav aria-label={t("sections")} className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6">
-        {sections.map((s, i) => (
-          <Button
-            key={s.id}
-            variant={s.id === activeId ? "default" : "secondary"}
-            className="shrink-0 rounded-full"
-            aria-current={s.id === activeId ? "true" : undefined}
-            onClick={() => select(s.id)}
-          >
-            {completedSectionIds?.includes(s.id) && (
-              <Check aria-label={t("sectionDone")} />
-            )}
-            {i + 1}. {s.title}
-          </Button>
-        ))}
-      </nav>
+        {stickyTop}
+        <div className="flex items-center gap-2 xl:hidden">
+          {tools && (
+            <div className="flex shrink-0 items-center gap-1" role="group" aria-label={t("toolsLabel")}>
+              {tools}
+            </div>
+          )}
+          <nav aria-label={t("sections")} className="flex min-w-0 flex-1 gap-2 overflow-x-auto pb-1">
+            {sections.map((s, i) => (
+              <Button
+                key={s.id}
+                size="sm"
+                variant={s.id === activeId ? "default" : "secondary"}
+                className="shrink-0 rounded-full"
+                aria-current={s.id === activeId ? "true" : undefined}
+                onClick={() => select(s.id)}
+              >
+                {completedSectionIds?.includes(s.id) && <Check aria-label={t("sectionDone")} />}
+                {i + 1}. {s.title}
+              </Button>
+            ))}
+          </nav>
+        </div>
       </div>
 
       <h2 className="text-xl font-semibold">
@@ -209,6 +226,28 @@ export function LessonPlayer({
           )}
         </div>
       )}
+    </div>
+      <aside className="hidden xl:sticky xl:top-20 xl:block">
+        <nav aria-label={t("sections")} className="flex flex-col gap-1 rounded-2xl border bg-card p-2">
+          <p className="px-2 pt-1 pb-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">{t("sections")}</p>
+          {sections.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              aria-current={s.id === activeId ? "true" : undefined}
+              onClick={() => select(s.id)}
+              className={cn(
+                "flex items-start gap-2 rounded-lg px-2 py-1.5 text-left text-sm transition-colors hover:bg-accent",
+                s.id === activeId && "bg-primary text-primary-foreground hover:bg-primary/90",
+              )}
+            >
+              <span className="tabular-nums opacity-70">{i + 1}.</span>
+              <span className="min-w-0 flex-1 break-words">{s.title}</span>
+              {completedSectionIds?.includes(s.id) && <Check className="mt-0.5 size-4 shrink-0" aria-label={t("sectionDone")} />}
+            </button>
+          ))}
+        </nav>
+      </aside>
     </div>
     </LessonLanguageProvider>
   );

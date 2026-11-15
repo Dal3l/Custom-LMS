@@ -3,7 +3,6 @@
 import { Check, Circle, Minus, Table2, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import type { ClassStudent } from "@/features/classes/queries";
 import { checkMode } from "@/features/exercises/catalog";
@@ -12,6 +11,7 @@ import type { StudentSection } from "@/features/lessons/queries";
 import { exerciseNumber } from "@/features/lessons/sections";
 import { cellStatus, correctCount } from "@/features/live/overview";
 import { cn } from "@/lib/utils";
+import { ToolButton } from "./lesson-tools";
 
 /**
  * "Overview": a table of students × exercises — who answered what, right or not,
@@ -40,10 +40,9 @@ export function GroupOverview({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button type="button" size="sm" variant="outline">
+        <ToolButton label={t("overview")}>
           <Table2 aria-hidden="true" />
-          <span className="max-sm:sr-only">{t("overview")}</span>
-        </Button>
+        </ToolButton>
       </SheetTrigger>
       <SheetContent side="right" className="w-full gap-0 sm:max-w-2xl">
         <SheetHeader>

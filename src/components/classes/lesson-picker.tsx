@@ -43,12 +43,15 @@ export function LessonPicker({
   variant = "default",
   size = "default",
   icon = "play",
+  compact = false,
 }: {
   classId: string;
   courseId?: string;
   label: string;
   variant?: "default" | "outline";
-  size?: "default" | "lg";
+  size?: "default" | "sm" | "lg";
+  /** only the icon on phones (the top bar) */
+  compact?: boolean;
   /** "list": the course's lessons ("Lessons of the course"). */
   icon?: "play" | "list";
 }) {
@@ -58,7 +61,7 @@ export function LessonPicker({
       <DialogTrigger asChild>
         <Button variant={variant} size={size}>
           {icon === "list" ? <ListOrdered aria-hidden="true" /> : <Play aria-hidden="true" />}
-          {label}
+          <span className={compact ? "max-sm:sr-only" : undefined}>{label}</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="flex max-h-[85svh] flex-col gap-4 sm:max-w-lg">

@@ -8,8 +8,8 @@ import en from "../messages/en.json";
 const doc = (content: unknown[]) => ({ doc: { type: "doc", content } });
 
 describe("exercise catalog", () => {
-  it("has all 15 types from the spec with names in the translations", () => {
-    expect(EXERCISE_TYPES).toHaveLength(15);
+  it("has all 15 types from the spec (+ the whiteboard block, §8) with names in the translations", () => {
+    expect(EXERCISE_TYPES).toHaveLength(16);
     for (const type of EXERCISE_TYPES) {
       expect(en.exercises.types[type.id as keyof typeof en.exercises.types]?.name, type.id).toBeTruthy();
     }

@@ -12,6 +12,7 @@ export const EXERCISE_TYPES = [
   { id: "video", group: "material", icon: "video", available: true },
   { id: "audio", group: "material", icon: "audio", available: true },
   { id: "file", group: "material", icon: "file", available: true },
+  { id: "whiteboard", group: "material", icon: "whiteboard", available: true },
   // Checked automatically
   // check: "button" = the student answers, then presses "Check"
   //        ("instant" = checked on every change; kept for types that may need it)
