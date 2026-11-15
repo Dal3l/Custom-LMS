@@ -43,6 +43,8 @@ import { useStudentLive } from "@/features/live/student-live";
 import { useTeacherLive } from "@/features/live/teacher-live";
 import { useRouter } from "@/i18n/navigation";
 import { LessonPicker } from "./lesson-picker";
+import { SendHomeworkTool } from "@/components/homework/send-homework";
+import type { SentHomework } from "@/features/homework/queries";
 import { GroupOverview } from "./group-overview";
 import { BoardDialog, BoardTool, DictionaryTool, TimerTool, ToolButton } from "./lesson-tools";
 import { LiveStudentsBar } from "./live-students-bar";
@@ -84,8 +86,14 @@ function useSynced<T>(initial: T) {
 export function TeacherClassLesson({
   students,
   initialAnswers,
+  homework,
   ...props
-}: CommonProps & { students: ClassStudent[]; initialAnswers: StudentAnswers }) {
+}: CommonProps & {
+  students: ClassStudent[];
+  initialAnswers: StudentAnswers;
+  /** the lesson's homework part and what was already sent */
+  homework: { sections: StudentSection[]; sent: SentHomework[]; builderHref: string | null };
+}) {
   const { classId, lessonId, courseId, finished, userId, inClass } = props;
   const t = useTranslations("classLessons");
   const tl = useTranslations("live");
@@ -265,6 +273,16 @@ export function TeacherClassLesson({
                   />
                 )}
                 {inClass && <TimerTool endsAt={props.timerEndsAt} teacher={{ classId, lessonId }} />}
+                {inClass && (
+                  <SendHomeworkTool
+                    classId={classId}
+                    lessonId={lessonId}
+                    builderHref={homework.builderHref}
+                    sections={homework.sections}
+                    students={students}
+                    sent={homework.sent}
+                  />
+                )}
                 <DictionaryTool />
               </>
             }

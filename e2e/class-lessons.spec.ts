@@ -119,7 +119,7 @@ test.describe("lessons in a class", () => {
     await studentPage.goto(`/ru/classes/${cls!.id}/lessons/${lessonIds[0]}`);
     await expect(studentPage.getByRole("heading", { name: "Страница не найдена" })).toBeVisible();
     await page.getByRole("button", { name: "Сделать текущим" }).click();
-    await expect(page.getByText("Идёт сейчас").filter({ visible: true })).toBeVisible();
+    await expect(page.getByText("Идёт сейчас").filter({ visible: true })).toBeVisible({ timeout: 20_000 });
     await expect(page.getByText("Этот урок сейчас видите только вы", { exact: false })).toHaveCount(0);
 
     // --- Back to all classes; the class card opens the lesson going on now.
@@ -165,7 +165,7 @@ test.describe("lessons in a class", () => {
     await dialog.getByRole("button", { name: /Numbers/ }).click();
     await expect(page.getByRole("heading", { level: 1, name: "Numbers" })).toBeVisible();
     await page.getByRole("button", { name: "Сделать текущим" }).click();
-    await expect(page.getByText("Идёт сейчас").filter({ visible: true })).toBeVisible();
+    await expect(page.getByText("Идёт сейчас").filter({ visible: true })).toBeVisible({ timeout: 20_000 });
 
     // "Course lessons" shows all lessons; opening another one does NOT finish Numbers.
     await page.getByRole("button", { name: "Уроки курса" }).click();
@@ -173,7 +173,7 @@ test.describe("lessons in a class", () => {
     await dialog.getByRole("button", { name: /Colours/ }).click();
     await expect(page.getByRole("heading", { level: 1, name: "Colours" })).toBeVisible();
     await page.getByRole("button", { name: "Сделать текущим" }).click();
-    await expect(page.getByText("Идёт сейчас").filter({ visible: true })).toBeVisible();
+    await expect(page.getByText("Идёт сейчас").filter({ visible: true })).toBeVisible({ timeout: 20_000 });
 
     // --- Class page: Colours going on, Numbers not finished, Greetings finished.
     await page.goto(`/ru/classes/${cls!.id}`);

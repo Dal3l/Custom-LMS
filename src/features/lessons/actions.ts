@@ -29,15 +29,19 @@ async function teacher() {
 // Sections
 // ---------------------------------------------------------------------------
 
-export async function createSection(lessonId: string, title: string): Promise<BuilderResult<{ id: string; title: string }>> {
+export async function createSection(
+  lessonId: string,
+  title: string,
+  kind: "lesson" | "homework" = "lesson",
+): Promise<BuilderResult<{ id: string; title: string }>> {
   const supabase = await teacher();
   const t = sectionTitle.safeParse(title);
   if (!supabase || !id.safeParse(lessonId).success) return fail("forbidden");
-  if (!t.success) return fail("invalid");
+  if (!t.success || (kind !== "lesson" && kind !== "homework")) return fail("invalid");
   const { data, error } = await supabase
     .from("sections")
     // `position` and `course_id` are set by a database trigger.
-    .insert({ lesson_id: lessonId, title: t.data } as TablesInsert<"sections">)
+    .insert({ lesson_id: lessonId, title: t.data, kind } as TablesInsert<"sections">)
     .select("id, title")
     .single();
   if (error || !data) return fail();

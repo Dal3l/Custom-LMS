@@ -564,7 +564,9 @@
     "sectionsNav": "Lesson sections",
     "preview": "Preview as student",
     "save": "Save",
-    "allSaved": "All saved"
+    "allSaved": "All saved",
+    "partLesson": "Lesson",
+    "partHomework": "Homework"
   },
   "player": {
     "previewBanner": "Preview: this is how a student sees the lesson. Answers are not saved.",
@@ -836,5 +838,57 @@
   "tools": {
     "dictionary": "Words and trainer",
     "dictionarySoon": "Lesson words and the flash-card trainer come in stage 4."
+  },
+  "homework": {
+    "title": "Homework",
+    "subtitle": "Tasks from your teachers: things to do first",
+    "emptyTitle": "No homework yet",
+    "emptyText": "When your teacher sends homework, it appears here.",
+    "status": {
+      "new": "New",
+      "in_progress": "In progress",
+      "submitted": "Handed in",
+      "overdue": "Overdue"
+    },
+    "tabs": "Lesson and homework",
+    "lessonTab": "Lesson",
+    "homeworkTab": "Homework",
+    "tool": "Homework",
+    "sendTitle": "Send homework",
+    "sendHint": "Tick exercises from this lesson's Homework part and send them to your students.",
+    "noHomeworkPart": "This lesson has no homework yet. Add it in the lesson builder: the Homework tab.",
+    "openBuilder": "Open the builder",
+    "exercises": "Exercises",
+    "all": "Select all",
+    "none": "Clear all",
+    "to": "To",
+    "noName": "No name",
+    "due": "Due (optional)",
+    "dueHint": "After the due date the homework is marked Overdue.",
+    "send": "{count, plural, one {Send # exercise} other {Send # exercises}}",
+    "sent": "Homework sent",
+    "sendFailed": "That didn't work. Please try again.",
+    "noStudents": "No students in the class yet.",
+    "alreadySent": "Already sent",
+    "sentOn": "Sent {date}",
+    "exercisesCount": "{count, plural, one {# exercise} other {# exercises}}",
+    "handedIn": "Handed in: {done} of {total}",
+    "dueOn": "due {date}",
+    "remove": "Take this homework back",
+    "removed": "Homework taken back",
+    "which": "Which homework",
+    "from": "from {date}",
+    "handedInOn": "Handed in {date}",
+    "noDue": "No due date",
+    "answeredOf": "Done {done} of {total}",
+    "handIn": "Hand in",
+    "handInHint": "Your answers are saved automatically. When you're done, press Hand in — your teacher will see your work.",
+    "handInTitle": "Hand in the homework?",
+    "handInText": "After handing in, the answers can't be changed.",
+    "handInNotAll": "{done} of {total} exercises done. After handing in, the answers can't be changed.",
+    "cancel": "Cancel",
+    "handedInToast": "Homework handed in",
+    "handInFailed": "Couldn't hand it in. Check the internet and try again.",
+    "handedInNote": "Homework handed in. Your teacher will look at it and may leave comments."
   }
 }

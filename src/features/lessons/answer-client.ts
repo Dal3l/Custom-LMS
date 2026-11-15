@@ -1,7 +1,10 @@
 import type { SaveAnswerRequest, SaveAnswerResponse } from "./answers";
 
 /** Saves (and optionally checks) a student's answer in a class lesson — browser side. */
-export async function requestSaveAnswer(body: SaveAnswerRequest): Promise<SaveAnswerResponse> {
+/** In a homework the request names the homework instead of only the class. */
+export type SaveRequest = SaveAnswerRequest & { homeworkId?: string };
+
+export async function requestSaveAnswer(body: SaveRequest): Promise<SaveAnswerResponse> {
   try {
     const res = await fetch("/api/answers", {
       method: "POST",

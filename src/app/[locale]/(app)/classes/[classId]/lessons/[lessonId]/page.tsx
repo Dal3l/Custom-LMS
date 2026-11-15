@@ -7,16 +7,19 @@ import { ClassLessonControls } from "@/components/classes/class-lesson-controls"
 import { StudentClassLesson, TeacherClassLesson } from "@/components/classes/class-lesson-view";
 import { LessonPicker } from "@/components/classes/lesson-picker";
 import { MakeCurrentBanner } from "@/components/classes/make-current-banner";
+import { MyHomeworkView } from "@/components/homework/my-homework";
 import { Badge } from "@/components/ui/badge";
 import { getClassLessonState, listClassMarks } from "@/features/classes/lesson-queries";
 import { getClassPage } from "@/features/classes/queries";
 import { idSchema } from "@/features/classes/schemas";
 import { getClassLessonAnswers, getMyClassAnswers } from "@/features/lessons/answers";
+import { getMyLessonHomeworks, listLessonHomeworks } from "@/features/homework/queries";
 import { revealedSolutions } from "@/features/lessons/grade";
 import { getStudentLesson } from "@/features/lessons/queries";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { requireProfile } from "@/lib/auth";
+import { cn } from "@/lib/utils";
 
 /**
  * A lesson in a class. Students see only lessons opened in the class. The
@@ -31,26 +34,32 @@ export default async function ClassLessonPage({
   setRequestLocale(locale);
   const profile = await requireProfile(locale);
   if (!idSchema.safeParse(classId).success || !idSchema.safeParse(lessonId).success) notFound();
-  const [cls, state, lesson, t, tc, savedAnswers] = await Promise.all([
+  const [cls, state, lesson, homeworkPart, t, tc, th, savedAnswers] = await Promise.all([
     getClassPage(classId, profile),
     getClassLessonState(classId, lessonId),
     getStudentLesson(lessonId),
+    // The lesson's homework part (students: only what was sent to them — RLS).
+    getStudentLesson(lessonId, "homework"),
     getTranslations("classLessons"),
     getTranslations("courses"),
+    getTranslations("homework"),
     profile.role === "student" ? getMyClassAnswers(classId, lessonId, profile.id) : getClassLessonAnswers(classId, lessonId),
   ]);
   // Students: only lessons opened in this class (RLS too). Teachers: any lesson they can see.
   if (!cls || !lesson || (!state && !cls.isTeacher)) notFound();
-  const { section, show } = await searchParams;
+  const { section, show, tab } = await searchParams;
   const live = state?.status === "live";
   const finished = Boolean(state?.finishedAt);
   const revealed = state?.revealed ?? [];
   const exerciseIds = lesson.sections.flatMap((s) => s.exercises.map((e) => e.id));
   // Access to this lesson in the class is confirmed above (RLS + class lesson).
-  const [solutions, marks] = await Promise.all([
+  const [solutions, marks, sentHomeworks, myHomeworks] = await Promise.all([
     revealedSolutions(lessonId, revealed),
     listClassMarks(classId, exerciseIds),
+    cls.isTeacher && state ? listLessonHomeworks(classId, lessonId) : Promise.resolve([]),
+    cls.isTeacher ? Promise.resolve([]) : getMyLessonHomeworks(classId, lessonId, profile.id),
   ]);
+  const showHomework = !cls.isTeacher && myHomeworks.length > 0 && tab === "homework";
   const common = {
     classId,
     lessonId,
@@ -135,11 +144,50 @@ export default async function ClassLessonPage({
         <span>{lesson.course.title}</span>
       </div>
 
+      {/* A student with homework from this lesson: "Lesson" and "Homework" tabs. */}
+      {!cls.isTeacher && myHomeworks.length > 0 && (
+        <nav className="flex gap-1 self-start rounded-lg bg-muted p-1" aria-label={th("tabs")}>
+          {(["lesson", "homework"] as const).map((key) => {
+            const current = (key === "homework") === showHomework;
+            return (
+              <Link
+                key={key}
+                href={`/classes/${classId}/lessons/${lessonId}${key === "homework" ? "?tab=homework" : ""}`}
+                aria-current={current ? "page" : undefined}
+                className={cn(
+                  "rounded-md px-3 py-1.5 text-sm font-medium",
+                  current ? "bg-background shadow-sm" : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {key === "lesson" ? th("lessonTab") : th("homeworkTab")}
+                {key === "homework" && myHomeworks.some((h) => h.status !== "submitted") && (
+                  <span className="ml-1.5 inline-block size-2 rounded-full bg-primary align-middle" aria-hidden="true" />
+                )}
+              </Link>
+            );
+          })}
+        </nav>
+      )}
+
       {cls.isTeacher ? (
         <TeacherClassLesson
           {...common}
           students={cls.students}
           initialAnswers={savedAnswers as Awaited<ReturnType<typeof getClassLessonAnswers>>}
+          homework={{
+            sections: homeworkPart?.sections ?? [],
+            sent: sentHomeworks,
+            builderHref:
+              lesson.course.owner_id === profile.id ? `/courses/${lesson.course.id}/lessons/${lessonId}?part=homework` : null,
+          }}
+        />
+      ) : showHomework ? (
+        <MyHomeworkView
+          classId={classId}
+          userId={profile.id}
+          language={lesson.course.language}
+          sections={homeworkPart?.sections ?? []}
+          homeworks={myHomeworks}
         />
       ) : (
         <StudentClassLesson

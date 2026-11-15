@@ -25,7 +25,7 @@ export default async function LessonBuilderPage({
   const data = await getBuilderData(lessonId);
   // Only the owner edits; the lesson must belong to the course in the address.
   if (!data || data.course.id !== courseId || data.course.owner_id !== profile.id) notFound();
-  const { section } = await searchParams;
+  const { section, part } = await searchParams;
   const t = await getTranslations("courses");
 
   return (
@@ -52,6 +52,7 @@ export default async function LessonBuilderPage({
         lessonId={lessonId}
         initialSections={data.sections}
         initialSectionId={typeof section === "string" ? section : null}
+        initialPart={part === "homework" ? "homework" : "lesson"}
       />
     </div>
   );

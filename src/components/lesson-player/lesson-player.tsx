@@ -57,7 +57,7 @@ export function LessonPlayer({
   /** Extra controls under a section (the teacher's "Finish section" in class). */
   sectionFooter?: (section: StudentSection, isLast: boolean) => React.ReactNode;
   /** A student in a class lesson: answers are saved (and restored from `saved`). */
-  classAnswers?: { classId: string; userId: string; saved: Record<string, SavedAnswer> };
+  classAnswers?: { classId: string; userId: string; saved: Record<string, SavedAnswer>; homeworkId?: string };
   /** The teacher looks at a student's answers (read-only, updated live). */
   review?: Record<string, SavedAnswer>;
   /** "Show to students": open this section and scroll to this exercise (a new nonce repeats it). */
@@ -213,7 +213,7 @@ export function LessonPlayer({
               pointer={pointer?.exerciseId === exercise.id ? pointer : null}
               persist={
                 classAnswers
-                  ? { classId: classAnswers.classId, saved: classAnswers.saved[exercise.id], queue }
+                  ? { classId: classAnswers.classId, homeworkId: classAnswers.homeworkId, saved: classAnswers.saved[exercise.id], queue }
                   : undefined
               }
             />
@@ -285,7 +285,7 @@ function AnswersStatus({ queue }: { queue: SaveQueue }) {
   );
 }
 
-type Persist = { classId: string; saved: SavedAnswer | undefined; queue: SaveQueue };
+type Persist = { classId: string; homeworkId?: string; saved: SavedAnswer | undefined; queue: SaveQueue };
 
 /** Restores a saved answer; parts changed since the last check lose their old verdict. */
 function restored(saved: SavedAnswer | undefined) {
@@ -445,7 +445,7 @@ function AnswerExercise({
     setPending(true);
     let response: Awaited<ReturnType<typeof requestSaveAnswer>> | null = null;
     p.queue.schedule(exercise.id, async () => {
-      response = await requestSaveAnswer({ classId: p.classId, exerciseId: exercise.id, answer: next, check: true });
+      response = await requestSaveAnswer({ classId: p.classId, homeworkId: p.homeworkId, exerciseId: exercise.id, answer: next, check: true });
       return true; // a failed check is not retried silently; the answer is saved with the next change
     });
     await p.queue.flush(exercise.id);
@@ -463,7 +463,7 @@ function AnswerExercise({
 
   function scheduleSave(next: unknown, p: Persist) {
     p.queue.schedule(exercise.id, async () => {
-      const r = await requestSaveAnswer({ classId: p.classId, exerciseId: exercise.id, answer: next });
+      const r = await requestSaveAnswer({ classId: p.classId, homeworkId: p.homeworkId, exerciseId: exercise.id, answer: next });
       return r.ok;
     });
   }
