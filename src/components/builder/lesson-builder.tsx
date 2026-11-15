@@ -33,9 +33,11 @@ import {
 } from "@/features/lessons/actions";
 import type { BuilderExercise, BuilderSection } from "@/features/lessons/queries";
 import { SaveQueue } from "@/features/lessons/save-queue";
+import type { SectionKind } from "@/features/lessons/queries";
 import { exerciseNumber } from "@/features/lessons/sections";
 import { moveItem } from "@/features/courses/outline";
 import { useRouter } from "@/i18n/navigation";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AddSectionDialog } from "./add-section-dialog";
 import { BuilderContext } from "./builder-context";
 import { ExerciseCard } from "./exercise-card";
@@ -57,6 +59,7 @@ export function LessonBuilder({
   lessonId,
   initialSections,
   initialSectionId,
+  initialPart = "lesson",
 }: {
   /** The teacher; their files are uploaded into a folder named after this id. */
   userId: string;
@@ -66,11 +69,19 @@ export function LessonBuilder({
   lessonId: string;
   initialSections: BuilderSection[];
   initialSectionId: string | null;
+  /** open on the homework part (from a class lesson's "Homework" tool) */
+  initialPart?: SectionKind;
 }) {
   const t = useTranslations("builder");
   const [sections, setSections] = useState(initialSections);
+  // Which part of the lesson is being edited: the lesson itself or its homework.
+  const startPart = initialSections.find((s) => s.id === initialSectionId)?.kind ?? initialPart;
+  const [part, setPart] = useState<SectionKind>(startPart);
+  const shown = sections.filter((s) => s.kind === part);
   const [activeId, setActiveId] = useState<string | null>(
-    initialSections.find((s) => s.id === initialSectionId)?.id ?? initialSections[0]?.id ?? null,
+    initialSections.find((s) => s.id === initialSectionId)?.id ??
+      initialSections.find((s) => s.kind === startPart)?.id ??
+      null,
   );
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [addingSection, setAddingSection] = useState(false);
@@ -86,8 +97,15 @@ export function LessonBuilder({
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
-  const activeIndex = sections.findIndex((s) => s.id === activeId);
-  const active = activeIndex >= 0 ? sections[activeIndex]! : null;
+  const activeIndex = shown.findIndex((s) => s.id === activeId);
+  const active = activeIndex >= 0 ? shown[activeIndex]! : null;
+
+  function switchPart(next: SectionKind) {
+    setPart(next);
+    const first = sections.find((s) => s.kind === next);
+    if (first) select(first.id);
+    else setActiveId(null);
+  }
 
   // Warn before leaving with unsaved edits; save everything when the tab is hidden.
   useEffect(() => {
@@ -114,8 +132,11 @@ export function LessonBuilder({
   async function openPreview() {
     setOpening(true);
     await queue.flushAll();
-    const section = activeId ? `?section=${activeId}` : "";
-    router.push(`/courses/${courseId}/lessons/${lessonId}/preview${section}`);
+    const query = new URLSearchParams();
+    if (activeId) query.set("section", activeId);
+    if (part === "homework") query.set("part", "homework");
+    const q = query.toString();
+    router.push(`/courses/${courseId}/lessons/${lessonId}/preview${q ? `?${q}` : ""}`);
   }
 
   // Remember the open section in the address, so a reload opens the same place.
@@ -141,9 +162,9 @@ export function LessonBuilder({
 
   // --- Sections ------------------------------------------------------------
   async function addSection(title: string) {
-    const created = await call(createSection(lessonId, title));
+    const created = await call(createSection(lessonId, title, part));
     if (!created) return;
-    setSections((ss) => [...ss, { ...created, exercises: [] }]);
+    setSections((ss) => [...ss, { ...created, kind: part, exercises: [] }]);
     select(created.id);
     setAddingSection(false);
   }
@@ -155,10 +176,11 @@ export function LessonBuilder({
   }
 
   async function reorder(from: number, to: number) {
+    // Only the sections of the part being edited are reordered.
     const before = sections;
-    const next = moveItem(sections, from, to);
-    setSections(next);
-    if ((await call(reorderSections(lessonId, next.map((s) => s.id)))) === null) setSections(before);
+    const nextShown = moveItem(shown, from, to);
+    setSections([...sections.filter((s) => s.kind !== part), ...nextShown]);
+    if ((await call(reorderSections(lessonId, nextShown.map((s) => s.id)))) === null) setSections(before);
   }
 
   // --- Exercises -----------------------------------------------------------
@@ -280,6 +302,15 @@ export function LessonBuilder({
     <LessonLanguageProvider value={language}>
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-end gap-3">
+        {/* The lesson and its homework are built here, one at a time. */}
+        <Tabs value={part} onValueChange={(v) => switchPart(v as SectionKind)} className="mr-auto">
+          <TabsList>
+            <TabsTrigger value="lesson">{t("partLesson")}</TabsTrigger>
+            <TabsTrigger value="homework">
+              {t("partHomework")} · {sections.filter((s) => s.kind === "homework").reduce((n, s) => n + s.exercises.length, 0)}
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
         <SaveStatus queue={queue} />
         <Button variant="outline" size="sm" onClick={openPreview} disabled={opening}>
           {opening ? <Loader2 className="animate-spin" aria-hidden="true" /> : <Eye aria-hidden="true" />}
@@ -290,7 +321,7 @@ export function LessonBuilder({
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 md:grid-cols-[14rem_minmax(0,1fr)] md:items-start lg:grid-cols-[16rem_minmax(0,1fr)]">
         <div className="min-w-0 md:sticky md:top-20">
           <SectionNav
-            sections={sections.map((s) => ({ id: s.id, title: s.title, count: s.exercises.length }))}
+            sections={shown.map((s) => ({ id: s.id, title: s.title, count: s.exercises.length }))}
             activeId={activeId}
             renamingId={renamingId}
             onSelect={select}
@@ -354,7 +385,7 @@ export function LessonBuilder({
                         key={exercise.id}
                         exercise={exercise}
                         number={exerciseNumber(activeIndex, i)}
-                        otherSections={sections.filter((s) => s.id !== active.id).map(({ id, title }) => ({ id, title }))}
+                        otherSections={shown.filter((s) => s.id !== active.id).map(({ id, title }) => ({ id, title }))}
                         onChange={(patch) => updateExercise(exercise.id, patch)}
                         onBlur={() => void queue.flush(exercise.id)}
                         onDuplicate={() => duplicate(active.id, exercise)}

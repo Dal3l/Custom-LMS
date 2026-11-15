@@ -10,7 +10,9 @@ export type BuilderExercise = {
   /** Correct answers — only ever loaded for the course owner. */
   key: Json | null;
 };
-export type BuilderSection = { id: string; title: string; exercises: BuilderExercise[] };
+/** "lesson": done in class; "homework": the lesson's homework part. */
+export type SectionKind = "lesson" | "homework";
+export type BuilderSection = { id: string; title: string; kind: SectionKind; exercises: BuilderExercise[] };
 export type BuilderData = {
   course: Pick<Tables<"courses">, "id" | "title" | "owner_id" | "language">;
   module: Pick<Tables<"modules">, "id" | "title">;
@@ -24,7 +26,7 @@ export async function getBuilderData(lessonId: string): Promise<BuilderData | nu
   const { data } = await supabase
     .from("lessons")
     .select(
-      "id, title, is_test, modules(id, title), courses(id, title, owner_id, language), sections(id, title, position), exercises(id, section_id, type, title, content, position, exercise_keys(answer_key))",
+      "id, title, is_test, modules(id, title), courses(id, title, owner_id, language), sections(id, title, position, kind), exercises(id, section_id, type, title, content, position, exercise_keys(answer_key))",
     )
     .eq("id", lessonId)
     .maybeSingle();
@@ -39,6 +41,7 @@ export async function getBuilderData(lessonId: string): Promise<BuilderData | nu
     sections: [...data.sections].sort(byPosition).map((s) => ({
       id: s.id,
       title: s.title,
+      kind: s.kind as SectionKind,
       exercises: exercises
         .filter((e) => e.section_id === s.id)
         .map((e) => ({
@@ -64,12 +67,12 @@ export type StudentLesson = {
  * The lesson as a student sees it. Deliberately does NOT select exercise_keys:
  * correct answers never leave the server; answers are checked by gradeExercise() (POST /api/check).
  */
-export async function getStudentLesson(lessonId: string): Promise<StudentLesson | null> {
+export async function getStudentLesson(lessonId: string, part: SectionKind = "lesson"): Promise<StudentLesson | null> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("lessons")
     .select(
-      "id, title, is_test, courses(id, title, owner_id, language), sections(id, title, position), exercises(id, section_id, type, title, content, position)",
+      "id, title, is_test, courses(id, title, owner_id, language), sections(id, title, position, kind), exercises(id, section_id, type, title, content, position)",
     )
     .eq("id", lessonId)
     .maybeSingle();
@@ -80,12 +83,16 @@ export async function getStudentLesson(lessonId: string): Promise<StudentLesson 
   return {
     course: data.courses,
     lesson: { id: data.id, title: data.title, is_test: data.is_test },
-    sections: [...data.sections].sort(byPosition).map((s) => ({
-      id: s.id,
-      title: s.title,
-      exercises: exercises
-        .filter((e) => e.section_id === s.id)
-        .map(({ id, type, title, content }) => ({ id, type, title, content })),
-    })),
+    // One part of the lesson: what is done in class, or the homework.
+    sections: [...data.sections]
+      .filter((s) => s.kind === part)
+      .sort(byPosition)
+      .map((s) => ({
+        id: s.id,
+        title: s.title,
+        exercises: exercises
+          .filter((e) => e.section_id === s.id)
+          .map(({ id, type, title, content }) => ({ id, type, title, content })),
+      })),
   };
 }

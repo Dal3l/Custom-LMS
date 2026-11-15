@@ -17,9 +17,9 @@ export default async function LessonPreviewPage({
   setRequestLocale(locale);
   const profile = await requireRole(locale, "teacher");
   if (!idSchema.safeParse(courseId).success || !idSchema.safeParse(lessonId).success) notFound();
-  const lesson = await getStudentLesson(lessonId);
+  const { section, part } = await searchParams;
+  const lesson = await getStudentLesson(lessonId, part === "homework" ? "homework" : "lesson");
   if (!lesson || lesson.course.id !== courseId || lesson.course.owner_id !== profile.id) notFound();
-  const { section } = await searchParams;
   const t = await getTranslations("courses");
 
   return (
@@ -30,7 +30,7 @@ export default async function LessonPreviewPage({
       </h1>
       <PreviewShell
         language={lesson.course.language}
-        editHref={`/courses/${courseId}/lessons/${lessonId}${typeof section === "string" ? `?section=${section}` : ""}`}
+        editHref={`/courses/${courseId}/lessons/${lessonId}${typeof section === "string" ? `?section=${section}` : part === "homework" ? "?part=homework" : ""}`}
         sections={lesson.sections}
         initialSectionId={typeof section === "string" ? section : null}
       />

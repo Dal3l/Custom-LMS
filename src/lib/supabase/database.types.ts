@@ -409,6 +409,7 @@ export type Database = {
           course_id: string
           created_at: string
           id: string
+          kind: string
           lesson_id: string
           position: number
           section_id: string
@@ -421,6 +422,7 @@ export type Database = {
           course_id: string
           created_at?: string
           id?: string
+          kind?: string
           lesson_id: string
           position: number
           section_id: string
@@ -433,6 +435,7 @@ export type Database = {
           course_id?: string
           created_at?: string
           id?: string
+          kind?: string
           lesson_id?: string
           position?: number
           section_id?: string
@@ -460,6 +463,175 @@ export type Database = {
             columns: ["section_id"]
             isOneToOne: false
             referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      homework_answers: {
+        Row: {
+          answer: Json
+          attempts: number
+          checked_answer: Json | null
+          exercise_id: string
+          first_answer: Json | null
+          first_result: Json | null
+          homework_id: string
+          result: Json | null
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          answer: Json
+          attempts?: number
+          checked_answer?: Json | null
+          exercise_id: string
+          first_answer?: Json | null
+          first_result?: Json | null
+          homework_id: string
+          result?: Json | null
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          answer?: Json
+          attempts?: number
+          checked_answer?: Json | null
+          exercise_id?: string
+          first_answer?: Json | null
+          first_result?: Json | null
+          homework_id?: string
+          result?: Json | null
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "homework_answers_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "homework_answers_homework_id_fkey"
+            columns: ["homework_id"]
+            isOneToOne: false
+            referencedRelation: "homeworks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "homework_answers_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      homework_exercises: {
+        Row: {
+          exercise_id: string
+          homework_id: string
+          position: number
+        }
+        Insert: {
+          exercise_id: string
+          homework_id: string
+          position: number
+        }
+        Update: {
+          exercise_id?: string
+          homework_id?: string
+          position?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "homework_exercises_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "homework_exercises_homework_id_fkey"
+            columns: ["homework_id"]
+            isOneToOne: false
+            referencedRelation: "homeworks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      homework_students: {
+        Row: {
+          homework_id: string
+          reviewed_at: string | null
+          student_id: string
+          submitted_at: string | null
+        }
+        Insert: {
+          homework_id: string
+          reviewed_at?: string | null
+          student_id: string
+          submitted_at?: string | null
+        }
+        Update: {
+          homework_id?: string
+          reviewed_at?: string | null
+          student_id?: string
+          submitted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "homework_students_homework_id_fkey"
+            columns: ["homework_id"]
+            isOneToOne: false
+            referencedRelation: "homeworks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "homework_students_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      homeworks: {
+        Row: {
+          class_id: string
+          created_at: string
+          due_at: string | null
+          id: string
+          lesson_id: string
+        }
+        Insert: {
+          class_id: string
+          created_at?: string
+          due_at?: string | null
+          id?: string
+          lesson_id: string
+        }
+        Update: {
+          class_id?: string
+          created_at?: string
+          due_at?: string | null
+          id?: string
+          lesson_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "homeworks_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "homeworks_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
             referencedColumns: ["id"]
           },
         ]
@@ -585,6 +757,7 @@ export type Database = {
           course_id: string
           created_at: string
           id: string
+          kind: string
           lesson_id: string
           position: number
           title: string
@@ -594,6 +767,7 @@ export type Database = {
           course_id: string
           created_at?: string
           id?: string
+          kind?: string
           lesson_id: string
           position: number
           title: string
@@ -603,6 +777,7 @@ export type Database = {
           course_id?: string
           created_at?: string
           id?: string
+          kind?: string
           lesson_id?: string
           position?: number
           title?: string

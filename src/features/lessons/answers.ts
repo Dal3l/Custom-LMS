@@ -49,7 +49,7 @@ export async function saveClassAnswer(body: unknown): Promise<SaveAnswerResponse
   // One round trip: the exercise (RLS: visible to this user), membership, the
   // class's opened lessons and the saved answer.
   const [exercise, member, opened, saved] = await Promise.all([
-    supabase.from("exercises").select("id, lesson_id, type, content").eq("id", exerciseId).maybeSingle(),
+    supabase.from("exercises").select("id, lesson_id, type, content, kind").eq("id", exerciseId).maybeSingle(),
     supabase
       .from("class_members")
       .select("student_id")
@@ -67,7 +67,14 @@ export async function saveClassAnswer(body: unknown): Promise<SaveAnswerResponse
   ]);
   if (exercise.error || member.error || opened.error || saved.error) return { ok: false, error: "generic" };
   const lessonId = exercise.data?.lesson_id;
-  if (!exercise.data || !member.data || !lessonId || !opened.data.some((l) => l.lesson_id === lessonId)) {
+  // Lesson exercises only: homework answers go through saveHomeworkAnswer.
+  if (
+    !exercise.data ||
+    exercise.data.kind !== "lesson" ||
+    !member.data ||
+    !lessonId ||
+    !opened.data.some((l) => l.lesson_id === lessonId)
+  ) {
     return { ok: false, error: "forbidden" };
   }
 
