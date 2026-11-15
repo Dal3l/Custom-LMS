@@ -20,10 +20,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useRouter } from "@/i18n/navigation";
 import {
   getPickerOutline,
   listPickerCourses,
-  openClassLesson,
   type PickerCourse,
   type PickerOutline,
 } from "@/features/classes/lesson-actions";
@@ -31,9 +31,10 @@ import {
 type Source = "mine" | "library";
 
 /**
- * "Open lesson": My courses / Library → course → lesson. Lessons already done in
- * this class have a check mark. With `courseId` it starts on that course
- * ("Next lesson").
+ * "Open lesson" / "Course lessons": My courses / Library → course → lesson.
+ * Lessons finished in this class have a check mark. The chosen lesson opens for
+ * the teacher only (to look ahead); "Make it current" there opens it for the class.
+ * With `courseId` it starts on that course.
  */
 export function LessonPicker({
   classId,
@@ -61,13 +62,22 @@ export function LessonPicker({
         </Button>
       </DialogTrigger>
       <DialogContent className="flex max-h-[85svh] flex-col gap-4 sm:max-w-lg">
-        {open && <PickerBody classId={classId} initialCourseId={courseId ?? null} />}
+        {open && <PickerBody classId={classId} initialCourseId={courseId ?? null} onClose={() => setOpen(false)} />}
       </DialogContent>
     </Dialog>
   );
 }
 
-function PickerBody({ classId, initialCourseId }: { classId: string; initialCourseId: string | null }) {
+function PickerBody({
+  classId,
+  initialCourseId,
+  onClose,
+}: {
+  classId: string;
+  initialCourseId: string | null;
+  onClose: () => void;
+}) {
+  const router = useRouter();
   const t = useTranslations("classLessons");
   const [source, setSource] = useState<Source>("mine");
   const [courseId, setCourseId] = useState<string | null>(initialCourseId);
@@ -106,15 +116,12 @@ function PickerBody({ classId, initialCourseId }: { classId: string; initialCour
     };
   }, [classId, courseId, t]);
 
+  // Opens the lesson for the teacher only; "Make it current" there opens it for the class.
   function open(lessonId: string) {
     setOpeningId(lessonId);
-    startOpening(async () => {
-      const result = await openClassLesson(classId, lessonId);
-      // On success the page changes; we only get here on errors.
-      if (result && !result.ok) {
-        toast.error(t(`errors.${result.error}`));
-        setOpeningId(null);
-      }
+    startOpening(() => {
+      router.push(`/classes/${classId}/lessons/${lessonId}`);
+      onClose();
     });
   }
 

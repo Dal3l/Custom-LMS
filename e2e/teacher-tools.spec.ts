@@ -116,9 +116,11 @@ test.describe("teacher tools", () => {
     // The pointer: the student sees it over the exercise the teacher points at.
     await bar.getByRole("button", { name: "Указка" }).click();
     const card = page.locator(`#exercise-${ex!.id}`);
+    // Below the part of the page that stays at the top.
+    await card.evaluate((el) => el.scrollIntoView({ block: "end" }));
     const box = (await card.boundingBox())!;
-    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-    await page.mouse.move(box.x + box.width / 2 + 10, box.y + box.height / 2);
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height - 20);
+    await page.mouse.move(box.x + box.width / 2 + 10, box.y + box.height - 20);
     await expect(sp.getByRole("img", { name: "Указка учителя" })).toBeVisible();
 
     // The student answers wrongly; the teacher shows the right answers.

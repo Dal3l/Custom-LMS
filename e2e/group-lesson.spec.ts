@@ -143,6 +143,8 @@ test.describe("group lesson", () => {
     await page.mouse.wheel(0, 400);
     await expect(bar).toBeInViewport();
     await expect(bar.getByRole("button", { name: "Указка" })).toBeInViewport();
+    // The sections stay on screen too.
+    await expect(page.getByRole("navigation", { name: "Секции урока" })).toBeInViewport();
     const before = (await q2.boundingBox())!.y;
     await bar.getByRole("button", { name: /Второй Ученик/ }).click();
     await expect(bar.getByRole("button", { name: /Второй Ученик/ })).toHaveAttribute("aria-pressed", "true");

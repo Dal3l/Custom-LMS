@@ -49,11 +49,8 @@ export function LiveStudentsBar({
   };
 
   return (
-    // Stays at the top while scrolling, so students and tools are always at hand.
-    <section
-      className="sticky top-14 z-[9] -mx-1 flex flex-col gap-2 rounded-2xl border bg-card/95 p-2 shadow-sm backdrop-blur sm:p-3"
-      aria-label={t("studentsLabel")}
-    >
+    // Kept at the top with the sections while scrolling (see LessonPlayer's stickyTop).
+    <section className="flex flex-col gap-2 rounded-2xl border bg-card p-2 sm:p-3" aria-label={t("studentsLabel")}>
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-sm font-medium">{t("studentsTitle")}</h2>
         <div className="flex items-center gap-2">

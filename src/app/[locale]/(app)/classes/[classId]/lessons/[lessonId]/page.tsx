@@ -5,6 +5,7 @@ import { CallButton } from "@/components/classes/call-button";
 import { ClassLessonControls } from "@/components/classes/class-lesson-controls";
 import { StudentClassLesson, TeacherClassLesson } from "@/components/classes/class-lesson-view";
 import { LessonPicker } from "@/components/classes/lesson-picker";
+import { MakeCurrentBanner } from "@/components/classes/make-current-banner";
 import { Badge } from "@/components/ui/badge";
 import { getClassLessonState, listClassMarks } from "@/features/classes/lesson-queries";
 import { getClassPage } from "@/features/classes/queries";
@@ -16,7 +17,11 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { requireProfile } from "@/lib/auth";
 
-/** A lesson opened in a class, for the teacher and the class's students. */
+/**
+ * A lesson in a class. Students see only lessons opened in the class. The
+ * teacher may open any lesson they can use, to look ahead; it opens for the
+ * class only when they press "Make it current".
+ */
 export default async function ClassLessonPage({
   params,
   searchParams,
@@ -33,15 +38,16 @@ export default async function ClassLessonPage({
     getTranslations("courses"),
     profile.role === "student" ? getMyClassAnswers(classId, lessonId, profile.id) : getClassLessonAnswers(classId, lessonId),
   ]);
-  // Only lessons opened in this class; students see nothing else (RLS too).
-  if (!cls || !state || !lesson) notFound();
+  // Students: only lessons opened in this class (RLS too). Teachers: any lesson they can see.
+  if (!cls || !lesson || (!state && !cls.isTeacher)) notFound();
   const { section, show } = await searchParams;
-  const live = state.status === "live";
-  const finished = Boolean(state.finishedAt);
+  const live = state?.status === "live";
+  const finished = Boolean(state?.finishedAt);
+  const revealed = state?.revealed ?? [];
   const exerciseIds = lesson.sections.flatMap((s) => s.exercises.map((e) => e.id));
   // Access to this lesson in the class is confirmed above (RLS + class lesson).
   const [solutions, marks] = await Promise.all([
-    revealedSolutions(lessonId, state.revealed),
+    revealedSolutions(lessonId, revealed),
     listClassMarks(classId, exerciseIds),
   ]);
   const common = {
@@ -51,9 +57,10 @@ export default async function ClassLessonPage({
     language: lesson.course.language,
     sections: lesson.sections,
     initialSectionId: typeof section === "string" ? section : null,
-    doneSections: state.doneSections,
+    doneSections: state?.doneSections ?? [],
     finished,
-    revealed: state.revealed,
+    revealed,
+    inClass: Boolean(state),
     solutions,
     marks,
     userId: profile.id,
@@ -61,6 +68,7 @@ export default async function ClassLessonPage({
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
+      {cls.isTeacher && !live && <MakeCurrentBanner classId={classId} lessonId={lessonId} />}
       <Link
         href={`/classes/${classId}`}
         className="flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
@@ -87,7 +95,7 @@ export default async function ClassLessonPage({
                 {t("done")}
               </Badge>
             ) : (
-              !live && (
+              state && !live && (
                 <Badge variant="outline">
                   <CircleDashed aria-hidden="true" />
                   {t("notFinished")}
@@ -108,7 +116,7 @@ export default async function ClassLessonPage({
                 variant="outline"
                 icon="list"
               />
-              <ClassLessonControls classId={classId} lessonId={lessonId} live={live} finished={finished} />
+              {state && <ClassLessonControls classId={classId} lessonId={lessonId} finished={finished} />}
             </>
           )}
         </div>

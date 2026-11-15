@@ -110,7 +110,7 @@ test.describe("classes, invite links and student accounts", () => {
     await expect(guest.getByRole("link", { name: "Позвонить" })).toBeVisible();
     await expect(guest.getByRole("tab", { name: /Ученики/ })).toHaveCount(0);
     await guest.goto("/ru/classes");
-    await expect(guest.getByText(className)).toBeVisible();
+    await expect(guest.getByRole("link", { name: className })).toBeVisible();
     await guest.context().close();
 
     // --- Existing student: "Log in" on the invite page, then join.

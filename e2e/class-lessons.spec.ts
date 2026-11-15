@@ -114,7 +114,20 @@ test.describe("lessons in a class", () => {
     await page.getByRole("dialog").getByRole("button", { name: /Greetings/ }).click();
     await expect(page).toHaveURL(new RegExp(`/classes/${cls!.id}/lessons/${lessonIds[0]}$`));
     await expect(page.getByRole("heading", { level: 1, name: "Greetings" })).toBeVisible();
+    // Only the teacher sees it until it is made current.
+    await expect(page.getByText("Этот урок сейчас видите только вы", { exact: false })).toBeVisible();
+    await studentPage.goto(`/ru/classes/${cls!.id}/lessons/${lessonIds[0]}`);
+    await expect(studentPage.getByRole("heading", { name: "Страница не найдена" })).toBeVisible();
+    await page.getByRole("button", { name: "Сделать текущим" }).click();
     await expect(page.getByText("Идёт сейчас")).toBeVisible();
+    await expect(page.getByText("Этот урок сейчас видите только вы", { exact: false })).toHaveCount(0);
+
+    // --- Back to all classes; the class card opens the lesson going on now.
+    await page.goto(`/ru/classes/${cls!.id}`);
+    await page.getByRole("link", { name: "Все классы" }).click();
+    await expect(page).toHaveURL(/\/ru\/classes$/);
+    await page.getByRole("link", { name: new RegExp(className) }).click();
+    await expect(page.getByRole("heading", { level: 1, name: "Greetings" })).toBeVisible();
 
     // --- Student: the lesson is in the class, marked as going on; answers are checked.
     await studentPage.goto(`/ru/classes/${cls!.id}`);
@@ -151,12 +164,16 @@ test.describe("lessons in a class", () => {
     await expect(dialog.getByRole("button", { name: /Greetings/ }).getByLabel("Пройден")).toBeVisible();
     await dialog.getByRole("button", { name: /Numbers/ }).click();
     await expect(page.getByRole("heading", { level: 1, name: "Numbers" })).toBeVisible();
+    await page.getByRole("button", { name: "Сделать текущим" }).click();
+    await expect(page.getByText("Идёт сейчас")).toBeVisible();
 
     // "Course lessons" shows all lessons; opening another one does NOT finish Numbers.
     await page.getByRole("button", { name: "Уроки курса" }).click();
     await expect(dialog.getByRole("button", { name: /Colours/ })).toBeVisible();
     await dialog.getByRole("button", { name: /Colours/ }).click();
     await expect(page.getByRole("heading", { level: 1, name: "Colours" })).toBeVisible();
+    await page.getByRole("button", { name: "Сделать текущим" }).click();
+    await expect(page.getByText("Идёт сейчас")).toBeVisible();
 
     // --- Class page: Colours going on, Numbers not finished, Greetings finished.
     await page.goto(`/ru/classes/${cls!.id}`);

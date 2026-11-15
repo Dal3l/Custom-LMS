@@ -4,7 +4,15 @@ import type { Tables } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
 
 export type ClassRow = Pick<Tables<"classes">, "id" | "name" | "kind" | "call_url">;
-export type ClassListItem = ClassRow & { studentCount: number; teacherName: string | null };
+export type ClassListItem = ClassRow & {
+  studentCount: number;
+  teacherName: string | null;
+  /** the lesson going on now: the class card opens it directly */
+  liveLessonId: string | null;
+};
+
+const liveLesson = (lessons: { lesson_id: string; status: string }[]) =>
+  lessons.find((l) => l.status === "live")?.lesson_id ?? null;
 
 /** Classes on the "Classes" page: a teacher's own, or the ones a student is in. */
 export async function listClasses(profile: ProfileWithRole): Promise<ClassListItem[]> {
@@ -12,22 +20,37 @@ export async function listClasses(profile: ProfileWithRole): Promise<ClassListIt
   if (profile.role === "teacher") {
     const { data } = await supabase
       .from("classes")
-      .select("id, name, kind, call_url, class_members(count)")
+      .select("id, name, kind, call_url, class_members(count), class_lessons(lesson_id, status)")
       .eq("teacher_id", profile.id)
       .order("created_at", { ascending: false });
-    return (data ?? []).map(({ class_members, ...c }) => ({
+    return (data ?? []).map(({ class_members, class_lessons, ...c }) => ({
       ...c,
       studentCount: class_members[0]?.count ?? 0,
       teacherName: null,
+      liveLessonId: liveLesson(class_lessons),
     }));
   }
   const { data } = await supabase
     .from("class_members")
-    .select("joined_at, class:classes(id, name, kind, call_url, teacher:profiles!classes_teacher_id_fkey(full_name))")
+    .select(
+      "joined_at, class:classes(id, name, kind, call_url, teacher:profiles!classes_teacher_id_fkey(full_name), class_lessons(lesson_id, status))",
+    )
     .eq("student_id", profile.id)
     .order("joined_at", { ascending: false });
   return (data ?? []).flatMap(({ class: c }) =>
-    c ? [{ id: c.id, name: c.name, kind: c.kind, call_url: c.call_url, studentCount: 0, teacherName: c.teacher?.full_name ?? null }] : [],
+    c
+      ? [
+          {
+            id: c.id,
+            name: c.name,
+            kind: c.kind,
+            call_url: c.call_url,
+            studentCount: 0,
+            teacherName: c.teacher?.full_name ?? null,
+            liveLessonId: liveLesson(c.class_lessons),
+          },
+        ]
+      : [],
   );
 }
 
