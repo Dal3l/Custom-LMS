@@ -108,7 +108,9 @@ test.describe("homework", () => {
     await sheet.getByLabel("Сдать до (необязательно)").fill("2030-01-15T18:00");
     await sheet.getByRole("button", { name: "Отправить 2 задания" }).click();
     await expect(page.getByText("Домашка отправлена")).toBeVisible();
-    await page.getByRole("button", { name: "Домашка" }).filter({ visible: true }).click();
+    // The sent exercises are marked; the sent homework opens from under the sections.
+    await expect(page.getByText("Отправлено", { exact: true })).toHaveCount(2);
+    await page.getByRole("button", { name: "Отправленная домашка · сдали 0 из 1" }).click();
     await expect(sheet.getByText("Сдали: 0 из 1")).toBeVisible();
     await page.keyboard.press("Escape");
 
@@ -179,7 +181,8 @@ test.describe("homework", () => {
 
     // The teacher sees it handed in.
     await page.reload();
-    await page.getByRole("button", { name: "Домашка" }).filter({ visible: true }).click();
+    await page.getByRole("button", { name: /At home/ }).filter({ visible: true }).first().click();
+    await page.getByRole("button", { name: "Отправленная домашка · сдали 1 из 1" }).click();
     await expect(page.getByRole("dialog", { name: "Отправить домашку" }).getByText("Сдали: 1 из 1")).toBeVisible();
 
     // Review: from the lesson to the student's answers — tries, first try, comment.
@@ -203,11 +206,13 @@ test.describe("homework", () => {
     const row = page.getByRole("link", { name: /Открыть ответы: .*Animals/ }).filter({ hasText: `домашка ${stamp}` });
     await expect(row).toContainText("Ждёт проверки");
     await row.click();
+    // "Mark as reviewed" is at the bottom, after the exercises; then back to the list.
     await page.getByRole("button", { name: "Отметить проверенной" }).click();
     await expect(page.getByText("Домашка отмечена проверенной")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Снять отметку «Проверено»" })).toBeVisible();
-    await page.goto("/ru/homework");
+    await expect(page).toHaveURL(/\/ru\/homework$/);
     await expect(row).toContainText("Проверено");
+    await row.click();
+    await expect(page.getByRole("button", { name: "Снять отметку «Проверено»" })).toBeVisible();
 
     // The student sees the comment next to the exercise and "Reviewed".
     await sp.goto(`${lessonUrl}?tab=homework`);
@@ -215,6 +220,13 @@ test.describe("homework", () => {
     await expect(sp.getByText("Учитель проверил домашку.")).toBeVisible();
     await sp.goto("/ru/homework");
     await expect(sp.getByRole("link", { name: new RegExp(`домашка ${stamp}`) }).filter({ visible: true })).toContainText("Проверено");
+
+    // A week after the check it moves to the archive (nothing is deleted).
+    await db.from("homework_students").update({ reviewed_at: new Date(Date.now() - 10 * 86400_000).toISOString() }).eq("homework_id", hw!.id);
+    await page.goto("/ru/homework");
+    await expect(row).toHaveCount(0);
+    await page.getByRole("link", { name: "Архив" }).click();
+    await expect(row).toContainText("Проверено");
 
     await sp.context().close();
   });

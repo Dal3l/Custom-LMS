@@ -69,7 +69,7 @@ export default async function HomeworkReviewPage({ params }: PageProps<"/[locale
   const date = (iso: string) => format.dateTime(new Date(iso), { dateStyle: "medium", timeStyle: "short" });
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <Button asChild variant="ghost" size="sm" className="-ml-2 w-fit text-muted-foreground">
         <Link href="/homework">
           <ChevronLeft aria-hidden="true" />
@@ -114,11 +114,6 @@ export default async function HomeworkReviewPage({ params }: PageProps<"/[locale
         <span className="text-sm text-muted-foreground tabular-nums">
           · {t("answeredOf", { done: Object.keys(review.answers).length, total: review.exerciseIds.length })}
         </span>
-        {review.submittedAt && (
-          <div className="ml-auto">
-            <ReviewedToggle homeworkId={review.id} studentId={review.studentId} reviewed={Boolean(review.reviewedAt)} />
-          </div>
-        )}
       </div>
 
       {!review.submittedAt && (
@@ -129,6 +124,14 @@ export default async function HomeworkReviewPage({ params }: PageProps<"/[locale
       )}
 
       <LessonPlayer language={review.language} sections={sections} review={saved} notes={notes} />
+
+      {/* After reading everything: mark it reviewed (the student sees "Reviewed"). */}
+      {review.submittedAt && (
+        <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed p-4 text-center">
+          <p className="text-sm text-muted-foreground">{review.reviewedAt ? tr("reviewedHint") : tr("markHint")}</p>
+          <ReviewedToggle homeworkId={review.id} studentId={review.studentId} reviewed={Boolean(review.reviewedAt)} />
+        </div>
+      )}
     </div>
   );
 }

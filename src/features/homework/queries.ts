@@ -13,6 +13,8 @@ export type SentHomework = {
   submitted: number;
   /** whose answers "Open answers" shows first: someone who handed in, else anyone */
   firstStudentId: string | null;
+  /** who got it */
+  studentIds: string[];
 };
 
 export async function listLessonHomeworks(classId: string, lessonId: string): Promise<SentHomework[]> {
@@ -30,6 +32,7 @@ export async function listLessonHomeworks(classId: string, lessonId: string): Pr
     exerciseIds: [...h.homework_exercises].sort((a, b) => a.position - b.position).map((e) => e.exercise_id),
     students: h.homework_students.length,
     submitted: h.homework_students.filter((s) => s.submitted_at).length,
+    studentIds: h.homework_students.map((s) => s.student_id),
     firstStudentId: (h.homework_students.find((s) => s.submitted_at) ?? h.homework_students[0])?.student_id ?? null,
   }));
 }
@@ -93,6 +96,7 @@ export type HomeworkListItem = {
   lessonTitle: string;
   createdAt: string;
   dueAt: string | null;
+  reviewedAt: string | null;
   status: HomeworkStatus;
   total: number;
   answered: number;
@@ -118,6 +122,7 @@ export async function listMyHomeworks(studentId: string): Promise<HomeworkListIt
         lessonTitle: h.lesson?.title ?? "",
         createdAt: h.created_at,
         dueAt: h.due_at,
+        reviewedAt: reviewed_at,
         status: homeworkStatus({ submittedAt: submitted_at, reviewedAt: reviewed_at, dueAt: h.due_at, answered }),
         total: h.homework_exercises.length,
         answered,
@@ -138,6 +143,7 @@ export type TeacherHomeworkItem = {
   createdAt: string;
   dueAt: string | null;
   submittedAt: string | null;
+  reviewedAt: string | null;
   status: HomeworkStatus;
   total: number;
   answered: number;
@@ -166,6 +172,7 @@ export async function listTeacherHomeworks(): Promise<TeacherHomeworkItem[]> {
         createdAt: h.created_at,
         dueAt: h.due_at,
         submittedAt: row.submitted_at,
+        reviewedAt: row.reviewed_at,
         status: homeworkStatus({ submittedAt: row.submitted_at, reviewedAt: row.reviewed_at, dueAt: h.due_at, answered }),
         total: h.homework_exercises.length,
         answered,
