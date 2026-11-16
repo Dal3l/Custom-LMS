@@ -46,6 +46,7 @@ export function LessonPlayer({
   stickyTop,
   tools,
   extraGroup,
+  notes,
 }: {
   /** the language the course teaches */
   language: string;
@@ -82,6 +83,8 @@ export function LessonPlayer({
    * lesson's homework). Students' class answers don't apply there.
    */
   extraGroup?: { label: string; sections: StudentSection[] };
+  /** Something shown under an exercise: the teacher's comment, tries… (by exercise id) */
+  notes?: Record<string, React.ReactNode>;
 }) {
   const t = useTranslations("player");
   const [queue] = useState(() => new SaveQueue());
@@ -239,6 +242,7 @@ export function LessonPlayer({
               menu={exerciseMenu?.(exercise, active.id)}
               solution={solutions?.[exercise.id]}
               pointer={pointer?.exerciseId === exercise.id ? pointer : null}
+              note={notes?.[exercise.id]}
               persist={
                 classAnswers && !inExtra
                   ? { classId: classAnswers.classId, homeworkId: classAnswers.homeworkId, saved: classAnswers.saved[exercise.id], queue }
@@ -351,6 +355,7 @@ function PlayerExercise({
   menu,
   solution,
   pointer,
+  note,
 }: {
   exercise: StudentExercise;
   number: string;
@@ -360,10 +365,12 @@ function PlayerExercise({
   menu?: React.ReactNode;
   solution?: Solution;
   pointer?: { x: number; y: number } | null;
+  note?: React.ReactNode;
 }) {
   const extra = (
     <>
       {solution && <SolutionBlock exercise={exercise} solution={solution} />}
+      {note}
       {pointer && <PointerDot x={pointer.x} y={pointer.y} />}
     </>
   );

@@ -96,3 +96,53 @@ export async function submitHomework(homeworkId: string): Promise<Result<string>
   revalidatePath("/[locale]/classes", "layout");
   return { ok: true, data: now };
 }
+
+const reviewIds = z.object({ homeworkId: id, studentId: id });
+
+/** The teacher's comment to one exercise of a student's homework ("" removes it). */
+export async function saveHomeworkComment(input: {
+  homeworkId: string;
+  studentId: string;
+  exerciseId: string;
+  body: string;
+}): Promise<Result> {
+  const profile = await getProfile();
+  const parsed = reviewIds
+    .extend({ exerciseId: id, body: z.string().max(2000) })
+    .safeParse(input);
+  if (profile?.role !== "teacher" || !parsed.success) return { ok: false, error: "forbidden" };
+  const { homeworkId, studentId, exerciseId } = parsed.data;
+  const body = parsed.data.body.trim();
+  const supabase = await createClient();
+  const match = { homework_id: homeworkId, student_id: studentId, exercise_id: exerciseId };
+  if (!body) {
+    const { error } = await supabase.from("homework_comments").delete().match(match);
+    return error ? { ok: false, error: "generic" } : { ok: true, data: undefined };
+  }
+  // RLS: only the teacher of the class, for an exercise and a student of this homework.
+  const { data: updated, error } = await supabase.from("homework_comments").update({ body }).match(match).select("body");
+  if (error) return { ok: false, error: "generic" };
+  if (!updated.length) {
+    const { error: insertError } = await supabase.from("homework_comments").insert({ ...match, body });
+    if (insertError) return { ok: false, error: insertError.code === "42501" ? "forbidden" : "generic" };
+  }
+  return { ok: true, data: undefined };
+}
+
+/** "Checked" (or not yet): the student sees "Checked" instead of "Handed in". */
+export async function setHomeworkReviewed(homeworkId: string, studentId: string, reviewed: boolean): Promise<Result> {
+  const profile = await getProfile();
+  const parsed = reviewIds.safeParse({ homeworkId, studentId });
+  if (profile?.role !== "teacher" || !parsed.success) return { ok: false, error: "forbidden" };
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("homework_students")
+    .update({ reviewed_at: reviewed ? new Date().toISOString() : null })
+    .eq("homework_id", homeworkId)
+    .eq("student_id", studentId)
+    .select("homework_id");
+  if (error) return { ok: false, error: "generic" };
+  if (!data.length) return { ok: false, error: "forbidden" };
+  revalidatePath("/[locale]/homework", "layout");
+  return { ok: true, data: undefined };
+}

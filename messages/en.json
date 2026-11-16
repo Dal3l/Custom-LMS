@@ -849,7 +849,9 @@
       "new": "New",
       "in_progress": "In progress",
       "submitted": "Handed in",
-      "overdue": "Overdue"
+      "overdue": "Overdue",
+      "reviewed": "Reviewed",
+      "toCheck": "To check"
     },
     "tabs": "Lesson and homework",
     "lessonTab": "Lesson",
@@ -892,6 +894,32 @@
     "partTitle": "Homework",
     "chosenCount": "{count, plural, one {# exercise chosen} other {# exercises chosen}}",
     "chooseFirst": "First tick “To homework” on exercises in the Homework sections on the right.",
-    "sendPicked": "Send homework · {count}"
+    "sendPicked": "Send homework · {count}",
+    "teacherSubtitle": "Students' work from all classes: handed-in work waiting for a check comes first",
+    "teacherEmptyText": "When you send homework to students, it will appear here.",
+    "openAnswers": "Open answers",
+    "allHomework": "All homework",
+    "review": {
+      "title": "Homework check",
+      "student": "Student",
+      "notSubmitted": "The student hasn't handed this homework in yet — you see the answers saved so far.",
+      "attempts": "{count, plural, one {# try} other {# tries}}",
+      "firstRight": "right on the first try",
+      "firstWrong": "mistakes on the first try",
+      "firstTry": "First try",
+      "comment": "Teacher's comment",
+      "commentPlaceholder": "Write what went well and what to fix",
+      "commentHint": "The student will see the comment next to the exercise",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "saveError": "Not saved. Check your connection.",
+      "markReviewed": "Mark as reviewed",
+      "unmark": "Remove the “Reviewed” mark",
+      "markedToast": "Homework marked as reviewed",
+      "unmarkedToast": "Mark removed",
+      "failed": "Something went wrong. Please try again.",
+      "noAnswer": "No answer",
+      "reviewedNote": "Your teacher has reviewed the homework."
+    }
   }
 }

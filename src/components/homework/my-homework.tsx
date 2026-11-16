@@ -21,6 +21,7 @@ import type { MyHomework } from "@/features/homework/queries";
 import type { StudentSection } from "@/features/lessons/queries";
 import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { TeacherComment } from "./review-notes";
 import { HomeworkStatusBadge } from "./status-badge";
 
 /**
@@ -58,6 +59,7 @@ export function MyHomeworkView({
     .filter((s) => s.exercises.length > 0);
   const answered = Object.keys(hw.saved).length;
   const submitted = Boolean(hw.submittedAt);
+  const notes = Object.fromEntries(Object.entries(hw.comments).map(([id, body]) => [id, <TeacherComment key={id} body={body} />]));
   const date = (iso: string) => format.dateTime(new Date(iso), { dateStyle: "medium", timeStyle: "short" });
 
   function handIn() {
@@ -111,6 +113,7 @@ export function MyHomeworkView({
         // Handed in: the student's answers, read-only.
         review={submitted ? hw.saved : undefined}
         classAnswers={submitted ? undefined : { classId, userId, saved: hw.saved, homeworkId: hw.id }}
+        notes={notes}
       />
 
       {!submitted ? (
@@ -124,7 +127,7 @@ export function MyHomeworkView({
       ) : (
         <p className={cn("flex items-center justify-center gap-2 text-sm text-emerald-700")}>
           <CircleCheck className="size-4" aria-hidden="true" />
-          {t("handedInNote")}
+          {hw.status === "reviewed" ? t("review.reviewedNote") : t("handedInNote")}
         </p>
       )}
 

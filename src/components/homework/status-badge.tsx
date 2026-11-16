@@ -8,15 +8,17 @@ import { cn } from "@/lib/utils";
 const STYLE: Record<HomeworkStatus, string> = {
   new: "border-sky-300 bg-sky-50 text-sky-800",
   in_progress: "border-amber-300 bg-amber-50 text-amber-800",
-  submitted: "border-emerald-300 bg-emerald-50 text-emerald-800",
+  submitted: "border-violet-300 bg-violet-50 text-violet-800",
+  reviewed: "border-emerald-300 bg-emerald-50 text-emerald-800",
   overdue: "border-red-300 bg-red-50 text-red-800",
 };
 
-export function HomeworkStatusBadge({ status }: { status: HomeworkStatus }) {
+/** `forTeacher`: "Handed in" reads "Waiting for a check" for the teacher. */
+export function HomeworkStatusBadge({ status, forTeacher = false }: { status: HomeworkStatus; forTeacher?: boolean }) {
   const t = useTranslations("homework.status");
   return (
     <Badge variant="outline" className={cn(STYLE[status])}>
-      {t(status)}
+      {forTeacher && status === "submitted" ? t("toCheck") : t(status)}
     </Badge>
   );
 }

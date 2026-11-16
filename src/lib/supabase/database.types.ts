@@ -528,6 +528,52 @@ export type Database = {
           },
         ]
       }
+      homework_comments: {
+        Row: {
+          body: string
+          exercise_id: string
+          homework_id: string
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          body: string
+          exercise_id: string
+          homework_id: string
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          exercise_id?: string
+          homework_id?: string
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "homework_comments_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "homework_comments_homework_id_fkey"
+            columns: ["homework_id"]
+            isOneToOne: false
+            referencedRelation: "homeworks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "homework_comments_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       homework_exercises: {
         Row: {
           exercise_id: string
