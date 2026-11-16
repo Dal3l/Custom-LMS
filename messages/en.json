@@ -582,7 +582,8 @@
     "checking": "Checking…",
     "highlight": {
       "mark": "Highlight",
-      "remove": "Remove"
+      "remove": "Remove",
+      "toDictionary": "To dictionary"
     },
     "backToCourse": "Back to course",
     "sectionDone": "Section finished",
@@ -838,8 +839,7 @@
     "start": "Start"
   },
   "tools": {
-    "dictionary": "Words and trainer",
-    "dictionarySoon": "Lesson words and the flash-card trainer come in stage 4."
+    "dictionary": "Dictionary"
   },
   "homework": {
     "title": "Homework",
@@ -948,5 +948,52 @@
     "comment": "Your teacher commented on the homework “{lesson}”",
     "reviewed": "Your teacher reviewed the homework “{lesson}”",
     "submitted": "{student} handed in the homework “{lesson}”"
+  },
+  "vocabulary": {
+    "title": "Dictionary",
+    "subtitle": "{count, plural, =0 {Your words from all classes} one {# word from all classes} other {# words from all classes}}",
+    "addWord": "Add a word",
+    "search": "Find a word or translation",
+    "course": "Course",
+    "lesson": "Lesson",
+    "allCourses": "All courses",
+    "allLessons": "All lessons",
+    "unknownCourse": "Course",
+    "unknownLesson": "Lesson",
+    "emptyTitle": "The dictionary is empty",
+    "emptyText": "Add a word with the button above, or select a word in a lesson text and press “To dictionary”. Words from your teacher appear here too.",
+    "nothingFound": "Nothing found",
+    "noTranslation": "No translation yet",
+    "fromTeacher": "from the teacher",
+    "actions": "Actions for “{term}”",
+    "edit": "Edit",
+    "remove": "Delete",
+    "cancel": "Cancel",
+    "removeTitle": "Delete “{term}” from the dictionary?",
+    "removeText": "The word disappears from the dictionary and the trainer.",
+    "removedToast": "“{term}” deleted",
+    "failed": "Something went wrong. Check your connection and try again.",
+    "listen": "Listen to “{term}”",
+    "addTitle": "New word",
+    "addHint": "The word goes to your dictionary and the trainer.",
+    "addForStudentsTitle": "A word for the student's dictionary",
+    "addForStudentsHint": "The word appears in the student's dictionary and trainer.",
+    "editTitle": "Edit the word",
+    "language": "Language",
+    "term": "Word or phrase",
+    "translation": "Translation",
+    "transcription": "Transcription",
+    "lookingUp": "looking up…",
+    "example": "Example",
+    "to": "To",
+    "noName": "No name",
+    "noStudents": "No students in the class yet.",
+    "add": "Add to dictionary",
+    "save": "Save",
+    "savedToast": "Saved",
+    "duplicate": "This word is already in the dictionary.",
+    "alreadyThere": "“{term}” is already in the dictionary",
+    "addedToast": "“{term}” added to the dictionary",
+    "addedForStudents": "{count, plural, one {Added to # student's dictionary} other {Added to # students' dictionaries}}"
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { BookA, Presentation, Timer, TimerOff } from "lucide-react";
+import { Presentation, Timer, TimerOff } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { forwardRef, useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -223,24 +223,6 @@ export function TimerTool({
             </>
           )}
         </div>
-      </PopoverContent>
-    </Popover>
-  );
-}
-
-/** Words of the lesson and the flash-card trainer — coming in stage 4. */
-export function DictionaryTool() {
-  const t = useTranslations("tools");
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <ToolButton label={t("dictionary")}>
-          <BookA aria-hidden="true" />
-        </ToolButton>
-      </PopoverTrigger>
-      <PopoverContent side="right" align="start" className="w-64 text-sm">
-        <p className="font-medium">{t("dictionary")}</p>
-        <p className="mt-1 text-muted-foreground">{t("dictionarySoon")}</p>
       </PopoverContent>
     </Popover>
   );

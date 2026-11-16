@@ -1,10 +1,11 @@
 "use client";
 
 import { EditorContent, useEditor, type Editor } from "@tiptap/react";
-import { Eraser, Highlighter } from "lucide-react";
+import { BookPlus, Eraser, Highlighter } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useWordAdder } from "@/features/vocabulary/word-adder-context";
 import type { ExerciseViewerProps } from "../../client-types";
 import { textExtensions } from "./extensions";
 import type { TextContent } from "./schema";
@@ -69,6 +70,7 @@ type Selected = { from: number; to: number; top: number; left: number };
  */
 function HighlightBar({ editor, exerciseId, shared }: { editor: Editor; exerciseId: string; shared: SharedMarks | null }) {
   const t = useTranslations("player.highlight");
+  const words = useWordAdder();
   const [selected, setSelected] = useState<Selected | null>(null);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -88,7 +90,7 @@ function HighlightBar({ editor, exerciseId, shared }: { editor: Editor; exercise
         const to = editor.view.posAtDOM(range.endContainer, range.endOffset);
         // Fixed to the screen (cards clip their contents), kept inside its width.
         const rect = range.getBoundingClientRect();
-        const left = Math.min(Math.max(8, rect.left), window.innerWidth - 240);
+        const left = Math.min(Math.max(8, rect.left), window.innerWidth - 340);
         if (to > from) {
           if (hideTimer.current) clearTimeout(hideTimer.current);
           setSelected({ from, to, top: rect.bottom + 8, left });
@@ -136,6 +138,22 @@ function HighlightBar({ editor, exerciseId, shared }: { editor: Editor; exercise
         <Eraser aria-hidden="true" />
         {t("remove")}
       </Button>
+      {words && (
+        <Button
+          type="button"
+          size="sm"
+          variant="ghost"
+          onClick={() => {
+            const text = editor.state.doc.textBetween(selected.from, selected.to, " ").replace(/\s+/g, " ").trim();
+            window.getSelection()?.removeAllRanges();
+            setSelected(null);
+            words.open(text);
+          }}
+        >
+          <BookPlus aria-hidden="true" className="text-primary" />
+          {t("toDictionary")}
+        </Button>
+      )}
     </div>
   );
 }
