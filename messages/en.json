@@ -375,8 +375,8 @@
       }
     },
     "attachment": {
-      "add": "Media on top",
-      "title": "Media above the task",
+      "add": "Add on top: text, picture…",
+      "title": "Above the exercise",
       "remove": "Remove"
     },
     "gaps": {
@@ -594,7 +594,8 @@
     "rightAnswers": "Right answers",
     "teacherPointer": "Teacher's pointer",
     "toolsLabel": "Lesson tools",
-    "awaitingTeacher": "Waiting for the teacher"
+    "awaitingTeacher": "Waiting for the teacher",
+    "noExtraSections": "Empty for now"
   },
   "classes": {
     "title": "Classes",
@@ -855,12 +856,9 @@
     "homeworkTab": "Homework",
     "tool": "Homework",
     "sendTitle": "Send homework",
-    "sendHint": "Tick exercises from this lesson's Homework part and send them to your students.",
+    "sendHint": "The ticked exercises from this lesson's Homework go to your students.",
     "noHomeworkPart": "This lesson has no homework yet. Add it in the lesson builder: the Homework tab.",
     "openBuilder": "Open the builder",
-    "exercises": "Exercises",
-    "all": "Select all",
-    "none": "Clear all",
     "to": "To",
     "noName": "No name",
     "due": "Due (optional)",
@@ -889,6 +887,11 @@
     "cancel": "Cancel",
     "handedInToast": "Homework handed in",
     "handInFailed": "Couldn't hand it in. Check the internet and try again.",
-    "handedInNote": "Homework handed in. Your teacher will look at it and may leave comments."
+    "handedInNote": "Homework handed in. Your teacher will look at it and may leave comments.",
+    "pick": "To homework",
+    "partTitle": "Homework",
+    "chosenCount": "{count, plural, one {# exercise chosen} other {# exercises chosen}}",
+    "chooseFirst": "First tick “To homework” on exercises in the Homework sections on the right.",
+    "sendPicked": "Send homework · {count}"
   }
 }

@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { createTempStudent, removeTempStudents } from "./temp-student";
 import { expect as baseExpect, test, type BrowserContextOptions, type Page } from "@playwright/test";
 
 // A live lesson in two browsers: the lesson opens for the student by itself,
@@ -31,6 +32,7 @@ test.describe("live lesson", () => {
   test.setTimeout(180_000);
   const cleanup = { courses: [] as string[], classes: [] as string[] };
   test.afterAll(async () => {
+    await removeTempStudents();
     if (!secret || !url) return;
     if (cleanup.classes.length) await admin().from("classes").delete().in("id", cleanup.classes);
     if (cleanup.courses.length) await admin().from("courses").delete().in("id", cleanup.courses);
@@ -40,7 +42,8 @@ test.describe("live lesson", () => {
     const options = testInfo.project.use as BrowserContextOptions;
     const stamp = `${Date.now()}-${testInfo.project.name}`;
     const db = admin();
-    const [teacherId, studentId] = await Promise.all([userId(teacher.email!), userId(student.email!)]);
+    const pupil = await createTempStudent(stamp);
+    const [teacherId, studentId] = [await userId(teacher.email!), pupil.id];
 
     const { data: course } = await db.from("courses").insert({ owner_id: teacherId, title: `E2E живой ${stamp}`, language: "en" }).select("id").single();
     cleanup.courses.push(course!.id);
@@ -68,7 +71,7 @@ test.describe("live lesson", () => {
 
     // Student waits on the class page.
     const sp = await (await browser.newContext(options)).newPage();
-    await login(sp, student.email!, student.password!);
+    await login(sp, pupil.email, pupil.password);
     await sp.goto(`/ru/classes/${cls!.id}`);
     await expect(sp.getByRole("heading", { level: 1, name: className })).toBeVisible();
 

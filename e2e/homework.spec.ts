@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { createTempStudent, removeTempStudents } from "./temp-student";
 import { expect as baseExpect, test, type BrowserContextOptions, type Page } from "@playwright/test";
 
 // Homework end to end: the lesson's homework part → the teacher sends it from
@@ -31,6 +32,7 @@ test.describe("homework", () => {
   test.setTimeout(180_000);
   const cleanup = { courses: [] as string[], classes: [] as string[] };
   test.afterAll(async () => {
+    await removeTempStudents();
     if (!secret || !url) return;
     if (cleanup.classes.length) await admin().from("classes").delete().in("id", cleanup.classes);
     if (cleanup.courses.length) await admin().from("courses").delete().in("id", cleanup.courses);
@@ -40,7 +42,8 @@ test.describe("homework", () => {
     const options = testInfo.project.use as BrowserContextOptions;
     const stamp = `${Date.now()}-${testInfo.project.name}`;
     const db = admin();
-    const [teacherId, studentId] = await Promise.all([userId(teacher.email!), userId(student.email!)]);
+    const pupil = await createTempStudent(stamp);
+    const [teacherId, studentId] = [await userId(teacher.email!), pupil.id];
     const { data: course } = await db.from("courses").insert({ owner_id: teacherId, title: `E2E домашка ${stamp}`, language: "en" }).select("id").single();
     cleanup.courses.push(course!.id);
     const { data: mod } = await db.from("modules").insert({ course_id: course!.id, title: "Unit", position: 0 }).select("id").single();
@@ -49,7 +52,26 @@ test.describe("homework", () => {
     const { data: hwSection } = await db.from("sections").insert({ lesson_id: lesson!.id, title: "At home", position: 0, kind: "homework" }).select("id").single();
     const { data: tf } = await db
       .from("exercises")
-      .insert({ section_id: hwSection!.id, type: "true_false", title: "Penguins", content: { statements: [{ id: "st000001", text: "Penguins can fly" }] }, position: 0 })
+      .insert({
+        section_id: hwSection!.id,
+        type: "true_false",
+        title: "Penguins",
+        content: {
+          statements: [{ id: "st000001", text: "Penguins can fly" }],
+          // Formatted text on top of the exercise: a heading and bold words.
+          attachment: {
+            kind: "text",
+            doc: {
+              type: "doc",
+              content: [
+                { type: "heading", attrs: { level: 2 }, content: [{ type: "text", text: "About penguins" }] },
+                { type: "paragraph", content: [{ type: "text", text: "Penguins ", marks: [{ type: "bold" }] }, { type: "text", text: "live in Antarctica." }] },
+              ],
+            },
+          },
+        },
+        position: 0,
+      })
       .select("id, course_id")
       .single();
     await db.from("exercise_keys").insert({ exercise_id: tf!.id, course_id: tf!.course_id, answer_key: { answers: { st000001: false } } });
@@ -62,23 +84,31 @@ test.describe("homework", () => {
 
     // Before it is sent the student sees no homework, not even through the database.
     const sp = await (await browser.newContext(options)).newPage();
-    await login(sp, student.email!, student.password!);
+    await login(sp, pupil.email, pupil.password);
     await sp.goto(lessonUrl);
     await expect(sp.getByRole("heading", { level: 1, name: "Animals" })).toBeVisible();
     const tabs = sp.getByRole("navigation", { name: "Урок и домашка" });
     await expect(tabs).toHaveCount(0);
     await expect(sp.getByText("Penguins can fly")).toHaveCount(0);
 
-    // The teacher sends both exercises with a due date.
+    // The teacher opens the lesson's Homework (its own group of sections), sees
+    // the exercises, ticks both and sends them with a due date.
     await login(page, teacher.email!, teacher.password!);
     await page.goto(lessonUrl);
-    await page.getByRole("button", { name: "Домашка" }).filter({ visible: true }).click();
+    // (a column on the right on wide screens, part of the top strip on phones)
+    await page.getByRole("button", { name: /At home/ }).filter({ visible: true }).first().click();
+    await expect(page.getByText("Penguins can fly")).toBeVisible();
+    await expect(page.getByText("Write about a penguin")).toBeVisible();
+    for (const box of await page.getByRole("checkbox", { name: "В домашку" }).all()) await box.click();
+    await page.getByRole("button", { name: "Отправить домашку · 2" }).click();
     const sheet = page.getByRole("dialog", { name: "Отправить домашку" });
-    await expect(sheet.getByText("Penguins")).toBeVisible();
+    await expect(sheet.getByText("Выбрано 2 задания")).toBeVisible();
     await sheet.getByLabel("Сдать до (необязательно)").fill("2030-01-15T18:00");
     await sheet.getByRole("button", { name: "Отправить 2 задания" }).click();
     await expect(page.getByText("Домашка отправлена")).toBeVisible();
+    await page.getByRole("button", { name: "Домашка" }).filter({ visible: true }).click();
     await expect(sheet.getByText("Сдали: 0 из 1")).toBeVisible();
+    await page.keyboard.press("Escape");
 
     // The student finds it under "Homework" (new), opens it.
     await sp.goto("/ru/homework");
@@ -87,6 +117,8 @@ test.describe("homework", () => {
     await item.click();
     await expect(tabs.getByRole("link", { name: "Домашка" })).toHaveAttribute("aria-current", "page");
     await expect(sp.getByText("Выполнено 0 из 2").filter({ visible: true })).toBeVisible();
+    await expect(sp.getByRole("heading", { name: "About penguins" })).toBeVisible();
+    await expect(sp.locator("strong", { hasText: "Penguins" })).toBeVisible();
 
     // Answers are checked right away and saved.
     await sp.getByRole("radio", { name: "True", exact: true }).click();

@@ -11,6 +11,7 @@ import {
   MousePointer2,
   RotateCcw,
   ScanEye,
+  Send,
   Undo2,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -43,7 +44,7 @@ import { useStudentLive } from "@/features/live/student-live";
 import { useTeacherLive } from "@/features/live/teacher-live";
 import { useRouter } from "@/i18n/navigation";
 import { LessonPicker } from "./lesson-picker";
-import { SendHomeworkTool } from "@/components/homework/send-homework";
+import { HomeworkPick, HomeworkToolButton, SendHomeworkDialog } from "@/components/homework/send-homework";
 import type { SentHomework } from "@/features/homework/queries";
 import { GroupOverview } from "./group-overview";
 import { BoardDialog, BoardTool, DictionaryTool, TimerTool, ToolButton } from "./lesson-tools";
@@ -97,6 +98,7 @@ export function TeacherClassLesson({
   const { classId, lessonId, courseId, finished, userId, inClass } = props;
   const t = useTranslations("classLessons");
   const tl = useTranslations("live");
+  const th = useTranslations("homework");
   const router = useRouter();
   const [done, setDone] = useSynced(props.doneSections);
   const [pending, startTransition] = useTransition();
@@ -106,6 +108,11 @@ export function TeacherClassLesson({
   const [viewing, setViewing] = useState<string | null>(students[0]?.id ?? null);
   const [pointerOn, setPointerOn] = useState(false);
   const [boardOpen, setBoardOpen] = useState(false);
+  // The lesson's homework: shown as its own group of sections; ticked exercises are sent.
+  const homeworkIds = homework.sections.flatMap((s) => s.exercises.map((e) => e.id));
+  const homeworkSectionIds = new Set(homework.sections.map((s) => s.id));
+  const [picked, setPicked] = useState<Set<string>>(new Set());
+  const [sending, setSending] = useState(false);
   const [focus, setFocus] = useState<{ sectionId: string; exerciseId: string; nonce: number } | null>(null);
 
   // Switching students keeps the same place on the page: the exercise at the top
@@ -197,6 +204,15 @@ export function TeacherClassLesson({
   const spinner = <Loader2 className="animate-spin" aria-hidden="true" />;
 
   function footer(section: StudentSection, isLast: boolean) {
+    if (homeworkSectionIds.has(section.id)) {
+      return inClass ? (
+        <Button onClick={() => setSending(true)}>
+          <Send aria-hidden="true" />
+          {th("sendPicked", { count: picked.size })}
+        </Button>
+      ) : null;
+    }
+    if (!inClass) return null;
     const sectionDone = done.includes(section.id);
     return (
       <>
@@ -241,7 +257,8 @@ export function TeacherClassLesson({
             sections={props.sections}
             initialSectionId={props.initialSectionId}
             completedSectionIds={done}
-            sectionFooter={inClass ? footer : undefined}
+            sectionFooter={footer}
+            extraGroup={{ label: th("partTitle"), sections: homework.sections }}
             review={viewing ? (live.answers[viewing] ?? {}) : undefined}
             solutions={props.solutions}
             focus={focus}
@@ -273,16 +290,7 @@ export function TeacherClassLesson({
                   />
                 )}
                 {inClass && <TimerTool endsAt={props.timerEndsAt} teacher={{ classId, lessonId }} />}
-                {inClass && (
-                  <SendHomeworkTool
-                    classId={classId}
-                    lessonId={lessonId}
-                    builderHref={homework.builderHref}
-                    sections={homework.sections}
-                    students={students}
-                    sent={homework.sent}
-                  />
-                )}
+                {inClass && <HomeworkToolButton onOpen={() => setSending(true)} />}
                 <DictionaryTool />
               </>
             }
@@ -301,6 +309,19 @@ export function TeacherClassLesson({
             exerciseMenu={(exercise, sectionId) => {
               // Tools act on the class, so only in a lesson the class has (not while looking ahead).
               if (!inClass) return null;
+              if (homeworkSectionIds.has(sectionId)) {
+                return (
+                  <HomeworkPick
+                    checked={picked.has(exercise.id)}
+                    onChange={(on) => {
+                      const next = new Set(picked);
+                      if (on) next.add(exercise.id);
+                      else next.delete(exercise.id);
+                      setPicked(next);
+                    }}
+                  />
+                );
+              }
               // Right answers exist only for automatically checked types; answers to reset for any answerable one.
               const checkable = isAutoChecked(exercise.type);
               const answerable = checkMode(exercise.type) !== null;
@@ -343,6 +364,23 @@ export function TeacherClassLesson({
         </div>
       </div>
       <BoardDialog lessonId={lessonId} open={boardOpen} onOpenChange={setBoardOpen} />
+      {inClass && (
+        <SendHomeworkDialog
+          open={sending}
+          onOpenChange={setSending}
+          classId={classId}
+          lessonId={lessonId}
+          chosen={homeworkIds.filter((id) => picked.has(id))}
+          hasHomework={homeworkIds.length > 0}
+          builderHref={homework.builderHref}
+          students={students}
+          sent={homework.sent}
+          onSent={() => {
+            setPicked(new Set());
+            setSending(false);
+          }}
+        />
+      )}
     </BoardsProvider>
     </ClassMarksProvider>
   );

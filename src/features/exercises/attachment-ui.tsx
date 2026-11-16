@@ -1,6 +1,6 @@
 "use client";
 
-import { AudioLines, Image as ImageIcon, Paperclip, Trash2, Video } from "lucide-react";
+import { AudioLines, Image as ImageIcon, Paperclip, Trash2, Type, Video } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,10 +14,13 @@ import { AudioEditor } from "./types/audio/editor";
 import { AudioViewer } from "./types/audio/viewer";
 import { ImageEditor } from "./types/image/editor";
 import { ImageViewer } from "./types/image/viewer";
+import { TextEditor } from "./types/text/editor";
+import { TextViewer } from "./types/text/viewer";
 import { VideoEditor } from "./types/video/editor";
 import { VideoViewer } from "./types/video/viewer";
 
 const EMPTY: Record<AttachmentKind, Attachment> = {
+  text: { kind: "text", doc: { type: "doc", content: [{ type: "paragraph" }] } },
   image: { kind: "image", images: [] },
   audio: { kind: "audio", file: null },
   video: { kind: "video", video: null },
@@ -44,6 +47,10 @@ export function AttachmentEditor({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
+          <DropdownMenuItem onSelect={() => onChange(EMPTY.text)}>
+            <Type aria-hidden="true" />
+            {tt("text.name")}
+          </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => onChange(EMPTY.image)}>
             <ImageIcon aria-hidden="true" />
             {tt("image.name")}
@@ -73,6 +80,9 @@ export function AttachmentEditor({
           {t("remove")}
         </Button>
       </div>
+      {value.kind === "text" && (
+        <TextEditor value={{ content: { doc: value.doc }, key: null }} onChange={(v) => onChange({ kind: "text", doc: v.content.doc })} />
+      )}
       {value.kind === "image" && (
         <ImageEditor
           value={{ content: { images: value.images, caption: "" }, key: null }}
@@ -98,9 +108,10 @@ export function AttachmentEditor({
   );
 }
 
-/** Student side: the picture / audio / video shown above the questions. */
+/** Student side: the text / picture / audio / video shown above the questions. */
 export function AttachmentViewer({ value }: { value: Attachment | null | undefined }) {
   if (!value) return null;
+  if (value.kind === "text") return <TextViewer content={{ doc: value.doc }} />;
   if (value.kind === "image") return <ImageViewer content={{ images: value.images, caption: "" }} />;
   if (value.kind === "audio") return <AudioViewer content={{ file: value.file, caption: "" }} />;
   return <VideoViewer content={{ video: value.video, caption: "" }} />;

@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { createClient } from "@supabase/supabase-js";
+import { createTempStudent, removeTempStudents } from "./temp-student";
 import { expect as baseExpect, test, type BrowserContextOptions, type Page } from "@playwright/test";
 
 // The rest of the live lesson: tools column, the shared whiteboard, the timer,
@@ -42,6 +43,7 @@ test.describe("lesson extras", () => {
   test.setTimeout(240_000);
   const cleanup = { courses: [] as string[], classes: [] as string[], files: [] as string[] };
   test.afterAll(async () => {
+    await removeTempStudents();
     if (!secret || !url) return;
     const db = admin();
     if (cleanup.classes.length) await db.from("classes").delete().in("id", cleanup.classes);
@@ -55,7 +57,8 @@ test.describe("lesson extras", () => {
     const options = testInfo.project.use as BrowserContextOptions;
     const stamp = `${Date.now()}-${testInfo.project.name}`;
     const db = admin();
-    const [teacherId, studentId] = await Promise.all([userId(teacher.email!), userId(student.email!)]);
+    const pupil = await createTempStudent(stamp);
+    const [teacherId, studentId] = [await userId(teacher.email!), pupil.id];
 
     // A PDF in storage.
     const pdfPath = `${teacherId}/${crypto.randomUUID()}.pdf`;
@@ -92,7 +95,7 @@ test.describe("lesson extras", () => {
     // The student is on the dashboard; the teacher makes the lesson current
     // → the student gets "A lesson is on — Join".
     const sp = await (await browser.newContext(options)).newPage();
-    await login(sp, student.email!, student.password!);
+    await login(sp, pupil.email, pupil.password);
     await login(page, teacher.email!, teacher.password!);
     await page.goto(lessonUrl);
     await page.getByRole("button", { name: "Сделать текущим" }).click();
@@ -115,12 +118,15 @@ test.describe("lesson extras", () => {
     await page.getByRole("button", { name: "Старт" }).click();
     await page.keyboard.press("Escape");
     await expect(sp.getByRole("button", { name: /Таймер: осталось 0:\d\d/ }).first()).toBeVisible();
+    // Both pages finished updating after the timer started.
+    await expect(tools.getByRole("button", { name: /Таймер: осталось/ })).toBeVisible();
 
     // The whiteboard: the teacher opens it (it opens for the student too) and draws.
     await tools.getByRole("button", { name: "Доска урока" }).click();
     const teacherBoard = page.getByRole("dialog", { name: "Доска урока" });
     await expect(sp.getByRole("dialog", { name: "Доска урока" })).toBeVisible();
     await scribble(page, teacherBoard.getByRole("img", { name: "Доска урока" }));
+    await expect(teacherBoard.locator(`[data-board="lesson:${lesson!.id}"] path`)).toHaveCount(1);
     const studentBoard = sp.locator(`[data-board="lesson:${lesson!.id}"]`);
     await expect(studentBoard.locator("path")).toHaveCount(1);
 

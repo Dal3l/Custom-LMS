@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { createTempStudent, removeTempStudents } from "./temp-student";
 import { expect as baseExpect, test, type BrowserContextOptions, type Page } from "@playwright/test";
 
 // Teacher-checked answers in a class lesson: an open answer with a word counter
@@ -33,6 +34,7 @@ test.describe("teacher-checked answers", () => {
   test.setTimeout(180_000);
   const cleanup = { courses: [] as string[], classes: [] as string[] };
   test.afterAll(async () => {
+    await removeTempStudents();
     if (!secret || !url) return;
     const db = admin();
     for (const id of cleanup.classes) {
@@ -50,7 +52,8 @@ test.describe("teacher-checked answers", () => {
     const options = testInfo.project.use as BrowserContextOptions;
     const stamp = `${Date.now()}-${testInfo.project.name}`;
     const db = admin();
-    const [teacherId, studentId] = await Promise.all([userId(teacher.email!), userId(student.email!)]);
+    const pupil = await createTempStudent(stamp);
+    const [teacherId, studentId] = [await userId(teacher.email!), pupil.id];
     const { data: course } = await db.from("courses").insert({ owner_id: teacherId, title: `E2E ручная ${stamp}`, language: "en" }).select("id").single();
     cleanup.courses.push(course!.id);
     const { data: mod } = await db.from("modules").insert({ course_id: course!.id, title: "Unit", position: 0 }).select("id").single();
@@ -67,7 +70,7 @@ test.describe("teacher-checked answers", () => {
     const lessonUrl = `/ru/classes/${cls!.id}/lessons/${lesson!.id}`;
 
     const sp = await (await browser.newContext({ ...options, permissions: ["microphone"] })).newPage();
-    await login(sp, student.email!, student.password!);
+    await login(sp, pupil.email, pupil.password);
     await sp.goto(lessonUrl);
 
     // Open answer: the counter shows the minimum; the answer is saved.

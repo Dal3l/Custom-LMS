@@ -130,6 +130,41 @@ export function BoardsProvider({
     };
   }, [supabase, classId, userId, put]);
 
+  // Safety net: boards on screen are compared with the server every few seconds,
+  // so a live message lost on a weak connection still shows up.
+  const shownBoards = [...boards.keys()].join("|");
+  useEffect(() => {
+    if (!shownBoards) return;
+    const keys = shownBoards.split("|");
+    const timer = setInterval(() => {
+      if (document.visibilityState === "hidden") return;
+      for (const board of keys) {
+        void supabase
+          .from("board_items")
+          .select("id, board, author_id, data, created_at")
+          .eq("class_id", classId)
+          .eq("board", board)
+          .order("created_at")
+          .then(({ data, error }) => {
+            if (error || !data) return;
+            const fresh = data.map(toItem).filter((i): i is BoardItem => i !== null);
+            setBoards((prev) => {
+              const current = prev.get(board);
+              if (!current) return prev;
+              // Keep drawings still being saved here (temporary ids).
+              const pending = current.filter((i) => i.id.startsWith("local-"));
+              const same =
+                pending.length === 0 &&
+                current.length === fresh.length &&
+                current.every((i, n) => i.id === fresh[n]!.id && JSON.stringify(i.data) === JSON.stringify(fresh[n]!.data));
+              return same ? prev : new Map(prev).set(board, [...fresh, ...pending]);
+            });
+          });
+      }
+    }, 8000);
+    return () => clearInterval(timer);
+  }, [shownBoards, supabase, classId]);
+
   const api = useMemo<BoardsApi>(
     () => ({
       userId,

@@ -45,6 +45,7 @@ export function LessonPlayer({
   resets,
   stickyTop,
   tools,
+  extraGroup,
 }: {
   /** the language the course teaches */
   language: string;
@@ -76,6 +77,11 @@ export function LessonPlayer({
   stickyTop?: React.ReactNode;
   /** Lesson tools (pointer, board, timer…): a column on the left on wide screens. */
   tools?: React.ReactNode;
+  /**
+   * A second group of sections under the lesson's (the teacher's view of the
+   * lesson's homework). Students' class answers don't apply there.
+   */
+  extraGroup?: { label: string; sections: StudentSection[] };
 }) {
   const t = useTranslations("player");
   const [queue] = useState(() => new SaveQueue());
@@ -97,12 +103,16 @@ export function LessonPlayer({
       window.removeEventListener("pagehide", flush);
     };
   }, [classAnswers, queue]);
+  const extra = extraGroup?.sections ?? [];
   const [activeId, setActiveId] = useState(
-    sections.find((s) => s.id === initialSectionId)?.id ?? sections[0]?.id ?? null,
+    [...sections, ...extra].find((s) => s.id === initialSectionId)?.id ?? sections[0]?.id ?? extra[0]?.id ?? null,
   );
-  const index = sections.findIndex((s) => s.id === activeId);
-  const active = index >= 0 ? sections[index]! : null;
-  const next = index >= 0 ? sections[index + 1] : undefined;
+  // The open section is in the lesson or in the second group; "next" stays in its group.
+  const inExtra = extra.some((s) => s.id === activeId);
+  const group = inExtra ? extra : sections;
+  const index = group.findIndex((s) => s.id === activeId);
+  const active = index >= 0 ? group[index]! : null;
+  const next = index >= 0 ? group[index + 1] : undefined;
 
   // A reset exercise must not save its old answer after all.
   const resetKey = JSON.stringify(resets ?? {});
@@ -120,7 +130,7 @@ export function LessonPlayer({
   // "Show to students": switch section, then scroll to the exercise and flash it.
   const [pendingFocus, setPendingFocus] = useState<string | null>(null);
   const [lastFocus, setLastFocus] = useState<number | null>(null);
-  if (focus && focus.nonce !== lastFocus && sections.some((s) => s.id === focus.sectionId)) {
+  if (focus && focus.nonce !== lastFocus && [...sections, ...extra].some((s) => s.id === focus.sectionId)) {
     setLastFocus(focus.nonce);
     setActiveId(focus.sectionId);
     setPendingFocus(focus.exerciseId);
@@ -189,11 +199,29 @@ export function LessonPlayer({
                 {i + 1}. {s.title}
               </Button>
             ))}
+            {extraGroup && extra.length > 0 && (
+              <>
+                <span className="shrink-0 self-center text-xs font-medium text-muted-foreground">{extraGroup.label}:</span>
+                {extra.map((s, i) => (
+                  <Button
+                    key={s.id}
+                    size="sm"
+                    variant={s.id === activeId ? "default" : "outline"}
+                    className="shrink-0 rounded-full"
+                    aria-current={s.id === activeId ? "true" : undefined}
+                    onClick={() => select(s.id)}
+                  >
+                    {i + 1}. {s.title}
+                  </Button>
+                ))}
+              </>
+            )}
           </nav>
         </div>
       </div>
 
       <h2 className="text-xl font-semibold">
+        {inExtra && extraGroup && <span className="mr-2 text-base font-medium text-primary">{extraGroup.label} ·</span>}
         <span className="text-muted-foreground tabular-nums">{index + 1}.</span> {active.title}
       </h2>
 
@@ -207,12 +235,12 @@ export function LessonPlayer({
               key={`${exercise.id}:${resetSignal}:${resets?.[exercise.id] ?? 0}`}
               exercise={exercise}
               number={exerciseNumber(index, i)}
-              review={review ? { saved: review[exercise.id] } : undefined}
+              review={review && !inExtra ? { saved: review[exercise.id] } : undefined}
               menu={exerciseMenu?.(exercise, active.id)}
               solution={solutions?.[exercise.id]}
               pointer={pointer?.exerciseId === exercise.id ? pointer : null}
               persist={
-                classAnswers
+                classAnswers && !inExtra
                   ? { classId: classAnswers.classId, homeworkId: classAnswers.homeworkId, saved: classAnswers.saved[exercise.id], queue }
                   : undefined
               }
@@ -253,6 +281,27 @@ export function LessonPlayer({
             </button>
           ))}
         </nav>
+        {extraGroup && (
+          <nav aria-label={extraGroup.label} className="mt-3 flex flex-col gap-1 rounded-2xl border border-dashed bg-card p-2">
+            <p className="px-2 pt-1 pb-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">{extraGroup.label}</p>
+            {extra.length === 0 && <p className="px-2 pb-1 text-sm text-muted-foreground">{t("noExtraSections")}</p>}
+            {extra.map((s, i) => (
+              <button
+                key={s.id}
+                type="button"
+                aria-current={s.id === activeId ? "true" : undefined}
+                onClick={() => select(s.id)}
+                className={cn(
+                  "flex items-start gap-2 rounded-lg px-2 py-1.5 text-left text-sm transition-colors hover:bg-accent",
+                  s.id === activeId && "bg-primary text-primary-foreground hover:bg-primary/90",
+                )}
+              >
+                <span className="tabular-nums opacity-70">{i + 1}.</span>
+                <span className="min-w-0 flex-1 break-words">{s.title}</span>
+              </button>
+            ))}
+          </nav>
+        )}
       </aside>
     </div>
     </AnswerPlaceContext.Provider>
