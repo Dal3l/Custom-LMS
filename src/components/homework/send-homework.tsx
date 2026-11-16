@@ -167,6 +167,11 @@ export function SendHomeworkDialog({
                       {h.dueAt && ` · ${t("dueOn", { date: date(h.dueAt) })}`}
                     </span>
                   </span>
+                  {h.firstStudentId && (
+                    <Button asChild variant="outline" size="sm">
+                      <Link href={`/homework/${h.id}/${h.firstStudentId}`}>{t("openAnswers")}</Link>
+                    </Button>
+                  )}
                   <Button type="button" variant="ghost" size="icon-sm" aria-label={t("remove")} title={t("remove")} disabled={pending} onClick={() => remove(h.id)}>
                     <Trash2 aria-hidden="true" />
                   </Button>

@@ -5,7 +5,9 @@ import { expect as baseExpect, test, type BrowserContextOptions, type Page } fro
 // Homework end to end: the lesson's homework part → the teacher sends it from
 // the class lesson with a due date → the student finds it under "Homework",
 // answers (checked right away, saved), hands it in → read-only; the teacher sees
-// "handed in 1 of 1". Also: the student can't see homework before it's sent.
+// "handed in 1 of 1", opens the answers (tries, first try), leaves a comment,
+// marks it reviewed; the student sees the comment and "Reviewed". Also: the
+// student can't see homework before it's sent.
 const teacher = { email: process.env.E2E_TEACHER_EMAIL, password: process.env.E2E_TEACHER_PASSWORD };
 const student = { email: process.env.E2E_STUDENT_EMAIL, password: process.env.E2E_STUDENT_PASSWORD };
 const secret = process.env.SUPABASE_SECRET_KEY;
@@ -179,6 +181,41 @@ test.describe("homework", () => {
     await page.reload();
     await page.getByRole("button", { name: "Домашка" }).filter({ visible: true }).click();
     await expect(page.getByRole("dialog", { name: "Отправить домашку" }).getByText("Сдали: 1 из 1")).toBeVisible();
+
+    // Review: from the lesson to the student's answers — tries, first try, comment.
+    await page.getByRole("dialog", { name: "Отправить домашку" }).getByRole("link", { name: "Открыть ответы" }).click();
+    await expect(page).toHaveURL(new RegExp(`/ru/homework/${hw!.id}/${studentId}`));
+    await expect(page.getByText("Ждёт проверки", { exact: true })).toBeVisible();
+    await expect(page.getByText("2 попытки")).toBeVisible();
+    await expect(page.getByText("с первого раза с ошибками")).toBeVisible();
+    await page.getByText("Первая попытка").click();
+    await expect(page.getByText("Penguins swim very well")).toBeVisible();
+    const comments = page.getByRole("textbox", { name: "Комментарий учителя" });
+    await expect(comments).toHaveCount(2);
+    await comments.last().fill("Nice! Add one more sentence.");
+    await expect(page.getByText("Сохранено")).toBeVisible();
+    await expect
+      .poll(async () => (await db.from("homework_comments").select("body").eq("homework_id", hw!.id)).data?.map((c) => c.body))
+      .toEqual(["Nice! Add one more sentence."]);
+
+    // The teacher's homework list: handed-in work waits for a check.
+    await page.goto("/ru/homework");
+    const row = page.getByRole("link", { name: /Открыть ответы: .*Animals/ }).filter({ hasText: `домашка ${stamp}` });
+    await expect(row).toContainText("Ждёт проверки");
+    await row.click();
+    await page.getByRole("button", { name: "Отметить проверенной" }).click();
+    await expect(page.getByText("Домашка отмечена проверенной")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Снять отметку «Проверено»" })).toBeVisible();
+    await page.goto("/ru/homework");
+    await expect(row).toContainText("Проверено");
+
+    // The student sees the comment next to the exercise and "Reviewed".
+    await sp.goto(`${lessonUrl}?tab=homework`);
+    await expect(sp.getByRole("note", { name: "Комментарий учителя" })).toHaveText("Nice! Add one more sentence.");
+    await expect(sp.getByText("Учитель проверил домашку.")).toBeVisible();
+    await sp.goto("/ru/homework");
+    await expect(sp.getByRole("link", { name: new RegExp(`домашка ${stamp}`) }).filter({ visible: true })).toContainText("Проверено");
+
     await sp.context().close();
   });
 });
