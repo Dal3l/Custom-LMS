@@ -898,6 +898,93 @@ export type Database = {
           },
         ]
       }
+      vocabulary: {
+        Row: {
+          added_by: string | null
+          audio_url: string | null
+          class_id: string | null
+          course_id: string | null
+          created_at: string
+          example: string
+          id: string
+          language: string
+          lesson_id: string | null
+          student_id: string
+          term: string
+          transcription: string
+          translation: string
+          updated_at: string
+        }
+        Insert: {
+          added_by?: string | null
+          audio_url?: string | null
+          class_id?: string | null
+          course_id?: string | null
+          created_at?: string
+          example?: string
+          id?: string
+          language: string
+          lesson_id?: string | null
+          student_id: string
+          term: string
+          transcription?: string
+          translation?: string
+          updated_at?: string
+        }
+        Update: {
+          added_by?: string | null
+          audio_url?: string | null
+          class_id?: string | null
+          course_id?: string | null
+          created_at?: string
+          example?: string
+          id?: string
+          language?: string
+          lesson_id?: string | null
+          student_id?: string
+          term?: string
+          transcription?: string
+          translation?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vocabulary_added_by_fkey"
+            columns: ["added_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vocabulary_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vocabulary_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vocabulary_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vocabulary_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

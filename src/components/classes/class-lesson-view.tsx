@@ -46,7 +46,8 @@ import { LessonPicker } from "./lesson-picker";
 import { HomeworkFooter, HomeworkPick, receivedBy, SendHomeworkDialog } from "@/components/homework/send-homework";
 import type { SentHomework } from "@/features/homework/queries";
 import { GroupOverview } from "./group-overview";
-import { BoardDialog, BoardTool, DictionaryTool, TimerTool, ToolButton } from "./lesson-tools";
+import { BoardDialog, BoardTool, TimerTool, ToolButton } from "./lesson-tools";
+import { DictionaryTool, WordAdderProvider } from "@/components/vocabulary/dictionary-tool";
 import { LiveStudentsBar } from "./live-students-bar";
 
 type CommonProps = {
@@ -237,6 +238,7 @@ export function TeacherClassLesson({
   }
 
   return (
+    <WordAdderProvider place={{ language: props.language, courseId, lessonId, classId }} students={students}>
     <ClassMarksProvider classId={classId} userId={userId} otherUserId={viewing} isTeacher initial={props.marks}>
     <BoardsProvider classId={classId} userId={userId} isTeacher otherUserId={viewing}>
       <div className="flex flex-col gap-4">
@@ -378,6 +380,7 @@ export function TeacherClassLesson({
       )}
     </BoardsProvider>
     </ClassMarksProvider>
+    </WordAdderProvider>
   );
 }
 
@@ -447,6 +450,7 @@ export function StudentClassLesson({
   useEffect(() => () => setLocation?.({ classId, lessonId: null, sectionId: null }), [setLocation, classId]);
 
   return (
+    <WordAdderProvider place={{ language: props.language, courseId: props.courseId, lessonId, classId }}>
     <ClassMarksProvider classId={classId} userId={userId} otherUserId={teacherId} isTeacher={false} initial={props.marks}>
     <BoardsProvider classId={classId} userId={userId} isTeacher={false} otherUserId={teacherId}>
       {studentLive?.status === "offline" && <StudentOffline />}
@@ -472,5 +476,6 @@ export function StudentClassLesson({
       <BoardDialog lessonId={lessonId} open={boardOpen} onOpenChange={setBoardOpen} />
     </BoardsProvider>
     </ClassMarksProvider>
+    </WordAdderProvider>
   );
 }
