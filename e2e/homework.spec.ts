@@ -120,7 +120,8 @@ test.describe("homework", () => {
     await expect(item).toContainText("Новое");
     await item.click();
     await expect(tabs.getByRole("link", { name: "Домашка" })).toHaveAttribute("aria-current", "page");
-    await expect(sp.getByText("Выполнено 0 из 2").filter({ visible: true })).toBeVisible();
+    // No "done X of Y" while working (it would be out of date); just the work.
+    await expect(sp.getByText(/Выполнено \d из 2/).filter({ visible: true })).toHaveCount(0);
     await expect(sp.getByRole("heading", { name: "About penguins" })).toBeVisible();
     await expect(sp.locator("strong", { hasText: "Penguins" })).toBeVisible();
 
@@ -141,7 +142,6 @@ test.describe("homework", () => {
       .toContain("Penguins swim very well");
     await sp.reload();
     await expect(sp.getByRole("textbox", { name: "Ваш ответ" })).toHaveValue("Penguins swim very well");
-    await expect(sp.getByText("Выполнено 2 из 2").filter({ visible: true })).toBeVisible();
 
     // The tries are counted, the first one kept for the teacher.
     const { data: saved } = await db.from("homework_answers").select("attempts, first_result").eq("exercise_id", tf!.id).single();
@@ -150,8 +150,12 @@ test.describe("homework", () => {
 
     // Hand in → read-only; the server refuses later changes.
     await sp.getByRole("button", { name: "Сдать" }).click();
+    // Just "are you sure?", no counting.
+    await expect(sp.getByRole("alertdialog")).toContainText("После сдачи ответы уже нельзя будет изменить.");
+    await expect(sp.getByRole("alertdialog")).not.toContainText("Выполнено");
     await sp.getByRole("alertdialog").getByRole("button", { name: "Сдать" }).click();
     await expect(sp.getByText("Домашка сдана", { exact: true })).toBeVisible();
+    await expect(sp.getByText("Выполнено 2 из 2").filter({ visible: true })).toBeVisible();
     await expect(sp.getByRole("textbox", { name: "Ваш ответ" })).toHaveCount(0);
     await expect(sp.getByText("Penguins swim very well")).toBeVisible();
     const { data: hw } = await db.from("homeworks").select("id").eq("class_id", cls!.id).single();

@@ -885,7 +885,6 @@
     "handInHint": "Your answers are saved automatically. When you're done, press Hand in — your teacher will see your work.",
     "handInTitle": "Hand in the homework?",
     "handInText": "After handing in, the answers can't be changed.",
-    "handInNotAll": "{done} of {total} exercises done. After handing in, the answers can't be changed.",
     "cancel": "Cancel",
     "handedInToast": "Homework handed in",
     "handInFailed": "Couldn't hand it in. Check the internet and try again.",

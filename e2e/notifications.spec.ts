@@ -76,13 +76,13 @@ test.describe("notifications", () => {
     await login(page, teacher.email!, teacher.password!);
     const teacherBell = page.getByRole("button", { name: /^Уведомления/ });
     await expect(teacherBell).toBeVisible();
+    // Typed and handed in right away: the answer is saved before handing in.
     await sp.getByRole("textbox", { name: "Ваш ответ" }).fill("Bells ring");
-    await expect
-      .poll(async () => (await db.from("homework_answers").select("answer").eq("student_id", pupil.id)).data?.length)
-      .toBe(1);
     await sp.getByRole("button", { name: "Сдать" }).click();
     await sp.getByRole("alertdialog").getByRole("button", { name: "Сдать" }).click();
     await expect(sp.getByText("Домашка сдана", { exact: true })).toBeVisible();
+    const { data: kept } = await db.from("homework_answers").select("answer").eq("student_id", pupil.id).single();
+    expect(JSON.stringify(kept!.answer)).toContain("Bells ring");
     await expect(teacherBell).toHaveAccessibleName(/Уведомления: \d+ нов/);
     await teacherBell.click();
     const handedIn = page.getByRole("link", { name: new RegExp(`Ученик ${stamp} сдал\\(а\\) домашку «${lessonTitle}»`) });
