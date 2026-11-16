@@ -14,6 +14,7 @@ import { getClassPage } from "@/features/classes/queries";
 import { idSchema } from "@/features/classes/schemas";
 import { getClassLessonAnswers, getMyClassAnswers } from "@/features/lessons/answers";
 import { getMyLessonHomeworks, listLessonHomeworks } from "@/features/homework/queries";
+import { markHomeworkNotificationsRead } from "@/features/notifications/actions";
 import { revealedSolutions } from "@/features/lessons/grade";
 import { getStudentLesson } from "@/features/lessons/queries";
 import { Link } from "@/i18n/navigation";
@@ -60,6 +61,8 @@ export default async function ClassLessonPage({
     cls.isTeacher ? Promise.resolve([]) : getMyLessonHomeworks(classId, lessonId, profile.id),
   ]);
   const showHomework = !cls.isTeacher && myHomeworks.length > 0 && tab === "homework";
+  // Seen now: the notifications about this homework (new, comment, reviewed).
+  if (showHomework) await markHomeworkNotificationsRead(myHomeworks.map((h) => h.id), profile.id);
   const common = {
     classId,
     lessonId,

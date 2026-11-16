@@ -2,6 +2,8 @@ import { setRequestLocale } from "next-intl/server";
 import { AppSidebar } from "@/components/app-shell/app-sidebar";
 import { UserMenu } from "@/components/app-shell/user-menu";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { NotificationBell } from "@/components/notifications/notification-bell";
+import { countUnreadNotifications } from "@/features/notifications/actions";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import type { Locale } from "@/i18n/routing";
 import { listStudentLiveClasses } from "@/features/classes/queries";
@@ -12,8 +14,9 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
   const { locale } = (await params) as { locale: Locale };
   setRequestLocale(locale);
   const profile = await requireProfile(locale);
-  const [user, liveClasses] = await Promise.all([
+  const [user, unread, liveClasses] = await Promise.all([
     getUser(),
+    countUnreadNotifications(),
     profile.role === "student" ? listStudentLiveClasses(profile.id) : Promise.resolve(null),
   ]);
   const name = profile.full_name || user?.email || "";
@@ -28,6 +31,7 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
           <div id="page-header-slot" className="flex min-w-0 flex-1 items-center gap-2" />
           <div className="ml-auto flex shrink-0 items-center gap-1">
             <LanguageSwitcher signedIn />
+            <NotificationBell userId={profile.id} initialUnread={unread} />
             <UserMenu name={name} role={profile.role} />
           </div>
         </header>
