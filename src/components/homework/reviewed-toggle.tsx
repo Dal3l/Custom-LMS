@@ -27,12 +27,14 @@ export function ReviewedToggle({
       const r = await setHomeworkReviewed(homeworkId, studentId, !reviewed);
       if (!r.ok) return void toast.error(t("failed"));
       toast.success(reviewed ? t("unmarkedToast") : t("markedToast"));
-      router.refresh();
+      // Checked: back to the list, to the next work waiting for a check.
+      if (reviewed) router.refresh();
+      else router.push("/homework");
     });
   }
 
   return (
-    <Button variant={reviewed ? "outline" : "default"} onClick={toggle} disabled={pending}>
+    <Button size={reviewed ? "default" : "lg"} variant={reviewed ? "outline" : "default"} onClick={toggle} disabled={pending}>
       {pending ? (
         <Loader2 className="animate-spin" aria-hidden="true" />
       ) : reviewed ? (

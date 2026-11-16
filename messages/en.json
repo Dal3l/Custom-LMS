@@ -791,7 +791,8 @@
     "studentOffline": "No connection — reconnecting… Your answers will be saved when the internet is back.",
     "lessonOn": "A lesson is on in “{name}”",
     "join": "Join",
-    "hide": "Hide"
+    "hide": "Hide",
+    "exercise": "Exercise"
   },
   "board": {
     "lessonBoard": "Lesson whiteboard",
@@ -856,7 +857,6 @@
     "tabs": "Lesson and homework",
     "lessonTab": "Lesson",
     "homeworkTab": "Homework",
-    "tool": "Homework",
     "sendTitle": "Send homework",
     "sendHint": "The ticked exercises from this lesson's Homework go to your students.",
     "noHomeworkPart": "This lesson has no homework yet. Add it in the lesson builder: the Homework tab.",
@@ -919,7 +919,21 @@
       "unmarkedToast": "Mark removed",
       "failed": "Something went wrong. Please try again.",
       "noAnswer": "No answer",
-      "reviewedNote": "Your teacher has reviewed the homework."
-    }
+      "reviewedNote": "Your teacher has reviewed the homework.",
+      "markHint": "Looked through every exercise? Mark the homework as reviewed — the student will see “Reviewed”.",
+      "reviewedHint": "The homework is marked as reviewed."
+    },
+    "sentAll": "Sent",
+    "sentSome": "Sent to {done} of {total}",
+    "sentSummary": "Sent homework · {done} of {total} handed in",
+    "alreadyGot": "already got it",
+    "listViews": "Which homework to show",
+    "current": "Current",
+    "archive": "Archive",
+    "byClass": "Class",
+    "allClasses": "All classes",
+    "archiveHint": "Homework reviewed more than a week ago and homework not handed in within a month. Nothing is deleted — students still see it in the lesson.",
+    "archiveEmptyTitle": "The archive is empty",
+    "archiveEmptyText": "Homework moves here a week after it was reviewed."
   }
 }

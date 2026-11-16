@@ -1,10 +1,9 @@
 "use client";
 
-import { ClipboardList, Loader2, Send, Trash2 } from "lucide-react";
+import { CircleCheck, ClipboardList, Loader2, Send, Trash2 } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
-import { ToolButton } from "@/components/classes/lesson-tools";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -15,24 +14,76 @@ import { deleteHomework, sendHomework } from "@/features/homework/actions";
 import type { SentHomework } from "@/features/homework/queries";
 import { Link, useRouter } from "@/i18n/navigation";
 
-/** The "Homework" button in the lesson's tools column. */
-export function HomeworkToolButton({ onOpen }: { onOpen: () => void }) {
+/** Which students already got this exercise in some homework of the lesson. */
+export function receivedBy(sent: SentHomework[], exerciseId: string): Set<string> {
+  const ids = new Set<string>();
+  for (const h of sent) if (h.exerciseIds.includes(exerciseId)) for (const s of h.studentIds) ids.add(s);
+  return ids;
+}
+
+/**
+ * "To homework": a check mark on each exercise of the lesson's Homework part,
+ * and whether it was already sent (to everyone or to some of the students).
+ */
+export function HomeworkPick({
+  checked,
+  onChange,
+  sentTo,
+  students,
+}: {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  /** how many students already got this exercise */
+  sentTo: number;
+  students: number;
+}) {
   const t = useTranslations("homework");
   return (
-    <ToolButton label={t("tool")} onClick={onOpen}>
-      <ClipboardList aria-hidden="true" />
-    </ToolButton>
+    <span className="ml-auto flex shrink-0 items-center gap-2">
+      {sentTo > 0 && (
+        <span className="flex items-center gap-1 text-xs text-emerald-700">
+          <CircleCheck className="size-3.5" aria-hidden="true" />
+          {sentTo >= students ? t("sentAll") : t("sentSome", { done: sentTo, total: students })}
+        </span>
+      )}
+      <Label className="flex cursor-pointer items-center gap-2 rounded-lg border px-2 py-1 text-sm font-normal">
+        <Checkbox checked={checked} onCheckedChange={(v) => onChange(v === true)} />
+        {t("pick")}
+      </Label>
+    </span>
   );
 }
 
-/** "To homework": a check mark on each exercise of the lesson's Homework part. */
-export function HomeworkPick({ checked, onChange }: { checked: boolean; onChange: (checked: boolean) => void }) {
+/**
+ * Under the Homework sections: "Send homework · N" for the ticked exercises,
+ * and, once something was sent, a button with how many handed it in that
+ * opens the sent homework (answers, cancel).
+ */
+export function HomeworkFooter({
+  picked,
+  sent,
+  onOpen,
+}: {
+  picked: number;
+  sent: SentHomework[];
+  onOpen: () => void;
+}) {
   const t = useTranslations("homework");
+  const total = sent.reduce((n, h) => n + h.students, 0);
+  const done = sent.reduce((n, h) => n + h.submitted, 0);
   return (
-    <Label className="ml-auto flex shrink-0 cursor-pointer items-center gap-2 rounded-lg border px-2 py-1 text-sm font-normal">
-      <Checkbox checked={checked} onCheckedChange={(v) => onChange(v === true)} />
-      {t("pick")}
-    </Label>
+    <>
+      {sent.length > 0 && (
+        <Button variant="outline" onClick={onOpen}>
+          <ClipboardList aria-hidden="true" />
+          {t("sentSummary", { done, total })}
+        </Button>
+      )}
+      <Button onClick={onOpen} variant={picked === 0 && sent.length > 0 ? "secondary" : "default"}>
+        <Send aria-hidden="true" />
+        {t("sendPicked", { count: picked })}
+      </Button>
+    </>
   );
 }
 
@@ -69,7 +120,15 @@ export function SendHomeworkDialog({
   const t = useTranslations("homework");
   const format = useFormatter();
   const router = useRouter();
-  const [to, setTo] = useState<Set<string>>(() => new Set(students.map((s) => s.id)));
+  // Who already has every ticked exercise: not ticked by default, marked "already got it".
+  const received = students.filter((s) => chosen.length > 0 && chosen.every((e) => receivedBy(sent, e).has(s.id))).map((s) => s.id);
+  const fresh = () => new Set(students.map((s) => s.id).filter((id) => !received.includes(id)));
+  const [to, setTo] = useState<Set<string>>(fresh);
+  const [wasOpen, setWasOpen] = useState(open);
+  if (open !== wasOpen) {
+    setWasOpen(open);
+    if (open) setTo(fresh());
+  }
   const [due, setDue] = useState("");
   const [pending, startTransition] = useTransition();
   const date = (iso: string) => format.dateTime(new Date(iso), { dateStyle: "medium", timeStyle: "short" });
@@ -120,7 +179,7 @@ export function SendHomeworkDialog({
             <p className="rounded-lg bg-muted px-3 py-2 text-sm">
               {chosen.length ? t("chosenCount", { count: chosen.length }) : t("chooseFirst")}
             </p>
-            {students.length > 1 && (
+            {(students.length > 1 || received.length > 0) && (
               <section className="flex flex-col gap-2" aria-label={t("to")}>
                 <h3 className="text-sm font-medium">{t("to")}</h3>
                 {students.map((s) => (
@@ -135,6 +194,7 @@ export function SendHomeworkDialog({
                       }}
                     />
                     {s.fullName || t("noName")}
+                    {received.includes(s.id) && <span className="text-xs text-muted-foreground">· {t("alreadyGot")}</span>}
                   </Label>
                 ))}
               </section>

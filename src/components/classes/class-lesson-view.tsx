@@ -11,7 +11,6 @@ import {
   MousePointer2,
   RotateCcw,
   ScanEye,
-  Send,
   Undo2,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -44,7 +43,7 @@ import { useStudentLive } from "@/features/live/student-live";
 import { useTeacherLive } from "@/features/live/teacher-live";
 import { useRouter } from "@/i18n/navigation";
 import { LessonPicker } from "./lesson-picker";
-import { HomeworkPick, HomeworkToolButton, SendHomeworkDialog } from "@/components/homework/send-homework";
+import { HomeworkFooter, HomeworkPick, receivedBy, SendHomeworkDialog } from "@/components/homework/send-homework";
 import type { SentHomework } from "@/features/homework/queries";
 import { GroupOverview } from "./group-overview";
 import { BoardDialog, BoardTool, DictionaryTool, TimerTool, ToolButton } from "./lesson-tools";
@@ -205,12 +204,7 @@ export function TeacherClassLesson({
 
   function footer(section: StudentSection, isLast: boolean) {
     if (homeworkSectionIds.has(section.id)) {
-      return inClass ? (
-        <Button onClick={() => setSending(true)}>
-          <Send aria-hidden="true" />
-          {th("sendPicked", { count: picked.size })}
-        </Button>
-      ) : null;
+      return inClass ? <HomeworkFooter picked={picked.size} sent={homework.sent} onOpen={() => setSending(true)} /> : null;
     }
     if (!inClass) return null;
     const sectionDone = done.includes(section.id);
@@ -290,7 +284,6 @@ export function TeacherClassLesson({
                   />
                 )}
                 {inClass && <TimerTool endsAt={props.timerEndsAt} teacher={{ classId, lessonId }} />}
-                {inClass && <HomeworkToolButton onOpen={() => setSending(true)} />}
                 <DictionaryTool />
               </>
             }
@@ -312,6 +305,8 @@ export function TeacherClassLesson({
               if (homeworkSectionIds.has(sectionId)) {
                 return (
                   <HomeworkPick
+                    sentTo={receivedBy(homework.sent, exercise.id).size}
+                    students={students.length}
                     checked={picked.has(exercise.id)}
                     onChange={(on) => {
                       const next = new Set(picked);

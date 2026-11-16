@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { homeworkStatus, sortForTeacher, sortHomeworks } from "@/features/homework/status";
+import { homeworkStatus, isArchived, sortForTeacher, sortHomeworks } from "@/features/homework/status";
 
 describe("homework status", () => {
   const now = new Date("2026-11-20T12:00:00Z").getTime();
@@ -39,5 +39,14 @@ describe("homework status", () => {
       { id: "newer", status: "in_progress" as const, createdAt: "2026-11-20", submittedAt: null },
     ];
     expect(sortForTeacher(items).map((i) => i.id)).toEqual(["early", "late", "newer", "new", "rev"]);
+  });
+
+  it("archive: reviewed a week ago, or never handed in a month after sending", () => {
+    const daysAgo = (d: number) => new Date(now - d * 24 * 3600 * 1000).toISOString();
+    expect(isArchived({ status: "reviewed", createdAt: daysAgo(30), reviewedAt: daysAgo(2) }, now)).toBe(false);
+    expect(isArchived({ status: "reviewed", createdAt: daysAgo(30), reviewedAt: daysAgo(8) }, now)).toBe(true);
+    expect(isArchived({ status: "submitted", createdAt: daysAgo(400), reviewedAt: null }, now)).toBe(false);
+    expect(isArchived({ status: "overdue", createdAt: daysAgo(10), reviewedAt: null }, now)).toBe(false);
+    expect(isArchived({ status: "overdue", createdAt: daysAgo(31), reviewedAt: null }, now)).toBe(true);
   });
 });
