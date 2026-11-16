@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { createTempStudent, removeTempStudents } from "./temp-student";
 import { expect as baseExpect, test, type BrowserContextOptions, type Page } from "@playwright/test";
 
 // Teacher opens lessons in a class; the student sees only those lessons and can
@@ -35,6 +36,7 @@ test.describe("lessons in a class", () => {
 
   const cleanup: { courses: string[]; classes: string[] } = { courses: [], classes: [] };
   test.afterAll(async () => {
+    await removeTempStudents();
     if (!secret || !url) return;
     if (cleanup.classes.length) await admin().from("classes").delete().in("id", cleanup.classes);
     if (cleanup.courses.length) await admin().from("courses").delete().in("id", cleanup.courses);
@@ -45,7 +47,8 @@ test.describe("lessons in a class", () => {
     const stamp = `${Date.now()}-${testInfo.project.name}`;
     const db = admin();
     const teacherId = await userId(teacher.email!);
-    const studentId = await userId(student.email!);
+    const pupil = await createTempStudent(stamp);
+    const studentId = pupil.id;
 
     // Test data: a course with two lessons (one true/false statement each) and a class with the student.
     const { data: course } = await db
@@ -87,7 +90,7 @@ test.describe("lessons in a class", () => {
 
     // --- Student: no lessons yet, and a lesson URL that was not opened is not available.
     const studentPage = await (await browser.newContext(options)).newPage();
-    await login(studentPage, student.email!, student.password!);
+    await login(studentPage, pupil.email, pupil.password);
     await studentPage.goto(`/ru/classes/${cls!.id}`);
     await expect(studentPage.getByText("Уроки появятся здесь после занятий с учителем.").first()).toBeVisible();
     await studentPage.goto(`/ru/classes/${cls!.id}/lessons/${lessonIds[0]}`);

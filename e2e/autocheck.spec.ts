@@ -55,7 +55,7 @@ test.describe("auto-checked exercises and student preview", () => {
 
     // 1.3 Multiple choice with a video on top
     await add(/^Выбор ответа/);
-    await card("1.3").getByRole("button", { name: "Медиа сверху" }).click();
+    await card("1.3").getByRole("button", { name: "Добавить сверху: текст, картинку…" }).click();
     await page.getByRole("menuitem", { name: "Видео" }).click();
     await card("1.3").getByLabel("Ссылка на видео").fill("https://youtu.be/dQw4w9WgXcQ");
     await card("1.3").getByRole("button", { name: "Добавить" }).click();

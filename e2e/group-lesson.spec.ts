@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { createTempStudent, removeTempStudents } from "./temp-student";
 import { expect as baseExpect, test, type BrowserContextOptions, type Page } from "@playwright/test";
 
 // A group lesson with two students: highlights of each student reach the
@@ -51,6 +52,7 @@ test.describe("group lesson", () => {
   test.setTimeout(180_000);
   const cleanup = { courses: [] as string[], classes: [] as string[], users: [] as string[] };
   test.afterAll(async () => {
+    await removeTempStudents();
     if (!secret || !url) return;
     const db = admin();
     if (cleanup.classes.length) await db.from("classes").delete().in("id", cleanup.classes);
@@ -62,7 +64,8 @@ test.describe("group lesson", () => {
     const options = testInfo.project.use as BrowserContextOptions;
     const stamp = `${Date.now()}-${testInfo.project.name}`;
     const db = admin();
-    const [teacherId, studentA] = await Promise.all([userId(teacher.email!), userId(student.email!)]);
+    const pupil = await createTempStudent(stamp, "Первый Ученик");
+    const [teacherId, studentA] = [await userId(teacher.email!), pupil.id];
     const second = { email: `e2e-second-${stamp}@linguaroom.test`, password: "second-pass-1" };
     const { data: created } = await db.auth.admin.createUser({
       email: second.email,
@@ -113,7 +116,7 @@ test.describe("group lesson", () => {
     const lessonUrl = `/ru/classes/${cls!.id}/lessons/${lesson!.id}`;
 
     const a = await (await browser.newContext(options)).newPage();
-    await login(a, student.email!, student.password!);
+    await login(a, pupil.email, pupil.password);
     await a.goto(lessonUrl);
     const b = await (await browser.newContext(options)).newPage();
     await login(b, second.email, second.password);
