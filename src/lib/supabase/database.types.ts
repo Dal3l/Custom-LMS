@@ -765,6 +765,58 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          created_at: string
+          homework_id: string
+          id: string
+          kind: Database["public"]["Enums"]["notification_kind"]
+          read_at: string | null
+          student_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          homework_id: string
+          id?: string
+          kind: Database["public"]["Enums"]["notification_kind"]
+          read_at?: string | null
+          student_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          homework_id?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["notification_kind"]
+          read_at?: string | null
+          student_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_homework_id_fkey"
+            columns: ["homework_id"]
+            isOneToOne: false
+            referencedRelation: "homeworks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -891,6 +943,11 @@ export type Database = {
     }
     Enums: {
       class_kind: "individual" | "group"
+      notification_kind:
+        | "homework_assigned"
+        | "homework_comment"
+        | "homework_reviewed"
+        | "homework_submitted"
       user_role: "teacher" | "student"
     }
     CompositeTypes: {
@@ -1020,6 +1077,12 @@ export const Constants = {
   public: {
     Enums: {
       class_kind: ["individual", "group"],
+      notification_kind: [
+        "homework_assigned",
+        "homework_comment",
+        "homework_reviewed",
+        "homework_submitted",
+      ],
       user_role: ["teacher", "student"],
     },
   },

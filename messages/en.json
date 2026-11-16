@@ -935,5 +935,19 @@
     "archiveHint": "Homework reviewed more than a week ago and homework not handed in within a month. Nothing is deleted — students still see it in the lesson.",
     "archiveEmptyTitle": "The archive is empty",
     "archiveEmptyText": "Homework moves here a week after it was reviewed."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "label": "Notifications",
+    "labelUnread": "{count, plural, one {Notifications: # new} other {Notifications: # new}}",
+    "readAll": "Mark all as read",
+    "loading": "Loading…",
+    "empty": "Nothing new yet",
+    "unread": "New",
+    "noName": "A student",
+    "assigned": "New homework: “{lesson}”",
+    "comment": "Your teacher commented on the homework “{lesson}”",
+    "reviewed": "Your teacher reviewed the homework “{lesson}”",
+    "submitted": "{student} handed in the homework “{lesson}”"
   }
 }

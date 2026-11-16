@@ -8,6 +8,7 @@ import { LessonPlayer } from "@/components/lesson-player/lesson-player";
 import { Button } from "@/components/ui/button";
 import { idSchema } from "@/features/classes/schemas";
 import { getHomeworkReview } from "@/features/homework/queries";
+import { markHomeworkNotificationsRead } from "@/features/notifications/actions";
 import { homeworkStatus } from "@/features/homework/status";
 import { getStudentLesson } from "@/features/lessons/queries";
 import { Link } from "@/i18n/navigation";
@@ -25,6 +26,8 @@ export default async function HomeworkReviewPage({ params }: PageProps<"/[locale
   }
   const review = await getHomeworkReview(homeworkId, studentId);
   if (!review) notFound();
+  // Seen now: "<student> handed in this homework".
+  await markHomeworkNotificationsRead([homeworkId], studentId);
   const [t, tr, format, lesson] = await Promise.all([
     getTranslations("homework"),
     getTranslations("homework.review"),
