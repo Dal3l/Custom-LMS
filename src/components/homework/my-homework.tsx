@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { submitHomework } from "@/features/homework/actions";
 import type { MyHomework } from "@/features/homework/queries";
 import type { StudentSection } from "@/features/lessons/queries";
+import { SaveQueue } from "@/features/lessons/save-queue";
 import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { TeacherComment } from "./review-notes";
@@ -49,6 +50,7 @@ export function MyHomeworkView({
   const [currentId, setCurrentId] = useState(homeworks[0]?.id ?? null);
   const [confirming, setConfirming] = useState(false);
   const [pending, startTransition] = useTransition();
+  const [queue] = useState(() => new SaveQueue());
   const hw = homeworks.find((h) => h.id === currentId) ?? homeworks[0];
   if (!hw) return null;
 
@@ -64,6 +66,13 @@ export function MyHomeworkView({
 
   function handIn() {
     startTransition(async () => {
+      // Answers typed a moment ago are saved first, so nothing is lost.
+      await queue.flushAll();
+      if (queue.getStatus() === "error") {
+        setConfirming(false);
+        toast.error(t("handInFailed"));
+        return;
+      }
       const r = await submitHomework(hw!.id);
       setConfirming(false);
       if (r.ok) {
@@ -101,9 +110,11 @@ export function MyHomeworkView({
               ? t("dueOn", { date: date(hw.dueAt) })
               : t("noDue")}
         </span>
-        <span className="ml-auto text-sm text-muted-foreground tabular-nums">
-          {t("answeredOf", { done: answered, total: hw.exerciseIds.length })}
-        </span>
+        {submitted && (
+          <span className="ml-auto text-sm text-muted-foreground tabular-nums">
+            {t("answeredOf", { done: answered, total: hw.exerciseIds.length })}
+          </span>
+        )}
       </div>
 
       <LessonPlayer
@@ -113,6 +124,7 @@ export function MyHomeworkView({
         // Handed in: the student's answers, read-only.
         review={submitted ? hw.saved : undefined}
         classAnswers={submitted ? undefined : { classId, userId, saved: hw.saved, homeworkId: hw.id }}
+        saveQueue={queue}
         notes={notes}
       />
 
@@ -135,11 +147,7 @@ export function MyHomeworkView({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t("handInTitle")}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {answered < hw.exerciseIds.length
-                ? t("handInNotAll", { done: answered, total: hw.exerciseIds.length })
-                : t("handInText")}
-            </AlertDialogDescription>
+            <AlertDialogDescription>{t("handInText")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>

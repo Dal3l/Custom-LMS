@@ -47,6 +47,7 @@ export function LessonPlayer({
   tools,
   extraGroup,
   notes,
+  saveQueue,
 }: {
   /** the language the course teaches */
   language: string;
@@ -85,9 +86,11 @@ export function LessonPlayer({
   extraGroup?: { label: string; sections: StudentSection[] };
   /** Something shown under an exercise: the teacher's comment, tries… (by exercise id) */
   notes?: Record<string, React.ReactNode>;
+  /** The autosave queue, when the page must wait for it (e.g. before handing homework in). */
+  saveQueue?: SaveQueue;
 }) {
   const t = useTranslations("player");
-  const [queue] = useState(() => new SaveQueue());
+  const [queue] = useState(() => saveQueue ?? new SaveQueue());
   const answerPlace = useMemo(
     () => (classAnswers ? { classId: classAnswers.classId, userId: classAnswers.userId } : null),
     [classAnswers],
