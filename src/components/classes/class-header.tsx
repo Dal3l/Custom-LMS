@@ -111,7 +111,7 @@ export function ClassHeader({
 
 const initial: ClassFormState = { status: "idle" };
 
-function EditClassForm({ cls, onDone }: { cls: ClassRow; onDone: () => void }) {
+export function EditClassForm({ cls, onDone }: { cls: ClassRow; onDone: () => void }) {
   const t = useTranslations("classes");
   const [state, action] = useActionState(updateClass, initial);
   useEffect(() => {

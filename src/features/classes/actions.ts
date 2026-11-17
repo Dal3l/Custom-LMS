@@ -9,13 +9,14 @@ import { getOrigin } from "@/lib/site-url";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { generateInviteToken, generatePassword } from "./credentials";
+import { ANSWER_BUCKET } from "@/features/exercises/types/voice_answer/schema";
 import { joinByInvite } from "./join";
 import { classSchema, idSchema, registerStudentSchema } from "./schemas";
 
 // Every action re-checks the user; the database rules (RLS) are the final guard.
 // The secret key (admin client) is used only after the teacher's access is checked.
 
-export type ClassActionError = "generic" | "forbidden" | "classFull";
+export type ClassActionError = "generic" | "forbidden" | "classFull" | "otherTeacher";
 export type ActionResult<T = undefined> = { ok: true; data: T } | { ok: false; error: ClassActionError };
 
 export type ClassFormState = {
@@ -256,6 +257,38 @@ export async function removeFromMyStudents(studentId: string): Promise<ActionRes
     .limit(1);
   if (inClass?.length) return fail("forbidden");
   const { error } = await ctx.supabase.from("teacher_students").delete().eq("student_id", student.data);
+  if (error) return fail();
+  refresh();
+  return ok(undefined);
+}
+
+/**
+ * Deletes a student's account for good (the student stopped studying): their
+ * answers, homework, dictionary and recordings go too. Only a student of this
+ * teacher alone — someone another teacher also teaches can only be removed
+ * from this teacher's classes.
+ */
+export async function deleteStudentAccount(studentId: string): Promise<ActionResult> {
+  const ctx = await teacherClient();
+  const student = idSchema.safeParse(studentId);
+  if (!ctx || !student.success || !(await onMyList(ctx.supabase, student.data))) return fail("forbidden");
+  const admin = createAdminClient();
+  const [{ data: profile }, { data: others }] = await Promise.all([
+    admin.from("profiles").select("role").eq("id", student.data).maybeSingle(),
+    admin.from("teacher_students").select("teacher_id").eq("student_id", student.data).neq("teacher_id", ctx.profile.id).limit(1),
+  ]);
+  if (profile?.role !== "student") return fail("forbidden");
+  if (others?.length) return fail("otherTeacher");
+
+  // Voice answers and other files: <class>/<student>/… in the answers bucket.
+  const { data: memberships } = await admin.from("class_members").select("class_id").eq("student_id", student.data);
+  for (const m of memberships ?? []) {
+    const folder = `${m.class_id}/${student.data}`;
+    const { data: files } = await admin.storage.from(ANSWER_BUCKET).list(folder, { limit: 1000 });
+    if (files?.length) await admin.storage.from(ANSWER_BUCKET).remove(files.map((f) => `${folder}/${f.name}`));
+  }
+  // Everything else is removed together with the account (database cascades).
+  const { error } = await admin.auth.admin.deleteUser(student.data);
   if (error) return fail();
   refresh();
   return ok(undefined);

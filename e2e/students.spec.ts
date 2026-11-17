@@ -90,6 +90,25 @@ test.describe("students page", () => {
     await page.getByRole("menuitem", { name: "Убрать из списка" }).click();
     await expect(row).toHaveCount(0);
 
+    // The class card opens the class's info page; there: Students / Homework / Settings.
+    await page.goto("/ru/classes");
+    await page.getByRole("link", { name: `Информация и настройки класса «${second.name}»` }).click();
+    await expect(page.getByRole("tab", { name: /Ученики · 1/ })).toHaveAttribute("aria-selected", "true");
+    await page.getByRole("tab", { name: "Настройки" }).click();
+    await expect(page.getByRole("region", { name: "Расписание" })).toContainText("этапе 5");
+    await expect(page.getByRole("region", { name: "Настройки класса" })).toContainText("Индивидуальный");
+
+    // Deleting a student's account: gone for good (and off the list).
+    await page.goto("/ru/students");
+    const secondRow = list.getByRole("listitem").filter({ hasText: second.name });
+    await secondRow.getByRole("button", { name: `Действия: ${second.name}` }).click();
+    await page.getByRole("menuitem", { name: "Удалить аккаунт" }).click();
+    await page.getByRole("alertdialog").getByRole("button", { name: "Удалить навсегда" }).click();
+    await expect(page.getByText(`Аккаунт ученика ${second.name} удалён`)).toBeVisible();
+    await expect(secondRow).toHaveCount(0);
+    const { data: left } = await db.auth.admin.listUsers({ perPage: 1000 });
+    expect(left.users.some((u) => u.email === second.email)).toBe(false);
+
     // The first student signs in with the message's password and sees the class.
     const sp = await (await browser.newContext(testInfo.project.use)).newPage();
     await login(sp, first.email, password!);

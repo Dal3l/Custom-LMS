@@ -129,7 +129,11 @@ test.describe("lessons in a class", () => {
     await page.goto(`/ru/classes/${cls!.id}`);
     await page.getByRole("link", { name: "Все классы" }).click();
     await expect(page).toHaveURL(/\/ru\/classes$/);
-    await page.getByRole("link", { name: new RegExp(className) }).click();
+    await page.getByRole("link", { name: new RegExp(`^${className}`) }).click();
+    await expect(page.getByRole("heading", { level: 1, name: "Greetings" })).toBeVisible();
+    // The class page (info and settings) offers "Continue the lesson".
+    await page.goto(`/ru/classes/${cls!.id}`);
+    await page.getByRole("link", { name: "Продолжить урок «Greetings»" }).click();
     await expect(page.getByRole("heading", { level: 1, name: "Greetings" })).toBeVisible();
 
     // --- Student: the lesson is in the class, marked as going on; answers are checked.
@@ -178,13 +182,10 @@ test.describe("lessons in a class", () => {
     await page.getByRole("button", { name: "Сделать текущим" }).click();
     await expect(page.getByText("Идёт сейчас").filter({ visible: true })).toBeVisible({ timeout: 20_000 });
 
-    // --- Class page: Colours going on, Numbers not finished, Greetings finished.
+    // --- Class page (teacher): no list of lessons any more, "Continue" leads to Colours.
     await page.goto(`/ru/classes/${cls!.id}`);
-    const list = page.getByRole("list", { name: "Уроки класса" });
-    await expect(list.getByRole("link")).toHaveCount(3);
-    await expect(list.getByRole("link").first()).toContainText("Colours");
-    await expect(list.getByRole("link", { name: /Numbers/ }).getByLabel("Не завершён")).toBeVisible();
-    await expect(list.getByRole("link", { name: /Greetings/ }).getByLabel("Пройден")).toBeVisible();
+    await expect(page.getByRole("list", { name: "Уроки класса" })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: "Продолжить урок «Colours»" })).toBeVisible();
 
     // --- Student sees the three lessons and the finished section of Greetings.
     await studentPage.goto(`/ru/classes/${cls!.id}`);

@@ -1,6 +1,7 @@
-import { User, Users } from "lucide-react";
+import { Settings2, User, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import type { ClassListItem } from "@/features/classes/queries";
 import { Link } from "@/i18n/navigation";
@@ -11,8 +12,14 @@ export async function ClassCard({ item, isTeacher }: { item: ClassListItem; isTe
   const Icon = item.kind === "group" ? Users : User;
   return (
     <Card className="h-full gap-3 rounded-2xl p-4 transition-shadow hover:shadow-md">
-      {/* Straight into the lesson going on now, if there is one. */}
-      <Link href={item.liveLessonId ? `/classes/${item.id}/lessons/${item.liveLessonId}` : `/classes/${item.id}`} className="flex items-start gap-3 rounded-xl focus-visible:outline-2 focus-visible:outline-ring">
+      {/* Straight into the lesson: the one going on now (a teacher: else the last opened). */}
+      <Link
+        href={
+          (isTeacher ? item.currentLessonId : item.liveLessonId)
+            ? `/classes/${item.id}/lessons/${isTeacher ? item.currentLessonId : item.liveLessonId}`
+            : `/classes/${item.id}`
+        }
+        className="flex items-start gap-3 rounded-xl focus-visible:outline-2 focus-visible:outline-ring">
         <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-accent text-primary">
           <Icon className="size-5" aria-hidden="true" />
         </span>
@@ -26,6 +33,14 @@ export async function ClassCard({ item, isTeacher }: { item: ClassListItem; isTe
       <div className="mt-auto flex items-center justify-between gap-2">
         <Badge variant="secondary">{t(`kind.${item.kind}`)}</Badge>
         {!isTeacher && item.call_url && <CallButton url={item.call_url} size="sm" />}
+        {isTeacher && (
+          <Button asChild variant="ghost" size="sm" className="text-muted-foreground">
+            <Link href={`/classes/${item.id}`} aria-label={t("infoFor", { name: item.name })}>
+              <Settings2 aria-hidden="true" />
+              {t("info")}
+            </Link>
+          </Button>
+        )}
       </div>
     </Card>
   );

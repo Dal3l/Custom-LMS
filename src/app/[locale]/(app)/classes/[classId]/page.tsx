@@ -1,4 +1,4 @@
-import { BookOpen, ChevronLeft } from "lucide-react";
+import { BookOpen, ChevronLeft, Play } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { ClassHeader } from "@/components/classes/class-header";
@@ -6,10 +6,12 @@ import { ClassLessonsList } from "@/components/classes/class-lessons-list";
 import { LessonPicker } from "@/components/classes/lesson-picker";
 import { InvitePanel } from "@/components/classes/invite-panel";
 import { RegisterStudentDialog } from "@/components/classes/register-student-dialog";
+import { ClassSettings } from "@/components/classes/class-settings";
 import { StudentsList } from "@/components/classes/students-panel";
 import { ClassHomeworkList } from "@/components/homework/class-homework-list";
 import { listTeacherHomeworks } from "@/features/homework/queries";
 import { vocabularySummaries } from "@/features/trainer/progress-queries";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { listClassLessons } from "@/features/classes/lesson-queries";
 import { getClassPage } from "@/features/classes/queries";
@@ -34,6 +36,8 @@ export default async function ClassPage({ params, searchParams }: PageProps<"/[l
   ]);
   if (!cls) notFound();
   const homework = cls.isTeacher ? await listTeacherHomeworks(cls.id) : [];
+  // The lesson going on now, else the last one opened: "Continue the lesson".
+  const current = classLessons.find((l) => l.status === "live") ?? [...classLessons].sort((a, b) => b.openedAt.localeCompare(a.openedAt))[0];
   const toCheck = homework.filter((h) => h.status === "submitted").length;
 
   const lessons =
@@ -69,9 +73,24 @@ export default async function ClassPage({ params, searchParams }: PageProps<"/[l
         teacherName={cls.teacherName}
       />
       {cls.isTeacher ? (
-        <Tabs defaultValue={tab === "students" || tab === "homework" ? tab : "lessons"} className="gap-4">
+        <>
+          {/* Lessons are switched inside a lesson ("Course lessons"); here: continue or open one. */}
+          <div className="flex flex-wrap items-center gap-2">
+            {current && (
+              <Button asChild size="lg">
+                <Link href={`/classes/${cls.id}/lessons/${current.lessonId}`}>
+                  <Play aria-hidden="true" />
+                  {t("continueLesson", { title: current.title })}
+                </Link>
+              </Button>
+            )}
+            <LessonPicker classId={cls.id} label={tl("openLesson")} size={current ? "default" : "lg"} />
+          </div>
+        <Tabs defaultValue={tab === "homework" || tab === "settings" ? tab : "students"} className="gap-4">
           <TabsList>
-            <TabsTrigger value="lessons">{t("lessonsTab")}</TabsTrigger>
+            <TabsTrigger value="students">
+              {t("studentsTab")} · {cls.students.length}
+            </TabsTrigger>
             <TabsTrigger value="homework">
               {t("homeworkTab")}
               {toCheck > 0 && (
@@ -80,11 +99,8 @@ export default async function ClassPage({ params, searchParams }: PageProps<"/[l
                 </span>
               )}
             </TabsTrigger>
-            <TabsTrigger value="students">
-              {t("studentsTab")} · {cls.students.length}
-            </TabsTrigger>
+            <TabsTrigger value="settings">{t("settingsTab")}</TabsTrigger>
           </TabsList>
-          <TabsContent value="lessons">{lessons}</TabsContent>
           <TabsContent value="homework">
             <ClassHomeworkList items={homework} />
           </TabsContent>
@@ -104,7 +120,11 @@ export default async function ClassPage({ params, searchParams }: PageProps<"/[l
             )}
             <StudentsList classId={cls.id} students={cls.students} vocabulary={await vocabularySummaries(cls.students.map((s) => s.id))} />
           </TabsContent>
+          <TabsContent value="settings">
+            <ClassSettings cls={{ id: cls.id, name: cls.name, kind: cls.kind, call_url: cls.call_url }} />
+          </TabsContent>
         </Tabs>
+        </>
       ) : (
         lessons
       )}

@@ -1,16 +1,26 @@
 "use client";
 
-import { BookA, FolderPlus, GraduationCap, MoreHorizontal, Search, UserMinus, UserPlus } from "lucide-react";
+import { BookA, FolderPlus, GraduationCap, MoreHorizontal, Search, Trash2, UserMinus, UserPlus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { RegisterForm } from "@/components/classes/register-student-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { removeFromMyStudents } from "@/features/classes/actions";
+import { deleteStudentAccount, removeFromMyStudents } from "@/features/classes/actions";
 import type { MyClass, MyStudent } from "@/features/students/queries";
 import { Link, useRouter } from "@/i18n/navigation";
 import { initials } from "@/lib/initials";
@@ -36,6 +46,7 @@ export function StudentsDirectory({
   const [query, setQuery] = useState("");
   const [adding, setAdding] = useState(false);
   const [placing, setPlacing] = useState<MyStudent | null>(null);
+  const [deleting, setDeleting] = useState<MyStudent | null>(null);
   const [pending, startTransition] = useTransition();
   const q = query.trim().toLowerCase();
   const shown = students.filter((s) => !q || s.fullName.toLowerCase().includes(q) || s.classes.some((c) => c.name.toLowerCase().includes(q)));
@@ -45,6 +56,16 @@ export function StudentsDirectory({
       const r = await removeFromMyStudents(s.id);
       if (!r.ok) return void toast.error(t("failed"));
       toast.success(t("removed", { name: s.fullName || t("noName") }));
+      router.refresh();
+    });
+  }
+
+  function deleteAccount(s: MyStudent) {
+    startTransition(async () => {
+      const r = await deleteStudentAccount(s.id);
+      setDeleting(null);
+      if (!r.ok) return void toast.error(r.error === "otherTeacher" ? t("otherTeacher") : t("failed"));
+      toast.success(t("accountDeleted", { name: s.fullName || t("noName") }));
       router.refresh();
     });
   }
@@ -128,11 +149,15 @@ export function StudentsDirectory({
                     </DropdownMenuItem>
                   )}
                   {s.classes.length === 0 && (
-                    <DropdownMenuItem variant="destructive" onSelect={() => remove(s)}>
+                    <DropdownMenuItem onSelect={() => remove(s)}>
                       <UserMinus aria-hidden="true" />
                       {t("removeFromList")}
                     </DropdownMenuItem>
                   )}
+                  <DropdownMenuItem variant="destructive" onSelect={() => setDeleting(s)}>
+                    <Trash2 aria-hidden="true" />
+                    {t("deleteAccount")}
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </li>
@@ -157,6 +182,21 @@ export function StudentsDirectory({
           )}
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={deleting !== null} onOpenChange={(open) => !open && setDeleting(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("deleteTitle", { name: deleting?.fullName || t("noName") })}</AlertDialogTitle>
+            <AlertDialogDescription>{t("deleteText")}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+            <AlertDialogAction variant="destructive" disabled={pending} onClick={() => deleting && deleteAccount(deleting)}>
+              {t("deleteForGood")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <Dialog open={placing !== null} onOpenChange={(open) => !open && setPlacing(null)}>
         <DialogContent className="max-h-[90svh] overflow-y-auto sm:max-w-lg">
