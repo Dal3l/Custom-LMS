@@ -14,7 +14,8 @@ import { getClassLessonState, listClassMarks } from "@/features/classes/lesson-q
 import { getClassPage } from "@/features/classes/queries";
 import { idSchema } from "@/features/classes/schemas";
 import { getClassLessonAnswers, getMyClassAnswers } from "@/features/lessons/answers";
-import { getMyLessonHomeworks, listLessonHomeworks } from "@/features/homework/queries";
+import { HomeworkReview } from "@/components/homework/homework-review";
+import { getHomeworkReview, getMyLessonHomeworks, listLessonHomeworks } from "@/features/homework/queries";
 import { markHomeworkNotificationsRead } from "@/features/notifications/actions";
 import { revealedSolutions } from "@/features/lessons/grade";
 import { getStudentLesson } from "@/features/lessons/queries";
@@ -49,7 +50,7 @@ export default async function ClassLessonPage({
   ]);
   // Students: only lessons opened in this class (RLS too). Teachers: any lesson they can see.
   if (!cls || !lesson || (!state && !cls.isTeacher)) notFound();
-  const { section, show, tab } = await searchParams;
+  const { section, show, tab, student } = await searchParams;
   const live = state?.status === "live";
   const finished = Boolean(state?.finishedAt);
   const revealed = state?.revealed ?? [];
@@ -62,6 +63,18 @@ export default async function ClassLessonPage({
     cls.isTeacher ? Promise.resolve([]) : getMyLessonHomeworks(classId, lessonId, profile.id),
   ]);
   const showHomework = !cls.isTeacher && myHomeworks.length > 0 && tab === "homework";
+  // The teacher: the lesson's homework (one per lesson) and whose answers to show.
+  const sentHomework = sentHomeworks[0];
+  const teacherHomework = cls.isTeacher && sentHomework && tab === "homework";
+  let review = null;
+  if (teacherHomework) {
+    const chosen = typeof student === "string" && sentHomework.studentIds.includes(student) ? student : null;
+    const first = await getHomeworkReview(sentHomework.id, chosen ?? sentHomework.studentIds[0]!);
+    // Without a choice: the first one who handed in and waits for a check.
+    const waiting = first?.students.find((s) => s.submitted && !s.reviewed);
+    review = !chosen && waiting && waiting.id !== first?.studentId ? await getHomeworkReview(sentHomework.id, waiting.id) : first;
+    if (review) await markHomeworkNotificationsRead([review.id], review.studentId);
+  }
   // Seen now: the notifications about this homework (new, comment, reviewed).
   if (showHomework) await markHomeworkNotificationsRead(myHomeworks.map((h) => h.id), profile.id);
   const common = {
@@ -148,11 +161,11 @@ export default async function ClassLessonPage({
         <span>{lesson.course.title}</span>
       </div>
 
-      {/* A student with homework from this lesson: "Lesson" and "Homework" tabs. */}
-      {!cls.isTeacher && myHomeworks.length > 0 && (
+      {/* Homework from this lesson (sent / received): "Lesson" and "Homework" tabs. */}
+      {(cls.isTeacher ? Boolean(sentHomework) : myHomeworks.length > 0) && (
         <nav className="flex gap-1 self-start rounded-lg bg-muted p-1" aria-label={th("tabs")}>
           {(["lesson", "homework"] as const).map((key) => {
-            const current = (key === "homework") === showHomework;
+            const current = (key === "homework") === (showHomework || Boolean(teacherHomework));
             return (
               <Link
                 key={key}
@@ -164,8 +177,16 @@ export default async function ClassLessonPage({
                 )}
               >
                 {key === "lesson" ? th("lessonTab") : th("homeworkTab")}
-                {key === "homework" && myHomeworks.some((h) => h.status !== "submitted") && (
+                {key === "homework" && !cls.isTeacher && myHomeworks.some((h) => h.status !== "submitted") && (
                   <span className="ml-1.5 inline-block size-2 rounded-full bg-primary align-middle" aria-hidden="true" />
+                )}
+                {key === "homework" && cls.isTeacher && (sentHomework?.toCheck ?? 0) > 0 && (
+                  <span
+                    className="ml-1.5 rounded-full bg-violet-600 px-1.5 text-xs text-white tabular-nums"
+                    aria-label={th("toCheckCount", { count: sentHomework!.toCheck })}
+                  >
+                    {sentHomework!.toCheck}
+                  </span>
                 )}
               </Link>
             );
@@ -173,7 +194,14 @@ export default async function ClassLessonPage({
         </nav>
       )}
 
-      {cls.isTeacher ? (
+      {teacherHomework && review ? (
+        <HomeworkReview
+          review={review}
+          withTitle={false}
+          stay
+          studentHref={(id) => `/classes/${classId}/lessons/${lessonId}?tab=homework&student=${id}`}
+        />
+      ) : cls.isTeacher ? (
         <TeacherClassLesson
           {...common}
           students={cls.students}
@@ -181,6 +209,7 @@ export default async function ClassLessonPage({
           homework={{
             sections: homeworkPart?.sections ?? [],
             sent: sentHomeworks,
+            answersHref: sentHomework ? `/classes/${classId}/lessons/${lessonId}?tab=homework` : null,
             builderHref:
               lesson.course.owner_id === profile.id ? `/courses/${lesson.course.id}/lessons/${lessonId}?part=homework` : null,
           }}

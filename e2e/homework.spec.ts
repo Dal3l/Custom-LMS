@@ -189,9 +189,15 @@ test.describe("homework", () => {
     await page.getByRole("button", { name: "Отправленная домашка · сдали 1 из 1" }).click();
     await expect(page.getByRole("dialog", { name: "Отправить домашку" }).getByText("Сдали: 1 из 1")).toBeVisible();
 
-    // Review: from the lesson to the student's answers — tries, first try, comment.
-    await page.getByRole("dialog", { name: "Отправить домашку" }).getByRole("link", { name: "Открыть ответы" }).click();
-    await expect(page).toHaveURL(new RegExp(`/ru/homework/${hw!.id}/${studentId}`));
+    await page.keyboard.press("Escape");
+
+    // Review right in the lesson: "Students' answers" under the homework sections
+    // → the lesson's Homework tab — tries, first try, comment.
+    await page.getByRole("link", { name: /Ответы учеников/ }).filter({ visible: true }).first().click();
+    await expect(page).toHaveURL(/tab=homework/);
+    const teacherTabs = page.getByRole("navigation", { name: "Урок и домашка" });
+    await expect(teacherTabs.getByRole("link", { name: /Домашка/ })).toHaveAttribute("aria-current", "page");
+    await expect(teacherTabs.getByLabel("1 работа ждёт проверки")).toBeVisible();
     await expect(page.getByText("Ждёт проверки", { exact: true })).toBeVisible();
     await expect(page.getByText("2 попытки")).toBeVisible();
     await expect(page.getByText("с первого раза с ошибками")).toBeVisible();
@@ -204,6 +210,13 @@ test.describe("homework", () => {
     await expect
       .poll(async () => (await db.from("homework_comments").select("body").eq("homework_id", hw!.id)).data?.map((c) => c.body))
       .toEqual(["Nice! Add one more sentence."]);
+
+    // Marking it reviewed right in the lesson keeps the teacher here.
+    await page.getByRole("button", { name: "Отметить проверенной" }).click();
+    await expect(page.getByRole("button", { name: "Снять отметку «Проверено»" })).toBeVisible();
+    await expect(page).toHaveURL(/tab=homework/);
+    await page.getByRole("button", { name: "Снять отметку «Проверено»" }).click();
+    await expect(page.getByRole("button", { name: "Отметить проверенной" })).toBeVisible();
 
     // No "Homework" in the teacher's menu: homework lives in the class (its Homework tab).
     await page.goto("/ru/homework");

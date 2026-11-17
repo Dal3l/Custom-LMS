@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleCheck, ClipboardList, Loader2, Send, Trash2 } from "lucide-react";
+import { CircleCheck, ClipboardCheck, ClipboardList, Loader2, Send, Trash2 } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -62,17 +62,34 @@ export function HomeworkPick({
 export function HomeworkFooter({
   picked,
   sent,
+  answersHref,
   onOpen,
 }: {
   picked: number;
   sent: SentHomework[];
+  /** the lesson's Homework tab: the students' answers */
+  answersHref: string | null;
   onOpen: () => void;
 }) {
   const t = useTranslations("homework");
   const total = sent.reduce((n, h) => n + h.students, 0);
   const done = sent.reduce((n, h) => n + h.submitted, 0);
+  const toCheck = sent.reduce((n, h) => n + h.toCheck, 0);
   return (
     <>
+      {answersHref && (
+        <Button asChild variant="outline">
+          <Link href={answersHref}>
+            <ClipboardCheck aria-hidden="true" />
+            {t("answers")}
+            {toCheck > 0 && (
+              <span className="rounded-full bg-violet-600 px-1.5 text-xs text-white tabular-nums" aria-label={t("toCheckCount", { count: toCheck })}>
+                {toCheck}
+              </span>
+            )}
+          </Link>
+        </Button>
+      )}
       {sent.length > 0 && (
         <Button variant="outline" onClick={onOpen}>
           <ClipboardList aria-hidden="true" />
