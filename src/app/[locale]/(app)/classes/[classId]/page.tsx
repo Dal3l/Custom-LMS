@@ -20,7 +20,9 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { requireProfile } from "@/lib/auth";
 import { getOrigin } from "@/lib/site-url";
-import { listTimeZones } from "@/lib/timezones";
+import { isValidTimeZone, listTimeZones } from "@/lib/timezones";
+import { localDate } from "@/features/schedule/occurrences";
+import { loadSchedule } from "@/features/schedule/queries";
 
 export default async function ClassPage({ params, searchParams }: PageProps<"/[locale]/classes/[classId]">) {
   const { locale, classId } = (await params) as { locale: Locale; classId: string };
@@ -36,6 +38,7 @@ export default async function ClassPage({ params, searchParams }: PageProps<"/[l
   ]);
   if (!cls) notFound();
   const homework = cls.isTeacher ? await listTeacherHomeworks(cls.id) : [];
+  const timeZone = isValidTimeZone(profile.timezone) ? profile.timezone : "UTC";
   // The lesson going on now, else the last one opened: "Continue the lesson".
   const current = classLessons.find((l) => l.status === "live") ?? [...classLessons].sort((a, b) => b.openedAt.localeCompare(a.openedAt))[0];
   const toCheck = homework.filter((h) => h.status === "submitted").length;
@@ -121,7 +124,12 @@ export default async function ClassPage({ params, searchParams }: PageProps<"/[l
             <StudentsList classId={cls.id} students={cls.students} vocabulary={await vocabularySummaries(cls.students.map((s) => s.id))} />
           </TabsContent>
           <TabsContent value="settings">
-            <ClassSettings cls={{ id: cls.id, name: cls.name, kind: cls.kind, call_url: cls.call_url }} />
+            <ClassSettings
+              cls={{ id: cls.id, name: cls.name, kind: cls.kind, call_url: cls.call_url }}
+              events={(await loadSchedule(cls.id)).events}
+              timeZone={timeZone}
+              today={localDate(new Date(), timeZone)}
+            />
           </TabsContent>
         </Tabs>
         </>
