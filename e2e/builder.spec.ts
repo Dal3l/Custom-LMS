@@ -66,7 +66,7 @@ test.describe("lesson builder", () => {
 
     // Survives a reload, and the same section opens
     await page.reload();
-    await expect(page.getByLabel("Задание")).toHaveValue("Read and sing");
+    await expect(page.getByLabel("Задание").filter({ visible: true })).toHaveValue("Read and sing");
     await expect(page.locator(".ProseMirror strong")).toHaveText("little star");
 
     // Duplicate → 2.2, then move the copy to Warm-up → 1.1

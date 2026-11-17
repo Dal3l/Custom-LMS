@@ -1,6 +1,6 @@
 "use client";
 
-import { BookA, GraduationCap, MoreHorizontal, Pencil, Plus, RotateCcw, Search, Trash2 } from "lucide-react";
+import { BookA, BookOpenCheck, GraduationCap, MoreHorizontal, Pencil, Plus, Repeat, RotateCcw, Search, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -24,41 +24,39 @@ import { relearnWord } from "@/features/trainer/actions";
 import { LEARNED, wordStatus } from "@/features/trainer/ladder";
 import { deleteWord } from "@/features/vocabulary/actions";
 import type { Word } from "@/features/vocabulary/queries";
+import type { Step } from "@/features/trainer/session";
 import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { SpeakButton } from "./speak-button";
+import { LearnDialog } from "./learn-dialog";
+import { LearnSession } from "./learn-session";
 import { WordDialog } from "./word-dialog";
 
 const NO_PLACE = { courseId: null, lessonId: null, classId: null };
 type Tab = "learning" | "learned" | "all";
 
-/** New / learning (with the ladder step) / learned. */
-function StatusBadge({ stage, reviews }: { stage: number; reviews: number }) {
+/** Learning / learned / time to review (learned, but it is time to check it). */
+function StatusBadge({ stage, due }: { stage: number; due: string }) {
   const t = useTranslations("vocabulary.status");
-  const status = wordStatus(stage, reviews);
+  const status = wordStatus(stage, due);
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs font-medium",
-        status === "new" && "border-sky-200 bg-sky-50 text-sky-800",
-        status === "learning" && "border-amber-200 bg-amber-50 text-amber-900",
+        "inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium",
+        status === "learning" && "border-sky-200 bg-sky-50 text-sky-800",
         status === "learned" && "border-emerald-200 bg-emerald-50 text-emerald-800",
+        status === "review" && "border-amber-200 bg-amber-50 text-amber-900",
       )}
-      title={status === "learning" ? t("step", { step: stage, total: LEARNED }) : undefined}
     >
       {t(status)}
-      {status === "learning" && (
-        <span className="flex gap-0.5" aria-label={t("step", { step: stage, total: LEARNED })}>
-          {Array.from({ length: LEARNED }, (_, i) => (
-            <span key={i} className={cn("size-1.5 rounded-full", i < stage ? "bg-amber-600" : "bg-amber-200")} />
-          ))}
-        </span>
-      )}
     </span>
   );
 }
 
-/** The Dictionary page: the student's words with search, course / lesson filters and editing. */
+/**
+ * The Dictionary page, with the trainer inside: the student's words (to learn /
+ * learned / all) with search and filters, "Learn words" and "Review".
+ */
 export function VocabularyList({
   words,
   defaultLanguage,
@@ -78,6 +76,8 @@ export function VocabularyList({
   const [editing, setEditing] = useState<Word | null>(null);
   const [removing, setRemoving] = useState<Word | null>(null);
   const [pending, startTransition] = useTransition();
+  const [choosing, setChoosing] = useState<"learn" | "review" | null>(null);
+  const [running, setRunning] = useState<{ kind: "learn" | "review"; ids: string[]; steps: Step[] } | null>(null);
 
   const courses = useMemo(() => {
     const map = new Map<string, string>();
@@ -89,6 +89,13 @@ export function VocabularyList({
     for (const w of words) if (w.lessonId && w.courseId === courseId) map.set(w.lessonId, w.lessonTitle || t("unknownLesson"));
     return [...map].map(([id, title]) => ({ id, title }));
   }, [words, courseId, t]);
+
+  // Only words with a translation can be trained.
+  const trainable = words.filter((w) => w.translation.trim());
+  const toLearn = trainable.filter((w) => w.stage < LEARNED);
+  const learnedWords = trainable.filter((w) => w.stage >= LEARNED);
+  const dueIds = new Set(learnedWords.filter((w) => wordStatus(w.stage, w.due) === "review").map((w) => w.id));
+  const noTranslation = words.filter((w) => !w.translation.trim() && w.stage < LEARNED).length;
 
   const q = query.trim().toLowerCase();
   const inTab = (w: Word) => tab === "all" || (tab === "learned" ? w.stage >= LEARNED : w.stage < LEARNED);
@@ -124,6 +131,25 @@ export function VocabularyList({
     });
   }
 
+  if (running) {
+    const byId = new Map(trainable.map((w) => [w.id, w]));
+    return (
+      <LearnSession
+        kind={running.kind}
+        words={running.ids.flatMap((id) => (byId.has(id) ? [byId.get(id)!] : []))}
+        steps={running.steps}
+        pool={trainable}
+        onExit={(saved) => {
+          setRunning(null);
+          if (saved) {
+            setTab(running.kind === "learn" ? "learned" : tab);
+            router.refresh();
+          }
+        }}
+      />
+    );
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end gap-3">
@@ -131,7 +157,7 @@ export function VocabularyList({
           <h1 className="text-2xl font-semibold">{t("title")}</h1>
           <p className="text-muted-foreground">{t("subtitle", { count: words.length })}</p>
         </div>
-        <Button onClick={() => setAdding(true)}>
+        <Button variant="outline" onClick={() => setAdding(true)}>
           <Plus aria-hidden="true" />
           {t("addWord")}
         </Button>
@@ -154,6 +180,34 @@ export function VocabularyList({
             </button>
           ))}
         </nav>
+      )}
+
+      {tab !== "learned" && words.length > 0 && (
+        <div className="flex flex-col items-center gap-2 rounded-2xl border bg-card p-4 text-center sm:flex-row sm:text-left">
+          <p className="flex-1 text-sm text-muted-foreground">
+            {toLearn.length > 0 ? t("learn.toLearn", { count: toLearn.length }) : t("learn.nothingToLearn")}
+            {noTranslation > 0 && ` ${t("learn.noTranslation", { count: noTranslation })}`}
+          </p>
+          <Button size="lg" className="w-full sm:w-auto" disabled={toLearn.length === 0} onClick={() => setChoosing("learn")}>
+            <BookOpenCheck aria-hidden="true" />
+            {t("learn.learnWords")}
+          </Button>
+        </div>
+      )}
+      {tab === "learned" && learnedWords.length > 0 && (
+        <div className="flex flex-col items-center gap-2 rounded-2xl border bg-card p-4 text-center sm:flex-row sm:text-left">
+          <p className="flex-1 text-sm" role="status">
+            {dueIds.size > 0 ? (
+              <span className="font-medium text-amber-800">{t("learn.timeToReview", { count: dueIds.size })}</span>
+            ) : (
+              <span className="text-muted-foreground">{t("learn.allFresh")}</span>
+            )}
+          </p>
+          <Button size="lg" className="w-full sm:w-auto" onClick={() => setChoosing("review")}>
+            <Repeat aria-hidden="true" />
+            {t("learn.review")}
+          </Button>
+        </div>
       )}
 
       {words.length > 0 && (
@@ -222,7 +276,7 @@ export function VocabularyList({
                   </span>
                   {w.transcription && <span className="text-sm text-muted-foreground">{w.transcription}</span>}
                   <SpeakButton term={w.term} language={w.language} audioUrl={w.audioUrl} />
-                  <StatusBadge stage={w.stage} reviews={w.reviews} />
+                  {(tab === "all" || wordStatus(w.stage, w.due) === "review") && <StatusBadge stage={w.stage} due={w.due} />}
                 </div>
                 {w.translation ? (
                   <p className="break-words">{w.translation}</p>
@@ -257,7 +311,7 @@ export function VocabularyList({
                     <Pencil aria-hidden="true" />
                     {t("edit")}
                   </DropdownMenuItem>
-                  {w.reviews > 0 && (
+                  {w.stage >= LEARNED && (
                     <DropdownMenuItem onSelect={() => relearn(w)}>
                       <RotateCcw aria-hidden="true" />
                       {t("relearn")}
@@ -274,6 +328,17 @@ export function VocabularyList({
         </ul>
       )}
 
+      <LearnDialog
+        open={choosing !== null}
+        onOpenChange={(open) => !open && setChoosing(null)}
+        kind={choosing ?? "learn"}
+        words={choosing === "review" ? learnedWords : toLearn}
+        due={dueIds}
+        onStart={(ids, steps) => {
+          setRunning({ kind: choosing ?? "learn", ids, steps });
+          setChoosing(null);
+        }}
+      />
       <WordDialog open={adding} onOpenChange={setAdding} place={{ ...NO_PLACE, language: defaultLanguage }} languages={languages} />
       <WordDialog
         open={editing !== null}

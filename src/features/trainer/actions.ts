@@ -6,67 +6,79 @@ import { getProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import type { Json } from "@/lib/supabase/database.types";
 import { reviewCard } from "./fsrs";
-import { gradeFor, LEARNED, nextDue, nextStage, type Grade } from "./ladder";
+import { LEARNED } from "./ladder";
+import { finalGrade } from "./session";
 
 type Result<T = undefined> = { ok: true; data: T } | { ok: false; error: "generic" | "forbidden" | "invalid" };
 
-const reviewInput = z.object({
-  wordId: z.uuid(),
-  mode: z.enum(["card", "choice", "write", "listen"]),
-  outcome: z.enum(["right", "almost", "wrong"]),
-  /** cards: the student's own grade (1 don't remember … 4 easy) */
-  cardGrade: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]).optional(),
+const finishInput = z.object({
+  kind: z.enum(["learn", "review"]),
+  words: z.array(z.object({ wordId: z.uuid(), mistakes: z.number().int().min(0).max(100) })).min(1).max(200),
+  answers: z
+    .array(z.object({ wordId: z.uuid(), step: z.enum(["card", "choice", "write", "listen"]), correct: z.boolean() }))
+    .max(2000),
 });
 
 /**
- * Saves one answer in the trainer: moves the word up or down the ladder,
- * updates its FSRS memory state and when it comes back. Only for the
- * student's own words (RLS).
+ * Saves a finished session. Learning: the words become learned. Review: they
+ * stay learned. Either way FSRS updates each word's memory (fewer mistakes →
+ * the next "time to review" is further away). Only the student's own words (RLS).
  */
-export async function recordReview(input: z.input<typeof reviewInput>): Promise<Result<{ stage: number; due: string }>> {
-  const parsed = reviewInput.safeParse(input);
+export async function finishSession(input: z.input<typeof finishInput>): Promise<Result<{ learned: number }>> {
+  const parsed = finishInput.safeParse(input);
   const profile = await getProfile();
   if (!parsed.success || profile?.role !== "student") return { ok: false, error: "invalid" };
-  const { wordId, mode, outcome, cardGrade } = parsed.data;
+  const { kind, words, answers } = parsed.data;
   const supabase = await createClient();
-  const { data: word } = await supabase
+  const { data: rows } = await supabase
     .from("vocabulary")
     .select("id, stage, fsrs, reviews, learned_at")
-    .eq("id", wordId)
     .eq("student_id", profile.id)
-    .maybeSingle();
-  if (!word) return { ok: false, error: "forbidden" };
+    .in(
+      "id",
+      words.map((w) => w.wordId),
+    );
+  if (!rows?.length) return { ok: false, error: "forbidden" };
 
   const now = new Date();
-  const grade: Grade = gradeFor(outcome, mode === "card" ? cardGrade ?? (outcome === "wrong" ? 1 : 3) : undefined);
-  const card = await reviewCard(word.fsrs, grade, now);
-  const stage = nextStage(word.stage, grade);
-  const due = nextDue(stage, grade, card.dueAt, now, word.stage);
-  const learnedAt = stage >= LEARNED ? (word.learned_at ?? now.toISOString()) : null;
+  let learned = 0;
+  const results = await Promise.all(
+    rows.map(async (row) => {
+      const mistakes = words.find((w) => w.wordId === row.id)?.mistakes ?? 0;
+      const grade = finalGrade(mistakes, kind);
+      const card = await reviewCard(row.fsrs, grade, now);
+      if (row.stage < LEARNED) learned++;
+      return supabase
+        .from("vocabulary")
+        .update({
+          stage: LEARNED,
+          fsrs: JSON.parse(JSON.stringify(card)) as Json,
+          due: card.dueAt.toISOString(),
+          learned_at: row.learned_at ?? now.toISOString(),
+          reviews: row.reviews + 1,
+        })
+        .eq("id", row.id);
+    }),
+  );
+  if (results.some((r) => r.error)) return { ok: false, error: "generic" };
 
-  const { error } = await supabase
-    .from("vocabulary")
-    .update({
-      stage,
-      fsrs: JSON.parse(JSON.stringify(card)) as Json,
-      due: due.toISOString(),
-      learned_at: learnedAt,
-      reviews: word.reviews + 1,
-    })
-    .eq("id", wordId);
-  if (error) return { ok: false, error: "generic" };
-  await supabase.from("vocabulary_reviews").insert({
-    word_id: wordId,
-    mode,
-    correct: grade > 1,
-    grade,
-    stage_before: word.stage,
-    stage_after: stage,
-  });
-  return { ok: true, data: { stage, due: due.toISOString() } };
+  const mine = new Map(rows.map((r) => [r.id, r.stage]));
+  const log = answers
+    .filter((a) => mine.has(a.wordId))
+    .map((a) => ({
+      word_id: a.wordId,
+      mode: a.step,
+      correct: a.correct,
+      grade: a.correct ? 3 : 1,
+      stage_before: mine.get(a.wordId)!,
+      stage_after: LEARNED,
+    }));
+  if (log.length) await supabase.from("vocabulary_reviews").insert(log);
+  revalidatePath("/[locale]/vocabulary", "page");
+  return { ok: true, data: { learned } };
 }
 
-/** "Learn again": the word starts the ladder from the beginning, right now. */
+/** "Learn again": the word goes back to the words to learn. */
 export async function relearnWord(wordId: string): Promise<Result> {
   if (!z.uuid().safeParse(wordId).success) return { ok: false, error: "invalid" };
   const profile = await getProfile();
@@ -81,6 +93,5 @@ export async function relearnWord(wordId: string): Promise<Result> {
   if (error) return { ok: false, error: "generic" };
   if (!data.length) return { ok: false, error: "forbidden" };
   revalidatePath("/[locale]/vocabulary", "page");
-  revalidatePath("/[locale]/trainer", "page");
   return { ok: true, data: undefined };
 }
