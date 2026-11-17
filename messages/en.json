@@ -678,12 +678,21 @@
       "nameTooLong": "The name is too long",
       "callUrlInvalid": "Use a link that starts with https://",
       "individualTooMany": "The class has several students, so it can only be a group.",
-      "emailTaken": "This email is already registered. Send the student the invite link — they can log in and join."
+      "emailTaken": "This email is already registered. Send the student the invite link — they can log in and join.",
+      "otherTeacher": "This student also studies with another teacher."
     },
     "vocabularyLine": "Dictionary: {total} · learned {learned}",
     "openProgress": "Dictionary and progress",
     "homeworkTab": "Homework",
-    "toCheckCount": "{count, plural, one {# work to check} other {# works to check}}"
+    "toCheckCount": "{count, plural, one {# work to check} other {# works to check}}",
+    "info": "Class",
+    "infoFor": "Info and settings of “{name}”",
+    "settingsTab": "Settings",
+    "settingsTitle": "Class settings",
+    "noCallLink": "Not set",
+    "scheduleTitle": "Schedule",
+    "scheduleSoon": "The class schedule comes in stage 5.",
+    "continueLesson": "Continue “{title}”"
   },
   "join": {
     "title": "Class invitation",
@@ -1147,6 +1156,13 @@
     "newClassName": "Name of the new class",
     "createClass": "Create a class with the student",
     "addedToClass": "{name} is in “{cls}”",
-    "classCreated": "Class “{cls}” created"
+    "classCreated": "Class “{cls}” created",
+    "deleteAccount": "Delete the account",
+    "deleteTitle": "Delete {name}'s account?",
+    "deleteText": "The student won't be able to sign in. Their answers, homework, dictionary and recordings are deleted for good — this can't be undone.",
+    "deleteForGood": "Delete for good",
+    "cancel": "Cancel",
+    "accountDeleted": "{name}'s account deleted",
+    "otherTeacher": "This student also studies with another teacher, so the account can't be deleted. You can remove them from your classes."
   }
 }
