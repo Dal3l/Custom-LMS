@@ -83,7 +83,7 @@ export function CourseHeader({
       const result = await deleteCourse(course.id);
       if (result.ok) {
         toast.success(t("deleted"));
-        router.replace("/courses");
+        router.replace("/library");
       } else {
         toast.error(t(`errors.${result.error}`));
       }

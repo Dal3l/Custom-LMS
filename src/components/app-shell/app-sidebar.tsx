@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Link, usePathname } from "@/i18n/navigation";
 import type { UserRole } from "@/lib/supabase/database.types";
-import { getNavItems, type NavIcon } from "./nav-items";
+import { getNavItems, isActive, type NavIcon } from "./nav-items";
 
 const ICONS: Record<NavIcon, LucideIcon> = {
   home: House,
@@ -55,7 +55,7 @@ export function AppSidebar({ role }: { role: UserRole }) {
             <SidebarMenu>
               {getNavItems(role).map((item) => {
                 const Icon = ICONS[item.icon];
-                const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+                const active = isActive(item, pathname);
                 return (
                   <SidebarMenuItem key={item.key}>
                     <SidebarMenuButton asChild isActive={active} size="lg">

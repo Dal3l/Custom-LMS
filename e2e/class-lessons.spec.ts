@@ -222,7 +222,13 @@ test.describe("lessons in a class", () => {
     await db.from("lessons").insert({ module_id: mod!.id, title: "Hello", position: 0 });
 
     await login(page, teacher.email!, teacher.password!);
-    await page.goto("/ru/library");
+    // Library: "My materials" and "Ready-made courses"; no separate "Courses" in the menu.
+    await page.goto("/ru/courses");
+    await expect(page).toHaveURL(/\/ru\/library$/);
+    await expect(page.getByRole("link", { name: "Курсы", exact: true })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: "Мои материалы" })).toHaveAttribute("aria-current", "page");
+    await page.getByRole("link", { name: "Готовые курсы" }).click();
+    await expect(page).toHaveURL(/tab=ready/);
     await page.getByRole("link", { name: new RegExp(title) }).click();
     await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
     await page.getByRole("link", { name: /Hello/ }).click();
