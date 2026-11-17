@@ -24,7 +24,7 @@ export default async function LibraryCoursePage({ params }: PageProps<"/[locale]
 
   return (
     <div className="flex flex-col gap-6">
-      <Link href="/library" className="flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <Link href="/library?tab=ready" className="flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ChevronLeft className="size-4" aria-hidden="true" />
         {t("backToLibrary")}
       </Link>

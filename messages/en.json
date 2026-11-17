@@ -204,7 +204,7 @@
     "saved": "Saved",
     "copied": "Copy created",
     "deleted": "Deleted",
-    "backToCourses": "All courses",
+    "backToCourses": "My materials",
     "titleField": "Title",
     "errors": {
       "titleRequired": "Enter a title",
@@ -710,7 +710,11 @@
     "copyToMine": "Copy to my courses",
     "copied": "The course was copied to “My courses”",
     "copyFailed": "Couldn't copy the course. Please try again.",
-    "preview": "View as a student"
+    "preview": "View as a student",
+    "mine": "My materials",
+    "ready": "Ready-made courses",
+    "mineSubtitle": "Your courses and lessons: create and edit them",
+    "tabs": "Library sections"
   },
   "classLessons": {
     "openLesson": "Open lesson",

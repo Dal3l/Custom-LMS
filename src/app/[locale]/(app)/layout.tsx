@@ -1,5 +1,7 @@
 import { setRequestLocale } from "next-intl/server";
+import { Suspense } from "react";
 import { AppSidebar } from "@/components/app-shell/app-sidebar";
+import { NavigationProgress } from "@/components/app-shell/navigation-progress";
 import { UserMenu } from "@/components/app-shell/user-menu";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { NotificationBell } from "@/components/notifications/notification-bell";
@@ -23,6 +25,9 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
 
   return (
     <SidebarProvider>
+      <Suspense>
+        <NavigationProgress />
+      </Suspense>
       <AppSidebar role={profile.role} />
       <SidebarInset>
         <header className="sticky top-0 z-10 flex h-14 items-center gap-2 border-b bg-background/90 px-3 backdrop-blur sm:px-4">
