@@ -8,9 +8,9 @@ describe("navigation by role", () => {
     expect(canAccess("teacher", "trainer")).toBe(false);
   });
 
-  it("student sees vocabulary and trainer but no course builder", () => {
+  it("student sees the dictionary (with the trainer inside) but no course builder", () => {
     const keys = getNavItems("student").map((i) => i.key);
-    expect(keys).toEqual(["dashboard", "classes", "homework", "vocabulary", "trainer", "schedule"]);
+    expect(keys).toEqual(["dashboard", "classes", "homework", "vocabulary", "schedule"]);
     expect(canAccess("student", "courses")).toBe(false);
     expect(canAccess("student", "library")).toBe(false);
   });

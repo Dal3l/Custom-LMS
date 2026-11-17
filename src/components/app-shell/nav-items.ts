@@ -35,7 +35,7 @@ const ITEMS: Record<NavKey, NavItem> = {
 
 const BY_ROLE: Record<UserRole, NavKey[]> = {
   teacher: ["dashboard", "classes", "courses", "library", "homework", "schedule"],
-  student: ["dashboard", "classes", "homework", "vocabulary", "trainer", "schedule"],
+  student: ["dashboard", "classes", "homework", "vocabulary", "schedule"],
 };
 
 export function getNavItems(role: UserRole): NavItem[] {

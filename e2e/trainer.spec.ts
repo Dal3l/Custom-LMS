@@ -2,10 +2,10 @@ import { createClient } from "@supabase/supabase-js";
 import { createTempStudent, removeTempStudents } from "./temp-student";
 import { expect as baseExpect, test, type Page } from "@playwright/test";
 
-// The trainer: words from the dictionary (one added by the teacher) are due
-// today; cards → pick the translation → write the word (a small typo is
-// "almost") → write it by ear → learned. Learned words have their own tab in
-// the dictionary and can be learned again.
+// The trainer inside the Dictionary: "Learn words" → choose the words → cards,
+// pick the translation, writing, by ear — one step after another; a mistake
+// comes back at the end of its step → the words are learned. Learned words
+// show "Time to review" and can be reviewed with chosen steps.
 const teacher = { email: process.env.E2E_TEACHER_EMAIL };
 const secret = process.env.SUPABASE_SECRET_KEY;
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -24,135 +24,132 @@ async function login(page: Page, email: string, password: string) {
   await expect(page).toHaveURL(/\/ru\/dashboard/);
 }
 
-/** Answers whatever exercise is on screen, right (or "Don't remember" for a card when asked). */
-async function answer(page: Page, forget = false) {
+/** Answers the task on screen. `wrongOnce` picks a wrong translation for that word (once). */
+async function answer(page: Page, wrongOnce: Set<string>) {
   const main = page.getByRole("main");
-  const card = main.getByRole("region", { name: "Карточка" });
-  const choice = main.getByRole("region", { name: "Выберите перевод" });
-  const write = main.getByRole("form", { name: "Напишите слово" });
-  await expect(card.or(choice).or(write)).toBeVisible();
+  const card = main.getByRole("region", { name: "Карточки" });
+  const choice = main.getByRole("region", { name: "Выбор перевода" });
+  const write = main.getByRole("form", { name: "Написание" });
+  const ear = main.getByRole("form", { name: "На слух" });
+  await expect(card.or(choice).or(write).or(ear)).toBeVisible();
   if (await card.isVisible()) {
-    await card.getByRole("button", { name: "Показать перевод" }).click();
-    await card.getByRole("button", { name: forget ? "Не помню" : "Помню", exact: true }).click();
+    await card.getByRole("button", { name: "Дальше" }).click();
   } else if (await choice.isVisible()) {
     const term = (await choice.locator("[lang]").first().innerText()).trim();
-    await choice.getByRole("button", { name: WORDS[term] }).click();
+    const right = WORDS[term];
+    if (wrongOnce.delete(term)) {
+      await choice.getByRole("group").getByRole("button").filter({ hasNotText: right }).first().click();
+      await expect(choice.getByRole("status")).toContainText("ещё раз в конце этапа");
+    } else {
+      await choice.getByRole("button", { name: right }).click();
+    }
     await choice.getByRole("button", { name: "Дальше" }).click();
-  } else {
+  } else if (await write.isVisible()) {
     const translation = (await write.locator("p").first().innerText()).trim();
     await write.getByRole("textbox", { name: "Ваш ответ" }).fill(TERM_OF[translation]);
     await write.getByRole("button", { name: "Проверить" }).click();
+    await expect(write.getByRole("status")).toContainText("Верно!");
     await write.getByRole("button", { name: "Дальше" }).click();
+  } else {
+    // By ear: the word the page said (the test listens to the browser's voice).
+    await expect.poll(() => page.evaluate(() => (window as unknown as { said: string[] }).said.length)).toBeGreaterThan(0);
+    const said = await page.evaluate(() => (window as unknown as { said: string[] }).said.at(-1)!);
+    await ear.getByRole("textbox", { name: "Ваш ответ" }).fill(said);
+    await ear.getByRole("button", { name: "Проверить" }).click();
+    await expect(ear.getByRole("status")).toContainText("Верно!");
+    await ear.getByRole("button", { name: "Дальше" }).click();
   }
 }
 
-test.describe("trainer", () => {
+test.describe("trainer in the dictionary", () => {
   test.skip(!teacher.email || !secret || !url, "test accounts not configured");
-  test.setTimeout(180_000);
+  test.setTimeout(240_000);
   test.afterAll(async () => {
     await removeTempStudents();
   });
 
-  test("the ladder: cards, choice, writing, by ear, learned", async ({ page }, testInfo) => {
+  test("learn words through all steps, then review", async ({ page }, testInfo) => {
     const stamp = `${Date.now()}-${testInfo.project.name}`;
     const db = admin();
     const pupil = await createTempStudent(stamp);
     const { data: users } = await db.auth.admin.listUsers({ perPage: 200 });
     const teacherId = users.users.find((u) => u.email === teacher.email)!.id;
-    const past = new Date(Date.now() - 60_000).toISOString();
     for (const [term, translation] of Object.entries(WORDS)) {
       // "apple" came from the teacher during a lesson.
-      await db.from("vocabulary").insert({
-        student_id: pupil.id,
-        term,
-        translation,
-        language: "en",
-        added_by: term === "apple" ? teacherId : pupil.id,
-        due: past,
-      });
+      await db.from("vocabulary").insert({ student_id: pupil.id, term, translation, language: "en", added_by: term === "apple" ? teacherId : pupil.id });
     }
-    const ids = Object.fromEntries(
-      ((await db.from("vocabulary").select("id, term").eq("student_id", pupil.id)).data ?? []).map((w) => [w.term, w.id]),
-    );
-    const setWord = (term: string, patch: Record<string, unknown>) => db.from("vocabulary").update(patch).eq("id", ids[term]);
-    const allLater = () => db.from("vocabulary").update({ due: new Date(Date.now() + 86_400_000).toISOString() }).eq("student_id", pupil.id);
-
-    await login(page, pupil.email, pupil.password);
-    await page.goto("/ru/trainer");
-    await expect(page.getByRole("status").filter({ hasText: "На сегодня к повторению" })).toContainText("5 слов");
-
-    // Session 1: five new words as cards; "apple" (the teacher's) not remembered.
-    await page.getByRole("link", { name: "Начать" }).click();
-    for (let i = 0; i < 5; i++) {
-      const term = (await page.getByRole("region", { name: "Карточка" }).locator("[lang]").first().innerText()).trim();
-      await answer(page, term === "apple");
-    }
-    await expect(page.getByText("Правильно 4 из 5")).toBeVisible();
-    await expect
-      .poll(async () => ((await db.from("vocabulary").select("term, stage").eq("student_id", pupil.id)).data ?? []).map((w) => `${w.term}:${w.stage}`).sort())
-      .toEqual(["apple:0", "cat:1", "dog:1", "house:1", "sun:1"]);
-    await page.getByRole("link", { name: "К тренажёру" }).click();
-    await expect(page.getByText("На сегодня всё повторено!")).toBeVisible();
-
-    // Session 2 (as if 10 minutes passed): the 4 words pick the translation, "apple" is a card again.
-    await db.from("vocabulary").update({ due: past }).eq("student_id", pupil.id);
-    await page.reload();
-    await page.getByRole("link", { name: "Начать" }).click();
-    for (let i = 0; i < 5; i++) await answer(page);
-    await expect(page.getByText("Правильно 5 из 5")).toBeVisible();
-    // Answers are saved in the background: wait for all ten.
+    await db.from("vocabulary").insert({ student_id: pupil.id, term: "moon", translation: "", language: "en", added_by: pupil.id });
     const reviews = async () => (await db.from("vocabulary_reviews").select("id", { count: "exact", head: true }).eq("student_id", pupil.id)).count;
-    await expect.poll(reviews).toBe(10);
-    await expect.poll(async () => (await db.from("vocabulary").select("stage").eq("id", ids.cat).single()).data?.stage).toBe(2);
 
-    // Writing with a small typo counts as "almost" and still moves on.
-    await allLater();
-    await setWord("house", { stage: 2, due: past });
-    await page.goto("/ru/trainer/session?kind=due");
-    const write = page.getByRole("form", { name: "Напишите слово" });
-    await expect(write).toContainText("дом");
-    await write.getByRole("textbox", { name: "Ваш ответ" }).fill("hous");
-    await write.getByRole("button", { name: "Проверить" }).click();
-    await expect(write.getByRole("status")).toContainText("Почти верно");
-    await expect(write.getByRole("status")).toContainText("house");
-    await write.getByRole("button", { name: "Дальше" }).click();
-    await expect.poll(async () => (await db.from("vocabulary").select("stage").eq("id", ids.house).single()).data?.stage).toBe(3);
+    // Listen to what the page says out loud.
+    await page.addInitScript(() => {
+      const w = window as unknown as { said: string[] };
+      w.said = [];
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.speak = (u: SpeechSynthesisUtterance) => void w.said.push(u.text);
+      }
+    });
+    await login(page, pupil.email, pupil.password);
 
-    // By ear, the last step: the word becomes learned.
-    await setWord("sun", { stage: 3, due: past });
-    await setWord("house", { due: new Date(Date.now() + 86_400_000).toISOString() });
-    await page.goto("/ru/trainer/session?kind=due");
-    const ear = page.getByRole("form", { name: "Напишите, что услышали" });
-    await expect(ear.getByRole("button", { name: "Послушать ещё раз" })).toBeVisible();
-    await ear.getByRole("textbox", { name: "Ваш ответ" }).fill("Sun");
-    await ear.getByRole("button", { name: "Проверить" }).click();
-    await expect(ear.getByRole("status")).toContainText("Верно!");
-    await ear.getByRole("button", { name: "Дальше" }).click();
-    await expect(page.getByText("1 слово выучено")).toBeVisible();
-    await expect.poll(reviews).toBe(12);
-    const sun = (await db.from("vocabulary").select("stage, learned_at, due").eq("id", ids.sun).single()).data!;
-    expect(sun.stage).toBe(4);
-    expect(sun.learned_at).not.toBeNull();
-    // Checked again only after a few days.
-    expect(new Date(sun.due).getTime() - Date.now()).toBeGreaterThan(3 * 86_400_000);
-
-    // The trainer offers learned words for practice; the dictionary has a "Learned" tab.
+    // No separate Trainer any more: it lives in the Dictionary.
+    await expect(page.getByRole("link", { name: "Тренажёр" })).toHaveCount(0);
     await page.goto("/ru/trainer");
-    await expect(page.getByRole("link", { name: "Повторить выученные" })).toBeVisible();
-    await page.goto("/ru/vocabulary");
-    const words = page.getByRole("list", { name: "Словарь" });
-    await expect(words.getByRole("listitem").filter({ hasText: "sun" })).toHaveCount(0);
-    await page.getByRole("button", { name: /^Выучено/ }).click();
-    const learned = words.getByRole("listitem").filter({ hasText: "sun" });
-    await expect(learned).toContainText("Выучено");
-    await learned.getByRole("button", { name: "Действия со словом «sun»" }).click();
-    await page.getByRole("menuitem", { name: "Учить заново" }).click();
-    await expect(page.getByText("«sun» снова в изучении")).toBeVisible();
-    await expect(learned).toHaveCount(0);
-    await page.getByRole("button", { name: /^Учу/ }).click();
-    await expect(words.getByRole("listitem").filter({ hasText: "sun" })).toContainText("Учу");
+    await expect(page).toHaveURL(/\/ru\/vocabulary/);
+    await expect(page.getByText("5 слов ждут изучения.").filter({ visible: true })).toBeVisible();
+    await expect(page.getByText("1 слово без перевода не участвует").filter({ visible: true })).toBeVisible();
 
-    // Every answer is kept (for the teacher's progress later).
-    expect(await reviews()).toBe(12);
+    // Learn words → all of them.
+    await page.getByRole("button", { name: "Учить слова" }).click();
+    const dialog = page.getByRole("dialog", { name: "Учить слова" });
+    await dialog.getByRole("button", { name: "Все (5)" }).click();
+    await dialog.getByRole("button", { name: "Начать · 5 слов" }).click();
+
+    // Step 1 of 4 … step 4 of 4; one wrong pick comes back at the end of its step.
+    await expect(page.getByText("Этап 1 из 4 · Карточки")).toBeVisible();
+    const wrongOnce = new Set(["cat"]);
+    for (let i = 0; i < 21; i++) await answer(page, wrongOnce);
+    await expect(page.getByRole("status").filter({ hasText: "5 слов перешли в «Выучено»" })).toBeVisible();
+    await expect(page.getByText("Ошибки были в 1 слове:")).toBeVisible();
+    await expect(page.getByRole("listitem").filter({ hasText: "cat — кот" })).toBeVisible();
+    expect(await reviews()).toBe(21);
+    const learned = (await db.from("vocabulary").select("term, stage, due").eq("student_id", pupil.id).eq("stage", 4)).data ?? [];
+    expect(learned.map((w) => w.term).sort()).toEqual(["apple", "cat", "dog", "house", "sun"]);
+    expect(learned.every((w) => new Date(w.due).getTime() > Date.now())).toBe(true);
+
+    // Back in the Dictionary: the "Learned" tab; for now nothing to review.
+    await page.getByRole("button", { name: "К словарю" }).click();
+    await expect(page.getByRole("button", { name: /^Выучено/ })).toHaveAttribute("aria-pressed", "true");
+    await expect(page.getByText("Все выученные слова пока хорошо помнятся.")).toBeVisible();
+
+    // Some time later two words need a review.
+    await db.from("vocabulary").update({ due: new Date(Date.now() - 60_000).toISOString() }).eq("student_id", pupil.id).in("term", ["dog", "sun"]);
+    await page.reload();
+    await page.getByRole("button", { name: /^Выучено/ }).click();
+    await expect(page.getByRole("status").filter({ hasText: "Пора повторить: 2 слова" })).toBeVisible();
+    const words = page.getByRole("list", { name: "Словарь" });
+    await expect(words.getByRole("listitem").filter({ hasText: "dog" })).toContainText("Пора повторить");
+
+    // Review: chosen word, only the writing step.
+    await page.getByRole("button", { name: "Повторить" }).click();
+    const review = page.getByRole("dialog", { name: "Повторить слова" });
+    await review.getByRole("button", { name: "Выбрать самому" }).click();
+    await review.getByRole("checkbox").first().waitFor();
+    await review.getByRole("listitem").filter({ hasText: "dog" }).getByRole("checkbox").click();
+    for (const step of ["Карточки", "Выбор перевода", "На слух"]) await review.getByRole("checkbox", { name: step }).click();
+    await review.getByRole("button", { name: "Начать · 1 слово" }).click();
+    await expect(page.getByText("Этап 1 из 1 · Написание")).toBeVisible();
+    await answer(page, new Set());
+    await expect(page.getByRole("status").filter({ hasText: "Повторено 1 слово" })).toBeVisible();
+    await page.getByRole("button", { name: "К словарю" }).click();
+    await expect(page.getByRole("status").filter({ hasText: "Пора повторить: 1 слово" })).toBeVisible();
+
+    // "Learn again" sends a learned word back to the words to learn.
+    await page.getByRole("button", { name: /^Выучено/ }).click();
+    const sun = words.getByRole("listitem").filter({ hasText: "sun" });
+    await sun.getByRole("button", { name: "Действия со словом «sun»" }).click();
+    await page.getByRole("menuitem", { name: "Учить заново" }).click();
+    await expect(sun).toHaveCount(0);
+    await page.getByRole("button", { name: /^Учу/ }).click();
+    await expect(words.getByRole("listitem").filter({ hasText: "sun" })).toBeVisible();
   });
 });
