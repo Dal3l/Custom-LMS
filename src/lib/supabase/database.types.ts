@@ -850,6 +850,85 @@ export type Database = {
         }
         Relationships: []
       }
+      schedule_events: {
+        Row: {
+          class_id: string
+          created_at: string
+          duration_min: number
+          id: string
+          local_time: string
+          starts_on: string
+          time_zone: string
+          until: string | null
+          updated_at: string
+          weekdays: number[] | null
+        }
+        Insert: {
+          class_id: string
+          created_at?: string
+          duration_min: number
+          id?: string
+          local_time: string
+          starts_on: string
+          time_zone: string
+          until?: string | null
+          updated_at?: string
+          weekdays?: number[] | null
+        }
+        Update: {
+          class_id?: string
+          created_at?: string
+          duration_min?: number
+          id?: string
+          local_time?: string
+          starts_on?: string
+          time_zone?: string
+          until?: string | null
+          updated_at?: string
+          weekdays?: number[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_events_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_overrides: {
+        Row: {
+          cancelled: boolean
+          duration_min: number | null
+          event_id: string
+          moved_to: string | null
+          occurs_on: string
+        }
+        Insert: {
+          cancelled?: boolean
+          duration_min?: number | null
+          event_id: string
+          moved_to?: string | null
+          occurs_on: string
+        }
+        Update: {
+          cancelled?: boolean
+          duration_min?: number | null
+          event_id?: string
+          moved_to?: string | null
+          occurs_on?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_overrides_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "schedule_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sections: {
         Row: {
           course_id: string

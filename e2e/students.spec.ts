@@ -95,7 +95,7 @@ test.describe("students page", () => {
     await page.getByRole("link", { name: `Информация и настройки класса «${second.name}»` }).click();
     await expect(page.getByRole("tab", { name: /Ученики · 1/ })).toHaveAttribute("aria-selected", "true");
     await page.getByRole("tab", { name: "Настройки" }).click();
-    await expect(page.getByRole("region", { name: "Расписание" })).toContainText("этапе 5");
+    await expect(page.getByRole("region", { name: "Расписание класса" })).toContainText("пока нет занятий");
     await expect(page.getByRole("region", { name: "Настройки класса" })).toContainText("Индивидуальный");
 
     // Deleting a student's account: gone for good (and off the list).
