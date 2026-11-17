@@ -27,13 +27,14 @@ export type ClassFormState = {
 };
 
 export type Credentials = { fullName: string; email: string; password: string; loginUrl: string };
-export type RegisterStudentState = ClassFormState & { credentials?: Credentials };
+export type RegisterStudentState = ClassFormState & { credentials?: Credentials; studentId?: string };
 
 const ok = <T,>(data: T): ActionResult<T> => ({ ok: true, data });
 const fail = (error: ClassActionError = "generic"): ActionResult<never> => ({ ok: false, error });
 
 function refresh() {
   revalidatePath("/[locale]/classes", "layout");
+  revalidatePath("/[locale]/students", "page");
 }
 
 function fieldErrorsOf(issues: { path: PropertyKey[]; message: string }[]) {
@@ -145,12 +146,15 @@ export async function registerStudent(
   _prev: RegisterStudentState,
   formData: FormData,
 ): Promise<RegisterStudentState> {
-  const ctx = await ownClass(formData.get("classId"));
-  if (!ctx) return { status: "error", formError: "forbidden" };
+  // From a class page: into that class. From the Students page: no class yet.
+  const withClass = Boolean(formData.get("classId"));
+  const ctx = await teacherClient();
+  const cls = withClass ? (await ownClass(formData.get("classId")))?.cls : null;
+  if (!ctx || (withClass && !cls)) return { status: "error", formError: "forbidden" };
   const values = formValues(formData, ["fullName", "email", "timezone"]);
   const parsed = registerStudentSchema.safeParse(values);
   if (!parsed.success) return { status: "error", fieldErrors: fieldErrorsOf(parsed.error.issues), values };
-  if (ctx.cls.kind === "individual" && ctx.cls.studentCount > 0) {
+  if (cls && cls.kind === "individual" && cls.studentCount > 0) {
     return { status: "error", formError: "classFull", values };
   }
 
@@ -174,9 +178,11 @@ export async function registerStudent(
     return { status: "error", formError: "generic", values };
   }
 
-  const { error: memberError } = await admin
-    .from("class_members")
-    .insert({ class_id: ctx.cls.id, student_id: created.user.id });
+  // Into the class (which also puts the student on the teacher's list), or just onto the list.
+  const { error: memberError } =
+    cls
+      ? await admin.from("class_members").insert({ class_id: cls.id, student_id: created.user.id })
+      : await admin.from("teacher_students").insert({ teacher_id: ctx.profile.id, student_id: created.user.id });
   if (memberError) {
     // Don't leave an account nobody knows about.
     await admin.auth.admin.deleteUser(created.user.id);
@@ -186,8 +192,73 @@ export async function registerStudent(
   refresh();
   return {
     status: "success",
+    studentId: created.user.id,
     credentials: { fullName, email, password, loginUrl: `${await getOrigin()}/${locale}/login` },
   };
+}
+
+/** Whether the student is on the signed-in teacher's list (RLS: only their own list). */
+async function onMyList(supabase: Awaited<ReturnType<typeof createClient>>, studentId: string) {
+  const { data } = await supabase.from("teacher_students").select("student_id").eq("student_id", studentId).maybeSingle();
+  return Boolean(data);
+}
+
+/** A student from "My students" into one of the teacher's classes. */
+export async function addStudentToClass(studentId: string, classId: string): Promise<ActionResult> {
+  const ctx = await ownClass(classId);
+  const student = idSchema.safeParse(studentId);
+  if (!ctx || !student.success || !(await onMyList(ctx.supabase, student.data))) return fail("forbidden");
+  const { data: already } = await ctx.supabase
+    .from("class_members")
+    .select("student_id")
+    .eq("class_id", ctx.cls.id)
+    .eq("student_id", student.data)
+    .maybeSingle();
+  if (already) return ok(undefined);
+  if (ctx.cls.kind === "individual" && ctx.cls.studentCount > 0) return fail("classFull");
+  // Students can't add themselves to classes; the teacher's access is checked above.
+  const { error } = await createAdminClient().from("class_members").insert({ class_id: ctx.cls.id, student_id: student.data });
+  if (error) return fail();
+  refresh();
+  return ok(undefined);
+}
+
+/** A new class for a student from "My students" (individual or group), with the student in it. */
+export async function createClassForStudent(studentId: string, name: string, kind: "individual" | "group"): Promise<ActionResult<string>> {
+  const ctx = await teacherClient();
+  const student = idSchema.safeParse(studentId);
+  const form = classSchema.safeParse({ name, kind, call_url: "" });
+  if (!ctx || !student.success || !(await onMyList(ctx.supabase, student.data))) return fail("forbidden");
+  if (!form.success) return fail();
+  const { data: cls, error } = await ctx.supabase
+    .from("classes")
+    .insert({ name: form.data.name, kind: form.data.kind, call_url: form.data.call_url })
+    .select("id")
+    .single();
+  if (error || !cls) return fail();
+  await ctx.supabase.from("class_invites").insert({ class_id: cls.id, token: generateInviteToken() });
+  const { error: memberError } = await createAdminClient().from("class_members").insert({ class_id: cls.id, student_id: student.data });
+  if (memberError) return fail();
+  refresh();
+  return ok(cls.id);
+}
+
+/** Takes a student off "My students" (only when they are in none of the teacher's classes). */
+export async function removeFromMyStudents(studentId: string): Promise<ActionResult> {
+  const ctx = await teacherClient();
+  const student = idSchema.safeParse(studentId);
+  if (!ctx || !student.success) return fail("forbidden");
+  const { data: inClass } = await ctx.supabase
+    .from("class_members")
+    .select("class_id, classes!inner(teacher_id)")
+    .eq("student_id", student.data)
+    .eq("classes.teacher_id", ctx.profile.id)
+    .limit(1);
+  if (inClass?.length) return fail("forbidden");
+  const { error } = await ctx.supabase.from("teacher_students").delete().eq("student_id", student.data);
+  if (error) return fail();
+  refresh();
+  return ok(undefined);
 }
 
 // ---------------------------------------------------------------------------

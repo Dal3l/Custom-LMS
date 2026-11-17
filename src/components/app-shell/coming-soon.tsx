@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { Card, CardContent } from "@/components/ui/card";
 import type { NavKey } from "./nav-items";
 
-type Section = Exclude<NavKey, "dashboard">;
+type Section = Exclude<NavKey, "dashboard" | "students">;
 
 /** Development stage (SPEC.md §13) in which each section arrives. */
 const STAGE: Record<Section, number> = {

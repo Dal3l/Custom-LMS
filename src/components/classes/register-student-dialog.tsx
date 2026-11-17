@@ -59,23 +59,33 @@ export function RegisterStudentDialog({
   );
 }
 
-function RegisterForm({
+/**
+ * The registration form; after success it shows the message for the student.
+ * Without a class (the Students page) `after` adds the next step under it.
+ */
+export function RegisterForm({
   classId,
   timeZones,
   defaultTimeZone,
   onClose,
+  after,
 }: {
-  classId: string;
+  classId?: string;
   timeZones: string[];
   defaultTimeZone: string;
   onClose: () => void;
+  after?: (studentId: string, fullName: string) => React.ReactNode;
 }) {
   const t = useTranslations("classes");
   const tv = useTranslations("validation");
   const [state, action] = useActionState(registerStudent, initial);
 
   if (state.status === "success" && state.credentials) {
-    return <CredentialsView credentials={state.credentials} onClose={onClose} />;
+    return (
+      <CredentialsView credentials={state.credentials} onClose={onClose}>
+        {after && state.studentId && after(state.studentId, state.credentials.fullName)}
+      </CredentialsView>
+    );
   }
 
   const err = (name: string) => {
@@ -90,7 +100,7 @@ function RegisterForm({
 
   return (
     <form action={action} className="flex flex-col gap-4" noValidate>
-      <input type="hidden" name="classId" value={classId} />
+      {classId && <input type="hidden" name="classId" value={classId} />}
       <DialogHeader>
         <DialogTitle>{t("registerStudent")}</DialogTitle>
         <DialogDescription>{t("registerHint")}</DialogDescription>
@@ -152,7 +162,15 @@ function RegisterForm({
   );
 }
 
-function CredentialsView({ credentials, onClose }: { credentials: Credentials; onClose: () => void }) {
+function CredentialsView({
+  credentials,
+  onClose,
+  children,
+}: {
+  credentials: Credentials;
+  onClose: () => void;
+  children?: React.ReactNode;
+}) {
   const t = useTranslations("classes");
   const message = t("credentialsMessage", {
     name: credentials.fullName,
@@ -177,6 +195,7 @@ function CredentialsView({ credentials, onClose }: { credentials: Credentials; o
       >
         {message}
       </div>
+      {children}
       <DialogFooter>
         <Button type="button" variant="outline" onClick={onClose}>
           {t("done")}

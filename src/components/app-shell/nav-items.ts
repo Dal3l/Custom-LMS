@@ -3,6 +3,7 @@ import type { UserRole } from "@/lib/supabase/database.types";
 export type NavKey =
   | "dashboard"
   | "classes"
+  | "students"
   | "courses"
   | "library"
   | "homework"
@@ -13,6 +14,7 @@ export type NavKey =
 export type NavIcon =
   | "home"
   | "users"
+  | "student"
   | "book"
   | "library"
   | "clipboard"
@@ -26,6 +28,7 @@ export type NavItem = { key: NavKey; href: `/${string}`; icon: NavIcon; also?: `
 const ITEMS: Record<NavKey, NavItem> = {
   dashboard: { key: "dashboard", href: "/dashboard", icon: "home" },
   classes: { key: "classes", href: "/classes", icon: "users" },
+  students: { key: "students", href: "/students", icon: "student" },
   courses: { key: "courses", href: "/courses", icon: "book" },
   library: { key: "library", href: "/library", icon: "library", also: ["/courses"] },
   homework: { key: "homework", href: "/homework", icon: "clipboard" },
@@ -35,7 +38,7 @@ const ITEMS: Record<NavKey, NavItem> = {
 };
 
 const BY_ROLE: Record<UserRole, NavKey[]> = {
-  teacher: ["dashboard", "classes", "library", "homework", "schedule"],
+  teacher: ["dashboard", "classes", "students", "library", "homework", "schedule"],
   student: ["dashboard", "classes", "homework", "vocabulary", "schedule"],
 };
 

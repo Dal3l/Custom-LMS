@@ -114,7 +114,8 @@
     "vocabulary": "Vocabulary",
     "trainer": "Trainer",
     "profile": "Profile",
-    "account": "Account"
+    "account": "Account",
+    "students": "Students"
   },
   "dashboard": {
     "greeting": "Hello, {name}!",
@@ -1113,5 +1114,35 @@
     "words": "The student's words",
     "noWords": "No words in the student's dictionary yet. Add a word here or right in a lesson.",
     "fromYou": "from you"
+  },
+  "students": {
+    "title": "Students",
+    "subtitle": "{count, plural, =0 {All your students from all classes} one {# student from all classes} other {# students from all classes}}",
+    "addStudent": "Add a student",
+    "search": "Find a student or class",
+    "noName": "No name",
+    "emptyTitle": "No students yet",
+    "emptyText": "Add a student: we create an account and give you a ready message with the login and password. Then put them into a class.",
+    "noClass": "Not in a class",
+    "toClass": "To a class",
+    "actions": "Actions: {name}",
+    "progress": "Dictionary and progress",
+    "removeFromList": "Remove from the list",
+    "removed": "{name} removed from the list",
+    "failed": "Something went wrong. Please try again.",
+    "toClassTitle": "{name}: which class",
+    "toClassHint": "Add the student to one of your classes or create a new one for them.",
+    "whereTitle": "Where to add the student",
+    "existingClasses": "Your classes",
+    "studentsCount": "{count, plural, =0 {no students} one {# student} other {# students}}",
+    "taken": "taken",
+    "alreadyIn": "Already in",
+    "add": "Add",
+    "addToNamed": "Add to “{cls}”",
+    "newClass": "New class",
+    "newClassName": "Name of the new class",
+    "createClass": "Create a class with the student",
+    "addedToClass": "{name} is in “{cls}”",
+    "classCreated": "Class “{cls}” created"
   }
 }
