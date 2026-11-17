@@ -7,6 +7,7 @@ import { LessonPicker } from "@/components/classes/lesson-picker";
 import { InvitePanel } from "@/components/classes/invite-panel";
 import { RegisterStudentDialog } from "@/components/classes/register-student-dialog";
 import { StudentsList } from "@/components/classes/students-panel";
+import { vocabularySummaries } from "@/features/trainer/progress-queries";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { listClassLessons } from "@/features/classes/lesson-queries";
 import { getClassPage } from "@/features/classes/queries";
@@ -17,8 +18,9 @@ import { requireProfile } from "@/lib/auth";
 import { getOrigin } from "@/lib/site-url";
 import { listTimeZones } from "@/lib/timezones";
 
-export default async function ClassPage({ params }: PageProps<"/[locale]/classes/[classId]">) {
+export default async function ClassPage({ params, searchParams }: PageProps<"/[locale]/classes/[classId]">) {
   const { locale, classId } = (await params) as { locale: Locale; classId: string };
+  const { tab } = await searchParams;
   setRequestLocale(locale);
   const profile = await requireProfile(locale);
   if (!idSchema.safeParse(classId).success) notFound();
@@ -63,7 +65,7 @@ export default async function ClassPage({ params }: PageProps<"/[locale]/classes
         teacherName={cls.teacherName}
       />
       {cls.isTeacher ? (
-        <Tabs defaultValue="lessons" className="gap-4">
+        <Tabs defaultValue={tab === "students" ? "students" : "lessons"} className="gap-4">
           <TabsList>
             <TabsTrigger value="lessons">{t("lessonsTab")}</TabsTrigger>
             <TabsTrigger value="students">
@@ -85,7 +87,7 @@ export default async function ClassPage({ params }: PageProps<"/[locale]/classes
             {cls.kind === "individual" && cls.students.length > 0 && (
               <p className="text-sm text-muted-foreground">{t("individualHint")}</p>
             )}
-            <StudentsList classId={cls.id} students={cls.students} />
+            <StudentsList classId={cls.id} students={cls.students} vocabulary={await vocabularySummaries(cls.students.map((s) => s.id))} />
           </TabsContent>
         </Tabs>
       ) : (
