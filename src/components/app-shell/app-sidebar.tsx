@@ -5,11 +5,12 @@ import {
   CalendarDays,
   ClipboardList,
   Dumbbell,
+  GraduationCap,
   House,
   Languages,
   Library,
-  Users,
   type LucideIcon,
+  Users,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Logo } from "@/components/logo";
@@ -31,6 +32,7 @@ import { getNavItems, isActive, type NavIcon } from "./nav-items";
 const ICONS: Record<NavIcon, LucideIcon> = {
   home: House,
   users: Users,
+  student: GraduationCap,
   book: BookOpen,
   library: Library,
   clipboard: ClipboardList,

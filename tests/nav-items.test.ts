@@ -4,7 +4,7 @@ import { canAccess, getNavItems, isActive } from "@/components/app-shell/nav-ite
 describe("navigation by role", () => {
   it("teacher sees teaching sections but no trainer", () => {
     const keys = getNavItems("teacher").map((i) => i.key);
-    expect(keys).toEqual(["dashboard", "classes", "library", "homework", "schedule"]);
+    expect(keys).toEqual(["dashboard", "classes", "students", "library", "homework", "schedule"]);
     expect(canAccess("teacher", "trainer")).toBe(false);
   });
 
