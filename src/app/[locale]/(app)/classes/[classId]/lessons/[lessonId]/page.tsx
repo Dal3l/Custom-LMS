@@ -8,6 +8,7 @@ import { StudentClassLesson, TeacherClassLesson } from "@/components/classes/cla
 import { LessonPicker } from "@/components/classes/lesson-picker";
 import { MakeCurrentBanner } from "@/components/classes/make-current-banner";
 import { MyHomeworkView } from "@/components/homework/my-homework";
+import { WordAdderProvider } from "@/components/vocabulary/dictionary-tool";
 import { Badge } from "@/components/ui/badge";
 import { getClassLessonState, listClassMarks } from "@/features/classes/lesson-queries";
 import { getClassPage } from "@/features/classes/queries";
@@ -185,13 +186,16 @@ export default async function ClassLessonPage({
           }}
         />
       ) : showHomework ? (
-        <MyHomeworkView
-          classId={classId}
-          userId={profile.id}
-          language={lesson.course.language}
-          sections={homeworkPart?.sections ?? []}
-          homeworks={myHomeworks}
-        />
+        // Words selected in the homework get a translation and "+" too.
+        <WordAdderProvider place={{ language: lesson.course.language, courseId: lesson.course.id, lessonId, classId }}>
+          <MyHomeworkView
+            classId={classId}
+            userId={profile.id}
+            language={lesson.course.language}
+            sections={homeworkPart?.sections ?? []}
+            homeworks={myHomeworks}
+          />
+        </WordAdderProvider>
       ) : (
         <StudentClassLesson
           {...common}
