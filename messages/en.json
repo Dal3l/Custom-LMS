@@ -582,8 +582,7 @@
     "checking": "Checking…",
     "highlight": {
       "mark": "Highlight",
-      "remove": "Remove",
-      "toDictionary": "To dictionary"
+      "remove": "Remove"
     },
     "backToCourse": "Back to course",
     "sectionDone": "Section finished",
@@ -994,6 +993,27 @@
     "duplicate": "This word is already in the dictionary.",
     "alreadyThere": "“{term}” is already in the dictionary",
     "addedToast": "“{term}” added to the dictionary",
-    "addedForStudents": "{count, plural, one {Added to # student's dictionary} other {Added to # students' dictionaries}}"
+    "addedForStudents": "{count, plural, one {Added to # student's dictionary} other {Added to # students' dictionaries}}",
+    "popup": {
+      "label": "Translation: {term}",
+      "close": "Close",
+      "translating": "Translating…",
+      "translation": "Translation",
+      "typeTranslation": "No translation found — type your own",
+      "ownTranslation": "Your own translation",
+      "edit": "Your own translation",
+      "variants": "Translation variants",
+      "toAll": "All students",
+      "toSome": "{count, plural, one {# student} other {# students}}",
+      "noName": "No name",
+      "add": "To dictionary",
+      "addForStudent": "For the student",
+      "addForStudents": "For students",
+      "noStudents": "No students in the class yet.",
+      "failed": "Something went wrong. Check your connection and try again.",
+      "added": "“{term}” added to the dictionary",
+      "alreadyThere": "“{term}” is already in the dictionary",
+      "addedForStudents": "“{term}” added to {count, plural, one {# student's dictionary} other {# students' dictionaries}}"
+    }
   }
 }

@@ -582,8 +582,7 @@
     "checking": "Тексерілуде…",
     "highlight": {
       "mark": "Белгілеу",
-      "remove": "Алып тастау",
-      "toDictionary": "Сөздікке"
+      "remove": "Алып тастау"
     },
     "backToCourse": "Курсқа оралу",
     "sectionDone": "Бөлім аяқталды",
@@ -994,6 +993,27 @@
     "duplicate": "Бұл сөз сөздікте бар.",
     "alreadyThere": "«{term}» сөздікте бар",
     "addedToast": "«{term}» сөздікке қосылды",
-    "addedForStudents": "{count, plural, other {# оқушының сөздігіне қосылды}}"
+    "addedForStudents": "{count, plural, other {# оқушының сөздігіне қосылды}}",
+    "popup": {
+      "label": "Аударма: {term}",
+      "close": "Жабу",
+      "translating": "Аударып жатыр…",
+      "translation": "Аудармасы",
+      "typeTranslation": "Аударма табылмады — өзіңіз жазыңыз",
+      "ownTranslation": "Өз аудармаңыз",
+      "edit": "Өз аудармаңыз",
+      "variants": "Аударма нұсқалары",
+      "toAll": "Барлық оқушыға",
+      "toSome": "{count, plural, other {# оқушыға}}",
+      "noName": "Атысыз",
+      "add": "Сөздікке",
+      "addForStudent": "Оқушыға",
+      "addForStudents": "Оқушыларға",
+      "noStudents": "Сыныпта әлі оқушы жоқ.",
+      "failed": "Болмады. Интернетті тексеріп, қайта көріңіз.",
+      "added": "«{term}» сөздікке қосылды",
+      "alreadyThere": "«{term}» сөздікте бар",
+      "addedForStudents": "«{term}» {count, plural, other {# оқушының сөздігіне}} қосылды"
+    }
   }
 }

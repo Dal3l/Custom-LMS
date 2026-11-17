@@ -2,16 +2,17 @@
 
 import { BookA } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { ToolButton } from "@/components/classes/lesson-tools";
 import type { ClassStudent } from "@/features/classes/queries";
 import type { WordPlace } from "@/features/vocabulary/schemas";
 import { useWordAdder, WordAdderContext } from "@/features/vocabulary/word-adder-context";
 import { WordDialog } from "./word-dialog";
+import { WordPopup } from "./word-popup";
 
 /**
  * Lets everything inside a class lesson add words: the "Dictionary" tool and
- * "To dictionary" on selected words. The teacher adds to students'
+ * the translation popup on selected words. The teacher adds to students'
  * dictionaries (all or chosen), the student to their own.
  */
 export function WordAdderProvider({
@@ -26,6 +27,7 @@ export function WordAdderProvider({
 }) {
   const [open, setOpen] = useState(false);
   const [term, setTerm] = useState("");
+  const root = useRef<HTMLDivElement>(null);
   const value = useMemo(
     () => ({
       open: (selected?: string) => {
@@ -37,7 +39,11 @@ export function WordAdderProvider({
   );
   return (
     <WordAdderContext.Provider value={value}>
-      {children}
+      {/* Words selected anywhere in here get a translation and "+". */}
+      <div ref={root} className="contents">
+        {children}
+      </div>
+      <WordPopup root={root} place={place} students={students} />
       <WordDialog open={open} onOpenChange={setOpen} place={place} initial={term ? { term } : undefined} students={students} />
     </WordAdderContext.Provider>
   );

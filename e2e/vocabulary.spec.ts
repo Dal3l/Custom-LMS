@@ -2,9 +2,10 @@ import { createClient } from "@supabase/supabase-js";
 import { createTempStudent, removeTempStudents } from "./temp-student";
 import { expect as baseExpect, test, type BrowserContextOptions, type Page } from "@playwright/test";
 
-// The dictionary: the teacher adds a word for the student during a lesson; the
-// student finds it in their Dictionary, adds a word selected in the lesson text
-// (transcription filled in by the dictionary service), edits and deletes words.
+// The dictionary: the teacher adds words for the student during a lesson (with
+// the Dictionary tool, and by selecting a word: translation shown, own variant);
+// the student finds them in their Dictionary, selects words anywhere in the
+// lesson (translation + "+"), edits and deletes words.
 // Nobody adds words to someone else's dictionary.
 const teacher = { email: process.env.E2E_TEACHER_EMAIL, password: process.env.E2E_TEACHER_PASSWORD };
 const secret = process.env.SUPABASE_SECRET_KEY;
@@ -22,14 +23,16 @@ async function login(page: Page, email: string, password: string) {
   await expect(page).toHaveURL(/\/ru\/dashboard/);
 }
 
-/** Selects a word in the (visible) lesson text, like a mouse would. */
-async function select(page: Page, word: string) {
-  await page.evaluate((w) => {
-    const roots = [...document.querySelectorAll<HTMLElement>(".rich-text")].filter((el) => el.offsetParent !== null);
-    for (const root of roots) {
+/** Selects a word anywhere on the (visible) page, like a mouse would. */
+async function select(page: Page, word: string, within = "main") {
+  await page.evaluate(
+    ([w, area]) => {
+      const root = document.querySelector(area) ?? document.body;
       const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
       let node: Node | null;
       while ((node = walker.nextNode())) {
+        const parent = node.parentElement;
+        if (!parent || parent.offsetParent === null || parent.closest("[data-word-popup]")) continue;
         const i = node.textContent!.indexOf(w);
         if (i >= 0) {
           const range = document.createRange();
@@ -40,8 +43,10 @@ async function select(page: Page, word: string) {
           return;
         }
       }
-    }
-  }, word);
+      throw new Error(`"${w}" not found`);
+    },
+    [word, within],
+  );
 }
 
 test.describe("dictionary", () => {
@@ -71,7 +76,7 @@ test.describe("dictionary", () => {
     await db.from("exercises").insert({
       section_id: section!.id,
       type: "text",
-      title: "Read",
+      title: "Fruit story",
       content: { doc: { type: "doc", content: [{ type: "paragraph", content: [{ type: "text", text: "I eat an orange every morning." }] }] } },
       position: 0,
     });
@@ -81,11 +86,17 @@ test.describe("dictionary", () => {
     await db.from("class_lessons").insert({ class_id: cls!.id, lesson_id: lesson!.id });
     const lessonUrl = `/ru/classes/${cls!.id}/lessons/${lesson!.id}`;
 
-    // The dictionary service answers with a transcription (stand-in: it is not reachable from tests).
-    const fakeLookup = async (p: Page) =>
-      p.route("**/api/dictionary?**", (route) =>
+    // The translation and dictionary services answer (stand-ins: not reachable from tests).
+    const TRANSLATIONS: Record<string, string[]> = { orange: ["апельсин", "оранжевый"], morning: ["утро"], story: ["рассказ", "история"] };
+    const fakeLookup = async (p: Page) => {
+      await p.route("**/api/dictionary?**", (route) =>
         route.fulfill({ json: { ok: true, transcription: "/ˈɒr.ɪndʒ/", audioUrl: null, example: "" } }),
       );
+      await p.route("**/api/translate?**", (route) => {
+        const term = new URL(route.request().url()).searchParams.get("term") ?? "";
+        return route.fulfill({ json: { ok: true, variants: TRANSLATIONS[term.toLowerCase()] ?? [] } });
+      });
+    };
 
     // The teacher, during the lesson: Dictionary → a word for the student.
     await login(page, teacher.email!, teacher.password!);
@@ -97,6 +108,17 @@ test.describe("dictionary", () => {
     await dialog.getByLabel("Перевод").fill("яблоко");
     await dialog.getByRole("button", { name: "Добавить в словарь" }).click();
     await expect(page.getByText("Добавлено в словарь 1 ученика")).toBeVisible();
+
+    // The teacher selects a word in the text: a translation right away; they type
+    // their own variant and press "For the student".
+    await expect(page.getByText("I eat an orange every morning.").filter({ visible: true })).toBeVisible();
+    await select(page, "morning");
+    const teacherPopup = page.getByRole("dialog", { name: "Перевод: morning" });
+    await expect(teacherPopup.getByRole("textbox", { name: "Перевод" })).toHaveValue("утро");
+    await teacherPopup.getByRole("textbox", { name: "Перевод" }).fill("утро (раннее)");
+    await teacherPopup.getByRole("button", { name: "Ученику" }).click();
+    await expect(page.getByText("«morning» добавлено в словарь 1 ученика")).toBeVisible();
+    await expect(teacherPopup).toHaveCount(0);
 
     // The student sees it in their Dictionary, marked "from the teacher", with the lesson.
     const sp = await (await browser.newContext(options)).newPage();
@@ -110,21 +132,31 @@ test.describe("dictionary", () => {
     await expect(apple).toContainText("Fruit");
     await expect(apple.getByRole("button", { name: "Послушать «apple»" })).toBeVisible();
 
-    // In the lesson: select a word → "To dictionary" → transcription comes by itself.
+    // The teacher's word with the teacher's translation.
+    await expect(words.getByRole("listitem").filter({ hasText: "morning" })).toContainText("утро (раннее)");
+
+    // In the lesson: select a word → its translation and variants right away → "+".
     await sp.goto(lessonUrl);
     await expect(sp.getByText("I eat an orange every morning.").filter({ visible: true })).toBeVisible();
     await select(sp, "orange");
-    await sp.getByRole("button", { name: "В словарь" }).click();
-    const own = sp.getByRole("dialog", { name: "Новое слово" });
-    await expect(own.getByLabel("Слово или фраза")).toHaveValue("orange");
-    await expect(own.getByLabel("Транскрипция")).toHaveValue("/ˈɒr.ɪndʒ/");
-    await own.getByLabel("Перевод").fill("апельсин");
-    await own.getByRole("button", { name: "Добавить в словарь" }).click();
+    const popup = sp.getByRole("dialog", { name: "Перевод: orange" });
+    await expect(popup).toContainText("апельсин");
+    await expect(popup).toContainText("/ˈɒr.ɪndʒ/");
+    await popup.getByRole("button", { name: "оранжевый" }).click();
+    await popup.getByRole("button", { name: "апельсин" }).click();
+    await popup.getByRole("button", { name: "В словарь" }).click();
     await expect(sp.getByText("«orange» добавлено в словарь")).toBeVisible();
+
+    // Any word on the page, e.g. in an exercise title.
+    await select(sp, "story");
+    const titlePopup = sp.getByRole("dialog", { name: "Перевод: story" });
+    await expect(titlePopup).toContainText("рассказ");
+    await titlePopup.getByRole("button", { name: "В словарь" }).click();
+    await expect(sp.getByText("«story» добавлено в словарь")).toBeVisible();
 
     // Back in the Dictionary: both words; search; edit; delete.
     await sp.goto("/ru/vocabulary");
-    await expect(sp.getByText("2 слова из всех классов").filter({ visible: true })).toBeVisible();
+    await expect(sp.getByText("4 слова из всех классов").filter({ visible: true })).toBeVisible();
     const orange = words.getByRole("listitem").filter({ hasText: "orange" });
     await expect(orange).toContainText("/ˈɒr.ɪndʒ/");
     await expect(orange).toContainText("апельсин");
@@ -156,7 +188,7 @@ test.describe("dictionary", () => {
     expect(forged).not.toBeNull();
     await db.from("vocabulary").insert({ student_id: other.id, term: "secret", language: "en", added_by: other.id });
     const { data: seen } = await as.from("vocabulary").select("term");
-    expect(seen!.map((w) => w.term)).toEqual(["orange"]);
+    expect(seen!.map((w) => w.term).sort()).toEqual(["morning", "orange", "story"]);
 
     await sp.context().close();
   });

@@ -582,8 +582,7 @@
     "checking": "Проверяем…",
     "highlight": {
       "mark": "Выделить",
-      "remove": "Убрать",
-      "toDictionary": "В словарь"
+      "remove": "Убрать"
     },
     "backToCourse": "К курсу",
     "sectionDone": "Секция завершена",
@@ -994,6 +993,27 @@
     "duplicate": "Такое слово уже есть в словаре.",
     "alreadyThere": "«{term}» уже есть в словаре",
     "addedToast": "«{term}» добавлено в словарь",
-    "addedForStudents": "{count, plural, one {Добавлено в словарь # ученика} few {Добавлено в словари # учеников} many {Добавлено в словари # учеников} other {Добавлено в словари # ученика}}"
+    "addedForStudents": "{count, plural, one {Добавлено в словарь # ученика} few {Добавлено в словари # учеников} many {Добавлено в словари # учеников} other {Добавлено в словари # ученика}}",
+    "popup": {
+      "label": "Перевод: {term}",
+      "close": "Закрыть",
+      "translating": "Переводим…",
+      "translation": "Перевод",
+      "typeTranslation": "Перевод не нашёлся — впишите свой",
+      "ownTranslation": "Свой вариант перевода",
+      "edit": "Свой вариант",
+      "variants": "Варианты перевода",
+      "toAll": "Всем ученикам",
+      "toSome": "{count, plural, one {# ученику} other {# ученикам}}",
+      "noName": "Без имени",
+      "add": "В словарь",
+      "addForStudent": "Ученику",
+      "addForStudents": "Ученикам",
+      "noStudents": "В классе пока нет учеников.",
+      "failed": "Не получилось. Проверьте интернет и попробуйте ещё раз.",
+      "added": "«{term}» добавлено в словарь",
+      "alreadyThere": "«{term}» уже есть в словаре",
+      "addedForStudents": "«{term}» добавлено в {count, plural, one {словарь # ученика} other {словари # учеников}}"
+    }
   }
 }

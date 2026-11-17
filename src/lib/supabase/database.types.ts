@@ -898,6 +898,30 @@ export type Database = {
           },
         ]
       }
+      translations: {
+        Row: {
+          created_at: string
+          source_lang: string
+          target_lang: string
+          term: string
+          variants: string[]
+        }
+        Insert: {
+          created_at?: string
+          source_lang: string
+          target_lang: string
+          term: string
+          variants: string[]
+        }
+        Update: {
+          created_at?: string
+          source_lang?: string
+          target_lang?: string
+          term?: string
+          variants?: string[]
+        }
+        Relationships: []
+      }
       vocabulary: {
         Row: {
           added_by: string | null
