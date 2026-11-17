@@ -1,6 +1,6 @@
 "use client";
 
-import { BookA, GraduationCap, MoreHorizontal, Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { BookA, GraduationCap, MoreHorizontal, Pencil, Plus, RotateCcw, Search, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -20,13 +20,43 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Input } from "@/components/ui/input";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 import type { LanguageOption } from "@/features/courses/languages";
+import { relearnWord } from "@/features/trainer/actions";
+import { LEARNED, wordStatus } from "@/features/trainer/ladder";
 import { deleteWord } from "@/features/vocabulary/actions";
 import type { Word } from "@/features/vocabulary/queries";
 import { useRouter } from "@/i18n/navigation";
+import { cn } from "@/lib/utils";
 import { SpeakButton } from "./speak-button";
 import { WordDialog } from "./word-dialog";
 
 const NO_PLACE = { courseId: null, lessonId: null, classId: null };
+type Tab = "learning" | "learned" | "all";
+
+/** New / learning (with the ladder step) / learned. */
+function StatusBadge({ stage, reviews }: { stage: number; reviews: number }) {
+  const t = useTranslations("vocabulary.status");
+  const status = wordStatus(stage, reviews);
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs font-medium",
+        status === "new" && "border-sky-200 bg-sky-50 text-sky-800",
+        status === "learning" && "border-amber-200 bg-amber-50 text-amber-900",
+        status === "learned" && "border-emerald-200 bg-emerald-50 text-emerald-800",
+      )}
+      title={status === "learning" ? t("step", { step: stage, total: LEARNED }) : undefined}
+    >
+      {t(status)}
+      {status === "learning" && (
+        <span className="flex gap-0.5" aria-label={t("step", { step: stage, total: LEARNED })}>
+          {Array.from({ length: LEARNED }, (_, i) => (
+            <span key={i} className={cn("size-1.5 rounded-full", i < stage ? "bg-amber-600" : "bg-amber-200")} />
+          ))}
+        </span>
+      )}
+    </span>
+  );
+}
 
 /** The Dictionary page: the student's words with search, course / lesson filters and editing. */
 export function VocabularyList({
@@ -41,6 +71,7 @@ export function VocabularyList({
   const t = useTranslations("vocabulary");
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [tab, setTab] = useState<Tab>("learning");
   const [courseId, setCourseId] = useState("");
   const [lessonId, setLessonId] = useState("");
   const [adding, setAdding] = useState(false);
@@ -60,12 +91,28 @@ export function VocabularyList({
   }, [words, courseId, t]);
 
   const q = query.trim().toLowerCase();
+  const inTab = (w: Word) => tab === "all" || (tab === "learned" ? w.stage >= LEARNED : w.stage < LEARNED);
+  const counts = {
+    learning: words.filter((w) => w.stage < LEARNED).length,
+    learned: words.filter((w) => w.stage >= LEARNED).length,
+    all: words.length,
+  };
   const shown = words.filter(
     (w) =>
+      inTab(w) &&
       (!courseId || w.courseId === courseId) &&
       (!lessonId || w.lessonId === lessonId) &&
       (!q || w.term.toLowerCase().includes(q) || w.translation.toLowerCase().includes(q)),
   );
+
+  function relearn(word: Word) {
+    startTransition(async () => {
+      const r = await relearnWord(word.id);
+      if (!r.ok) return void toast.error(t("failed"));
+      toast.success(t("relearnToast", { term: word.term }));
+      router.refresh();
+    });
+  }
 
   function remove(word: Word) {
     startTransition(async () => {
@@ -89,6 +136,25 @@ export function VocabularyList({
           {t("addWord")}
         </Button>
       </div>
+
+      {words.length > 0 && (
+        <nav className="flex gap-2 overflow-x-auto pb-1" aria-label={t("tabs")}>
+          {(["learning", "learned", "all"] as const).map((key) => (
+            <button
+              key={key}
+              type="button"
+              aria-pressed={tab === key}
+              onClick={() => setTab(key)}
+              className={cn(
+                "shrink-0 rounded-full border px-3 py-1 text-sm transition-colors",
+                tab === key ? "border-primary bg-primary text-primary-foreground" : "bg-card hover:bg-accent",
+              )}
+            >
+              {t(`tab.${key}`)} <span className="tabular-nums opacity-80">{counts[key]}</span>
+            </button>
+          ))}
+        </nav>
+      )}
 
       {words.length > 0 && (
         <div className="flex flex-col gap-2 sm:flex-row">
@@ -142,7 +208,9 @@ export function VocabularyList({
           <p className="max-w-md text-muted-foreground">{t("emptyText")}</p>
         </div>
       ) : shown.length === 0 ? (
-        <p className="py-10 text-center text-muted-foreground">{t("nothingFound")}</p>
+        <p className="py-10 text-center text-muted-foreground">
+          {q || courseId ? t("nothingFound") : tab === "learned" ? t("noLearnedYet") : t("nothingToLearn")}
+        </p>
       ) : (
         <ul className="flex flex-col gap-2" aria-label={t("title")}>
           {shown.map((w) => (
@@ -154,6 +222,7 @@ export function VocabularyList({
                   </span>
                   {w.transcription && <span className="text-sm text-muted-foreground">{w.transcription}</span>}
                   <SpeakButton term={w.term} language={w.language} audioUrl={w.audioUrl} />
+                  <StatusBadge stage={w.stage} reviews={w.reviews} />
                 </div>
                 {w.translation ? (
                   <p className="break-words">{w.translation}</p>
@@ -188,6 +257,12 @@ export function VocabularyList({
                     <Pencil aria-hidden="true" />
                     {t("edit")}
                   </DropdownMenuItem>
+                  {w.reviews > 0 && (
+                    <DropdownMenuItem onSelect={() => relearn(w)}>
+                      <RotateCcw aria-hidden="true" />
+                      {t("relearn")}
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem variant="destructive" onSelect={() => setRemoving(w)}>
                     <Trash2 aria-hidden="true" />
                     {t("remove")}
