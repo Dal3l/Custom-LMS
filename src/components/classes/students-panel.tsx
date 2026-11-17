@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreHorizontal, UserMinus } from "lucide-react";
+import { BookA, MoreHorizontal, UserMinus } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -24,9 +24,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { removeStudent } from "@/features/classes/actions";
 import type { ClassStudent } from "@/features/classes/queries";
+import type { VocabularySummary } from "@/features/trainer/progress";
+import { Link } from "@/i18n/navigation";
 import { initials } from "@/lib/initials";
 
-export function StudentsList({ classId, students }: { classId: string; students: ClassStudent[] }) {
+export function StudentsList({
+  classId,
+  students,
+  vocabulary = {},
+}: {
+  classId: string;
+  students: ClassStudent[];
+  /** each student's dictionary summary */
+  vocabulary?: Record<string, VocabularySummary>;
+}) {
   const t = useTranslations("classes");
   const format = useFormatter();
   const [pending, startTransition] = useTransition();
@@ -52,12 +63,18 @@ export function StudentsList({ classId, students }: { classId: string; students:
             <Avatar className="size-10">
               <AvatarFallback>{initials(s.fullName)}</AvatarFallback>
             </Avatar>
-            <div className="flex min-w-0 flex-1 flex-col">
-              <span className="truncate font-medium">{s.fullName || t("noName")}</span>
+            <Link href={`/classes/${classId}/students/${s.id}`} className="flex min-w-0 flex-1 flex-col rounded-lg hover:underline-offset-2">
+              <span className="truncate font-medium hover:underline">{s.fullName || t("noName")}</span>
               <span className="text-sm text-muted-foreground">
                 {t("joined", { date: format.dateTime(new Date(s.joinedAt), { dateStyle: "medium" }) })}
               </span>
-            </div>
+              {vocabulary[s.id] && vocabulary[s.id].total > 0 && (
+                <span className="flex items-center gap-1 text-sm text-muted-foreground">
+                  <BookA className="size-3.5" aria-hidden="true" />
+                  {t("vocabularyLine", { total: vocabulary[s.id].total, learned: vocabulary[s.id].learned })}
+                </span>
+              )}
+            </Link>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" aria-label={t("studentActions", { name: s.fullName })} disabled={pending}>
@@ -65,6 +82,12 @@ export function StudentsList({ classId, students }: { classId: string; students:
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <Link href={`/classes/${classId}/students/${s.id}`}>
+                    <BookA aria-hidden="true" />
+                    {t("openProgress")}
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem variant="destructive" onSelect={() => setRemoving(s)}>
                   <UserMinus aria-hidden="true" />
                   {t("removeStudent")}

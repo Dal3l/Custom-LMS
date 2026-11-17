@@ -678,7 +678,9 @@
       "callUrlInvalid": "Use a link that starts with https://",
       "individualTooMany": "The class has several students, so it can only be a group.",
       "emailTaken": "This email is already registered. Send the student the invite link — they can log in and join."
-    }
+    },
+    "vocabularyLine": "Dictionary: {total} · learned {learned}",
+    "openProgress": "Dictionary and progress"
   },
   "join": {
     "title": "Class invitation",
@@ -1088,5 +1090,24 @@
       },
       "startEmpty": "Start"
     }
+  },
+  "studentProgress": {
+    "subtitle": "Dictionary and progress",
+    "noName": "No name",
+    "summary": "The student's dictionary",
+    "total": "Words",
+    "learning": "Learning",
+    "learned": "Learned",
+    "toReview": "Time to review",
+    "activity": "Trainer sessions",
+    "lastTrained": "Last session {when}",
+    "answersThisWeek": "{count, plural, one {This week: # answer} other {This week: # answers}}",
+    "accuracy": "Right answers in 30 days: {percent}%",
+    "neverTrained": "The student hasn't used the trainer yet.",
+    "hardWords": "Hard words",
+    "mistakes": "{count, plural, one {# mistake} other {# mistakes}}",
+    "words": "The student's words",
+    "noWords": "No words in the student's dictionary yet. Add a word here or right in a lesson.",
+    "fromYou": "from you"
   }
 }
