@@ -1014,6 +1014,74 @@
       "added": "“{term}” added to the dictionary",
       "alreadyThere": "“{term}” is already in the dictionary",
       "addedForStudents": "“{term}” added to {count, plural, one {# student's dictionary} other {# students' dictionaries}}"
-    }
+    },
+    "tabs": "Which words to show",
+    "tab": {
+      "learning": "Learning",
+      "learned": "Learned",
+      "all": "All"
+    },
+    "status": {
+      "new": "New",
+      "learning": "Learning",
+      "learned": "Learned",
+      "step": "Step {step} of {total}"
+    },
+    "relearn": "Learn again",
+    "relearnToast": "“{term}” is back in learning",
+    "noLearnedYet": "No learned words yet — they appear after the trainer.",
+    "nothingToLearn": "All words are learned!"
+  },
+  "trainer": {
+    "title": "Trainer",
+    "subtitle": "Words from your dictionary: cards, picking the translation, writing and listening",
+    "noWordsTitle": "No words in the dictionary yet",
+    "noWordsText": "Add words to your dictionary and they appear here to practise.",
+    "toDictionary": "Open the dictionary",
+    "dueToday": "{count, plural, one {To review today: <b>#</b> word} other {To review today: <b>#</b> words}}",
+    "start": "Start",
+    "allDone": "All done for today!",
+    "nextDue": "Next words {when}",
+    "statNew": "New",
+    "statLearning": "Learning",
+    "statLearned": "Learned",
+    "practiceLearned": "Review learned words",
+    "noTranslation": "{count, plural, one {# word without a translation is not trained — <link>add a translation</link>} other {# words without a translation are not trained — <link>add a translation</link>}}",
+    "nothingNow": "Nothing to review right now.",
+    "backHome": "Back to the trainer",
+    "progress": "Words done",
+    "saveFailed": "The answer was not saved. Check your connection.",
+    "saving": "Saving answers…",
+    "finishedTitle": "Done!",
+    "finishedScore": "{right} of {total} right",
+    "finishedLearned": "{count, plural, one {# word learned} other {# words learned}}",
+    "continue": "Continue",
+    "practiceAgain": "Again",
+    "mode": {
+      "card": "Card",
+      "choice": "Pick the translation",
+      "write": "Write the word",
+      "listen": "Write what you hear"
+    },
+    "showTranslation": "Show the translation",
+    "howWell": "How well did you remember it?",
+    "grade": {
+      "again": "Don't remember",
+      "hard": "Hard",
+      "good": "Remember",
+      "easy": "Easy"
+    },
+    "options": "Translation options",
+    "listenAgain": "Listen again",
+    "yourAnswer": "Your answer",
+    "writeWord": "The word in the language you learn",
+    "writeHeard": "What you heard",
+    "result": {
+      "right": "Right!",
+      "almost": "Almost — a small typo",
+      "wrong": "Wrong. The right word:"
+    },
+    "check": "Check",
+    "next": "Next"
   }
 }

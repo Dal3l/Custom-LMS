@@ -929,10 +929,15 @@ export type Database = {
           class_id: string | null
           course_id: string | null
           created_at: string
+          due: string
           example: string
+          fsrs: Json | null
           id: string
           language: string
+          learned_at: string | null
           lesson_id: string | null
+          reviews: number
+          stage: number
           student_id: string
           term: string
           transcription: string
@@ -945,10 +950,15 @@ export type Database = {
           class_id?: string | null
           course_id?: string | null
           created_at?: string
+          due?: string
           example?: string
+          fsrs?: Json | null
           id?: string
           language: string
+          learned_at?: string | null
           lesson_id?: string | null
+          reviews?: number
+          stage?: number
           student_id: string
           term: string
           transcription?: string
@@ -961,10 +971,15 @@ export type Database = {
           class_id?: string | null
           course_id?: string | null
           created_at?: string
+          due?: string
           example?: string
+          fsrs?: Json | null
           id?: string
           language?: string
+          learned_at?: string | null
           lesson_id?: string | null
+          reviews?: number
+          stage?: number
           student_id?: string
           term?: string
           transcription?: string
@@ -1005,6 +1020,57 @@ export type Database = {
             columns: ["student_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vocabulary_reviews: {
+        Row: {
+          correct: boolean
+          grade: number
+          id: string
+          mode: string
+          reviewed_at: string
+          stage_after: number
+          stage_before: number
+          student_id: string
+          word_id: string
+        }
+        Insert: {
+          correct: boolean
+          grade: number
+          id?: string
+          mode: string
+          reviewed_at?: string
+          stage_after: number
+          stage_before: number
+          student_id?: string
+          word_id: string
+        }
+        Update: {
+          correct?: boolean
+          grade?: number
+          id?: string
+          mode?: string
+          reviewed_at?: string
+          stage_after?: number
+          stage_before?: number
+          student_id?: string
+          word_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vocabulary_reviews_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vocabulary_reviews_word_id_fkey"
+            columns: ["word_id"]
+            isOneToOne: false
+            referencedRelation: "vocabulary"
             referencedColumns: ["id"]
           },
         ]

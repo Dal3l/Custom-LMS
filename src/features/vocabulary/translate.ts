@@ -49,3 +49,34 @@ export function parseTranslation(data: unknown, term: string): string[] | null {
   }
   return found.slice(0, 4);
 }
+
+/** Languages written in Cyrillic (a variant in Latin letters is junk for them, and the other way round). */
+const CYRILLIC = new Set(["ru", "kk", "uk", "be", "ky", "bg", "sr", "mk", "mn", "tg"]);
+const LATIN = new Set(["en", "de", "fr", "es", "it", "pt", "pl", "nl", "cs", "tr", "uz", "sv", "fi"]);
+
+/**
+ * Drops junk the service sends along with good translations: punctuation at
+ * the ends ("кухня:"), the wrong alphabet ("BABOCHKI" for Russian), SHOUTING
+ * words, repeats. Used for new answers and for remembered ones.
+ */
+export function cleanVariants(variants: string[], term: string, target: string): string[] {
+  const wanted = normalizeTerm(term);
+  const out: string[] = [];
+  for (const raw of variants) {
+    const v = raw
+      .replace(/\s+/g, " ")
+      .trim()
+      // Punctuation and quotes at the ends (brackets stay: "котик (разг.)").
+      .replace(/^[\s"'«»“”‘’.,;:!?¡¿…—–-]+|[\s"'«»“”‘’.,;:!?¡¿…—–-]+$/g, "");
+    if (!v || !/\p{L}/u.test(v)) continue;
+    if (normalizeTerm(v) === wanted) continue;
+    if (CYRILLIC.has(target) && (!/\p{Script=Cyrillic}/u.test(v) || /\p{Script=Latin}/u.test(v))) continue;
+    if (LATIN.has(target) && /\p{Script=Cyrillic}/u.test(v)) continue;
+    // SHOUTING (all capitals, more than one letter) is not a dictionary form.
+    const letters = v.replace(/[^\p{L}]/gu, "");
+    if (letters.length > 1 && letters === letters.toLocaleUpperCase() && letters !== letters.toLocaleLowerCase()) continue;
+    if (out.some((o) => o.toLocaleLowerCase() === v.toLocaleLowerCase())) continue;
+    out.push(v);
+  }
+  return out.slice(0, 4);
+}

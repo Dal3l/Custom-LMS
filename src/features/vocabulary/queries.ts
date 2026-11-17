@@ -16,6 +16,9 @@ export type Word = {
   /** added by the teacher (not by the student) */
   fromTeacher: boolean;
   createdAt: string;
+  /** the trainer's ladder step (4 = learned) and how many answers so far */
+  stage: number;
+  reviews: number;
 };
 
 /** A student's dictionary, newest first. */
@@ -24,7 +27,7 @@ export async function listWords(studentId: string): Promise<Word[]> {
   const { data } = await supabase
     .from("vocabulary")
     .select(
-      "id, term, translation, transcription, example, audio_url, language, course_id, lesson_id, added_by, created_at, course:courses(title), lesson:lessons(title)",
+      "id, term, translation, transcription, example, audio_url, language, course_id, lesson_id, added_by, created_at, stage, reviews, course:courses(title), lesson:lessons(title)",
     )
     .eq("student_id", studentId)
     .order("created_at", { ascending: false });
@@ -42,6 +45,8 @@ export async function listWords(studentId: string): Promise<Word[]> {
     lessonTitle: w.lesson?.title ?? "",
     fromTeacher: w.added_by !== null && w.added_by !== studentId,
     createdAt: w.created_at,
+    stage: w.stage,
+    reviews: w.reviews,
   }));
 }
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { canLookUp, parseLookup } from "@/features/vocabulary/lookup";
 import { wordFields } from "@/features/vocabulary/schemas";
-import { isTranslatable, normalizeTerm, parseTranslation } from "@/features/vocabulary/translate";
+import { cleanVariants, isTranslatable, normalizeTerm, parseTranslation } from "@/features/vocabulary/translate";
 
 describe("dictionary lookup", () => {
   it("takes the transcription, an https recording and an example", () => {
@@ -76,5 +76,17 @@ describe("translate a selected word", () => {
       parseTranslation({ responseStatus: 200, responseData: { translatedText: "MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIONS" } }, "cat"),
     ).toBeNull();
     expect(parseTranslation({ responseStatus: 200, responseData: { translatedText: "cat" }, matches: [] }, "cat")).toEqual([]);
+  });
+});
+
+describe("cleaning translation variants", () => {
+  it("drops junk the service sends (seen on the live site)", () => {
+    expect(cleanVariants(["бабочка", "BABOCHKI"], "butterfly", "ru")).toEqual(["бабочка"]);
+    expect(cleanVariants(["кухня", "кухня:"], "kitchen", "ru")).toEqual(["кухня"]);
+  });
+  it("keeps the right alphabet and drops shouting, repeats and the word itself", () => {
+    expect(cleanVariants(["Кот", "КОТ", "cat", "кошка", "котик (разг.)"], "cat", "ru")).toEqual(["Кот", "кошка", "котик (разг.)"]);
+    expect(cleanVariants(["apple", "яблоко", "Apple"], "яблоко", "en")).toEqual(["apple"]);
+    expect(cleanVariants(["алма", "alma"], "apple", "kk")).toEqual(["алма"]);
   });
 });
