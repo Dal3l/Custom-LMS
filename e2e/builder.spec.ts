@@ -96,7 +96,7 @@ test.describe("lesson builder", () => {
     await page.getByRole("button", { name: "Ещё действия" }).first().click();
     await page.getByRole("menuitem", { name: "Удалить курс" }).click();
     await page.getByRole("button", { name: "Удалить" }).click();
-    await expect(page).toHaveURL(/\/ru\/courses$/);
+    await expect(page).toHaveURL(/\/ru\/library$/);
   });
 });
 
@@ -145,6 +145,6 @@ test.describe("lesson builder: rich text", () => {
     await page.getByRole("button", { name: "Ещё действия" }).first().click();
     await page.getByRole("menuitem", { name: "Удалить курс" }).click();
     await page.getByRole("button", { name: "Удалить" }).click();
-    await expect(page).toHaveURL(/\/ru\/courses$/);
+    await expect(page).toHaveURL(/\/ru\/library$/);
   });
 });
