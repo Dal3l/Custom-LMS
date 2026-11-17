@@ -93,7 +93,7 @@ export function TeacherClassLesson({
   students: ClassStudent[];
   initialAnswers: StudentAnswers;
   /** the lesson's homework part and what was already sent */
-  homework: { sections: StudentSection[]; sent: SentHomework[]; builderHref: string | null };
+  homework: { sections: StudentSection[]; sent: SentHomework[]; builderHref: string | null; answersHref?: string | null };
 }) {
   const { classId, lessonId, courseId, finished, userId, inClass } = props;
   const t = useTranslations("classLessons");
@@ -205,7 +205,7 @@ export function TeacherClassLesson({
 
   function footer(section: StudentSection, isLast: boolean) {
     if (homeworkSectionIds.has(section.id)) {
-      return inClass ? <HomeworkFooter picked={picked.size} sent={homework.sent} onOpen={() => setSending(true)} /> : null;
+      return inClass ? <HomeworkFooter picked={picked.size} sent={homework.sent} answersHref={homework.answersHref ?? null} onOpen={() => setSending(true)} /> : null;
     }
     if (!inClass) return null;
     const sectionDone = done.includes(section.id);

@@ -951,7 +951,9 @@
     "archiveHint": "Homework reviewed more than a week ago and homework not handed in within a month. Nothing is deleted — students still see it in the lesson.",
     "archiveEmptyTitle": "The archive is empty",
     "archiveEmptyText": "Homework moves here a week after it was reviewed.",
-    "classEmptyText": "Send homework from a lesson — the students' work appears here, handed-in work to check first."
+    "classEmptyText": "Send homework from a lesson — the students' work appears here, handed-in work to check first.",
+    "toCheckCount": "{count, plural, one {# work to check} other {# works to check}}",
+    "answers": "Students' answers"
   },
   "notifications": {
     "title": "Notifications",

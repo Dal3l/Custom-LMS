@@ -15,13 +15,15 @@ export type SentHomework = {
   firstStudentId: string | null;
   /** who got it */
   studentIds: string[];
+  /** handed in and not checked yet */
+  toCheck: number;
 };
 
 export async function listLessonHomeworks(classId: string, lessonId: string): Promise<SentHomework[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("homeworks")
-    .select("id, created_at, due_at, homework_exercises(exercise_id, position), homework_students(student_id, submitted_at)")
+    .select("id, created_at, due_at, homework_exercises(exercise_id, position), homework_students(student_id, submitted_at, reviewed_at)")
     .eq("class_id", classId)
     .eq("lesson_id", lessonId)
     .order("created_at", { ascending: false });
@@ -33,6 +35,7 @@ export async function listLessonHomeworks(classId: string, lessonId: string): Pr
     students: h.homework_students.length,
     submitted: h.homework_students.filter((s) => s.submitted_at).length,
     studentIds: h.homework_students.map((s) => s.student_id),
+    toCheck: h.homework_students.filter((s) => s.submitted_at && !s.reviewed_at).length,
     firstStudentId: (h.homework_students.find((s) => s.submitted_at) ?? h.homework_students[0])?.student_id ?? null,
   }));
 }
@@ -206,7 +209,7 @@ export async function getHomeworkReview(homeworkId: string, studentId: string) {
   const comments: Record<string, string> = {};
   for (const c of h.homework_comments) if (c.student_id === studentId) comments[c.exercise_id] = c.body;
   const students = [...h.homework_students]
-    .map((s) => ({ id: s.student_id, name: s.student?.full_name ?? "", submitted: Boolean(s.submitted_at) }))
+    .map((s) => ({ id: s.student_id, name: s.student?.full_name ?? "", submitted: Boolean(s.submitted_at), reviewed: Boolean(s.reviewed_at) }))
     .sort((a, b) => a.name.localeCompare(b.name));
   return {
     id: h.id,
