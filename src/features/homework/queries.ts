@@ -149,14 +149,15 @@ export type TeacherHomeworkItem = {
   answered: number;
 };
 
-export async function listTeacherHomeworks(): Promise<TeacherHomeworkItem[]> {
+export async function listTeacherHomeworks(classId?: string): Promise<TeacherHomeworkItem[]> {
   const supabase = await createClient();
   // RLS: only homework of the teacher's own classes.
   const { data } = await supabase
     .from("homework_students")
     .select(
-      "student_id, submitted_at, reviewed_at, student:profiles(full_name), homework:homeworks(id, class_id, created_at, due_at, class:classes(name), lesson:lessons(title), homework_exercises(exercise_id), homework_answers(student_id))",
-    );
+      "student_id, submitted_at, reviewed_at, student:profiles(full_name), homework:homeworks!inner(id, class_id, created_at, due_at, class:classes(name), lesson:lessons(title), homework_exercises(exercise_id), homework_answers(student_id))",
+    )
+    .match(classId ? { "homework.class_id": classId } : {});
   const items = (data ?? []).flatMap((row) => {
     const h = row.homework;
     if (!h) return [];

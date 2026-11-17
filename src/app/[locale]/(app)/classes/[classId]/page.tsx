@@ -7,6 +7,8 @@ import { LessonPicker } from "@/components/classes/lesson-picker";
 import { InvitePanel } from "@/components/classes/invite-panel";
 import { RegisterStudentDialog } from "@/components/classes/register-student-dialog";
 import { StudentsList } from "@/components/classes/students-panel";
+import { ClassHomeworkList } from "@/components/homework/class-homework-list";
+import { listTeacherHomeworks } from "@/features/homework/queries";
 import { vocabularySummaries } from "@/features/trainer/progress-queries";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { listClassLessons } from "@/features/classes/lesson-queries";
@@ -31,6 +33,8 @@ export default async function ClassPage({ params, searchParams }: PageProps<"/[l
     listClassLessons(classId),
   ]);
   if (!cls) notFound();
+  const homework = cls.isTeacher ? await listTeacherHomeworks(cls.id) : [];
+  const toCheck = homework.filter((h) => h.status === "submitted").length;
 
   const lessons =
     classLessons.length === 0 ? (
@@ -65,14 +69,25 @@ export default async function ClassPage({ params, searchParams }: PageProps<"/[l
         teacherName={cls.teacherName}
       />
       {cls.isTeacher ? (
-        <Tabs defaultValue={tab === "students" ? "students" : "lessons"} className="gap-4">
+        <Tabs defaultValue={tab === "students" || tab === "homework" ? tab : "lessons"} className="gap-4">
           <TabsList>
             <TabsTrigger value="lessons">{t("lessonsTab")}</TabsTrigger>
+            <TabsTrigger value="homework">
+              {t("homeworkTab")}
+              {toCheck > 0 && (
+                <span className="ml-1 rounded-full bg-violet-600 px-1.5 text-xs text-white tabular-nums" aria-label={t("toCheckCount", { count: toCheck })}>
+                  {toCheck}
+                </span>
+              )}
+            </TabsTrigger>
             <TabsTrigger value="students">
               {t("studentsTab")} · {cls.students.length}
             </TabsTrigger>
           </TabsList>
           <TabsContent value="lessons">{lessons}</TabsContent>
+          <TabsContent value="homework">
+            <ClassHomeworkList items={homework} />
+          </TabsContent>
           <TabsContent value="students" className="flex flex-col gap-4">
             <InvitePanel classId={cls.id} invite={cls.invite} origin={await getOrigin()} />
             <div className="flex flex-wrap items-center justify-between gap-2">

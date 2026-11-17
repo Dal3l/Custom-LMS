@@ -7,7 +7,7 @@ describe("notification links", () => {
     expect(notificationHref({ ...n, kind: "homework_submitted" })).toBe("/homework/h1/s1");
   });
   it("student: everything else opens the lesson's Homework tab", () => {
-    for (const kind of ["homework_assigned", "homework_comment", "homework_reviewed"] as const) {
+    for (const kind of ["homework_assigned", "homework_updated", "homework_comment", "homework_reviewed"] as const) {
       expect(notificationHref({ ...n, kind })).toBe("/classes/c1/lessons/l1?tab=homework");
     }
   });

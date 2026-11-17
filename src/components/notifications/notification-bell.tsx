@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 
 const ICON: Record<NotificationKind, typeof Bell> = {
   homework_assigned: ClipboardList,
+  homework_updated: ClipboardList,
   homework_comment: MessageSquare,
   homework_reviewed: ClipboardCheck,
   homework_submitted: Send,
@@ -84,6 +85,8 @@ export function NotificationBell({ userId, initialUnread }: { userId: string; in
     switch (n.kind) {
       case "homework_assigned":
         return t("assigned", values);
+      case "homework_updated":
+        return t("updated", values);
       case "homework_comment":
         return t("comment", values);
       case "homework_reviewed":
