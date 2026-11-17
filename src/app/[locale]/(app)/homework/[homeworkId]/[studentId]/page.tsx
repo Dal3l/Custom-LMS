@@ -74,9 +74,9 @@ export default async function HomeworkReviewPage({ params }: PageProps<"/[locale
   return (
     <div className="flex flex-col gap-4">
       <Button asChild variant="ghost" size="sm" className="-ml-2 w-fit text-muted-foreground">
-        <Link href="/homework">
+        <Link href={`/classes/${review.classId}?tab=homework`}>
           <ChevronLeft aria-hidden="true" />
-          {t("allHomework")}
+          {review.className}
         </Link>
       </Button>
       <div className="flex flex-col gap-1">
@@ -132,7 +132,7 @@ export default async function HomeworkReviewPage({ params }: PageProps<"/[locale
       {review.submittedAt && (
         <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed p-4 text-center">
           <p className="text-sm text-muted-foreground">{review.reviewedAt ? tr("reviewedHint") : tr("markHint")}</p>
-          <ReviewedToggle homeworkId={review.id} studentId={review.studentId} reviewed={Boolean(review.reviewedAt)} />
+          <ReviewedToggle homeworkId={review.id} studentId={review.studentId} reviewed={Boolean(review.reviewedAt)} classId={review.classId} />
         </div>
       )}
     </div>

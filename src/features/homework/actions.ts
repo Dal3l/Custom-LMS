@@ -37,17 +37,49 @@ export async function sendHomework(input: {
   const { classId, lessonId, exerciseIds, studentIds, dueAt } = parsed.data;
   const supabase = await createClient();
 
+  // One homework per lesson in a class: more exercises / students go into it.
+  const { data: existing } = await supabase
+    .from("homeworks")
+    .select("id, homework_exercises(exercise_id, position), homework_students(student_id)")
+    .eq("class_id", classId)
+    .eq("lesson_id", lessonId)
+    .maybeSingle();
+  if (existing) {
+    const haveExercises = new Set(existing.homework_exercises.map((e) => e.exercise_id));
+    const haveStudents = new Set(existing.homework_students.map((s) => s.student_id));
+    const last = Math.max(-1, ...existing.homework_exercises.map((e) => e.position));
+    const newExercises = exerciseIds.filter((e) => !haveExercises.has(e));
+    const newStudents = studentIds.filter((st) => !haveStudents.has(st));
+    // New exercises reopen the homework for those who handed it in and tell its
+    // students (database trigger) — before the new students join, who get
+    // "new homework" instead.
+    const ex = newExercises.length
+      ? await supabase.from("homework_exercises").insert(newExercises.map((exerciseId, i) => ({ homework_id: existing.id, exercise_id: exerciseId, position: last + 1 + i })))
+      : { error: null };
+    const [st, due] = await Promise.all([
+      newStudents.length
+        ? supabase.from("homework_students").insert(newStudents.map((studentId) => ({ homework_id: existing.id, student_id: studentId })))
+        : Promise.resolve({ error: null }),
+      dueAt ? supabase.from("homeworks").update({ due_at: dueAt }).eq("id", existing.id) : Promise.resolve({ error: null }),
+    ]);
+    const error = ex.error ?? st.error ?? due.error;
+    if (error) return { ok: false, error: error.code === "42501" ? "forbidden" : "generic" };
+    revalidatePath(`/[locale]/classes/${classId}`, "layout");
+    return { ok: true, data: existing.id };
+  }
+
   const { data: hw, error } = await supabase
     .from("homeworks")
     .insert({ class_id: classId, lesson_id: lessonId, due_at: dueAt })
     .select("id")
     .single();
+  // Sent from two places at once: the other one created it — add to it.
+  if (error?.code === "23505") return sendHomework(input);
   if (error || !hw) return { ok: false, error: error?.code === "42501" ? "forbidden" : "generic" };
 
-  const [ex, st] = await Promise.all([
-    supabase.from("homework_exercises").insert(exerciseIds.map((exerciseId, position) => ({ homework_id: hw.id, exercise_id: exerciseId, position }))),
-    supabase.from("homework_students").insert(studentIds.map((studentId) => ({ homework_id: hw.id, student_id: studentId }))),
-  ]);
+  // Exercises first, then students: so the students get only "new homework".
+  const ex = await supabase.from("homework_exercises").insert(exerciseIds.map((exerciseId, position) => ({ homework_id: hw.id, exercise_id: exerciseId, position })));
+  const st = ex.error ? { error: null } : await supabase.from("homework_students").insert(studentIds.map((studentId) => ({ homework_id: hw.id, student_id: studentId })));
   if (ex.error || st.error) {
     // All or nothing: a half-sent homework is removed.
     await supabase.from("homeworks").delete().eq("id", hw.id);

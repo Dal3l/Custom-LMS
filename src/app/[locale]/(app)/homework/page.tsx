@@ -1,9 +1,9 @@
 import { Archive, ClipboardList } from "lucide-react";
 import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
 import { HomeworkStatusBadge } from "@/components/homework/status-badge";
-import { listMyHomeworks, listTeacherHomeworks } from "@/features/homework/queries";
+import { listMyHomeworks } from "@/features/homework/queries";
 import { isArchived } from "@/features/homework/status";
-import { Link } from "@/i18n/navigation";
+import { Link, redirect } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { requireProfile } from "@/lib/auth";
 import { cn } from "@/lib/utils";
@@ -25,7 +25,9 @@ export default async function HomeworkPage({ params, searchParams }: PageProps<"
     archive: query.view === "archive",
     classId: typeof query.class === "string" ? query.class : null,
   };
-  return profile.role === "teacher" ? <TeacherHomework filters={filters} /> : <StudentHomework studentId={profile.id} filters={filters} />;
+  // Teachers look at homework inside each class (the class's Homework tab).
+  if (profile.role === "teacher") redirect({ href: "/classes", locale });
+  return <StudentHomework studentId={profile.id} filters={filters} />;
 }
 
 function classesOf(items: { classId: string; className: string }[]): Classes {
@@ -130,51 +132,6 @@ async function StudentHomework({ studentId, filters }: { studentId: string; filt
                   </span>
                 </span>
                 <HomeworkStatusBadge status={h.status} />
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}
-
-async function TeacherHomework({ filters }: { filters: Filters }) {
-  const [t, format, all] = await Promise.all([getTranslations("homework"), getFormatter(), listTeacherHomeworks()]);
-  const items = pick(all, filters);
-  const date = (iso: string) => format.dateTime(new Date(iso), { dateStyle: "medium", timeStyle: "short" });
-  return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold">{t("title")}</h1>
-        <p className="text-muted-foreground">{t("teacherSubtitle")}</p>
-      </div>
-      {all.length > 0 && <FilterBar filters={filters} classes={classesOf(all)} />}
-      {items.length === 0 ? (
-        filters.archive ? (
-          <Empty title={t("archiveEmptyTitle")} text={t("archiveEmptyText")} />
-        ) : (
-          <Empty title={t("emptyTitle")} text={t("teacherEmptyText")} />
-        )
-      ) : (
-        <ul className="flex flex-col gap-2" aria-label={t("title")}>
-          {items.map((h) => (
-            <li key={`${h.homeworkId}-${h.studentId}`}>
-              <Link
-                href={`/homework/${h.homeworkId}/${h.studentId}`}
-                aria-label={`${t("openAnswers")}: ${h.studentName || t("noName")}, ${h.lessonTitle}`}
-                className="flex flex-col gap-1 rounded-2xl border bg-card p-3 transition-colors hover:bg-accent sm:flex-row sm:items-center sm:gap-3"
-              >
-                <span className="flex min-w-0 flex-1 flex-col">
-                  <span className="font-medium break-words">
-                    {h.studentName || t("noName")} · {h.lessonTitle}
-                  </span>
-                  <span className="text-sm text-muted-foreground">
-                    {h.className} · {t("answeredOf", { done: h.answered, total: h.total })}
-                    {h.submittedAt ? ` · ${t("handedInOn", { date: date(h.submittedAt) })}` : h.dueAt && ` · ${t("dueOn", { date: date(h.dueAt) })}`}
-                  </span>
-                </span>
-                <HomeworkStatusBadge status={h.status} forTeacher />
               </Link>
             </li>
           ))}

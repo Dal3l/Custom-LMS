@@ -205,15 +205,20 @@ test.describe("homework", () => {
       .poll(async () => (await db.from("homework_comments").select("body").eq("homework_id", hw!.id)).data?.map((c) => c.body))
       .toEqual(["Nice! Add one more sentence."]);
 
-    // The teacher's homework list: handed-in work waits for a check.
+    // No "Homework" in the teacher's menu: homework lives in the class (its Homework tab).
     await page.goto("/ru/homework");
-    const row = page.getByRole("link", { name: /Открыть ответы: .*Animals/ }).filter({ hasText: `домашка ${stamp}` });
+    await expect(page).toHaveURL(/\/ru\/classes$/);
+    await expect(page.getByRole("link", { name: "Домашка", exact: true })).toHaveCount(0);
+    await page.goto(`/ru/classes/${cls!.id}?tab=homework`);
+    await expect(page.getByRole("tab", { name: /Домашка/ })).toHaveAttribute("aria-selected", "true");
+    await expect(page.getByLabel("1 работа ждёт проверки")).toBeVisible();
+    const row = page.getByRole("link", { name: /Открыть ответы: .*Animals/ });
     await expect(row).toContainText("Ждёт проверки");
     await row.click();
-    // "Mark as reviewed" is at the bottom, after the exercises; then back to the list.
+    // "Mark as reviewed" is at the bottom, after the exercises; then back to the class's homework.
     await page.getByRole("button", { name: "Отметить проверенной" }).click();
     await expect(page.getByText("Домашка отмечена проверенной")).toBeVisible();
-    await expect(page).toHaveURL(/\/ru\/homework$/);
+    await expect(page).toHaveURL(new RegExp(`/ru/classes/${cls!.id}\\?tab=homework`));
     await expect(row).toContainText("Проверено");
     await row.click();
     await expect(page.getByRole("button", { name: "Снять отметку «Проверено»" })).toBeVisible();
@@ -225,12 +230,34 @@ test.describe("homework", () => {
     await sp.goto("/ru/homework");
     await expect(sp.getByRole("link", { name: new RegExp(`домашка ${stamp}`) }).filter({ visible: true })).toContainText("Проверено");
 
-    // A week after the check it moves to the archive (nothing is deleted).
-    await db.from("homework_students").update({ reviewed_at: new Date(Date.now() - 10 * 86400_000).toISOString() }).eq("homework_id", hw!.id);
-    await page.goto("/ru/homework");
-    await expect(row).toHaveCount(0);
-    await page.getByRole("link", { name: "Архив" }).click();
-    await expect(row).toContainText("Проверено");
+    // One homework per lesson: one more exercise goes into the same homework
+    // and opens it again for the student (the answers stay).
+    await db.from("exercises").insert({ section_id: hwSection!.id, type: "open_answer", title: "One more sentence", content: { minWords: 1 }, position: 2 });
+    await page.goto(lessonUrl);
+    await page.getByRole("button", { name: /At home/ }).filter({ visible: true }).first().click();
+    await expect(page.getByText("One more sentence")).toBeVisible();
+    await page.getByRole("checkbox", { name: "В домашку" }).last().click();
+    await page.getByRole("button", { name: "Отправить домашку · 1" }).click();
+    await page.getByRole("dialog", { name: "Отправить домашку" }).getByRole("button", { name: "Отправить 1 задание" }).click();
+    await expect(page.getByText("Домашка отправлена")).toBeVisible();
+    const { data: all } = await db.from("homeworks").select("id, homework_exercises(exercise_id), homework_students(submitted_at, reviewed_at)").eq("class_id", cls!.id);
+    expect(all).toHaveLength(1);
+    expect(all![0].homework_exercises).toHaveLength(3);
+    expect(all![0].homework_students[0]).toMatchObject({ submitted_at: null, reviewed_at: null });
+    const { count: kept } = await db.from("homework_answers").select("exercise_id", { count: "exact", head: true }).eq("homework_id", hw!.id);
+    expect(kept).toBe(2);
+    await sp.goto("/ru/homework");
+    await expect(sp.getByRole("link", { name: new RegExp(`домашка ${stamp}`) }).filter({ visible: true })).toContainText("В процессе");
+    await sp.getByRole("button", { name: /^Уведомления/ }).click();
+    await expect(sp.getByRole("link", { name: /Новые задания в домашке «Animals»/ })).toBeVisible();
+    await sp.keyboard.press("Escape");
+
+    // Student: a week after the check, homework moves to the archive (nothing is deleted).
+    await db.from("homework_students").update({ submitted_at: new Date().toISOString(), reviewed_at: new Date(Date.now() - 10 * 86400_000).toISOString() }).eq("homework_id", hw!.id);
+    await sp.goto("/ru/homework");
+    await expect(sp.getByRole("link", { name: new RegExp(`домашка ${stamp}`) }).filter({ visible: true })).toHaveCount(0);
+    await sp.getByRole("link", { name: "Архив" }).click();
+    await expect(sp.getByRole("link", { name: new RegExp(`домашка ${stamp}`) }).filter({ visible: true })).toContainText("Проверено");
 
     await sp.context().close();
   });

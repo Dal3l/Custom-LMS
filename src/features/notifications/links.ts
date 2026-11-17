@@ -1,6 +1,6 @@
 // Where a notification leads. Pure, shared by the server and the bell.
 
-export type NotificationKind = "homework_assigned" | "homework_comment" | "homework_reviewed" | "homework_submitted";
+export type NotificationKind = "homework_assigned" | "homework_updated" | "homework_comment" | "homework_reviewed" | "homework_submitted";
 
 export type NotificationItem = {
   id: string;

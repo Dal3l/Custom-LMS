@@ -38,7 +38,7 @@ const ITEMS: Record<NavKey, NavItem> = {
 };
 
 const BY_ROLE: Record<UserRole, NavKey[]> = {
-  teacher: ["dashboard", "classes", "students", "library", "homework", "schedule"],
+  teacher: ["dashboard", "classes", "students", "library", "schedule"],
   student: ["dashboard", "classes", "homework", "vocabulary", "schedule"],
 };
 

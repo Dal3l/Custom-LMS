@@ -13,10 +13,13 @@ export function ReviewedToggle({
   homeworkId,
   studentId,
   reviewed,
+  classId,
 }: {
   homeworkId: string;
   studentId: string;
   reviewed: boolean;
+  /** after "Mark as reviewed": back to this class's Homework tab */
+  classId: string;
 }) {
   const t = useTranslations("homework.review");
   const router = useRouter();
@@ -27,9 +30,9 @@ export function ReviewedToggle({
       const r = await setHomeworkReviewed(homeworkId, studentId, !reviewed);
       if (!r.ok) return void toast.error(t("failed"));
       toast.success(reviewed ? t("unmarkedToast") : t("markedToast"));
-      // Checked: back to the list, to the next work waiting for a check.
+      // Checked: back to the class's homework, to the next work waiting for a check.
       if (reviewed) router.refresh();
-      else router.push("/homework");
+      else router.push(`/classes/${classId}?tab=homework`);
     });
   }
 

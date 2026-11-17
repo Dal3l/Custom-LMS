@@ -1158,6 +1158,7 @@ export type Database = {
         | "homework_comment"
         | "homework_reviewed"
         | "homework_submitted"
+        | "homework_updated"
       user_role: "teacher" | "student"
     }
     CompositeTypes: {
@@ -1292,6 +1293,7 @@ export const Constants = {
         "homework_comment",
         "homework_reviewed",
         "homework_submitted",
+        "homework_updated",
       ],
       user_role: ["teacher", "student"],
     },

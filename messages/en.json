@@ -681,7 +681,9 @@
       "emailTaken": "This email is already registered. Send the student the invite link — they can log in and join."
     },
     "vocabularyLine": "Dictionary: {total} · learned {learned}",
-    "openProgress": "Dictionary and progress"
+    "openProgress": "Dictionary and progress",
+    "homeworkTab": "Homework",
+    "toCheckCount": "{count, plural, one {# work to check} other {# works to check}}"
   },
   "join": {
     "title": "Class invitation",
@@ -939,7 +941,8 @@
     "allClasses": "All classes",
     "archiveHint": "Homework reviewed more than a week ago and homework not handed in within a month. Nothing is deleted — students still see it in the lesson.",
     "archiveEmptyTitle": "The archive is empty",
-    "archiveEmptyText": "Homework moves here a week after it was reviewed."
+    "archiveEmptyText": "Homework moves here a week after it was reviewed.",
+    "classEmptyText": "Send homework from a lesson — the students' work appears here, handed-in work to check first."
   },
   "notifications": {
     "title": "Notifications",
@@ -953,7 +956,8 @@
     "assigned": "New homework: “{lesson}”",
     "comment": "Your teacher commented on the homework “{lesson}”",
     "reviewed": "Your teacher reviewed the homework “{lesson}”",
-    "submitted": "{student} handed in the homework “{lesson}”"
+    "submitted": "{student} handed in the homework “{lesson}”",
+    "updated": "New exercises in the homework “{lesson}”"
   },
   "vocabulary": {
     "title": "Dictionary",
