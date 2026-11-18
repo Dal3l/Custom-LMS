@@ -120,8 +120,6 @@
   "dashboard": {
     "greeting": "Сәлеметсіз бе, {name}!",
     "greetingNoName": "Сәлеметсіз бе!",
-    "liveNow": "Қазір сабақ жүріп жатыр · {name}",
-    "joinLesson": "Сабаққа кіру",
     "upcoming": "Жақын сабақтар",
     "schedule": "Кесте",
     "noLessonsWeek": "Осы аптада кестеде сабақ жоқ.",

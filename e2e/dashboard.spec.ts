@@ -2,10 +2,9 @@ import { createClient } from "@supabase/supabase-js";
 import { createTempStudent, removeTempStudents } from "./temp-student";
 import { expect as baseExpect, test, type BrowserContextOptions, type Page } from "@playwright/test";
 
-// The home page: the teacher sees a lesson going on, work to check and new
-// chat messages; the student sees the lesson, the next one in the schedule,
-// homework to do, words to review and new messages (the app-wide banner
-// already brings the student into a lesson going on).
+// The home page: the teacher sees lessons coming up, work to check and new
+// chat messages (no banner for a lesson going on); the student sees the next
+// lesson in the schedule, homework to do, words to review and new messages.
 const teacher = { email: process.env.E2E_TEACHER_EMAIL, password: process.env.E2E_TEACHER_PASSWORD };
 const secret = process.env.SUPABASE_SECRET_KEY;
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -98,7 +97,7 @@ test.describe("home page", () => {
 
     // The teacher.
     await login(page, teacher.email!, teacher.password!);
-    await expect(page.getByText(`Сейчас идёт урок · ${className}`)).toBeVisible();
+    await expect(page.getByText(`Сейчас идёт урок · ${className}`)).toHaveCount(0);
     const check = page.getByRole("region", { name: "Ждут проверки" });
     await expect(check.getByRole("link", { name: new RegExp(studentName) })).toBeVisible();
     await expect(check.getByRole("link", { name: new RegExp(studentName) })).toContainText(`Сдано ${stamp}`);
@@ -118,7 +117,5 @@ test.describe("home page", () => {
     await expect(words.getByRole("definition")).toHaveText(["1", "1", "1"]);
     await expect(words.getByRole("link", { name: "Повторить слова" })).toBeVisible();
     await expect(sp.getByRole("region", { name: "Новые сообщения" }).getByRole("link", { name: new RegExp(className) })).toContainText("1 новое");
-    // The lesson going on: the app-wide banner leads into it (no second banner here).
-    await expect(sp.getByRole("link", { name: "Войти в урок" })).toHaveCount(0);
   });
 });

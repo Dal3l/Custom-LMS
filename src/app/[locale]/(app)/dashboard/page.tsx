@@ -1,6 +1,6 @@
 import { BookA, CalendarDays, ClipboardCheck, ClipboardList, Video } from "lucide-react";
 import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
-import { ChatRows, Empty, LessonRows, LiveBanner, Section, whenFormatter } from "@/components/dashboard/dashboard-parts";
+import { ChatRows, Empty, LessonRows, Section, whenFormatter } from "@/components/dashboard/dashboard-parts";
 import { HomeworkStatusBadge } from "@/components/homework/status-badge";
 import { Button } from "@/components/ui/button";
 import { studentDashboard, teacherDashboard } from "@/features/dashboard/queries";
@@ -34,39 +34,36 @@ export default async function DashboardPage({ params }: PageProps<"/[locale]/das
 async function TeacherHome({ profile, timeZone }: { profile: ProfileWithRole; timeZone: string }) {
   const [t, format, data] = await Promise.all([getTranslations("dashboard"), getFormatter(), teacherDashboard(profile)]);
   return (
-    <>
-      <LiveBanner live={data.live} />
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Section title={t("upcoming")} icon={CalendarDays} allHref="/schedule" allLabel={t("schedule")}>
-          {data.upcoming.length === 0 ? <Empty>{t("noLessonsWeek")}</Empty> : <LessonRows lessons={data.upcoming} timeZone={timeZone} />}
-        </Section>
-        <Section title={t("toCheck")} icon={ClipboardCheck} count={data.toCheck.length} allHref="/homework" allLabel={t("allHomework")}>
-          {data.toCheck.length === 0 ? (
-            <Empty>{t("allChecked")}</Empty>
-          ) : (
-            <ul className="flex flex-col gap-1">
-              {data.toCheck.slice(0, SHOW).map((h) => (
-                <li key={`${h.homeworkId}|${h.studentId}`}>
-                  <Link
-                    href={`/homework/${h.homeworkId}/${h.studentId}`}
-                    className="flex flex-col rounded-xl p-2 transition-colors hover:bg-accent"
-                  >
-                    <span className="font-medium break-words">{h.studentName}</span>
-                    <span className="text-sm text-muted-foreground break-words">
-                      {h.lessonTitle} · {h.className}
-                      {h.submittedAt &&
-                        ` · ${t("handedIn", { date: format.dateTime(new Date(h.submittedAt), { day: "numeric", month: "short", timeZone }) })}`}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-              {data.toCheck.length > SHOW && <Empty>{t("more", { count: data.toCheck.length - SHOW })}</Empty>}
-            </ul>
-          )}
-        </Section>
-        <ChatRows chats={data.chats} />
-      </div>
-    </>
+    <div className="grid gap-4 lg:grid-cols-2">
+      <Section title={t("upcoming")} icon={CalendarDays} allHref="/schedule" allLabel={t("schedule")}>
+        {data.upcoming.length === 0 ? <Empty>{t("noLessonsWeek")}</Empty> : <LessonRows lessons={data.upcoming} timeZone={timeZone} />}
+      </Section>
+      <Section title={t("toCheck")} icon={ClipboardCheck} count={data.toCheck.length} allHref="/homework" allLabel={t("allHomework")}>
+        {data.toCheck.length === 0 ? (
+          <Empty>{t("allChecked")}</Empty>
+        ) : (
+          <ul className="flex flex-col gap-1">
+            {data.toCheck.slice(0, SHOW).map((h) => (
+              <li key={`${h.homeworkId}|${h.studentId}`}>
+                <Link
+                  href={`/homework/${h.homeworkId}/${h.studentId}`}
+                  className="flex flex-col rounded-xl p-2 transition-colors hover:bg-accent"
+                >
+                  <span className="font-medium break-words">{h.studentName}</span>
+                  <span className="text-sm text-muted-foreground break-words">
+                    {h.lessonTitle} · {h.className}
+                    {h.submittedAt &&
+                      ` · ${t("handedIn", { date: format.dateTime(new Date(h.submittedAt), { day: "numeric", month: "short", timeZone }) })}`}
+                  </span>
+                </Link>
+              </li>
+            ))}
+            {data.toCheck.length > SHOW && <Empty>{t("more", { count: data.toCheck.length - SHOW })}</Empty>}
+          </ul>
+        )}
+      </Section>
+      <ChatRows chats={data.chats} />
+    </div>
   );
 }
 

@@ -21,8 +21,6 @@ export type UpcomingLesson = {
   href: string;
 };
 
-export type LiveClass = { classId: string; name: string; href: string };
-
 async function common(profile: ProfileWithRole, days: number, limit: number) {
   const now = new Date();
   const [{ events, overrides, classes }, list, unread] = await Promise.all([loadSchedule(), listClasses(profile), chatUnread()]);
@@ -40,11 +38,8 @@ async function common(profile: ProfileWithRole, days: number, limit: number) {
         href: c?.lessonId ? `/classes/${o.classId}/lessons/${c.lessonId}` : `/classes/${o.classId}`,
       };
     });
-  const live: LiveClass[] = list.flatMap((c) =>
-    c.liveLessonId ? [{ classId: c.id, name: c.name, href: `/classes/${c.id}/lessons/${c.liveLessonId}` }] : [],
-  );
   const names = Object.fromEntries(list.map((c) => [c.id, c.name]));
-  return { upcoming, live, chats: unreadChats(unread, names) };
+  return { upcoming, chats: unreadChats(unread, names) };
 }
 
 /** Teacher's home: lessons of the next week, work to check, new messages. */

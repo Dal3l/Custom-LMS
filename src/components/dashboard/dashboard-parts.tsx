@@ -1,9 +1,9 @@
-import { ArrowRight, MessageCircle, Radio, Video } from "lucide-react";
+import { ArrowRight, MessageCircle, Video } from "lucide-react";
 import { getFormatter, getTranslations } from "next-intl/server";
 import type { ComponentType, ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { dayKind } from "@/features/dashboard/dashboard";
-import type { LiveClass, UpcomingLesson } from "@/features/dashboard/queries";
+import type { UpcomingLesson } from "@/features/dashboard/queries";
 import { localTime } from "@/features/schedule/occurrences";
 import { Link } from "@/i18n/navigation";
 
@@ -45,25 +45,6 @@ export function Section({
 
 export function Empty({ children }: { children: ReactNode }) {
   return <p className="text-sm text-muted-foreground">{children}</p>;
-}
-
-/** "A lesson is on now" — straight into it. */
-export async function LiveBanner({ live }: { live: LiveClass[] }) {
-  if (!live.length) return null;
-  const t = await getTranslations("dashboard");
-  return (
-    <div className="flex flex-col gap-2">
-      {live.map((c) => (
-        <div key={c.classId} className="flex flex-wrap items-center gap-3 rounded-2xl border border-emerald-300 bg-emerald-50 p-3 text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950 dark:text-emerald-100">
-          <Radio className="size-5 shrink-0" aria-hidden="true" />
-          <span className="min-w-0 flex-1 font-medium break-words">{t("liveNow", { name: c.name })}</span>
-          <Button asChild size="sm">
-            <Link href={c.href}>{t("joinLesson")}</Link>
-          </Button>
-        </div>
-      ))}
-    </div>
-  );
 }
 
 /** "Today 18:00–19:00" in the viewer's time zone. */

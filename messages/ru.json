@@ -120,8 +120,6 @@
   "dashboard": {
     "greeting": "Здравствуйте, {name}!",
     "greetingNoName": "Здравствуйте!",
-    "liveNow": "Сейчас идёт урок · {name}",
-    "joinLesson": "Войти в урок",
     "upcoming": "Ближайшие уроки",
     "schedule": "Расписание",
     "noLessonsWeek": "На этой неделе уроков в расписании нет.",
