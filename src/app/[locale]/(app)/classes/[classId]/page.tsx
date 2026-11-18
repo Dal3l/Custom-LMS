@@ -6,7 +6,9 @@ import { ClassLessonsList } from "@/components/classes/class-lessons-list";
 import { LessonPicker } from "@/components/classes/lesson-picker";
 import { InvitePanel } from "@/components/classes/invite-panel";
 import { RegisterStudentDialog } from "@/components/classes/register-student-dialog";
+import { ClassChat } from "@/components/chat/class-chat";
 import { ClassSettings } from "@/components/classes/class-settings";
+import { chatUnread, loadChat } from "@/features/chat/actions";
 import { StudentsList } from "@/components/classes/students-panel";
 import { ClassHomeworkList } from "@/components/homework/class-homework-list";
 import { listTeacherHomeworks } from "@/features/homework/queries";
@@ -37,7 +39,12 @@ export default async function ClassPage({ params, searchParams }: PageProps<"/[l
     listClassLessons(classId),
   ]);
   if (!cls) notFound();
-  const homework = cls.isTeacher ? await listTeacherHomeworks(cls.id) : [];
+  const [homework, chatData, unread, tch] = await Promise.all([
+    cls.isTeacher ? listTeacherHomeworks(cls.id) : Promise.resolve([]),
+    loadChat(cls.id),
+    chatUnread(),
+    getTranslations("chat"),
+  ]);
   const timeZone = isValidTimeZone(profile.timezone) ? profile.timezone : "UTC";
   // The lesson going on now, else the last one opened: "Continue the lesson".
   const current = classLessons.find((l) => l.status === "live") ?? [...classLessons].sort((a, b) => b.openedAt.localeCompare(a.openedAt))[0];
@@ -89,7 +96,7 @@ export default async function ClassPage({ params, searchParams }: PageProps<"/[l
             )}
             <LessonPicker classId={cls.id} label={tl("openLesson")} size={current ? "default" : "lg"} />
           </div>
-        <Tabs defaultValue={tab === "homework" || tab === "settings" ? tab : "students"} className="gap-4">
+        <Tabs defaultValue={tab === "homework" || tab === "settings" || tab === "chat" ? tab : "students"} className="gap-4">
           <TabsList>
             <TabsTrigger value="students">
               {t("studentsTab")} · {cls.students.length}
@@ -102,8 +109,17 @@ export default async function ClassPage({ params, searchParams }: PageProps<"/[l
                 </span>
               )}
             </TabsTrigger>
+            <TabsTrigger value="chat">
+              {tch("tab")}
+              {(unread[cls.id] ?? 0) > 0 && (
+                <span className="ml-1 rounded-full bg-red-600 px-1.5 text-xs text-white tabular-nums" aria-label={tch("buttonUnread", { count: unread[cls.id]! })}>
+                  {unread[cls.id]}
+                </span>
+              )}
+            </TabsTrigger>
             <TabsTrigger value="settings">{t("settingsTab")}</TabsTrigger>
           </TabsList>
+          <TabsContent value="chat">{chatData && <ClassChat data={chatData} me={profile.id} isTeacher className="h-[min(70svh,40rem)] rounded-2xl border bg-card" />}</TabsContent>
           <TabsContent value="homework">
             <ClassHomeworkList items={homework} />
           </TabsContent>
@@ -134,7 +150,23 @@ export default async function ClassPage({ params, searchParams }: PageProps<"/[l
         </Tabs>
         </>
       ) : (
-        lessons
+        <Tabs defaultValue={tab === "chat" ? "chat" : "lessons"} className="gap-4">
+          <TabsList>
+            <TabsTrigger value="lessons">{t("lessonsTab")}</TabsTrigger>
+            <TabsTrigger value="chat">
+              {tch("tab")}
+              {(unread[cls.id] ?? 0) > 0 && (
+                <span className="ml-1 rounded-full bg-red-600 px-1.5 text-xs text-white tabular-nums" aria-label={tch("buttonUnread", { count: unread[cls.id]! })}>
+                  {unread[cls.id]}
+                </span>
+              )}
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="lessons">{lessons}</TabsContent>
+          <TabsContent value="chat">
+            {chatData && <ClassChat data={chatData} me={profile.id} isTeacher={false} className="h-[min(70svh,40rem)] rounded-2xl border bg-card" />}
+          </TabsContent>
+        </Tabs>
       )}
     </div>
   );

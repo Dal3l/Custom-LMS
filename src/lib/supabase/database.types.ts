@@ -58,6 +58,93 @@ export type Database = {
           },
         ]
       }
+      chat_messages: {
+        Row: {
+          author_id: string
+          body: string
+          class_id: string
+          created_at: string
+          deleted_at: string | null
+          file_name: string | null
+          file_path: string | null
+          file_size: number | null
+          file_type: string | null
+          id: string
+        }
+        Insert: {
+          author_id?: string
+          body?: string
+          class_id: string
+          created_at?: string
+          deleted_at?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          file_type?: string | null
+          id?: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          class_id?: string
+          created_at?: string
+          deleted_at?: string | null
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          file_type?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_messages_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_reads: {
+        Row: {
+          class_id: string
+          last_read_at: string
+          user_id: string
+        }
+        Insert: {
+          class_id: string
+          last_read_at?: string
+          user_id?: string
+        }
+        Update: {
+          class_id?: string
+          last_read_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_reads_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_reads_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       class_answers: {
         Row: {
           answer: Json
@@ -1212,6 +1299,13 @@ export type Database = {
       move_exercise: {
         Args: { p_id: string; p_section: string }
         Returns: undefined
+      }
+      my_chat_unread: {
+        Args: never
+        Returns: {
+          class_id: string
+          unread: number
+        }[]
       }
       reorder_exercises: {
         Args: { p_ids: string[]; p_section: string }

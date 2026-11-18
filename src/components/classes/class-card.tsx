@@ -1,4 +1,4 @@
-import { Settings2, User, Users } from "lucide-react";
+import { MessageCircle, Settings2, User, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,8 +7,9 @@ import type { ClassListItem } from "@/features/classes/queries";
 import { Link } from "@/i18n/navigation";
 import { CallButton } from "./call-button";
 
-export async function ClassCard({ item, isTeacher }: { item: ClassListItem; isTeacher: boolean }) {
+export async function ClassCard({ item, isTeacher, unread = 0 }: { item: ClassListItem; isTeacher: boolean; unread?: number }) {
   const t = await getTranslations("classes");
+  const tc = await getTranslations("chat");
   const Icon = item.kind === "group" ? Users : User;
   return (
     <Card className="h-full gap-3 rounded-2xl p-4 transition-shadow hover:shadow-md">
@@ -32,6 +33,16 @@ export async function ClassCard({ item, isTeacher }: { item: ClassListItem; isTe
       </Link>
       <div className="mt-auto flex items-center justify-between gap-2">
         <Badge variant="secondary">{t(`kind.${item.kind}`)}</Badge>
+        {unread > 0 && (
+          <Link
+            href={`/classes/${item.id}?tab=chat`}
+            className="flex items-center gap-1 rounded-full bg-red-600 px-2 py-0.5 text-xs font-medium text-white"
+            aria-label={tc("unreadOnCard", { count: unread })}
+          >
+            <MessageCircle className="size-3.5" aria-hidden="true" />
+            {unread}
+          </Link>
+        )}
         {!isTeacher && item.call_url && <CallButton url={item.call_url} size="sm" />}
         {isTeacher && (
           <Button asChild variant="ghost" size="sm" className="text-muted-foreground">
