@@ -1126,7 +1126,8 @@
     "mistakes": "{count, plural, one {# mistake} other {# mistakes}}",
     "words": "The student's words",
     "noWords": "No words in the student's dictionary yet. Add a word here or right in a lesson.",
-    "fromYou": "from you"
+    "fromYou": "from you",
+    "dictionaryTitle": "Dictionary"
   },
   "students": {
     "title": "Students",
@@ -1244,5 +1245,31 @@
     "sinceUntil": "from {from} to {to}",
     "since": "from {from}",
     "openSchedule": "Open the schedule"
+  },
+  "stats": {
+    "title": "Results",
+    "ofTotal": "{done} of {total}",
+    "lessonsDone": "Lessons done",
+    "lessonRight": "Right in lessons",
+    "homeworkHandedIn": "Homework handed in",
+    "homeworkFirstTry": "Right in homework, first try",
+    "onTime": "On time: {count}",
+    "late": "Late: {count}",
+    "missed": "Missed: {count}",
+    "finalRight": "Final, after fixing: {percent}%",
+    "byHomework": "By homework",
+    "noHomework": "No homework sent to this student yet.",
+    "firstTry": "first try",
+    "final": "final",
+    "timing": {
+      "onTime": "on time",
+      "late": "late",
+      "waiting": "not handed in",
+      "missed": "overdue"
+    },
+    "answered": "Answered {done} of {total}",
+    "byLesson": "By lesson",
+    "noLessons": "No lessons in the class yet.",
+    "finished": "done"
   }
 }

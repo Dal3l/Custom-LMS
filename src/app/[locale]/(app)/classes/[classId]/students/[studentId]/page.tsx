@@ -1,7 +1,9 @@
 import { BookA, ChevronLeft, GraduationCap, Repeat, Sparkles, TriangleAlert } from "lucide-react";
 import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { StudentStats } from "@/components/stats/student-stats";
 import { StudentWords } from "@/components/vocabulary/student-words";
+import { studentClassStats } from "@/features/stats/queries";
 import { sortedLanguages } from "@/features/courses/languages";
 import { getClassPage } from "@/features/classes/queries";
 import { idSchema } from "@/features/classes/schemas";
@@ -20,11 +22,12 @@ export default async function StudentPage({ params }: PageProps<"/[locale]/class
   const cls = await getClassPage(classId, profile);
   const student = cls?.isTeacher ? cls.students.find((s) => s.id === studentId) : undefined;
   if (!cls || !student) notFound();
-  const [t, format, p, words] = await Promise.all([
+  const [t, format, p, words, stats] = await Promise.all([
     getTranslations("studentProgress"),
     getFormatter(),
     studentProgress(studentId),
     listWords(studentId),
+    studentClassStats(classId, studentId),
   ]);
   const languages = await studyLanguages(words);
   const now = new Date();
@@ -49,6 +52,10 @@ export default async function StudentPage({ params }: PageProps<"/[locale]/class
         <h1 className="text-2xl font-semibold break-words">{student.fullName || t("noName")}</h1>
         <p className="text-muted-foreground">{t("subtitle")}</p>
       </div>
+
+      <StudentStats stats={stats} />
+
+      <h2 className="-mb-2 text-lg font-semibold">{t("dictionaryTitle")}</h2>
 
       <dl className="grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label={t("summary")}>
         {tiles.map((tile) => (

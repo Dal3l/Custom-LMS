@@ -1126,7 +1126,8 @@
     "mistakes": "{count, plural, other {# қате}}",
     "words": "Оқушының сөздері",
     "noWords": "Оқушы сөздігінде әзірге сөз жоқ. Сөзді осында немесе сабақта қосыңыз.",
-    "fromYou": "сізден"
+    "fromYou": "сізден",
+    "dictionaryTitle": "Сөздік"
   },
   "students": {
     "title": "Оқушылар",
@@ -1244,5 +1245,31 @@
     "sinceUntil": "{from} – {to}",
     "since": "{from} бастап",
     "openSchedule": "Кестені ашу"
+  },
+  "stats": {
+    "title": "Үлгерім",
+    "ofTotal": "{done} / {total}",
+    "lessonsDone": "Өтілген сабақтар",
+    "lessonRight": "Сабақтағы дұрыс жауаптар",
+    "homeworkHandedIn": "Тапсырылған үй жұмыстары",
+    "homeworkFirstTry": "Үй жұмысындағы 1-әрекеттен дұрыс",
+    "onTime": "Уақытында: {count}",
+    "late": "Кешігіп: {count}",
+    "missed": "Мерзімінде тапсырылмады: {count}",
+    "finalRight": "Түзетуден кейінгі нәтиже: {percent}%",
+    "byHomework": "Үй жұмыстары бойынша",
+    "noHomework": "Бұл оқушыға әлі үй жұмысы жіберілмеген.",
+    "firstTry": "1-әрекеттен",
+    "final": "нәтиже",
+    "timing": {
+      "onTime": "уақытында",
+      "late": "кешігіп",
+      "waiting": "тапсырылмаған",
+      "missed": "мерзімі өтті"
+    },
+    "answered": "{total} тапсырманың {done}-не жауап берді",
+    "byLesson": "Сабақтар бойынша",
+    "noLessons": "Сыныпта әлі сабақ болған жоқ.",
+    "finished": "өтілді"
   }
 }
