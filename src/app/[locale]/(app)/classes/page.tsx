@@ -2,6 +2,7 @@ import { Users } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ClassCard } from "@/components/classes/class-card";
 import { CreateClassDialog } from "@/components/classes/create-class-dialog";
+import { chatUnread } from "@/features/chat/actions";
 import { listClasses } from "@/features/classes/queries";
 import type { Locale } from "@/i18n/routing";
 import { requireProfile } from "@/lib/auth";
@@ -10,7 +11,7 @@ export default async function ClassesPage({ params }: PageProps<"/[locale]/class
   const { locale } = (await params) as { locale: Locale };
   setRequestLocale(locale);
   const profile = await requireProfile(locale);
-  const [t, classes] = await Promise.all([getTranslations("classes"), listClasses(profile)]);
+  const [t, classes, unread] = await Promise.all([getTranslations("classes"), listClasses(profile), chatUnread()]);
   const isTeacher = profile.role === "teacher";
 
   return (
@@ -38,7 +39,7 @@ export default async function ClassesPage({ params }: PageProps<"/[locale]/class
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {classes.map((c) => (
             <li key={c.id}>
-              <ClassCard item={c} isTeacher={isTeacher} />
+              <ClassCard item={c} isTeacher={isTeacher} unread={unread[c.id] ?? 0} />
             </li>
           ))}
         </ul>

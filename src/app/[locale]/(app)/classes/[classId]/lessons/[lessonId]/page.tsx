@@ -14,7 +14,9 @@ import { getClassLessonState, listClassMarks } from "@/features/classes/lesson-q
 import { getClassPage } from "@/features/classes/queries";
 import { idSchema } from "@/features/classes/schemas";
 import { getClassLessonAnswers, getMyClassAnswers } from "@/features/lessons/answers";
+import { ChatButton } from "@/components/chat/chat-button";
 import { HomeworkReview } from "@/components/homework/homework-review";
+import { chatUnread } from "@/features/chat/actions";
 import { getHomeworkReview, getMyLessonHomeworks, listLessonHomeworks } from "@/features/homework/queries";
 import { markHomeworkNotificationsRead } from "@/features/notifications/actions";
 import { revealedSolutions } from "@/features/lessons/grade";
@@ -62,6 +64,7 @@ export default async function ClassLessonPage({
     cls.isTeacher && state ? listLessonHomeworks(classId, lessonId) : Promise.resolve([]),
     cls.isTeacher ? Promise.resolve([]) : getMyLessonHomeworks(classId, lessonId, profile.id),
   ]);
+  const unread = await chatUnread();
   const showHomework = !cls.isTeacher && myHomeworks.length > 0 && tab === "homework";
   // The teacher: the lesson's homework (one per lesson) and whose answers to show.
   const sentHomework = sentHomeworks[0];
@@ -117,6 +120,7 @@ export default async function ClassLessonPage({
           </Badge>
         )}
         <div className="ml-auto flex shrink-0 items-center gap-1">
+          <ChatButton classId={classId} className={cls.name} me={profile.id} isTeacher={cls.isTeacher} initialUnread={unread[classId] ?? 0} />
           {cls.call_url && <CallButton url={cls.call_url} size="sm" compact />}
           {cls.isTeacher && (
             <>
