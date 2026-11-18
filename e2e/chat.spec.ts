@@ -91,6 +91,14 @@ test.describe("class chat", () => {
     await expect(teacherLog).toContainText("Did you get this?");
     await sp.context().setOffline(false);
     await expect(studentLog).toContainText("Did you get this?");
+    // (the student's "read" mark is saved before leaving the chat)
+    await expect
+      .poll(async () => {
+        const { data: last } = await db.from("chat_messages").select("created_at").eq("class_id", cls!.id).order("created_at", { ascending: false }).limit(1).single();
+        const { data: mark } = await db.from("chat_reads").select("last_read_at").eq("class_id", cls!.id).eq("user_id", pupil.id).maybeSingle();
+        return Boolean(mark && last && mark.last_read_at >= last.created_at);
+      })
+      .toBe(true);
 
     // Unread: the class card shows it; so does the Chat button in the lesson.
     await sp.goto("/ru/classes");
