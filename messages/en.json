@@ -120,8 +120,6 @@
   "dashboard": {
     "greeting": "Hello, {name}!",
     "greetingNoName": "Hello!",
-    "liveNow": "A lesson is on now · {name}",
-    "joinLesson": "Join the lesson",
     "upcoming": "Upcoming lessons",
     "schedule": "Schedule",
     "noLessonsWeek": "No lessons in the schedule this week.",
