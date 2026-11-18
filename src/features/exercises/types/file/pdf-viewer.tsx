@@ -109,7 +109,7 @@ function UndoLast({ board, label }: { board: string; label: string }) {
   const state = useBoardItems(board);
   const mine = state.items.filter((i) => i.authorId === state.userId);
   return (
-    <Button type="button" size="icon-sm" variant="ghost" aria-label={label} title={label} disabled={!mine.length} onClick={() => mine.length && state.remove(mine[mine.length - 1]!.id)}>
+    <Button type="button" size="icon-sm" variant="ghost" aria-label={label} title={label} disabled={!mine.length} onClick={() => mine.length && state.change([{ remove: mine[mine.length - 1]!.id }])}>
       <Undo2 aria-hidden="true" />
     </Button>
   );

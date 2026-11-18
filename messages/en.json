@@ -837,12 +837,12 @@
   },
   "board": {
     "lessonBoard": "Lesson whiteboard",
-    "lessonBoardHint": "A shared board: everyone in the lesson sees it and can draw.",
+    "lessonBoardHint": "A shared board: everyone in the lesson sees it and can draw. It is endless: move it with the Hand, zoom with the buttons or Ctrl + wheel. Text: one click shows a frame to resize it, a double click lets you edit it.",
     "textPlaceholder": "Text, then Enter",
     "loading": "Loading the board…",
     "tools": "Board tools",
     "color": "Colour",
-    "undo": "Undo my last",
+    "undo": "Undo the last change (Ctrl+Z)",
     "clear": "Clear the board",
     "tool": {
       "view": "Just look",
@@ -864,7 +864,11 @@
     },
     "zoom": "Zoom",
     "zoomIn": "Zoom in",
-    "zoomOut": "Zoom out"
+    "zoomOut": "Zoom out",
+    "image": "Insert a picture",
+    "imageFailed": "Could not add the picture. Please try again.",
+    "imageTooBig": "The picture is too big — pick a smaller one.",
+    "fit": "Show the whole drawing"
   },
   "timer": {
     "title": "Timer",
