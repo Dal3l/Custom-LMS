@@ -404,6 +404,33 @@ export type Database = {
           },
         ]
       }
+      context_translations: {
+        Row: {
+          context_key: string
+          created_at: string
+          source_lang: string
+          target_lang: string
+          term: string
+          variants: string[]
+        }
+        Insert: {
+          context_key: string
+          created_at?: string
+          source_lang: string
+          target_lang: string
+          term: string
+          variants: string[]
+        }
+        Update: {
+          context_key?: string
+          created_at?: string
+          source_lang?: string
+          target_lang?: string
+          term?: string
+          variants?: string[]
+        }
+        Relationships: []
+      }
       courses: {
         Row: {
           cover_path: string | null
@@ -1099,6 +1126,7 @@ export type Database = {
       }
       translations: {
         Row: {
+          by_ai: boolean
           created_at: string
           source_lang: string
           target_lang: string
@@ -1106,6 +1134,7 @@ export type Database = {
           variants: string[]
         }
         Insert: {
+          by_ai?: boolean
           created_at?: string
           source_lang: string
           target_lang: string
@@ -1113,6 +1142,7 @@ export type Database = {
           variants: string[]
         }
         Update: {
+          by_ai?: boolean
           created_at?: string
           source_lang?: string
           target_lang?: string
