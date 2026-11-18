@@ -1126,7 +1126,8 @@
     "mistakes": "{count, plural, one {# ошибка} few {# ошибки} many {# ошибок} other {# ошибки}}",
     "words": "Слова ученика",
     "noWords": "В словаре ученика пока нет слов. Добавьте слово здесь или прямо на уроке.",
-    "fromYou": "от вас"
+    "fromYou": "от вас",
+    "dictionaryTitle": "Словарь"
   },
   "students": {
     "title": "Ученики",
@@ -1278,5 +1279,31 @@
     "discard": "Убрать",
     "unreadOnCard": "{count, plural, one {# новое сообщение в чате} few {# новых сообщения в чате} many {# новых сообщений в чате} other {# новых сообщения в чате}}",
     "teacherName": "Учитель"
+  },
+  "stats": {
+    "title": "Успеваемость",
+    "ofTotal": "{done} из {total}",
+    "lessonsDone": "Уроков пройдено",
+    "lessonRight": "Верных на уроках",
+    "homeworkHandedIn": "Домашек сдано",
+    "homeworkFirstTry": "Верных в домашке с 1-й попытки",
+    "onTime": "Вовремя: {count}",
+    "late": "С опозданием: {count}",
+    "missed": "Не сдано в срок: {count}",
+    "finalRight": "Итог после исправлений: {percent}%",
+    "byHomework": "По домашкам",
+    "noHomework": "Домашку этому ученику пока не отправляли.",
+    "firstTry": "с 1-й попытки",
+    "final": "итог",
+    "timing": {
+      "onTime": "вовремя",
+      "late": "с опозданием",
+      "waiting": "не сдано",
+      "missed": "просрочено"
+    },
+    "answered": "Отвечено {done} из {total}",
+    "byLesson": "По урокам",
+    "noLessons": "Уроков в классе пока не было.",
+    "finished": "пройден"
   }
 }

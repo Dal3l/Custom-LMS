@@ -23,10 +23,11 @@ async function login(page: Page, email: string, password: string) {
 test.describe("student progress", () => {
   test.skip(!teacher.email || !teacher.password || !secret || !url, "test accounts not configured");
   test.setTimeout(180_000);
-  const cleanup = { classes: [] as string[] };
+  const cleanup = { classes: [] as string[], courses: [] as string[] };
   test.afterAll(async () => {
     await removeTempStudents();
     if (cleanup.classes.length) await admin().from("classes").delete().in("id", cleanup.classes);
+    if (cleanup.courses.length) await admin().from("courses").delete().in("id", cleanup.courses);
   });
 
   test("the teacher sees the dictionary progress and adds a word", async ({ page }, testInfo) => {
@@ -71,6 +72,47 @@ test.describe("student progress", () => {
       });
     }
 
+    // Results: a finished lesson with one right and one wrong answer; homework
+    // handed in late, wrong at first, right after fixing.
+    const { data: course } = await db.from("courses").insert({ owner_id: teacherId, title: `E2E статистика ${stamp}`, language: "en" }).select("id").single();
+    cleanup.courses.push(course!.id);
+    const { data: mod } = await db.from("modules").insert({ course_id: course!.id, title: "Unit", position: 0 }).select("id").single();
+    const { data: lesson } = await db.from("lessons").insert({ module_id: mod!.id, title: "Results lesson", position: 0 }).select("id").single();
+    const { data: sec } = await db.from("sections").insert({ lesson_id: lesson!.id, title: "Practice", position: 0 }).select("id").single();
+    const { data: hwSec } = await db.from("sections").insert({ lesson_id: lesson!.id, title: "At home", position: 1, kind: "homework" }).select("id").single();
+    const ex: string[] = [];
+    for (const [i, section] of [sec!.id, sec!.id, hwSec!.id].entries()) {
+      const { data } = await db
+        .from("exercises")
+        .insert({ section_id: section, type: "true_false", title: `Q${i}`, content: { statements: [{ id: "st000001", text: "x" }] }, position: i })
+        .select("id")
+        .single();
+      ex.push(data!.id);
+    }
+    await db.from("class_lessons").insert({ class_id: cls!.id, lesson_id: lesson!.id, status: "open", finished_at: new Date().toISOString() });
+    const verdict = (ok: boolean) => ({ parts: { st000001: ok }, score: ok ? 1 : 0, correct: ok });
+    await db.from("class_answers").insert([
+      { class_id: cls!.id, exercise_id: ex[0], student_id: pupil.id, lesson_id: lesson!.id, answer: {}, result: verdict(true) },
+      { class_id: cls!.id, exercise_id: ex[1], student_id: pupil.id, lesson_id: lesson!.id, answer: {}, result: verdict(false) },
+    ]);
+    const { data: hwRow } = await db
+      .from("homeworks")
+      .insert({ class_id: cls!.id, lesson_id: lesson!.id, due_at: new Date(Date.now() - 3 * day).toISOString() })
+      .select("id")
+      .single();
+    await db.from("homework_exercises").insert({ homework_id: hwRow!.id, exercise_id: ex[2], position: 0 });
+    await db.from("homework_students").insert({ homework_id: hwRow!.id, student_id: pupil.id });
+    await db.from("homework_answers").insert({
+      homework_id: hwRow!.id,
+      exercise_id: ex[2],
+      student_id: pupil.id,
+      answer: {},
+      result: verdict(true),
+      first_result: verdict(false),
+      attempts: 2,
+    });
+    await db.from("homework_students").update({ submitted_at: new Date(Date.now() - day).toISOString() }).eq("homework_id", hwRow!.id);
+
     await login(page, teacher.email!, teacher.password!);
     await page.goto(`/ru/classes/${cls!.id}?tab=students`);
     const row = page.getByRole("list", { name: "Ученики" }).getByRole("listitem").filter({ hasText: name });
@@ -78,7 +120,13 @@ test.describe("student progress", () => {
     await row.getByRole("link", { name: new RegExp(name) }).click();
 
     await expect(page.getByRole("heading", { level: 1, name })).toBeVisible();
-    const summary = page.getByRole("definition");
+    const results = page.getByRole("region", { name: "Успеваемость" });
+    await expect(results.getByRole("definition")).toHaveText(["1 из 1", "50%", "1 из 1", "0%"]);
+    await expect(results).toContainText("С опозданием: 1");
+    await expect(results).toContainText("Итог после исправлений: 100%");
+    await expect(results.getByRole("region", { name: "По домашкам" })).toContainText("с опозданием");
+    await expect(results.getByRole("region", { name: "По урокам" })).toContainText("Results lesson");
+    const summary = page.getByLabel("Словарь ученика").getByRole("definition");
     await expect(summary).toHaveText(["3", "1", "2", "1"]);
     const activity = page.getByRole("region", { name: "Занятия в тренажёре" });
     await expect(activity).toContainText("Последнее занятие — 2 дня назад");
@@ -96,7 +144,7 @@ test.describe("student progress", () => {
     await dialog.getByRole("button", { name: "Добавить в словарь" }).click();
     const pear = words.getByRole("listitem").filter({ hasText: "pear" });
     await expect(pear).toContainText("от вас");
-    await expect(page.getByRole("definition").first()).toHaveText("4");
+    await expect(summary.first()).toHaveText("4");
     // Words the teacher added can be removed by the teacher.
     await pear.getByRole("button", { name: "Действия со словом «pear»" }).click();
     await page.getByRole("menuitem", { name: "Удалить" }).click();
