@@ -16,11 +16,12 @@ import type { ClassStudent } from "@/features/classes/queries";
 import { addWord } from "@/features/vocabulary/actions";
 import { canLookUp, type Lookup } from "@/features/vocabulary/lookup";
 import type { WordPlace } from "@/features/vocabulary/schemas";
-import { isTranslatable } from "@/features/vocabulary/translate";
+import { isTranslatable, sentenceAround } from "@/features/vocabulary/translate";
 import { cn } from "@/lib/utils";
 import { SpeakButton } from "./speak-button";
 
-type Selected = { term: string; top: number; bottom: number; left: number };
+/** context: the sentence the word stands in (for a translation that fits it) */
+type Selected = { term: string; context: string | null; top: number; bottom: number; left: number };
 type Found = { variants: string[]; transcription: string; audioUrl: string | null };
 
 const WIDTH = 320;
@@ -31,6 +32,23 @@ function cleanSelection(text: string): string {
     .replace(/\s+/g, " ")
     .trim()
     .replace(/^[\s"'«»“”‘’()[\]{}.,;:!?¡¿…—–-]+|[\s"'«»“”‘’()[\]{}.,;:!?¡¿…—–-]+$/g, "");
+}
+
+/** The sentence around a selection: from the text of its paragraph (or list item, cell…). */
+function contextOf(range: Range): string | null {
+  const start = range.startContainer;
+  const el = start instanceof Element ? start : start.parentElement;
+  const block = el?.closest("p, li, td, th, h1, h2, h3, h4, h5, h6, blockquote, dd, dt, figcaption, label") ?? el;
+  if (!block) return null;
+  try {
+    const before = document.createRange();
+    before.selectNodeContents(block);
+    before.setEnd(range.startContainer, range.startOffset);
+    const offset = before.toString().length;
+    return sentenceAround(block.textContent ?? "", offset, offset + range.toString().length);
+  } catch {
+    return null;
+  }
 }
 
 /** Selections in fields the user types in, in dialogs or in this popup are not words to translate. */
@@ -75,7 +93,9 @@ export function WordPopup({
       if (!isTranslatable(term)) return setSelected(null);
       const rect = range.getBoundingClientRect();
       setSelected((prev) =>
-        prev?.term === term && prev.top === rect.top ? prev : { term, top: rect.top, bottom: rect.bottom, left: rect.left },
+        prev?.term === term && prev.top === rect.top
+          ? prev
+          : { term, context: contextOf(range), top: rect.top, bottom: rect.bottom, left: rect.left },
       );
     }
     // Wait until the selection settles (dragging, long press on a phone).
@@ -140,7 +160,7 @@ function PopupCard({
   const [editing, setEditing] = useState(false);
   const [to, setTo] = useState<Set<string>>(() => new Set(students?.map((s) => s.id) ?? []));
   const [pending, startTransition] = useTransition();
-  const { term } = selected;
+  const { term, context } = selected;
 
   useEffect(() => {
     let cancelled = false;
@@ -155,7 +175,10 @@ function PopupCard({
     void (async () => {
       const [tr, lookup] = await Promise.all([
         translatable
-          ? get<{ variants: string[] }>(`/api/translate?term=${encodeURIComponent(term)}&from=${place.language}&to=${locale}`)
+          ? get<{ variants: string[] }>(
+              `/api/translate?term=${encodeURIComponent(term)}&from=${place.language}&to=${locale}` +
+                (context ? `&context=${encodeURIComponent(context)}` : ""),
+            )
           : Promise.resolve(null),
         canLookUp(place.language) ? get<Lookup>(`/api/dictionary?term=${encodeURIComponent(term)}&lang=${place.language}`) : Promise.resolve(null),
       ]);
@@ -168,7 +191,7 @@ function PopupCard({
     return () => {
       cancelled = true;
     };
-  }, [term, place.language, locale, translatable]);
+  }, [term, context, place.language, locale, translatable]);
 
   function add() {
     startTransition(async () => {
