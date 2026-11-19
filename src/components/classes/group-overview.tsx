@@ -8,7 +8,7 @@ import type { ClassStudent } from "@/features/classes/queries";
 import { checkMode } from "@/features/exercises/catalog";
 import type { StudentAnswers } from "@/features/lessons/answers-shared";
 import type { StudentSection } from "@/features/lessons/queries";
-import { exerciseNumber } from "@/features/lessons/sections";
+import { exerciseNumbers } from "@/features/lessons/sections";
 import { cellStatus, correctCount } from "@/features/live/overview";
 import { cn } from "@/lib/utils";
 import { ToolButton } from "./lesson-tools";
@@ -33,7 +33,7 @@ export function GroupOverview({
   // Only exercises with answers to check.
   const rows = sections.flatMap((s, si) =>
     s.exercises
-      .map((e, ei) => ({ exercise: e, sectionId: s.id, number: exerciseNumber(si, ei) }))
+      .map((e, ei) => ({ exercise: e, sectionId: s.id, number: exerciseNumbers(si, s.exercises)[ei] ?? "" }))
       .filter((c) => checkMode(c.exercise.type) !== null),
   );
 

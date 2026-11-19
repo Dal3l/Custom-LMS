@@ -263,6 +263,10 @@
         "name": "Text",
         "description": "Text with headings, lists and highlighting"
       },
+      "note": {
+        "name": "Note",
+        "description": "A tip for the teacher, a suggested answer or a rule — can be hidden from students"
+      },
       "image": {
         "name": "Image",
         "description": "One or more pictures with a caption"
@@ -551,6 +555,12 @@
       "noMicrophone": "No access to the microphone. Allow it in the browser settings.",
       "tooLong": "The recording is too big.",
       "uploadFailed": "Couldn't save the recording. Check the internet and record again."
+    },
+    "note": {
+      "shown": "Shown to students",
+      "hidden": "Hidden from students",
+      "shownHint": "Students see this note in the lesson.",
+      "hiddenHint": "Only you and other teachers see it. In a lesson, show it to students with the eye button."
     }
   },
   "builder": {
@@ -621,7 +631,9 @@
     "teacherPointer": "Teacher's pointer",
     "toolsLabel": "Lesson tools",
     "awaitingTeacher": "Waiting for the teacher",
-    "noExtraSections": "Empty for now"
+    "noExtraSections": "Empty for now",
+    "note": "Note",
+    "noteHidden": "Hidden from students"
   },
   "classes": {
     "title": "Classes",
@@ -833,7 +845,11 @@
     "lessonOn": "A lesson is on in “{name}”",
     "join": "Join",
     "hide": "Hide",
-    "exercise": "Exercise"
+    "exercise": "Exercise",
+    "showNote": "Show the note to students",
+    "hideNote": "Hide the note from students",
+    "noteShown": "The note is shown to students",
+    "noteHidden": "The note is hidden from students"
   },
   "board": {
     "lessonBoard": "Lesson whiteboard",

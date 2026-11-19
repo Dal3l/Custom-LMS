@@ -117,6 +117,8 @@ export async function saveExercise(
   const content = def.contentSchema.safeParse(value.content);
   const key = def.keySchema ? def.keySchema.safeParse(value.key) : null;
   if (!title.success || !content.success || (key && !key.success)) return fail("invalid");
+  // What students may read is made on the server, whatever the browser sent.
+  if (def.publicContent && key?.success) content.data = def.publicContent(content.data, key.data);
 
   // Matching on type too: a client cannot store one type's data under another type.
   const { data, error } = await supabase

@@ -34,7 +34,7 @@ import {
 import type { BuilderExercise, BuilderSection } from "@/features/lessons/queries";
 import { SaveQueue } from "@/features/lessons/save-queue";
 import type { SectionKind } from "@/features/lessons/queries";
-import { exerciseNumber } from "@/features/lessons/sections";
+import { exerciseNumbers } from "@/features/lessons/sections";
 import { moveItem } from "@/features/courses/outline";
 import { useRouter } from "@/i18n/navigation";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -294,7 +294,8 @@ export function LessonBuilder({
     }
     const si = sections.findIndex((s) => s.exercises.some((e) => e.id === confirm.id));
     const ei = si >= 0 ? sections[si]!.exercises.findIndex((e) => e.id === confirm.id) : 0;
-    return { title: t("deleteExerciseTitle", { number: exerciseNumber(si, ei) }), description: t("deleteExerciseText") };
+    const number = si >= 0 ? exerciseNumbers(si, sections[si]!.exercises)[ei] : null;
+    return { title: t("deleteExerciseTitle", { number: number ?? "" }), description: t("deleteExerciseText") };
   })();
 
   return (
@@ -384,7 +385,7 @@ export function LessonBuilder({
                       <ExerciseCard
                         key={exercise.id}
                         exercise={exercise}
-                        number={exerciseNumber(activeIndex, i)}
+                        number={exerciseNumbers(activeIndex, active.exercises)[i] ?? ""}
                         otherSections={shown.filter((s) => s.id !== active.id).map(({ id, title }) => ({ id, title }))}
                         onChange={(patch) => updateExercise(exercise.id, patch)}
                         onBlur={() => void queue.flush(exercise.id)}

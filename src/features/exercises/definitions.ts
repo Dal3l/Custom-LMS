@@ -14,12 +14,14 @@ import { imageDefinition } from "./types/image/schema";
 import { matchingDefinition } from "./types/matching/schema";
 import { multipleChoiceDefinition } from "./types/multiple_choice/schema";
 import { orderingDefinition } from "./types/ordering/schema";
+import { noteDefinition } from "./types/note/schema";
 import { textDefinition } from "./types/text/schema";
 import { trueFalseDefinition } from "./types/true_false/schema";
 import { videoDefinition } from "./types/video/schema";
 
 export const DEFINITIONS: Partial<Record<ExerciseTypeId, ExerciseDefinition>> = {
   text: textDefinition as ExerciseDefinition,
+  note: noteDefinition as ExerciseDefinition,
   image: imageDefinition as ExerciseDefinition,
   video: videoDefinition as ExerciseDefinition,
   audio: audioDefinition as ExerciseDefinition,

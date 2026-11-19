@@ -14,6 +14,11 @@ export type ExerciseDefinition<Content = unknown, Key = unknown, Answer = unknow
   /** null for materials that have nothing to check */
   keySchema: z.ZodType<Key> | null;
   create: () => { content: Content; key: Key | null };
+  /**
+   * What students may see, made from the content and the key when saving
+   * (e.g. a hidden note keeps its text only in the key).
+   */
+  publicContent?: (content: Content, key: Key) => Content;
   /** Answers checked by the teacher: only their shape is checked on the server. */
   manual?: { answerSchema: z.ZodType<Answer> };
   grading?: {
