@@ -20,6 +20,7 @@ import { chatUnread } from "@/features/chat/actions";
 import { getHomeworkReview, getMyLessonHomeworks, listLessonHomeworks } from "@/features/homework/queries";
 import { markHomeworkNotificationsRead } from "@/features/notifications/actions";
 import { revealedSolutions } from "@/features/lessons/grade";
+import { withNotes } from "@/features/lessons/notes";
 import { getStudentLesson } from "@/features/lessons/queries";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -52,6 +53,14 @@ export default async function ClassLessonPage({
   ]);
   // Students: only lessons opened in this class (RLS too). Teachers: any lesson they can see.
   if (!cls || !lesson || (!state && !cls.isTeacher)) notFound();
+  // Notes: the teacher sees them all; students only those shown (texts from the keys).
+  const noteOptions = { teacher: cls.isTeacher, toggled: state?.revealed ?? [] };
+  const [lessonSections, homeworkSections] = await Promise.all([
+    withNotes(lessonId, lesson.sections, noteOptions),
+    homeworkPart ? withNotes(lessonId, homeworkPart.sections, noteOptions) : Promise.resolve(null),
+  ]);
+  lesson.sections = lessonSections;
+  if (homeworkPart && homeworkSections) homeworkPart.sections = homeworkSections;
   const { section, show, tab, student } = await searchParams;
   const live = state?.status === "live";
   const finished = Boolean(state?.finishedAt);

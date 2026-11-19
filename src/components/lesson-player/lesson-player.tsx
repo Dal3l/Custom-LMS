@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Check, CircleCheck, CloudOff, Loader2 } from "lucide-react";
+import { ArrowRight, Check, CircleCheck, CloudOff, EyeOff, Loader2, StickyNote } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { toast } from "sonner";
@@ -21,7 +21,7 @@ import type { Solution } from "@/features/lessons/grade";
 import { requestCheck } from "@/features/lessons/check-client";
 import { SaveQueue } from "@/features/lessons/save-queue";
 import type { StudentExercise, StudentSection } from "@/features/lessons/queries";
-import { exerciseNumber } from "@/features/lessons/sections";
+import { exerciseNumbers } from "@/features/lessons/sections";
 import { cn } from "@/lib/utils";
 
 /**
@@ -240,7 +240,7 @@ export function LessonPlayer({
               // Remounting clears typed answers when the teacher presses "Reset".
               key={`${exercise.id}:${resetSignal}:${resets?.[exercise.id] ?? 0}`}
               exercise={exercise}
-              number={exerciseNumber(index, i)}
+              number={exerciseNumbers(index, active.exercises)[i] ?? ""}
               review={review && !inExtra ? { saved: review[exercise.id] } : undefined}
               menu={exerciseMenu?.(exercise, active.id)}
               solution={solutions?.[exercise.id]}
@@ -370,6 +370,7 @@ function PlayerExercise({
   pointer?: { x: number; y: number } | null;
   note?: React.ReactNode;
 }) {
+  if (exercise.type === "note") return <NoteCard exercise={exercise} menu={menu} />;
   const extra = (
     <>
       {solution && <SolutionBlock exercise={exercise} solution={solution} />}
@@ -379,6 +380,42 @@ function PlayerExercise({
   );
   if (review) return <ReviewExercise exercise={exercise} number={number} saved={review.saved} menu={menu} extra={extra} />;
   return <AnswerExercise exercise={exercise} number={number} persist={persist} menu={menu} extra={extra} />;
+}
+
+/**
+ * A note beside the exercises (no number, nothing to answer). Students get it
+ * only while it is shown; the teacher always sees it, marked when students don't.
+ */
+function NoteCard({ exercise, menu }: { exercise: StudentExercise; menu?: React.ReactNode }) {
+  const t = useTranslations("player");
+  const meta = EXERCISE_UI.note;
+  const content = exercise.content as { shown?: boolean; doc?: unknown };
+  if (!content.doc || !meta) return null;
+  const hidden = content.shown === false;
+  return (
+    <li className="group list-none" id={`exercise-${exercise.id}`}>
+      <section
+        className={cn(
+          "flex flex-col gap-2 rounded-2xl border p-4 transition-shadow group-data-[flash=true]:ring-4 group-data-[flash=true]:ring-primary/50",
+          hidden ? "border-dashed border-amber-300 bg-amber-50/40 dark:bg-amber-950/20" : "border-amber-300 bg-amber-50 dark:bg-amber-950/40",
+        )}
+        aria-label={exercise.title || t("note")}
+      >
+        <div className="flex items-center gap-2">
+          <StickyNote className="size-4 shrink-0 text-amber-700" aria-hidden="true" />
+          <h3 className="flex-1 text-sm font-medium text-amber-900 dark:text-amber-200">{exercise.title || t("note")}</h3>
+          {hidden && (
+            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              <EyeOff className="size-3.5" aria-hidden="true" />
+              {t("noteHidden")}
+            </span>
+          )}
+          {menu}
+        </div>
+        <meta.Viewer content={exercise.content} />
+      </section>
+    </li>
+  );
 }
 
 /** "Right answers", revealed by the teacher: the exercise filled in correctly. */

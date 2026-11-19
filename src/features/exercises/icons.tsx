@@ -11,6 +11,7 @@ import {
   Move,
   PenLine,
   Presentation,
+  StickyNote,
   TextCursorInput,
   ToggleLeft,
   Type,
@@ -21,6 +22,7 @@ import type { ExerciseIcon } from "./catalog";
 
 export const EXERCISE_ICONS: Record<ExerciseIcon, LucideIcon> = {
   text: Type,
+  note: StickyNote,
   image: Image,
   video: Video,
   audio: AudioLines,

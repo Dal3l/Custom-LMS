@@ -32,6 +32,8 @@ import { MultipleChoiceEditor } from "./types/multiple_choice/editor";
 import { MultipleChoiceViewer } from "./types/multiple_choice/viewer";
 import { OrderingEditor } from "./types/ordering/editor";
 import { OrderingViewer } from "./types/ordering/viewer";
+import { NoteEditor } from "./types/note/editor";
+import { NoteViewer } from "./types/note/viewer";
 import { TextEditor } from "./types/text/editor";
 import { TextViewer } from "./types/text/viewer";
 import { TrueFalseEditor } from "./types/true_false/editor";
@@ -52,6 +54,7 @@ type ExerciseUI = {
 
 export const EXERCISE_UI: Partial<Record<ExerciseTypeId, ExerciseUI>> = {
   text: { Editor: TextEditor as unknown as AnyEditor, Viewer: TextViewer as unknown as AnyViewer },
+  note: { Editor: NoteEditor as unknown as AnyEditor, Viewer: NoteViewer as unknown as AnyViewer },
   image: { Editor: ImageEditor as unknown as AnyEditor, Viewer: ImageViewer as unknown as AnyViewer },
   video: { Editor: VideoEditor as unknown as AnyEditor, Viewer: VideoViewer as unknown as AnyViewer },
   audio: { Editor: AudioEditor as unknown as AnyEditor, Viewer: AudioViewer as unknown as AnyViewer },

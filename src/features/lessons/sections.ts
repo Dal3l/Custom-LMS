@@ -11,6 +11,18 @@ export const SECTION_TEMPLATES = [
   "Homework",
 ] as const;
 
+/** Blocks without a number: notes are comments beside the exercises, not exercises. */
+export const isUnnumbered = (type: string) => type === "note";
+
+/**
+ * The numbers of a section's blocks ("1.1", "1.2"…), notes left out of the
+ * count (null for them).
+ */
+export function exerciseNumbers(sectionIndex: number, exercises: { type: string }[]): (string | null)[] {
+  let n = 0;
+  return exercises.map((e) => (isUnnumbered(e.type) ? null : exerciseNumber(sectionIndex, n++)));
+}
+
 /** "1.2": section number . exercise number, both counted from 1. */
 export function exerciseNumber(sectionIndex: number, exerciseIndex: number): string {
   return `${sectionIndex + 1}.${exerciseIndex + 1}`;

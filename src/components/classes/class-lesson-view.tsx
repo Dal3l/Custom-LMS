@@ -29,6 +29,7 @@ import {
   resetExerciseAnswers,
   setClassLessonFinished,
   setExerciseRevealed,
+  setNoteShown,
   setSectionFinished,
 } from "@/features/classes/lesson-actions";
 import type { ClassMark } from "@/features/classes/lesson-queries";
@@ -171,6 +172,16 @@ export function TeacherClassLesson({
     });
   }
 
+  function showNote(exerciseId: string, value: boolean) {
+    startTransition(async () => {
+      const result = await setNoteShown(classId, lessonId, exerciseId, value);
+      if (result.ok) {
+        toast.success(value ? tl("noteShown") : tl("noteHidden"));
+        router.refresh();
+      } else toast.error(t(`errors.${result.error}`));
+    });
+  }
+
   function reset(exerciseId: string) {
     startTransition(async () => {
       const result = await resetExerciseAnswers(classId, lessonId, exerciseId);
@@ -304,6 +315,25 @@ export function TeacherClassLesson({
             exerciseMenu={(exercise, sectionId) => {
               // Tools act on the class, so only in a lesson the class has (not while looking ahead).
               if (!inClass) return null;
+              // A note: its eye shows it to the students now, or hides it.
+              if (exercise.type === "note") {
+                const shown = (exercise.content as { shown?: boolean }).shown === true;
+                const label = shown ? tl("hideNote") : tl("showNote");
+                return (
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    className="-my-1 shrink-0"
+                    aria-label={label}
+                    title={label}
+                    aria-pressed={shown}
+                    disabled={pending}
+                    onClick={() => showNote(exercise.id, !shown)}
+                  >
+                    {shown ? <Eye aria-hidden="true" /> : <EyeOff aria-hidden="true" />}
+                  </Button>
+                );
+              }
               if (homeworkSectionIds.has(sectionId)) {
                 return (
                   <HomeworkPick

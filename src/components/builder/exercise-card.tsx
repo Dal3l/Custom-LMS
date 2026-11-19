@@ -86,9 +86,11 @@ export function ExerciseCard({
           >
             <GripVertical className="size-4" aria-hidden="true" />
           </button>
-          <Badge variant="secondary" className="tabular-nums">
-            {number}
-          </Badge>
+          {number && (
+            <Badge variant="secondary" className="tabular-nums">
+              {number}
+            </Badge>
+          )}
           <span className="flex min-w-0 flex-1 items-center gap-1.5 text-sm text-muted-foreground">
             <Icon className="size-4 shrink-0" aria-hidden="true" />
             <span className="truncate">{meta ? te(`types.${meta.id}.name`) : exercise.type}</span>

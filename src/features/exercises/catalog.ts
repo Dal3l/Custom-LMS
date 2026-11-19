@@ -8,6 +8,9 @@ export type ExerciseGroup = (typeof EXERCISE_GROUPS)[number];
 export const EXERCISE_TYPES = [
   // Materials (no checking)
   { id: "text", group: "material", icon: "text", available: true },
+  // A note: tips for the teacher, a suggested answer, a rule. Hidden from
+  // students unless the teacher shows it (its text is then kept with the keys).
+  { id: "note", group: "material", icon: "note", available: true },
   { id: "image", group: "material", icon: "image", available: true },
   { id: "video", group: "material", icon: "video", available: true },
   { id: "audio", group: "material", icon: "audio", available: true },

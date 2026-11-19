@@ -229,6 +229,27 @@ export async function setExerciseRevealed(
   return { ok: true, data: next };
 }
 
+/**
+ * A note's eye in the class: shows it to the students now, or hides it.
+ * Stored as a toggle of the note's own setting (an id in `revealed`).
+ */
+export async function setNoteShown(classId: string, lessonId: string, exerciseId: string, shown: boolean): Promise<Result<string[]>> {
+  const ctx = await teacherExercise(classId, lessonId, exerciseId);
+  if (!ctx) return { ok: false, error: "forbidden" };
+  const { data: note } = await ctx.supabase.from("exercises").select("type, content").eq("id", ctx.ids.exerciseId).maybeSingle();
+  if (note?.type !== "note") return { ok: false, error: "forbidden" };
+  const defaultShown = (note.content as { shown?: unknown } | null)?.shown === true;
+  const next = toggleDoneSection(ctx.revealed, ctx.ids.exerciseId, shown !== defaultShown);
+  const { error } = await ctx.supabase
+    .from("class_lessons")
+    .update({ revealed: next })
+    .eq("class_id", ctx.ids.classId)
+    .eq("lesson_id", ctx.ids.lessonId);
+  if (error) return { ok: false, error: "generic" };
+  refresh(ctx.ids.classId);
+  return { ok: true, data: next };
+}
+
 /** "Reset answers": every student of the class does the exercise again. Hides revealed answers too. */
 export async function resetExerciseAnswers(classId: string, lessonId: string, exerciseId: string): Promise<Result<undefined>> {
   const ctx = await teacherExercise(classId, lessonId, exerciseId);
