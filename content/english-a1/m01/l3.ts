@@ -1,17 +1,36 @@
-import { box, choose, gaps, homework, lesson, match, quiz, record, section, text, tip, trueFalse, words, write } from "../../kit";
+import {
+  box,
+  choose,
+  gaps,
+  homework,
+  lesson,
+  listening,
+  match,
+  quiz,
+  record,
+  section,
+  sort,
+  table,
+  text,
+  tip,
+  trueFalse,
+  video,
+  words,
+  write,
+} from "../../kit";
 
 // 1.3 My profile — a skills lesson (no new grammar): profiles, jobs with a / an (as phrases), numbers 20–100, email.
 export default lesson("a1-1.3", "My profile", () => [
-  section("Warm-up", [
+  section("Warm-up: Profiles", [
     box("Today you will…", "- read short profiles\n- say your job or what you study\n- count from 20 to 100\n- make your own profile"),
+    tip("Review: *Where are you from? Is your best friend from Kazakhstan?* Keep it light — the student can make up a username."),
     text(
       "Talk to your teacher.",
-      "- Do you have a profile? Where — in a game 🎮, in a school app 🏫 or on social media 📱?\n- What's your username?\n- Is your profile picture a photo of you? 🙂",
+      "- Do you have a profile? Where — in a game 🎮, in a school app 🏫 or on social media 📱?\n- What's your username?\n- Is your profile picture a photo of you? 🙂\n- What is a cool username? Make one up!",
     ),
-    tip("Review: *Where are you from? Is your best friend from Kazakhstan?* Keep it light — the student can make up a username."),
   ]),
 
-  section("Vocabulary", [
+  section("Vocabulary: Jobs", [
     words("Profiles and jobs", [
       ["profile", "📄 information about you in an app"],
       ["username", "🆔 your name in an app or a game", "My username is rocket_07."],
@@ -29,8 +48,22 @@ export default lesson("a1-1.3", "My profile", () => [
       ["an engineer", "⚙️"],
       ["an artist", "🖌️"],
     ]),
-    box("a or an?", "**a** + consonant sound: *a student, a doctor, a designer*\n\n**an** + vowel sound (a, e, i, o, u): *an engineer, an artist, an actor*"),
+    match("Match the jobs and the places.", [
+      ["a doctor", "a hospital 🏥"],
+      ["a teacher", "a school 🏫"],
+      ["a driver", "a taxi 🚕"],
+      ["a developer", "a computer 💻"],
+      ["a blogger", "YouTube and TikTok 📱"],
+    ]),
+    table("a-an"),
     choose("Choose a or an.", "1. I'm [*a/an] student.\n2. She's [a/*an] engineer.\n3. He's [*a/an] developer.\n4. Mia is [a/*an] artist.\n5. Leo is [*a/an] blogger."),
+    sort("a or an? Sort.", {
+      a: ["doctor", "nurse", "designer", "driver"],
+      an: ["engineer", "artist", "actor", "app developer"],
+    }),
+  ]),
+
+  section("Vocabulary: Numbers 20–100", [
     words("Numbers 20–100", [
       ["twenty", "20"],
       ["twenty-one", "21"],
@@ -53,10 +86,11 @@ export default lesson("a1-1.3", "My profile", () => [
       ["sixty-two", "62"],
       ["one hundred", "100"],
     ]),
+    gaps("Write the numbers.", "1. twenty-five → [25]\n2. seventy → [70]\n3. eighty-eight → [88]\n4. thirty-three → [33]"),
     tip("*Pronunciation tip:* thir**TEEN** — **THIR**ty, fif**TEEN** — **FIF**ty. Say a number, the student points to it: 13 or 30?"),
   ]),
 
-  section("Reading", [
+  section("Reading: Three profiles", [
     quiz(
       "Read the profiles. Who is it?",
       [
@@ -74,25 +108,39 @@ export default lesson("a1-1.3", "My profile", () => [
         ].join("\n\n"),
       },
     ),
-    text("Talk to your teacher.", "- Which profile is cool? Why?\n- What is in a good bio?"),
+    trueFalse("Read again. True or false?", [
+      ["Aigerim is from Almaty.", false],
+      ["Rocket's real name is Sofia Lima.", true],
+      ["Chen is from China.", true],
+      ["Chen's email is chen@workhub.com.", false],
+    ]),
+    text("Talk to your teacher.", "- Which profile is cool? Why?\n- What is in a good bio?\n- Is your real name in your profile? Why / why not?\n- Is a profile picture important?"),
   ]),
 
-  section("Listening", [
-    box("How we say emails", "**@** = *at* · **.** = *dot* · **_** = *underscore*\n\n*chen.wei@workhub.com* = chen **dot** wei **at** workhub **dot** com"),
-    gaps(
-      "Read and write the email addresses.",
-      "1. leo at mail dot com → [leo@mail.com]\n2. mia underscore art at nova dot com → [mia_art@nova.com]\n3. aigerim dot b at school dot kz → [aigerim.b@school.kz]",
+  section("Video: Talking about jobs", [
+    tip("Watch the video before the lesson. Pause after each person: *What's his / her job?* The student says the jobs they hear."),
+    video("Watch the video. What jobs do the people have?", "qHWtJtRSYjc"),
+    write("Write 3 jobs from the video.", null),
+    text("Talk to your teacher.", "- Which job is interesting?\n- Which job is difficult?\n- What's your job? Or what is your dream job? ✨"),
+  ]),
+
+  section("Listening: Emails", [
+    table("email"),
+    ...listening(
+      "Listen and write the email addresses.",
+      "1. leo at mail dot com\n\n2. mia underscore art at nova dot com\n\n3. aigerim dot b at school dot kz",
     ),
-    tip("Read more email addresses aloud (make them up, or use the student's own if they want). The student writes them on the board."),
+    gaps("Write the email addresses.", "1. [leo@mail.com]\n2. [mia_art@nova.com]\n3. [aigerim.b@school.kz]"),
+    tip("Until the audio is ready, read the script aloud (or show it with the eye). Then dictate 2–3 more made-up emails; the student writes them on the board."),
   ]),
 
-  section("Let's talk", [
+  section("Let's talk: My profile", [
     text(
       "Make your profile and tell your teacher about it.",
       "**Name:** …\n\n**Username:** …\n\n**Age:** …\n\n**City:** …\n\n**I'm a…** (student / designer / …)\n\n**Bio:** …\n\n*Hi! I'm… My username is… I'm a… I'm from…*",
     ),
     text("Now tell your teacher about a friend or a famous person.", "*This is… He's / She's… He's / She's from… He's / She's a…*"),
-    tip("The student can make up a profile. *If you have time:* the student asks the teacher about the teacher's profile."),
+    tip("The student can make up a profile. *If you have time:* the student asks about the teacher's profile: *What's your username? Where are you from?*"),
   ]),
 
   section("Wrap-up", [
@@ -100,25 +148,42 @@ export default lesson("a1-1.3", "My profile", () => [
       { q: "She's ___ engineer.", options: ["*an", "a", "—"] },
       { q: "50 = ?", options: ["*fifty", "fifteen", "five"] },
       { q: "@ = ?", options: ["*at", "dot", "and"] },
+      { q: "A ___ makes apps and websites.", options: ["*developer", "doctor", "driver"] },
     ]),
     box("Word of the day: no cap", "**no cap** = really, it's true! 🧢❌\n\n*This game is the best, no cap.*"),
   ]),
 
-  homework([
-    gaps("Write the numbers in words.", "1. 30 → [thirty]\n2. 14 → [fourteen]\n3. 45 → [forty-five]\n4. 100 → [one hundred/a hundred]\n5. 18 → [eighteen]"),
-    trueFalse(
-      "Read Leo's profile. True or false?",
-      [
-        ["Leo is twenty.", true],
-        ["He's from Brazil.", true],
-        ["He's a student.", false],
-        ["His email is leo_photo@mail.com.", true],
-      ],
-      { read: "## 📷 PhotoGram\n**Leo Costa**\nAge: 20 · City: Rio, Brazil\nBio: *I'm a blogger. Photos of my city!* 🏖️\nEmail: leo_photo@mail.com" },
-    ),
-    write("Write your profile: name, age, city, job and a short bio. (25+ words)", 25, {
-      read: "*Example:* My name is Daniyar. My username is dan_99. I'm seventeen. I'm from Astana. I'm a student. Bio: Gamer, football fan and English learner! ⚽",
-    }),
-    record("Record your answer: tell us about a friend — name, age, city, job.", 90),
-  ]),
+  homework(
+    [
+      gaps("Write the numbers in words.", "1. 30 → [thirty]\n2. 14 → [fourteen]\n3. 45 → [forty-five]\n4. 100 → [one hundred/a hundred]\n5. 18 → [eighteen]"),
+      choose("Choose a or an.", "1. He's [*a/an] nurse.\n2. I'm [a/*an] artist.\n3. She's [*a/an] blogger.\n4. Daniyar is [a/*an] engineer."),
+    ],
+    "Homework: Vocabulary",
+  ),
+  homework(
+    [
+      trueFalse(
+        "Read Leo's profile. True or false?",
+        [
+          ["Leo is twenty.", true],
+          ["He's from Brazil.", true],
+          ["He's a student.", false],
+          ["His email is leo_photo@mail.com.", true],
+        ],
+        { read: "## 📷 PhotoGram\n**Leo Costa**\nAge: 20 · City: Rio, Brazil\nBio: *I'm a blogger. Photos of my city!* 🏖️\nEmail: leo_photo@mail.com" },
+      ),
+      video("Watch the first 3 minutes. People in London talk about their dream jobs.", "iHG0RjSmjhk"),
+      write("What dream jobs do you hear? Write 2–3 jobs. What is your dream job?", null),
+    ],
+    "Homework: Reading and video",
+  ),
+  homework(
+    [
+      write("Write your profile: name, age, city, job and a short bio. (25+ words)", 25, {
+        read: "*Example:* My name is Daniyar. My username is dan_99. I'm seventeen. I'm from Astana. I'm a student. Bio: Gamer, football fan and English learner! ⚽",
+      }),
+      record("Record your answer: tell us about a friend — name, age, city, job.", 90),
+    ],
+    "Homework: Writing and speaking",
+  ),
 ]);

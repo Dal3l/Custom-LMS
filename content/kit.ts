@@ -98,9 +98,24 @@ export type ContentBlock = { type: ExerciseTypeId; title: string; content: unkno
 export type ContentSection = { title: string; kind: "lesson" | "homework"; blocks: ContentBlock[] };
 export type ContentLesson = { title: string; sections: ContentSection[] };
 
-/** Optional "on top" part of an exercise with answers: a text to read. */
-type Extra = { read?: string };
-const attach = (extra?: Extra) => (extra?.read ? { attachment: { kind: "text", doc: md(extra.read) } } : {});
+/** A picture from content/<course>/assets ("people/hello.jpg"); made a real file when loading. */
+export function pic(asset: string) {
+  const name = asset.split("/").pop()!;
+  const mime = name.endsWith(".png") ? "image/png" : name.endsWith(".webp") ? "image/webp" : "image/jpeg";
+  return { path: `asset:${asset}`, name, size: 0, mime };
+}
+
+/**
+ * Optional "on top" part of an exercise with answers: a text to read, pictures,
+ * or a YouTube video.
+ */
+type Extra = { read?: string; pictures?: string[]; youtube?: string };
+const attach = (extra?: Extra) => {
+  if (extra?.read) return { attachment: { kind: "text", doc: md(extra.read) } };
+  if (extra?.pictures?.length) return { attachment: { kind: "image", images: extra.pictures.map(pic) } };
+  if (extra?.youtube) return { attachment: { kind: "video", video: { provider: "youtube", id: extra.youtube } } };
+  return {};
+};
 
 export function text(title: string, source: string): ContentBlock {
   return { type: "text", title, content: { doc: md(source) }, key: null };
@@ -171,6 +186,23 @@ export function trueFalse(title: string, list: [string, boolean][], extra?: Extr
   return { type: "true_false", title, content: { statements, ...attach(extra) }, key: { answers } };
 }
 
+/** Pictures, e.g. for a warm-up, or a grammar table (see tables.ts). */
+export function picture(title: string, assets: string[], caption = ""): ContentBlock {
+  return { type: "image", title, content: { images: assets.map(pic), caption }, key: null };
+}
+
+/** A grammar table drawn as a picture (content/<course>/tables.ts). */
+export const table = (name: string, title = "") => picture(title, [`grammar/${name}.png`]);
+
+/** Match pictures with words: [picture, word]. */
+export function matchPictures(title: string, pairs: [string, string][], extra?: Extra): ContentBlock {
+  const built = buildMatching({
+    salt: nextId(),
+    pairs: pairs.map(([asset, word]) => ({ id: nextId(), left: { kind: "image", image: pic(asset) }, right: word })),
+  });
+  return { type: "matching", title, content: { ...built.content, ...attach(extra) }, key: built.key };
+}
+
 /** Match: [left, right]. */
 export function match(title: string, pairs: [string, string][], extra?: Extra): ContentBlock {
   const built = buildMatching({
@@ -208,6 +240,15 @@ export function record(title: string, maxSeconds = 120, extra?: Extra): ContentB
 /** A YouTube video (official channels only), or a place for one (null). */
 export function video(title: string, youtubeId: string | null, caption = ""): ContentBlock {
   return { type: "video", title, content: { video: youtubeId ? { provider: "youtube", id: youtubeId } : null, caption }, key: null };
+}
+
+/**
+ * A listening: the audio (added later — recorded from the script) and the
+ * script in a hidden note. The teacher can show the script to the student
+ * with the note's eye, to read along.
+ */
+export function listening(title: string, script: string): ContentBlock[] {
+  return [audio(title, "🎧 Audio coming soon — your teacher reads the dialogue."), note("Audio script", script)];
 }
 
 /** A place for audio (the file is added later); the script goes into a hidden note next to it. */
