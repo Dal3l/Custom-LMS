@@ -11,6 +11,8 @@ export const EXERCISE_TYPES = [
   // A note: tips for the teacher, a suggested answer, a rule. Hidden from
   // students unless the teacher shows it (its text is then kept with the keys).
   { id: "note", group: "material", icon: "note", available: true },
+  // Words with a translation or definition, "+" adds them to the dictionary.
+  { id: "glossary", group: "material", icon: "glossary", available: true },
   { id: "image", group: "material", icon: "image", available: true },
   { id: "video", group: "material", icon: "video", available: true },
   { id: "audio", group: "material", icon: "audio", available: true },

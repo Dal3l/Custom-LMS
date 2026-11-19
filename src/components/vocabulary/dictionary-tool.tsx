@@ -6,7 +6,8 @@ import { useMemo, useRef, useState } from "react";
 import { ToolButton } from "@/components/classes/lesson-tools";
 import type { ClassStudent } from "@/features/classes/queries";
 import type { WordPlace } from "@/features/vocabulary/schemas";
-import { useWordAdder, WordAdderContext } from "@/features/vocabulary/word-adder-context";
+import { addWords } from "@/features/vocabulary/actions";
+import { useWordAdder, WordAdderContext, type WordAdder } from "@/features/vocabulary/word-adder-context";
 import { WordDialog } from "./word-dialog";
 import { WordPopup } from "./word-popup";
 
@@ -28,14 +29,25 @@ export function WordAdderProvider({
   const [open, setOpen] = useState(false);
   const [term, setTerm] = useState("");
   const root = useRef<HTMLDivElement>(null);
-  const value = useMemo(
+  const value = useMemo<WordAdder>(
     () => ({
       open: (selected?: string) => {
         setTerm(selected?.trim().slice(0, 200) ?? "");
         setOpen(true);
       },
+      forStudents: students !== undefined,
+      addWords: async (words) => {
+        const studentIds = students?.map((s) => s.id);
+        if (studentIds && studentIds.length === 0) return null;
+        const r = await addWords({
+          words: words.map((w) => ({ ...w, transcription: "", audioUrl: null })),
+          place,
+          studentIds,
+        });
+        return r.ok ? r.data : null;
+      },
     }),
-    [],
+    [place, students],
   );
   return (
     <WordAdderContext.Provider value={value}>

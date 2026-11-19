@@ -61,6 +61,24 @@ export async function addWord(input: {
   return { ok: true, data: { added, existing } };
 }
 
+/** Several words at once (the "Words" block's "Add all"); same rules as addWord. */
+export async function addWords(input: {
+  words: WordFields[];
+  place: WordPlace;
+  studentIds?: string[];
+}): Promise<Result<{ added: number; existing: number }>> {
+  if (!Array.isArray(input.words) || input.words.length === 0 || input.words.length > 60) return { ok: false, error: "invalid" };
+  let added = 0;
+  let existing = 0;
+  for (const fields of input.words) {
+    const r = await addWord({ fields, place: input.place, studentIds: input.studentIds });
+    if (!r.ok) return r;
+    added += r.data.added;
+    existing += r.data.existing;
+  }
+  return { ok: true, data: { added, existing } };
+}
+
 export async function updateWord(id: string, input: WordFields): Promise<Result> {
   const fields = wordFields.safeParse(input);
   if (!z.uuid().safeParse(id).success || !fields.success) return { ok: false, error: "invalid" };
