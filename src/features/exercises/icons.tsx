@@ -1,6 +1,7 @@
 import {
   ArrowDownUp,
   AudioLines,
+  BookOpenText,
   CircleCheck,
   Columns3,
   FileText,
@@ -23,6 +24,7 @@ import type { ExerciseIcon } from "./catalog";
 export const EXERCISE_ICONS: Record<ExerciseIcon, LucideIcon> = {
   text: Type,
   note: StickyNote,
+  glossary: BookOpenText,
   image: Image,
   video: Video,
   audio: AudioLines,

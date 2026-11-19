@@ -267,6 +267,10 @@
         "name": "Note",
         "description": "A tip for the teacher, a suggested answer or a rule — can be hidden from students"
       },
+      "glossary": {
+        "name": "Words",
+        "description": "A glossary before a text or audio: word, translation or definition, example — with “+” to the dictionary"
+      },
       "image": {
         "name": "Image",
         "description": "One or more pictures with a caption"
@@ -561,6 +565,29 @@
       "hidden": "Hidden from students",
       "shownHint": "Students see this note in the lesson.",
       "hiddenHint": "Only you and other teachers see it. In a lesson, show it to students with the eye button."
+    },
+    "glossary": {
+      "term": "Word {n}",
+      "termPlaceholder": "Word or phrase",
+      "meaning": "Translation or definition {n}",
+      "meaningPlaceholder": "Translation or definition",
+      "example": "Example {n}",
+      "examplePlaceholder": "Example (optional)",
+      "remove": "Remove word {n}",
+      "add": "Word",
+      "paste": "Paste a list",
+      "pasteLabel": "List of words",
+      "pastePlaceholder": "apple — яблоко\nto commute — ездить на работу — I commute by bus.",
+      "pasteHint": "One word per line: “word — translation”. A third part is the example. “-”, “:” and tabs (from a table) work too.",
+      "pasteAdd": "{count, plural, =0 {No words} one {Add # word} other {Add # words}}",
+      "addOne": "Add “{term}” to the dictionary",
+      "inDictionary": "“{term}” is in the dictionary",
+      "addAll": "Add all to my dictionary",
+      "addAllForStudents": "Add all to students’ dictionaries",
+      "added": "{count, plural, one {The word is in the dictionary} other {# words added to the dictionary}}",
+      "addedForStudents": "{count, plural, one {The word is in the students’ dictionaries} other {# words added to the students’ dictionaries}}",
+      "alreadyThere": "These words are already in the dictionary",
+      "addFailed": "Could not add. Please try again."
     }
   },
   "builder": {
