@@ -1,22 +1,29 @@
 import { describe, expect, it } from "vitest";
 import { getDefinition } from "@/features/exercises/definitions";
 import { md, problems, size } from "../content/kit";
+import path from "node:path";
+import { resolveAssets } from "../content/assets";
 import { course } from "../content/english-a1/course";
 
 // Course content: every lesson loads (passes the schemas) and fits the lesson template.
 describe("course content", () => {
-  const lessons = course.modules.flatMap((m, mi) => m.lessons.map((l, li) => ({ n: `${mi + 1}.${li + 1}`, l })));
+  // Pictures resolved as for loading (a made-up owner): every file must exist.
+  const root = path.resolve("content/english-a1");
+  const owner = "00000000-0000-4000-8000-000000000000";
+  const lessons = course.modules.flatMap((m, mi) =>
+    m.lessons.map((l, li) => ({ n: `${mi + 1}.${li + 1}`, l: resolveAssets(l, { owner, root }).lesson })),
+  );
 
   it.each(lessons)("$n passes the checks", ({ l }) => {
     expect(problems(l)).toEqual([]);
   });
 
-  it.each(lessons)("$n fits the template: 9–13 blocks in class, 3–5 at home", ({ l }) => {
+  it.each(lessons)("$n fits the template: 12–30 blocks in class, 5–14 at home", ({ l }) => {
     const s = size(l);
-    expect(s.inClass).toBeGreaterThanOrEqual(9);
-    expect(s.inClass).toBeLessThanOrEqual(13);
-    expect(s.homework).toBeGreaterThanOrEqual(3);
-    expect(s.homework).toBeLessThanOrEqual(5);
+    expect(s.inClass).toBeGreaterThanOrEqual(12);
+    expect(s.inClass).toBeLessThanOrEqual(30);
+    expect(s.homework).toBeGreaterThanOrEqual(5);
+    expect(s.homework).toBeLessThanOrEqual(14);
   });
 
   it.each(lessons)("$n: the right answers of every exercise are accepted", ({ l }) => {
@@ -32,7 +39,7 @@ describe("course content", () => {
 
   it("lesson ids are stable: the same lesson builds the same way twice", async () => {
     const again = (await import("../content/english-a1/m01/l1")).default;
-    expect(JSON.stringify(again)).toBe(JSON.stringify(lessons[0]!.l));
+    expect(JSON.stringify(resolveAssets(again, { owner, root }).lesson)).toBe(JSON.stringify(lessons[0]!.l));
   });
 
   it("turns the little markdown into editor text", () => {

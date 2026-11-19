@@ -10,6 +10,8 @@
 // it in the builder) unless --replace is given.
 import { createClient } from "@supabase/supabase-js";
 import { getDefinition } from "@/features/exercises/definitions";
+import path from "node:path";
+import { resolveAssets, type Upload } from "../../content/assets";
 import { problems, size, type ContentLesson } from "../../content/kit";
 
 export type CourseFile = {
@@ -34,6 +36,21 @@ async function main() {
   const { course: original } = (await import(`../../content/${name}/course.ts`)) as { course: CourseFile };
   const course = asArg ? { ...original, id: asArg, title: `${original.title} (copy)` } : original;
 
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const secret = process.env.SUPABASE_SECRET_KEY;
+  const owner = process.env.CONTENT_OWNER_ID ?? "00000000-0000-0000-0000-000000000000";
+
+  // 0) Pictures: "asset:" files become storage paths (in the owner's folder).
+  const uploads = new Map<string, Upload>();
+  const root = path.resolve(`content/${name}`);
+  for (const m of course.modules) {
+    m.lessons = m.lessons.map((l) => {
+      const r = resolveAssets(l, { owner, root });
+      r.uploads.forEach((u) => uploads.set(u.storagePath, u));
+      return r.lesson;
+    });
+  }
+
   // 1) Check everything first: nothing is loaded if one lesson is broken.
   let broken = 0;
   course.modules.forEach((m, mi) =>
@@ -49,10 +66,7 @@ async function main() {
   if (broken) throw new Error(`${broken} problem(s): nothing loaded`);
   if (flag("--check")) return;
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const secret = process.env.SUPABASE_SECRET_KEY;
-  const owner = process.env.CONTENT_OWNER_ID;
-  if (!url || !secret || !owner) throw new Error("Needs NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SECRET_KEY and CONTENT_OWNER_ID in .env.local");
+  if (!url || !secret || !process.env.CONTENT_OWNER_ID) throw new Error("Needs NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SECRET_KEY and CONTENT_OWNER_ID in .env.local");
   const db = createClient(url, secret, { auth: { persistSession: false } });
   const must = <T>(r: { data: T; error: { message: string } | null }, what: string): T => {
     if (r.error) throw new Error(`${what}: ${r.error.message}`);
@@ -79,6 +93,16 @@ async function main() {
     }),
     "save course",
   );
+
+  // Pictures go up first (same file → same path: uploading again just replaces it).
+  for (const u of uploads.values()) {
+    const { readFile } = await import("node:fs/promises");
+    must(
+      await db.storage.from("lesson-media").upload(u.storagePath, await readFile(u.file), { contentType: u.mime, upsert: true }),
+      `upload ${path.basename(u.file)}`,
+    );
+  }
+  if (uploads.size) console.log(`↑ ${uploads.size} file(s)`);
 
   for (const [mi, m] of course.modules.entries()) {
     // 3) Modules and lessons are found by their place in the course.
