@@ -4,9 +4,9 @@
 // <owner id>/<id made from the file's contents>.<ext> — the same file always
 // gets the same path, so loading again doesn't upload it twice.
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
-import type { ContentLesson } from "./kit";
+import { md, type ContentLesson } from "./kit";
 
 export type Upload = { storagePath: string; file: string; mime: string };
 
@@ -36,18 +36,26 @@ const uuidOf = (data: Buffer) => {
   return `${h.slice(0, 8)}-${h.slice(8, 12)}-4${h.slice(13, 16)}-a${h.slice(17, 20)}-${h.slice(20, 32)}`;
 };
 
+type Credit = { title: string; author: string; license: string; source: string };
+
 /**
  * The lesson with every "asset:" file replaced by its storage path, size and
  * picture size, and the list of files to upload.
  */
 export function resolveAssets<L extends ContentLesson>(lesson: L, options: { owner: string; root: string }): { lesson: L; uploads: Upload[] } {
   const uploads = new Map<string, Upload>();
+  const creditsFile = path.join(options.root, "assets", "photos", "credits.json");
+  const credits: Record<string, Credit> = existsSync(creditsFile) ? JSON.parse(readFileSync(creditsFile, "utf8")) : {};
+  const used: Credit[] = [];
   const walk = (value: unknown): unknown => {
     if (Array.isArray(value)) return value.map(walk);
     if (!value || typeof value !== "object") return value;
     const obj = value as Record<string, unknown>;
     if (typeof obj.path === "string" && obj.path.startsWith("asset:")) {
       const rel = obj.path.slice("asset:".length);
+      const credit = rel.startsWith("photos/") ? credits[rel.slice("photos/".length)] : undefined;
+      if (rel.startsWith("photos/") && !credit) throw new Error(`No credit for ${rel} (photos/credits.json)`);
+      if (credit && !used.includes(credit)) used.push(credit);
       const file = path.join(options.root, "assets", rel);
       const data = readFileSync(file);
       const ext = path.extname(rel).slice(1).toLowerCase().replace("jpeg", "jpg");
@@ -58,5 +66,13 @@ export function resolveAssets<L extends ContentLesson>(lesson: L, options: { own
     }
     return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, walk(v)]));
   };
-  return { lesson: walk(lesson) as L, uploads: [...uploads.values()] };
+  const resolved = walk(lesson) as L;
+  // Free photos say who took them: one small block at the end of the lesson part they are in.
+  if (used.length) {
+    const list = used.map((c) => `- ${c.title.replace(/^File:/, "")} — ${c.author}, ${c.license} (Wikimedia Commons)`).join("\n");
+    const block = { type: "text" as const, title: "📷 Photo credits", content: { doc: md(list) }, key: null };
+    const last = [...resolved.sections].reverse().find((s) => s.kind === "lesson");
+    last?.blocks.push(block);
+  }
+  return { lesson: resolved, uploads: [...uploads.values()] };
 }

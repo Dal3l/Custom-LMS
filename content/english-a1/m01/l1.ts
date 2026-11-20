@@ -6,6 +6,7 @@ import {
   homework,
   lesson,
   match,
+  matchPictures,
   order,
   quiz,
   record,
@@ -55,6 +56,14 @@ export default lesson("a1-1.1", "Nice to meet you", () => [
       ["Nice to meet you.", "😊 you say it when you meet a new person"],
       ["What's your name?", "❓ you ask a new person", "What's your name? — I'm Leo."],
       ["thank you / thanks", "🙏", "Thanks, Mia!"],
+      ["wave", "👋 move your hand to say hello or bye"],
+      ["shake hands", "🤝 two people hold hands — formal hello"],
+      ["hug", "🤗 put your arms around a friend"],
+    ]),
+    matchPictures("How do they say hello? Match the pictures and the words.", [
+      ["photos/greet-handshake.jpg", "shake hands"],
+      ["photos/greet-wave.jpg", "wave"],
+      ["photos/greet-hug.jpg", "hug"],
     ]),
     sort("Formal or informal? Sort.", {
       "Formal 👔 (teacher, hotel, new people)": ["Good morning", "Good evening", "Goodbye", "Nice to meet you"],
@@ -69,15 +78,6 @@ export default lesson("a1-1.1", "Nice to meet you", () => [
       "A: [Hello]! I'm Ms. Lee. What's your [name]?\nB: Hi! I'm Aigerim.\nA: [Nice] to meet you, Aigerim!\n\nA: Bye, Leo! [See] you!\nB: [Goodbye]!",
       ["morning", "thanks"],
     ),
-  ]),
-
-  section("Video: How to introduce yourself", [
-    tip(
-      "Watch the video before the lesson and choose 1–2 minutes that fit your student. Pause after each speaker and ask: *What's his / her name?* Then the student repeats the phrases.",
-    ),
-    video("Watch the video. How do people say hello? How do they say their names?", "I_tRSrPru94"),
-    write("Write 3 phrases from the video.", null),
-    text("Talk to your teacher.", "- Which phrase is new for you?\n- Which phrase is easy?\n- Say hello and your name like the people in the video."),
   ]),
 
   section("Vocabulary: Numbers 0–20", [

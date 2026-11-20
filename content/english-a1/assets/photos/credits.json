@@ -1,0 +1,50 @@
+{
+  "greet-handshake.jpg": {
+    "title": "File:Business agreement handshake at coffee shop.jpg",
+    "author": "rawpixel.com",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Business_agreement_handshake_at_coffee_shop.jpg"
+  },
+  "greet-wave.jpg": {
+    "title": "File:Child waving-Rwanda.jpg",
+    "author": "Matthew Guitguit",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AChild_waving-Rwanda.jpg"
+  },
+  "greet-hug.jpg": {
+    "title": "File:Two Friends In The Woods.jpg",
+    "author": "D. Sharon Pruitt",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ATwo_Friends_In_The_Woods.jpg"
+  },
+  "place-big-ben.jpg": {
+    "title": "File:Clock Tower - Palace of Westminster, London - September 2006-2.jpg",
+    "author": "Diliff",
+    "license": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AClock_Tower_-_Palace_of_Westminster%2C_London_-_September_2006-2.jpg"
+  },
+  "place-liberty.jpg": {
+    "title": "File:Statue of Liberty, NY.jpg",
+    "author": "William Warby",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AStatue_of_Liberty%2C_NY.jpg"
+  },
+  "place-colosseum.jpg": {
+    "title": "File:Rome Colosseum 001.jpg",
+    "author": "Wilfredor",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ARome_Colosseum_001.jpg"
+  },
+  "place-registan.jpg": {
+    "title": "File:Registan - Gusjer.jpg",
+    "author": "Gustavo Jeronimo",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ARegistan_-_Gusjer.jpg"
+  },
+  "place-christ.jpg": {
+    "title": "File:Christ the Redeemer 3.jpg",
+    "author": "PLBechly",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AChrist_the_Redeemer_3.jpg"
+  }
+}
