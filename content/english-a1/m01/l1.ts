@@ -59,10 +59,11 @@ export default lesson("a1-1.1", "Nice to meet you", () => [
       ["wave", "👋 move your hand to say hello or bye"],
       ["shake hands", "🤝 two people hold hands — formal hello"],
       ["hug", "🤗 put your arms around a friend"],
+      ["bow", "🙇 bend your body to say hello — in Japan and Korea"],
     ]),
     matchPictures("How do they say hello? Match the pictures and the words.", [
       ["photos/greet-handshake.jpg", "shake hands"],
-      ["photos/greet-wave.jpg", "wave"],
+      ["photos/greet-bow.jpg", "bow"],
       ["photos/greet-hug.jpg", "hug"],
     ]),
     sort("Formal or informal? Sort.", {

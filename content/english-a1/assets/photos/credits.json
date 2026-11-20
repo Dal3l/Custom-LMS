@@ -5,12 +5,6 @@
     "license": "CC0",
     "source": "https://commons.wikimedia.org/wiki/File:Business_agreement_handshake_at_coffee_shop.jpg"
   },
-  "greet-wave.jpg": {
-    "title": "File:Child waving-Rwanda.jpg",
-    "author": "Matthew Guitguit",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AChild_waving-Rwanda.jpg"
-  },
   "greet-hug.jpg": {
     "title": "File:Two Friends In The Woods.jpg",
     "author": "D. Sharon Pruitt",
@@ -30,10 +24,10 @@
     "source": "https://commons.wikimedia.org/wiki/File%3AStatue_of_Liberty%2C_NY.jpg"
   },
   "place-colosseum.jpg": {
-    "title": "File:Rome Colosseum 001.jpg",
-    "author": "Wilfredor",
-    "license": "CC0",
-    "source": "https://commons.wikimedia.org/wiki/File%3ARome_Colosseum_001.jpg"
+    "title": "File:Colosseum and Via Sacra (Rome).jpg",
+    "author": "Livioandronico2013",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AColosseum_and_Via_Sacra_%28Rome%29.jpg"
   },
   "place-registan.jpg": {
     "title": "File:Registan - Gusjer.jpg",
@@ -42,9 +36,15 @@
     "source": "https://commons.wikimedia.org/wiki/File%3ARegistan_-_Gusjer.jpg"
   },
   "place-christ.jpg": {
-    "title": "File:Christ the Redeemer 3.jpg",
-    "author": "PLBechly",
-    "license": "CC BY-SA 4.0",
-    "source": "https://commons.wikimedia.org/wiki/File%3AChrist_the_Redeemer_3.jpg"
+    "title": "File:Cristo Redentor - Rio de Janeiro, Brasil.jpg",
+    "author": "Nico Kaiser",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ACristo_Redentor_-_Rio_de_Janeiro%2C_Brasil.jpg"
+  },
+  "greet-bow.jpg": {
+    "title": "File:Kusakabe Kimbei - 400 Greeting.jpg",
+    "author": "Kusakabe Kimbei",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File%3AKusakabe_Kimbei_-_400_Greeting.jpg"
   }
 }
