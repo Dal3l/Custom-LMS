@@ -7,6 +7,7 @@ import {
   lesson,
   listening,
   match,
+  matchPictures,
   order,
   quiz,
   record,
@@ -72,6 +73,13 @@ export default lesson("a1-1.2", "Where are you from?", () => [
       "-ish": ["British", "Turkish", "Spanish"],
       "other": ["Kazakh", "Uzbek"],
     }),
+    matchPictures("Where is it? Match the places and the countries.", [
+      ["photos/place-big-ben.jpg", "the UK"],
+      ["photos/place-liberty.jpg", "the USA"],
+      ["photos/place-colosseum.jpg", "Italy"],
+      ["photos/place-registan.jpg", "Uzbekistan"],
+      ["photos/place-christ.jpg", "Brazil"],
+    ]),
     gaps("Complete.", "1. I'm from Kazakhstan. I'm [Kazakh].\n2. Tokyo is in [Japan].\n3. Neymar is from Brazil. He's [Brazilian].\n4. London is in the [UK]."),
     tip("*Pronunciation tip:* stress — JaPAnese, ChiNESE, BraZILian, ItALian. Say them together."),
   ]),
@@ -109,11 +117,19 @@ export default lesson("a1-1.2", "Where are you from?", () => [
     ),
   ]),
 
-  section("Video: Saying where you're from", [
-    tip("Watch the video before the lesson. Pause after each person and ask: *Where is he / she from?* The student repeats the answers."),
-    video("Watch the video. Where are the people from?", "31y2Bq1RYQA"),
-    write("Write 3 places from the video: countries or cities.", null),
-    text("Talk to your teacher.", "- Say where you are from like the people in the video.\n- Which city in your country is cool for tourists?"),
+  section("Listening: At the airport", [
+    tip("Until the audio is ready, read the dialogue with the student (show the script with the eye if it helps). Then do the tasks."),
+    ...listening(
+      "Listen. Where are they from?",
+      "**Kenji:** Hi! I'm Kenji. Nice to meet you!\n\n**Laura:** Hello, Kenji! I'm Laura. Nice to meet you too.\n\n**Kenji:** Where are you from, Laura?\n\n**Laura:** I'm from Spain. And you? Are you Chinese?\n\n**Kenji:** No, I'm not. I'm Japanese. I'm from Tokyo.\n\n**Laura:** Oh, cool! Is your friend Japanese too?\n\n**Kenji:** No, he isn't. Aidar is from Kazakhstan. He's from Almaty.\n\n**Laura:** Almaty! It's a beautiful city.",
+    ),
+    quiz("Listen and choose.", [
+      { q: "Laura is from…", options: ["*Spain", "Japan", "Kazakhstan"] },
+      { q: "Kenji is…", options: ["Chinese", "*Japanese", "Kazakh"] },
+      { q: "Aidar is from…", options: ["Tokyo", "Madrid", "*Almaty"] },
+    ]),
+    gaps("Listen again. Complete.", "1. Are you [Chinese]? — No, I'm not.\n2. I'm from [Tokyo].\n3. Aidar is from [Kazakhstan]."),
+    text("Talk to your teacher.", "- Imagine you're at an airport. Say hello to a person and ask *Where are you from?*\n- What countries are on your travel list? ✈️"),
   ]),
 
   section("Grammar: be — negatives and questions", [
@@ -186,14 +202,8 @@ export default lesson("a1-1.2", "Where are you from?", () => [
   ),
   homework(
     [
-      ...listening(
-        "Listen. Where are they from?",
-        "**A:** Hi! I'm Kenji. I'm from Japan.\n\n**B:** Hello, Kenji! I'm Laura. I'm from Spain.\n\n**A:** Are you from Madrid?\n\n**B:** No, I'm not. I'm from Barcelona. And you? Are you from Tokyo?\n\n**A:** Yes, I am!",
-      ),
-      quiz("Choose.", [
-        { q: "Kenji is from…", options: ["*Japan", "Spain", "China"] },
-        { q: "Laura is from…", options: ["Madrid", "*Barcelona", "Tokyo"] },
-      ]),
+      video("Watch the video. People say where they're from.", "31y2Bq1RYQA"),
+      write("Write 3 places from the video and say where YOU are from.", null),
       trueFalse(
         "Read and answer. True or false?",
         [
@@ -204,7 +214,7 @@ export default lesson("a1-1.2", "Where are you from?", () => [
         { read: "💬 *Hi! I'm Daniyar. I'm from Astana. My friend Sofia is from Brazil. She's Brazilian. Our team is Team Nova!*" },
       ),
     ],
-    "Homework: Reading and listening",
+    "Homework: Video and reading",
   ),
   homework(
     [

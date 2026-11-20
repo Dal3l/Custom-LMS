@@ -124,14 +124,11 @@ export default lesson("a1-1.3", "My profile", () => [
     text("Talk to your teacher.", "- Which job is interesting?\n- Which job is difficult?\n- What's your job? Or what is your dream job? ✨"),
   ]),
 
-  section("Listening: Emails", [
+  section("Speaking: Emails", [
     table("email"),
-    ...listening(
-      "Listen and write the email addresses.",
-      "1. leo at mail dot com\n\n2. mia underscore art at nova dot com\n\n3. aigerim dot b at school dot kz",
-    ),
-    gaps("Write the email addresses.", "1. [leo@mail.com]\n2. [mia_art@nova.com]\n3. [aigerim.b@school.kz]"),
-    tip("Until the audio is ready, read the script aloud (or show it with the eye). Then dictate 2–3 more made-up emails; the student writes them on the board."),
+    gaps("Read and write the email addresses.", "1. leo at mail dot com → [leo@mail.com]\n2. mia underscore art at nova dot com → [mia_art@nova.com]\n3. aigerim dot b at school dot kz → [aigerim.b@school.kz]"),
+    text("Dictation! 🎤", "Your teacher says 3 email addresses. Write them.\n\nThen say your email address (or a made-up one) — your teacher writes it."),
+    tip("Dictate made-up emails: *tom dot hill at mail dot com, sara underscore 15 at school dot kz…*"),
   ]),
 
   section("Let's talk: My profile", [
@@ -172,10 +169,17 @@ export default lesson("a1-1.3", "My profile", () => [
         ],
         { read: "## 📷 PhotoGram\n**Leo Costa**\nAge: 20 · City: Rio, Brazil\nBio: *I'm a blogger. Photos of my city!* 🏖️\nEmail: leo_photo@mail.com" },
       ),
-      video("Watch the first 3 minutes. People in London talk about their dream jobs.", "iHG0RjSmjhk"),
-      write("What dream jobs do you hear? Write 2–3 jobs. What is your dream job?", null),
+      ...listening(
+        "Listen. What are their jobs?",
+        "**Anna:** Hi, I'm Anna. I'm a nurse. I'm from London.\n\n**Tom:** Hello! I'm Tom. I'm a developer. My email is tom dot dev at mail dot com.\n\n**Dina:** Hi! I'm Dina. I'm from Astana. I'm a student — and a blogger! 📱",
+      ),
+      match("Listen and match.", [
+        ["Anna", "a nurse"],
+        ["Tom", "a developer"],
+        ["Dina", "a student and a blogger"],
+      ]),
     ],
-    "Homework: Reading and video",
+    "Homework: Reading and listening",
   ),
   homework(
     [

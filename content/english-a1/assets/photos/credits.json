@@ -1,0 +1,50 @@
+{
+  "greet-handshake.jpg": {
+    "title": "File:Business agreement handshake at coffee shop.jpg",
+    "author": "rawpixel.com",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Business_agreement_handshake_at_coffee_shop.jpg"
+  },
+  "greet-hug.jpg": {
+    "title": "File:Two Friends In The Woods.jpg",
+    "author": "D. Sharon Pruitt",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ATwo_Friends_In_The_Woods.jpg"
+  },
+  "place-big-ben.jpg": {
+    "title": "File:Clock Tower - Palace of Westminster, London - September 2006-2.jpg",
+    "author": "Diliff",
+    "license": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AClock_Tower_-_Palace_of_Westminster%2C_London_-_September_2006-2.jpg"
+  },
+  "place-liberty.jpg": {
+    "title": "File:Statue of Liberty, NY.jpg",
+    "author": "William Warby",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AStatue_of_Liberty%2C_NY.jpg"
+  },
+  "place-colosseum.jpg": {
+    "title": "File:Colosseum and Via Sacra (Rome).jpg",
+    "author": "Livioandronico2013",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AColosseum_and_Via_Sacra_%28Rome%29.jpg"
+  },
+  "place-registan.jpg": {
+    "title": "File:Registan - Gusjer.jpg",
+    "author": "Gustavo Jeronimo",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ARegistan_-_Gusjer.jpg"
+  },
+  "place-christ.jpg": {
+    "title": "File:Cristo Redentor - Rio de Janeiro, Brasil.jpg",
+    "author": "Nico Kaiser",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ACristo_Redentor_-_Rio_de_Janeiro%2C_Brasil.jpg"
+  },
+  "greet-bow.jpg": {
+    "title": "File:Kusakabe Kimbei - 400 Greeting.jpg",
+    "author": "Kusakabe Kimbei",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File%3AKusakabe_Kimbei_-_400_Greeting.jpg"
+  }
+}

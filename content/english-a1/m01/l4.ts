@@ -3,7 +3,6 @@ import {
   gaps,
   homework,
   lesson,
-  listening,
   match,
   order,
   quiz,
@@ -46,12 +45,6 @@ export default lesson("a1-1.4", "Practical: Sign me up", () => [
       ["Z-A-R-A", "Zara"],
     ]),
     tip("Play a quick game: spell short words (C-A-T, B-U-S, A-P-P) and the student writes them; then change roles. Common problems: E/I, G/J, A/R."),
-  ]),
-
-  section("Video: Spelling names and phone numbers", [
-    tip("Watch the video before the lesson. Pause and let the student spell the names and say the numbers with the video."),
-    video("Watch the video. Spell the names and say the numbers with the people.", "Vep0aCOPag4"),
-    write("Write 2 names and 1 phone number from the video.", null),
   ]),
 
   section("Useful phrases", [
@@ -156,14 +149,10 @@ export default lesson("a1-1.4", "Practical: Sign me up", () => [
         ],
         { read: "💬 *Hi! It's Mia. My last name is Schmidt — S-C-H-M-I-D-T. My phone number is 555 0132 and my email is mia dot s at nova dot de. See you!*" },
       ),
-      ...listening(
-        "Listen. Complete the form.",
-        "**A:** Hi! What's your name?\n\n**B:** Tom Walker.\n\n**A:** How do you spell Walker?\n\n**B:** W-A-L-K-E-R.\n\n**A:** And your phone number?\n\n**B:** 555 7319.",
-      ),
-      gaps("Complete the form.", "Last name: [Walker]\nPhone: [555 7319/5557319]"),
+      video("Watch the video. Spell names and say phone numbers with the people.", "Vep0aCOPag4"),
       video("Fun fact! Watch the video: how pilots and soldiers spell words. A for Alpha, B for Bravo…", "vslDNsnNFvs"),
     ],
-    "Homework: Reading, listening and video",
+    "Homework: Reading and video",
   ),
   homework(
     [
