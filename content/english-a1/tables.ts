@@ -110,4 +110,56 @@ export const tables: GrammarTable[] = [
     ],
     note: "Spelling tips: **double L** = LL · **double 7** = 77",
   },
+  // 2.1
+  {
+    name: "this-that",
+    title: "this / that",
+    subtitle: "One thing: near 👇 or far 👉",
+    color: "orange",
+    columns: ["", "Near 👇", "Far 👉"],
+    rows: [
+      ["One thing", "**this** phone", "**that** bag"],
+      ["Question", "What's **this**?", "What's **that**?"],
+      ["Answer", "It's a charger.", "It's an umbrella."],
+    ],
+    note: "**a** + consonant sound: a phone · **an** + vowel sound: an umbrella",
+  },
+  // 2.2
+  {
+    name: "these-those",
+    title: "this / that / these / those",
+    color: "blue",
+    columns: ["", "Near 👇", "Far 👉"],
+    rows: [
+      ["One 1️⃣", "**this** key", "**that** key"],
+      ["Two or more 🔢", "**these** keys", "**those** keys"],
+      ["Question", "What are **these**?", "What are **those**?"],
+      ["Answer", "They're my keys.", "They're headphones."],
+    ],
+  },
+  {
+    name: "plurals",
+    title: "Plural nouns",
+    subtitle: "One → two or more",
+    color: "green",
+    columns: ["Rule", "One", "Two or more"],
+    rows: [
+      ["+ **s**", "phone, key, bag", "phone**s**, key**s**, bag**s**"],
+      ["-s, -sh, -ch, -x → + **es**", "glass, brush, watch, box", "glass**es**, brush**es**, watch**es**, box**es**"],
+      ["consonant + y → **ies**", "battery, city", "batter**ies**, cit**ies**"],
+      ["Different!", "person, child, man, woman", "**people**, **children**, **men**, **women**"],
+    ],
+    note: "Always plural: **headphones**, **sunglasses**, **jeans** — These are my sunglasses.",
+  },
+  {
+    name: "a-the",
+    title: "a / an or the?",
+    color: "pink",
+    columns: ["", "When?", "Example"],
+    rows: [
+      ["**a / an**", "one thing, first time", "I have **a** new phone."],
+      ["**the**", "we know which one", "**The** phone is black."],
+      ["**the**", "only one", "**the** sun, **the** USA, **the** UK"],
+    ],
+  },
 ];
