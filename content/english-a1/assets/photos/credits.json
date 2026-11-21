@@ -328,5 +328,23 @@
     "author": "NeONBRAND",
     "license": "CC0",
     "source": "https://commons.wikimedia.org/wiki/File%3AMan_looking_at_iPhone_%28Unsplash%29.jpg"
+  },
+  "hab-sleep.jpg": {
+    "title": "File:Sleeping-girl.jpg",
+    "author": "rachel CALAMUSA",
+    "license": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ASleeping-girl.jpg"
+  },
+  "hab-run.jpg": {
+    "title": "File:Running in a park in Brussels - 2023 - P060598-845611.jpg",
+    "author": "European Commission (Christophe Licoppe)",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ARunning_in_a_park_in_Brussels_-_2023_-_P060598-845611.jpg"
+  },
+  "hab-cook.jpg": {
+    "title": "File:Namche Bazaar, Cooking in the kitchen, Nepal.jpg",
+    "author": "Vyacheslav Argenberg",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ANamche_Bazaar%2C_Cooking_in_the_kitchen%2C_Nepal.jpg"
   }
 }
