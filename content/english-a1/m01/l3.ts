@@ -8,6 +8,7 @@ import {
   match,
   quiz,
   record,
+  picture,
   section,
   sort,
   table,
@@ -24,9 +25,17 @@ export default lesson("a1-1.3", "My profile", () => [
   section("Warm-up: Profiles", [
     box("Today you will…", "- read short profiles\n- say your job or what you study\n- count from 20 to 100\n- make your own profile"),
     tip("Review: *Where are you from? Is your best friend from Kazakhstan?* Keep it light — the student can make up a username."),
+    picture("Profiles everywhere", ["photos/warm-profile.jpg"], "A profile in an app: a photo, a name, a username…"),
+    quiz("Guess the app! 📱", [
+      { q: "📸 Photos, stories and reels", options: ["*Instagram", "LinkedIn", "Duolingo"] },
+      { q: "🎵 Short videos and dances", options: ["*TikTok", "Gmail", "Zoom"] },
+      { q: "▶️ Long videos and vlogs", options: ["*YouTube", "WhatsApp", "Discord"] },
+      { q: "🦉 English lessons with a green owl", options: ["*Duolingo", "Spotify", "Netflix"] },
+      { q: "💼 Profiles for jobs and work", options: ["*LinkedIn", "TikTok", "Snapchat"] },
+    ]),
     text(
       "Talk to your teacher.",
-      "- Do you have a profile? Where — in a game 🎮, in a school app 🏫 or on social media 📱?\n- What's your username?\n- Is your profile picture a photo of you? 🙂\n- What is a cool username? Make one up!",
+      "- Do you have a profile? Where — in a game 🎮, in a school app 🏫 or on social media 📱?\n- What is a cool username? Make one up! 😎",
     ),
   ]),
 

@@ -9,6 +9,7 @@ import {
   order,
   quiz,
   record,
+  picture,
   section,
   sort,
   table,
@@ -25,10 +26,14 @@ export default lesson("a1-2.1", "What's in my bag?", () => [
   section("Warm-up: My bag", [
     box("Today you will…", "- name things in your bag\n- ask *What's this? What's that?*\n- say *It's a… / It's an…*"),
     tip("Quick review of module 1: *What's your name? Where are you from?* Then show your own bag or pencil case and take out 2–3 things: *This is my phone. This is my pen.*"),
-    text(
-      "Talk to your teacher.",
-      "- Is your bag big or small? 👜\n- What 3 things are always in your bag?\n- Phone, keys, headphones — what is the most important thing for you? 📱\n- Is your bag a mess? 😅",
-    ),
+    picture("What's in the backpack?", ["photos/warm-bag.jpg"], "A traveler's things for 188 days in Asia! What do you see?"),
+    quiz("Whose bag is it? Guess! 🎒", [
+      { q: "⚽ + 👟 + 💧 + 🧦", options: ["*a football player", "a tourist", "a student"] },
+      { q: "🛂 + 🕶️ + 🗺️ + 📷", options: ["*a tourist", "a doctor", "a gamer"] },
+      { q: "💻 + 📒 + 🖊️ + 🪪", options: ["*a student", "a football player", "a baby"] },
+      { q: "🎧 + 🎮 + 🔋 + 🍫", options: ["*a gamer", "a teacher", "a tourist"] },
+    ]),
+    text("Talk to your teacher.", "- Is your bag big or small? 👜\n- What 3 things are always in your bag?"),
   ]),
 
   section("Vocabulary: Things in my bag", [
