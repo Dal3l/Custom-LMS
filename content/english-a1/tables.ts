@@ -439,4 +439,36 @@ export const tables: GrammarTable[] = [
       ["I **can't hear** you. 🔇", "Check your **microphone**."],
     ],
   },
+  // 8.1
+  {
+    name: "like-ing",
+    title: "love / like / don't mind / hate + -ing",
+    color: "pink",
+    columns: ["", "", "Example"],
+    rows: [
+      ["😍", "**love**", "I **love** danc**ing**."],
+      ["🙂", "**like**", "She **likes** watch**ing** anime."],
+      ["😐", "**don't mind**", "I **don't mind** cook**ing**. (it's OK)"],
+      ["🙁", "**don't like**", "We **don't like** gett**ing** up early."],
+      ["😡", "**hate**", "He **hates** clean**ing** his room."],
+    ],
+    note: "-ing: read → read**ing** · dance → danc**ing** · swim → swim**ming** · Also: I love **music**. I hate **Mondays**.",
+  },
+  // 8.2
+  {
+    name: "object-pronouns",
+    title: "me / you / him / her / it / us / them",
+    color: "violet",
+    columns: ["Subject", "Object", "Example"],
+    rows: [
+      ["I", "**me**", "Can you help **me**?"],
+      ["you", "**you**", "I love **you**! ❤️"],
+      ["he", "**him**", "I follow **him** on Instagram."],
+      ["she", "**her**", "We love **her** songs — we love **her**!"],
+      ["it", "**it**", "This song is great. I love **it**."],
+      ["we", "**us**", "Come with **us**!"],
+      ["they", "**them**", "BTS? I love **them**!"],
+    ],
+    note: "**She** likes **him**. **He** likes **her**. 💕",
+  },
 ];
