@@ -9,6 +9,10 @@ import l21 from "./m02/l1";
 import l22 from "./m02/l2";
 import l23 from "./m02/l3";
 import l24 from "./m02/l4";
+import l31 from "./m03/l1";
+import l32 from "./m03/l2";
+import l33 from "./m03/l3";
+import l34 from "./m03/l4";
 
 export const course: CourseFile = {
   id: "ed41ba8e-00d0-46e3-8314-6ed35197aeff",
@@ -20,5 +24,6 @@ export const course: CourseFile = {
   modules: [
     { title: "Hello, world!", lessons: [l11, l12, l13, l14] },
     { title: "My stuff", lessons: [l21, l22, l23, l24] },
+    { title: "People in my life", lessons: [l31, l32, l33, l34] },
   ],
 };
