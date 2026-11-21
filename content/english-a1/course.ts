@@ -17,6 +17,10 @@ import l41 from "./m04/l1";
 import l42 from "./m04/l2";
 import l43 from "./m04/l3";
 import l44 from "./m04/l4";
+import l51 from "./m05/l1";
+import l52 from "./m05/l2";
+import l53 from "./m05/l3";
+import l54 from "./m05/l4";
 
 export const course: CourseFile = {
   id: "ed41ba8e-00d0-46e3-8314-6ed35197aeff",
@@ -30,5 +34,6 @@ export const course: CourseFile = {
     { title: "My stuff", lessons: [l21, l22, l23, l24] },
     { title: "People in my life", lessons: [l31, l32, l33, l34] },
     { title: "My space", lessons: [l41, l42, l43, l44] },
+    { title: "Day by day", lessons: [l51, l52, l53, l54] },
   ],
 };

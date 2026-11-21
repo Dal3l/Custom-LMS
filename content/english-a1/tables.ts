@@ -280,4 +280,79 @@ export const tables: GrammarTable[] = [
       ["↔️", "**between**", "The plant is **between** the two armchairs."],
     ],
   },
+  // 5.1
+  {
+    name: "ps-positive",
+    title: "Present Simple: I / you / we / they",
+    subtitle: "Things we do every day, every week, usually",
+    color: "violet",
+    columns: ["Who?", "Verb", "Example"],
+    rows: [
+      ["I", "**get up**", "I **get up** at 7."],
+      ["you", "**work**", "You **work** online."],
+      ["we", "**have**", "We **have** lunch at 1."],
+      ["they", "**go**", "They **go** to school by bus."],
+    ],
+    note: "No “am / are” here: I **work** — not “I am work”. Words: every day, usually, often, always",
+  },
+  // 5.2
+  {
+    name: "ps-questions",
+    title: "Present Simple: − and ?",
+    color: "blue",
+    columns: ["", "Example", "Answer"],
+    rows: [
+      ["−", "I **don't** work on Sunday.", ""],
+      ["?", "**Do** you study online?", "Yes, I **do**. / No, I **don't**."],
+      ["What?", "**What do** you **do**?", "I'm a designer."],
+      ["Where?", "**Where do** you **work**?", "At home. / In an office."],
+      ["When?", "**When do** you **start**?", "At 9 o'clock."],
+    ],
+    note: "don't = do **not** · **What do you do?** = What's your job?",
+  },
+  // 5.3
+  {
+    name: "in-on-at",
+    title: "in / on / at — time",
+    color: "green",
+    columns: ["", "When?", "Example"],
+    rows: [
+      ["**in**", "parts of the day, months", "**in** the morning, **in** the evening, **in** July"],
+      ["**on**", "days", "**on** Monday, **on** Friday evening"],
+      ["**at**", "times", "**at** 7 o'clock, **at** half past six, **at** night"],
+    ],
+    note: "🇺🇸 **on** the weekend · 🇬🇧 **at** the weekend",
+  },
+  // 5.4
+  {
+    name: "cafe",
+    title: "At a coffee shop",
+    color: "orange",
+    columns: ["Barista ☕", "You 🙂"],
+    rows: [
+      ["What can I get you?", "**Can I have** a latte, please?"],
+      ["What size?", "**Small / medium / large**, please."],
+      ["Anything else?", "**I'd like** a croissant, please. / No, thanks."],
+      ["For here or to go? 🇺🇸", "**To go**, please. / **For here**."],
+      ["Eat in or take away? 🇬🇧", "**Take away**, please."],
+      ["That's 5 dollars.", "Here you are. / Can I pay by card?"],
+    ],
+    note: "I'd like = I **would** like — polite ✨",
+  },
+  {
+    name: "menu",
+    title: "☕ BEAN THERE — Menu",
+    color: "teal",
+    columns: ["Drinks", "S", "M", "L"],
+    rows: [
+      ["Espresso", "$2.00", "—", "—"],
+      ["Cappuccino", "$3.50", "$4.00", "$4.50"],
+      ["Latte", "$3.50", "$4.00", "$4.50"],
+      ["Tea", "$2.50", "$3.00", "$3.50"],
+      ["Hot chocolate", "$3.00", "$3.50", "$4.00"],
+      ["Smoothie", "$4.50", "$5.00", "$5.50"],
+      ["**Food:**", "Croissant $3.00", "Muffin $2.50", "Sandwich $6.00"],
+    ],
+    note: "$4.50 = **four fifty** (four dollars fifty)",
+  },
 ];
