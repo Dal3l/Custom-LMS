@@ -233,4 +233,51 @@ export const tables: GrammarTable[] = [
     ],
     note: "Days always start with a **capital letter**: Monday, not monday.",
   },
+  // 4.1
+  {
+    name: "there-is",
+    title: "there is / there are",
+    color: "orange",
+    columns: ["", "One 1️⃣", "Two or more 🔢"],
+    rows: [
+      ["+", "There**'s** a bed.", "There **are** two windows."],
+      ["−", "There **isn't** a TV.", "There **aren't** any plants."],
+    ],
+    note: "There's = There **is** · We say: There's **a** lamp. There are **three** lamps.",
+  },
+  {
+    name: "prep-1",
+    title: "Where is it? in / on / under / next to",
+    color: "blue",
+    columns: ["", "", "Example"],
+    rows: [
+      ["📦", "**in**", "The keys are **in** the bag."],
+      ["⬆️", "**on**", "The laptop is **on** the desk."],
+      ["⬇️", "**under**", "The cat is **under** the bed."],
+      ["↔️", "**next to**", "The lamp is **next to** the bed."],
+    ],
+  },
+  // 4.2
+  {
+    name: "there-questions",
+    title: "Is there…? Are there any…?",
+    color: "green",
+    columns: ["Question", "Yes 👍", "No 👎"],
+    rows: [
+      ["**Is there** a robot vacuum?", "Yes, there **is**.", "No, there **isn't**."],
+      ["**Are there any** smart lights?", "Yes, there **are**.", "No, there **aren't**."],
+    ],
+    note: "+ There are **some** plants. · − There aren't **any** plants. · ? Are there **any** plants?",
+  },
+  {
+    name: "prep-2",
+    title: "behind / in front of / between",
+    color: "pink",
+    columns: ["", "", "Example"],
+    rows: [
+      ["🔙", "**behind**", "The cat is **behind** the sofa."],
+      ["🔜", "**in front of**", "The table is **in front of** the TV."],
+      ["↔️", "**between**", "The plant is **between** the two armchairs."],
+    ],
+  },
 ];
