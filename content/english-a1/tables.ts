@@ -162,4 +162,75 @@ export const tables: GrammarTable[] = [
       ["**the**", "only one", "**the** sun, **the** USA, **the** UK"],
     ],
   },
+  // 3.1
+  {
+    name: "have-has",
+    title: "have / has",
+    color: "violet",
+    columns: ["", "", "Example"],
+    rows: [
+      ["I / you / we / they", "**have**", "I **have** a brother."],
+      ["he / she / it", "**has**", "She **has** a cat."],
+    ],
+    note: "🇬🇧 Also: I**'ve got** a brother. = I **have** a brother. · She**'s got** a cat. = She **has** a cat.",
+  },
+  // 3.2
+  {
+    name: "do-you-have",
+    title: "have: − and ?",
+    subtitle: "Negatives, questions and short answers",
+    color: "blue",
+    columns: ["", "I / you / we / they", "he / she / it"],
+    rows: [
+      ["−", "I **don't have** a pet.", "He **doesn't have** a pet."],
+      ["?", "**Do** you **have** a pet?", "**Does** she **have** a pet?"],
+      ["Yes 👍", "Yes, I **do**.", "Yes, she **does**."],
+      ["No 👎", "No, I **don't**.", "No, she **doesn't**."],
+    ],
+    note: "After doesn't / does → **have**: She doesn't **have** — not “doesn't has”.",
+  },
+  {
+    name: "possessive-s",
+    title: "'s — whose is it?",
+    color: "pink",
+    columns: ["Who?", "+ 's", "Example"],
+    rows: [
+      ["Leo", "Leo**'s**", "This is Leo**'s** phone."],
+      ["my sister", "my sister**'s**", "My sister**'s** room is big."],
+      ["Mia", "Mia**'s**", "Mia**'s** cat is white."],
+      ["my parents", "my parents**'**", "My parents**'** car is old."],
+    ],
+    note: "Careful! Leo**'s** 15. = Leo **is** 15. · Leo**'s** phone = the phone of Leo",
+  },
+  // 3.4
+  {
+    name: "time",
+    title: "What time is it?",
+    color: "orange",
+    columns: ["", "🇬🇧 / 🇺🇸 easy way", "Also"],
+    rows: [
+      ["7:00", "seven **o'clock**", ""],
+      ["7:30", "seven **thirty**", "**half past** seven"],
+      ["7:15", "seven **fifteen**", "(a) **quarter past** seven"],
+      ["7:45", "seven **forty-five**", "(a) **quarter to** eight"],
+      ["7:05", "seven **oh five**", "five **past** seven"],
+    ],
+    note: "**at** + time: at 7 o'clock · **on** + day: on Monday · **in the** morning / afternoon / evening",
+  },
+  {
+    name: "days",
+    title: "Days of the week",
+    color: "green",
+    columns: ["Day", "Short", "Example"],
+    rows: [
+      ["**Monday**", "Mon", "Let's meet **on Monday**."],
+      ["**Tuesday**", "Tue", ""],
+      ["**Wednesday**", "Wed", "🗣️ say: WENZ-day"],
+      ["**Thursday**", "Thu", ""],
+      ["**Friday**", "Fri", "Are you free **on Friday**?"],
+      ["**Saturday**", "Sat", "the **weekend** 🎉"],
+      ["**Sunday**", "Sun", "the **weekend** 🎉"],
+    ],
+    note: "Days always start with a **capital letter**: Monday, not monday.",
+  },
 ];
