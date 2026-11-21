@@ -346,5 +346,53 @@
     "author": "Vyacheslav Argenberg",
     "license": "CC BY 4.0",
     "source": "https://commons.wikimedia.org/wiki/File%3ANamche_Bazaar%2C_Cooking_in_the_kitchen%2C_Nepal.jpg"
+  },
+  "skill-guitar.jpg": {
+    "title": "File:Playing a chord on a guitar.jpg",
+    "author": "Ivan Radic",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3APlaying_a_chord_on_a_guitar.jpg"
+  },
+  "skill-skate.jpg": {
+    "title": "File:Skateboarding at Mexico City - Ollie - 005.JPG",
+    "author": "Jarek Tuszyński",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ASkateboarding_at_Mexico_City_-_Ollie_-_005.JPG"
+  },
+  "skill-juggle.jpg": {
+    "title": "File:A juggler at Ibirapuera Park, Sao Paulo.jpg",
+    "author": "Slyronit",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AA_juggler_at_Ibirapuera_Park%2C_Sao_Paulo.jpg"
+  },
+  "skill-chess.jpg": {
+    "title": "File:Paris - Playing chess at the Jardins du Luxembourg - 2966.jpg",
+    "author": "Jorge Royan",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AParis_-_Playing_chess_at_the_Jardins_du_Luxembourg_-_2966.jpg"
+  },
+  "skill-swim.jpg": {
+    "title": "File:Girl with swimming board.jpg",
+    "author": "Tommy Wong",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AGirl_with_swimming_board.jpg"
+  },
+  "skill-drive.jpg": {
+    "title": "File:Driver holding key near steering wheel in Volkswagen car while starting the engine.jpg",
+    "author": "Shixart1985",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ADriver_holding_key_near_steering_wheel_in_Volkswagen_car_while_starting_the_engine.jpg"
+  },
+  "skill-code.jpg": {
+    "title": "File:Programmer at work (Unsplash).jpg",
+    "author": "Crew",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AProgrammer_at_work_%28Unsplash%29.jpg"
+  },
+  "ai-robot.jpg": {
+    "title": "File:Ameca Generation 1.jpg",
+    "author": "Willy Jackson",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AAmeca_Generation_1.jpg"
   }
 }

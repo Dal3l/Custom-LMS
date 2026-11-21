@@ -25,6 +25,10 @@ import l61 from "./m06/l1";
 import l62 from "./m06/l2";
 import l63 from "./m06/l3";
 import l64 from "./m06/l4";
+import l71 from "./m07/l1";
+import l72 from "./m07/l2";
+import l73 from "./m07/l3";
+import l74 from "./m07/l4";
 
 export const course: CourseFile = {
   id: "ed41ba8e-00d0-46e3-8314-6ed35197aeff",
@@ -40,5 +44,6 @@ export const course: CourseFile = {
     { title: "My space", lessons: [l41, l42, l43, l44] },
     { title: "Day by day", lessons: [l51, l52, l53, l54] },
     { title: "Habits", lessons: [l61, l62, l63, l64] },
+    { title: "Skills and tech", lessons: [l71, l72, l73, l74] },
   ],
 };

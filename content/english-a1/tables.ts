@@ -397,4 +397,46 @@ export const tables: GrammarTable[] = [
     ],
     note: "Before the verb: I **often** play. · After be: I'm **always** tired. 😴",
   },
+  // 7.1
+  {
+    name: "can",
+    title: "can / can't",
+    subtitle: "the same for I, you, he, she, we, they",
+    color: "violet",
+    columns: ["", "Example", ""],
+    rows: [
+      ["+", "I **can** swim.", "She **can** code."],
+      ["−", "I **can't** drive.", "He **can't** cook."],
+      ["?", "**Can** you play the guitar?", "Yes, I **can**. / No, I **can't**."],
+    ],
+    note: "can + verb, **no s, no to**: She can swim — not “She cans swim” or “can to swim”.",
+  },
+  // 7.2
+  {
+    name: "can-requests",
+    title: "Can I…? Can you…?",
+    subtitle: "Asking for help and permission",
+    color: "blue",
+    columns: ["", "Question", "Answer"],
+    rows: [
+      ["🙋 Permission", "**Can I** use your phone?", "Sure! / Sorry, you can't."],
+      ["🤝 Help", "**Can you** help me, please?", "Of course! / Sorry, I can't."],
+      ["🤖 Ability", "**Can** AI draw pictures?", "Yes, it **can**."],
+    ],
+    note: "Add **please** — it's polite! ✨",
+  },
+  // 7.4
+  {
+    name: "tech-problems",
+    title: "Tech problems",
+    color: "orange",
+    columns: ["Problem 😟", "Help 🛠️"],
+    rows: [
+      ["It **doesn't work**.", "Try to **restart** it."],
+      ["I **can't log in**.", "Click “**Forgot password?**”"],
+      ["My screen is **frozen**. 🧊", "Turn it **off** and **on** again."],
+      ["The Wi-Fi is **slow**. 🐢", "Check the **router**."],
+      ["I **can't hear** you. 🔇", "Check your **microphone**."],
+    ],
+  },
 ];
