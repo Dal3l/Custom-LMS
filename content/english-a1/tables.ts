@@ -355,4 +355,46 @@ export const tables: GrammarTable[] = [
     ],
     note: "$4.50 = **four fifty** (four dollars fifty)",
   },
+  // 6.1
+  {
+    name: "ps-he-she",
+    title: "Present Simple: he / she / it",
+    subtitle: "he / she / it → verb + s",
+    color: "violet",
+    columns: ["Rule", "I / you / we / they", "he / she / it"],
+    rows: [
+      ["+ **s**", "play, stream, work", "play**s**, stream**s**, work**s**"],
+      ["-s, -sh, -ch, -o, -x → + **es**", "watch, go, do, fix, kiss", "watch**es**, go**es**, do**es**, fix**es**, kiss**es**"],
+      ["consonant + y → **ies**", "study", "stud**ies**"],
+      ["Different!", "have", "**has**"],
+    ],
+    note: "I play → She play**s**. · They have → He **has**.",
+  },
+  // 6.2
+  {
+    name: "ps-doesnt",
+    title: "he / she / it: − and ?",
+    color: "blue",
+    columns: ["", "Example", "Answer"],
+    rows: [
+      ["−", "She **doesn't** stream on Sunday.", ""],
+      ["?", "**Does** he play every day?", "Yes, he **does**. / No, he **doesn't**."],
+      ["Wh-?", "**When does** she **start**?", "At 6 p.m."],
+    ],
+    note: "After does / doesn't → **no s**: Does she **play**? — not “Does she plays?”",
+  },
+  {
+    name: "frequency",
+    title: "How often?",
+    color: "green",
+    columns: ["", "%", "Example"],
+    rows: [
+      ["**always**", "100%", "I **always** have breakfast."],
+      ["**usually**", "80%", "She **usually** goes to bed at 11."],
+      ["**often**", "60%", "We **often** play games."],
+      ["**sometimes**", "40%", "He **sometimes** cooks dinner."],
+      ["**never**", "0%", "They **never** watch TV."],
+    ],
+    note: "Before the verb: I **often** play. · After be: I'm **always** tired. 😴",
+  },
 ];
