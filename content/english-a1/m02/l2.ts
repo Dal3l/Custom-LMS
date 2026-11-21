@@ -10,6 +10,7 @@ import {
   order,
   quiz,
   record,
+  picture,
   section,
   sort,
   table,
@@ -26,10 +27,16 @@ export default lesson("a1-2.2", "These are my favorites", () => [
   section("Warm-up: Favorite things", [
     box("Today you will…", "- say colors and *big / small, new / old*\n- talk about two or more things: *these, those*\n- show and describe your favorite things"),
     tip("Quick review of 2.1: point to things in the room — *What's this? What's that?* The student answers *It's a… / It's an…*"),
-    text(
-      "Talk to your teacher.",
-      "- What's your favorite thing? Your phone, your headphones, your sneakers? 👟\n- Is it new or old?\n- What color is it?\n- Do you watch unboxing videos? 📦",
-    ),
+    picture("Colors everywhere!", ["photos/warm-colors.jpg"], "Umbrellas over a street in Hungary. How many colors do you see? 🌈"),
+    quiz("Color quiz! Guess. 🎨", [
+      { q: "🇯🇵 The flag of Japan is red and…", options: ["*white", "blue", "green"] },
+      { q: "Pikachu ⚡ is…", options: ["*yellow", "pink", "blue"] },
+      { q: "Shrek is…", options: ["*green", "purple", "orange"] },
+      { q: "🇰🇿 The flag of Kazakhstan is blue and…", options: ["*yellow", "red", "black"] },
+      { q: "🦓 A zebra is black and…", options: ["*white", "brown", "gray"] },
+    ]),
+    tip("Let the student guess — the colors come next in the vocabulary."),
+    text("Talk to your teacher.", "- What's your favorite thing? Is it new or old? 👟\n- Do you watch unboxing videos? 📦"),
   ]),
 
   section("Vocabulary: Colors and describing words", [

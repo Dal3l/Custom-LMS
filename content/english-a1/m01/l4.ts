@@ -7,6 +7,7 @@ import {
   order,
   quiz,
   record,
+  picture,
   section,
   sort,
   table,
@@ -22,9 +23,18 @@ import {
 export default lesson("a1-1.4", "Practical: Sign me up", () => [
   section("Warm-up: Apps and clubs", [
     box("Today you will…", "- say the English alphabet\n- spell your name\n- say your phone number and email\n- sign up at a gym or in an app"),
+    picture("A new gym", ["photos/warm-gym.jpg"], "A new gym in your city. You want to sign up! 🏋️"),
+    trueFalse("Guess! True or false? 🤔", [
+      ["The English alphabet has 26 letters.", true],
+      ["E is the most popular letter in English.", true],
+      ["In the UK, Z is “zee”.", false],
+      ["Q is in a lot of English words.", false],
+      ["@ in an email is “at”.", true],
+    ]),
+    tip("Let the student guess — the answers come in the lesson. Then talk."),
     text(
       "Talk to your teacher.",
-      "- What apps are on your phone? 📱\n- What is your favorite sport? 🏋️\n- Is your name easy or difficult for English speakers? 🙂\n- What English words are on your phone or computer? (OK, Delete, Settings…)",
+      "- What apps are on your phone? 📱\n- Is your name easy or difficult for English speakers? 🙂",
     ),
   ]),
 

@@ -27,9 +27,16 @@ export default lesson("a1-2.4", "Revision 1–2", () => [
       "- review modules 1 and 2: *be, my / your / his / her, a / an, this / that / these / those, plurals*\n- check your vocabulary, grammar, reading and listening — get points! ⭐\n- start your project: **My profile + my things**",
     ),
     tip("The tasks in this lesson check themselves and give points. Don't help during the tasks — help after: look at the mistakes together and repeat the rules."),
+    matchPictures("Remember module 1? Where is it? Match. 🌍", [
+      ["photos/place-big-ben.jpg", "the UK"],
+      ["photos/place-liberty.jpg", "the USA"],
+      ["photos/place-colosseum.jpg", "Italy"],
+      ["photos/place-registan.jpg", "Uzbekistan"],
+      ["photos/place-christ.jpg", "Brazil"],
+    ]),
     text(
-      "Talk to your teacher. Quick questions — answer fast! ⚡",
-      "- What's your name? How do you spell it?\n- How old are you? Where are you from?\n- What's your job, or what do you study?\n- What's in your bag today?\n- What's your favorite thing? What color is it?",
+      "Speed round! ⚡ Answer fast.",
+      "- What's your name? How do you spell it?\n- Where are you from?\n- What's in your bag today?",
     ),
   ]),
 
