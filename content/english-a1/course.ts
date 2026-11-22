@@ -55,6 +55,7 @@ export const course: CourseFile = {
   title: "English A1",
   language: "en",
   level: "A1",
+  cover: "cover.png",
   description:
     "English from zero for teens (12+) and adults: modern topics — social media, generations, AI, streaming, apps. 12 modules × 4 lessons, 60 minutes each + homework.",
   modules: [

@@ -20,6 +20,8 @@ export type CourseFile = {
   language: string;
   level: string;
   description: string;
+  /** A cover picture in content/<course>/assets (drawn by render-cover.mjs). */
+  cover?: string;
   modules: { title: string; lessons: (ContentLesson & { slug: string })[] }[];
 };
 
@@ -93,6 +95,21 @@ async function main() {
     }),
     "save course",
   );
+
+  // The cover: a public picture in the "course-covers" bucket, named by its content.
+  if (course.cover) {
+    const { readFile } = await import("node:fs/promises");
+    const { createHash } = await import("node:crypto");
+    const bytes = await readFile(path.resolve(`content/${name}/assets/${course.cover}`));
+    const ext = path.extname(course.cover).slice(1).toLowerCase();
+    const coverPath = `${owner}/${createHash("sha256").update(bytes).digest("hex").slice(0, 32)}.${ext}`;
+    must(
+      await db.storage.from("course-covers").upload(coverPath, bytes, { contentType: ext === "png" ? "image/png" : "image/jpeg", upsert: true }),
+      "upload cover",
+    );
+    must(await db.from("courses").update({ cover_path: coverPath }).eq("id", course.id), "save cover");
+    console.log("↑ cover");
+  }
 
   // Pictures go up first (same file → same path: uploading again just replaces it).
   for (const u of uploads.values()) {
