@@ -98,7 +98,7 @@ export default lesson("a1-11.3", "Food trends", () => [
     ),
     drag(
       "Complete the recipe.",
-      "🥑 Avocado toast: You need [some] bread, an [avocado], some salt and a [little] lemon. How [many] eggs? One! Put the avocado [on] the bread. Enjoy! 😋",
+      "🥑 Avocado toast: You need [some] bread, an [avocado], some salt and a [little] lemon juice. How [many] eggs? One! Put the avocado [on] the bread. Enjoy! 😋",
       ["any", "much", "a"],
     ),
     gaps("Complete with How much or How many.", "1. [How many] people are there?\n2. [How much] water do you drink?\n3. [How much] is it?"),

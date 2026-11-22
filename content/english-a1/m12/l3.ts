@@ -95,7 +95,7 @@ export default lesson("a1-12.3", "Life before smartphones", () => [
   section("Review: was / were and the past", [
     choose(
       "Choose.",
-      "1. There [*were/was] phone boxes in the street.\n2. The internet [*was/were] slow.\n3. There [*weren't/wasn't] any smartphones.\n4. My mom [*had/has] a Walkman in 1995.\n5. People [*wrote/write] letters 30 years ago.",
+      "1. There [*were/was] phone boxes in the street.\n2. The internet [*was/were] slow.\n3. There [*weren't/wasn't] any smartphones.\n4. My mom [*had/has] a Walkman in 1995.\n5. People [*listened/listen] to cassettes 30 years ago.",
     ),
     drag(
       "Complete: then and now.",

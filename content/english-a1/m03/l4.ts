@@ -76,7 +76,7 @@ export default lesson("a1-3.4", "Practical: Let's meet!", () => [
       ["What time?", "At 6 o'clock."],
       ["Let's meet at the café.", "OK! See you then!"],
     ]),
-    gaps("Complete.", "1. Are you [free] on Sunday?\n2. [Let's] go to the park!\n3. How [about] Monday?\n4. Sounds [good]!\n5. Sorry, I [can't]. I'm busy."),
+    gaps("Complete.", "1. Are you [free] on Sunday?\n2. [Let's] go to the park!\n3. How [about] Monday?\n4. Sounds [good]!\n5. Sorry, I [can't/cannot]. I'm busy."),
   ]),
 
   section("Chat: Weekend plans", [

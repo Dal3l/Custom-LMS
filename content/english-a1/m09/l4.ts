@@ -56,6 +56,10 @@ export default lesson("a1-9.4", "Practical: Taxi or metro?", () => [
       ["A single or a return?", "A return, please."],
       ["How much is it?", "It's 12 dollars."],
     ]),
+    choose(
+      "Choose.",
+      "1. Can you [*take/bring] me to the airport, please?\n2. Can you [*stop/finish] here, please?\n3. A [*single/one] ticket: one way only.\n4. You wait for the train on the [*platform/street].",
+    ),
   ]),
 
   section("Dialogue: In a taxi", [

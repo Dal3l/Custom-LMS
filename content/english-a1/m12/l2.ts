@@ -53,6 +53,7 @@ export default lesson("a1-12.2", "Throwback", () => [
       ["see", "saw"],
       ["study", "studied"],
     ]),
+    gaps("Complete with the past.", "1. When I was small, I [lived] in a village. (live)\n2. I [played] with my cousins every day. (play)\n3. I [had] a red bike. (have)\n4. We [went] to the sea in summer. (go)\n5. I [loved] cartoons! (love)"),
   ]),
 
   section("Grammar: Past Simple — first steps", [

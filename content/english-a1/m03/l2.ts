@@ -97,7 +97,7 @@ export default lesson("a1-3.2", "Describe them", () => [
     ),
     gaps(
       "Complete the short answers.",
-      "1. Do you have a sister? — Yes, I [do].\n2. Does Lily have a cat? — Yes, she [does].\n3. Does Max have long hair? — No, he [doesn't].\n4. Do they have a dog? — No, they [don't].",
+      "1. Do you have a sister? — Yes, I [do].\n2. Does Lily have a cat? — Yes, she [does].\n3. Does Max have long hair? — No, he [doesn't/does not].\n4. Do they have a dog? — No, they [don't/do not].",
     ),
     order("Make questions.", ["Do you have a pet?", "Does she have blue eyes?", "Does your brother have glasses?"]),
   ]),

@@ -63,7 +63,7 @@ export default lesson("a1-12.1", "Where were you?", () => [
       "Choose.",
       "1. I [*was/were] at home yesterday.\n2. We [was/*were] at the cinema last night.\n3. She [*wasn't/weren't] at school on Monday.\n4. [*Were/Was] you at the party?\n5. Was it good? — Yes, it [*was/were]!",
     ),
-    gaps("Complete with was, were, wasn't or weren't.", "1. My friends [were] at the beach. ✅\n2. It [was] sunny and hot. ✅\n3. I [wasn't] with them. ❌\n4. We [weren't] at home last weekend. ❌"),
+    gaps("Complete with was, were, wasn't or weren't.", "1. My friends [were] at the beach. ✅\n2. It [was] sunny and hot. ✅\n3. I [wasn't/was not] with them. ❌\n4. We [weren't/were not] at home last weekend. ❌"),
     drag(
       "Complete the dialogue.",
       "A: Where [were] you last Saturday?\nB: I [was] at a concert! 🎤\nA: Cool! [Was] it good?\nB: Yes, it [was]. My friends [were] there too.",

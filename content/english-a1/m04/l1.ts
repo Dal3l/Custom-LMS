@@ -94,7 +94,7 @@ export default lesson("a1-4.1", "Room tour", () => [
       "there's or there are? Choose.",
       "1. [*There's/There are] a lamp on the desk.\n2. [There's/*There are] three posters on the wall.\n3. [*There isn't/There aren't] a TV in my room.\n4. [There isn't/*There aren't] any chairs in the kitchen.",
     ),
-    gaps("Complete with is, isn't, are or aren't.", "1. There [is] a rug on the floor. ✅\n2. There [are] two beds in the room. ✅\n3. There [isn't] a balcony. ❌\n4. There [aren't] any plants. ❌"),
+    gaps("Complete with is, isn't, are or aren't.", "1. There [is] a rug on the floor. ✅\n2. There [are] two beds in the room. ✅\n3. There [isn't/is not] a balcony. ❌\n4. There [aren't/are not] any plants. ❌"),
   ]),
 
   section("Grammar: Where is it?", [

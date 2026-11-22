@@ -148,7 +148,7 @@ export default lesson("a1-8.4", "Revision 7–8", () => [
   ),
   homework(
     [
-      gaps("Review: complete.", "1. [Can] you help me? — Of course!\n2. She loves [dancing]. (dance)\n3. My friends? I love [them]!\n4. I [can't] log in. I forgot my password."),
+      gaps("Review: complete.", "1. [Can] you help me? — Of course!\n2. She loves [dancing]. (dance)\n3. My friends? I love [them]!\n4. I [can't/cannot] log in. I forgot my password."),
       trueFalse("Correct or not?", [
         ["He cans swim.", false],
         ["I don't mind cooking.", true],

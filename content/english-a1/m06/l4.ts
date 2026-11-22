@@ -148,7 +148,7 @@ export default lesson("a1-6.4", "Revision 5–6", () => [
   ),
   homework(
     [
-      gaps("Review: complete.", "1. She [doesn't] like coffee.\n2. [Does] he work on Saturday?\n3. I get up [at] 7.\n4. We meet [on] Friday.\n5. He [watches] TV every evening. (watch)"),
+      gaps("Review: complete.", "1. She [doesn't/does not] like coffee.\n2. [Does] he work on Saturday?\n3. I get up [at] 7.\n4. We meet [on] Friday.\n5. He [watches] TV every evening. (watch)"),
       choose("Choose.", "1. I [*always have/have always] breakfast.\n2. Can I [*have/has] a tea, please?\n3. How often [*does/do] she cook?"),
       quiz("Choose.", [
         { q: "🇬🇧 take away = 🇺🇸 …", options: ["*to go", "for here", "the check"] },
