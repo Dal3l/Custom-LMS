@@ -20,6 +20,8 @@ export type CourseFile = {
   language: string;
   level: string;
   description: string;
+  /** Number of the first module (default 1; 0 when the course starts with an entry test). */
+  firstModule?: number;
   /** A cover picture in content/<course>/assets (drawn by render-cover.mjs). */
   cover?: string;
   modules: { title: string; lessons: (ContentLesson & { slug: string })[] }[];
@@ -57,7 +59,7 @@ async function main() {
   let broken = 0;
   course.modules.forEach((m, mi) =>
     m.lessons.forEach((l, li) => {
-      const n = `${mi + 1}.${li + 1}`;
+      const n = `${mi + (course.firstModule ?? 1)}.${li + 1}`;
       const p = problems(l);
       const s = size(l);
       console.log(`${p.length ? "✗" : "✓"} ${n} ${l.title} — in class ${s.inClass}, homework ${s.homework}`);
@@ -128,7 +130,7 @@ async function main() {
     else must(await db.from("modules").update({ title: m.title }).eq("id", mod.id), "rename module");
 
     for (const [li, l] of m.lessons.entries()) {
-      const n = `${mi + 1}.${li + 1}`;
+      const n = `${mi + (course.firstModule ?? 1)}.${li + 1}`;
       if (only && !only.has(n)) continue;
       let row = must(await db.from("lessons").select("id").eq("module_id", mod.id).eq("position", li).maybeSingle(), "lesson");
       if (row) {

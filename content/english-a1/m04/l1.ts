@@ -172,7 +172,7 @@ export default lesson("a1-4.1", "Room tour", () => [
   homework(
     [
       video("Watch a real room tour. What furniture is in the room?", "aDbtAU2qqyg"),
-      write("Write 5 things from the room in the video: *There's a… There are…*", null),
+      write("Write 5 things from the room in the video: “There's a… There are…”", null),
     ],
     "Homework: Video",
   ),

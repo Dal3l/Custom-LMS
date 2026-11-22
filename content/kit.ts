@@ -307,6 +307,7 @@ export function problems(l: ContentLesson): string[] {
         if (!key.success) out.push(`${where}: key — ${key.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ")}`);
       } else if (b.key !== null) out.push(`${where}: this type has no key`);
       if (b.title.length > 500) out.push(`${where}: title too long`);
+      if (/\*/.test(b.title)) out.push(`${where}: * in a task title — titles are plain text, it shows as a star`);
       const json = JSON.stringify(b.content);
       if (b.type === "gap_input" && !json.includes('"t":"gap"')) out.push(`${where}: no gaps`);
       // Formatting works only in texts and notes; anywhere else ** or == would show as is.

@@ -196,7 +196,7 @@ export default lesson("a1-2.2", "These are my favorites", () => [
       write("Write a post: My favorite things. Describe 3 things — color, big / small, new / old. (30+ words)", 30, {
         read: "*Example:* These are my favorite things. This is my phone. It's new and it's blue. These are my headphones. They're big and white. And this is my hoodie. The hoodie is old, but I love it!",
       }),
-      record("Record a mini unboxing: show 2–3 things and describe them. *What's this? It's a… It's…*", 90),
+      record("Record a mini unboxing: show 2–3 things and describe them. “What's this? It's a… It's…”", 90),
     ],
     "Homework: Writing and speaking",
   ),

@@ -131,7 +131,7 @@ export default lesson("a1-6.3", "Celebrity routines", () => [
   homework(
     [
       video("Watch: morning routines of successful people. Write down 3 habits.", "mc7XC1psZCM"),
-      write("Write 3 habits from the video: *He / She always… often… never…*", null),
+      write("Write 3 habits from the video: “He / She always… often… never…”", null),
     ],
     "Homework: Video",
   ),
