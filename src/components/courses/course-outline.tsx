@@ -21,6 +21,9 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
+  ChevronRight,
+  ChevronsDownUp,
+  ChevronsUpDown,
   ClipboardCheck,
   Copy,
   FileText,
@@ -32,7 +35,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useId, useState, useTransition } from "react";
+import { useEffect, useId, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -101,6 +104,37 @@ export function CourseOutline({ courseId, initial }: { courseId: string; initial
   const [toDelete, setToDelete] = useState<Pending>(null);
   const [dragFrom, setDragFrom] = useState<string | null>(null); // module a lesson was dragged from
   const [, startTransition] = useTransition();
+  // Modules start folded; the ones the teacher opens are remembered for this browser tab,
+  // so coming back from a lesson keeps them open.
+  const openKey = `course-outline-open:${courseId}`;
+  const [open, setOpen] = useState<ReadonlySet<string>>(() => new Set());
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem(openKey);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- read once after mount (no storage on the server)
+      if (saved) setOpen(new Set(JSON.parse(saved) as string[]));
+    } catch {
+      // No storage (private mode): modules simply start folded.
+    }
+  }, [openKey]);
+  function changeOpen(next: ReadonlySet<string>) {
+    setOpen(next);
+    try {
+      sessionStorage.setItem(openKey, JSON.stringify([...next]));
+    } catch {
+      // Not remembered — fine.
+    }
+  }
+  function toggleModule(id: string) {
+    const next = new Set(open);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    changeOpen(next);
+  }
+  // Empty modules and the one getting a new lesson stay open, so "+ Lesson" is in reach.
+  const isOpen = (m: OutlineModule) =>
+    open.has(m.id) || m.lessons.length === 0 || (draft?.kind === "lesson" && draft.moduleId === m.id);
+  const allOpen = modules.length > 0 && modules.every(isOpen);
   // Stable id so the drag-and-drop accessibility labels match between server and browser.
   const dndId = useId();
 
@@ -250,6 +284,19 @@ export function CourseOutline({ courseId, initial }: { courseId: string; initial
       {modules.length === 0 && (
         <p className="rounded-xl border border-dashed p-6 text-center text-muted-foreground">{t("noModules")}</p>
       )}
+      {modules.length > 1 && (
+        <div className="-mb-2 flex justify-end">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground"
+            onClick={() => changeOpen(allOpen ? new Set() : new Set(modules.map((m) => m.id)))}
+          >
+            {allOpen ? <ChevronsDownUp aria-hidden="true" /> : <ChevronsUpDown aria-hidden="true" />}
+            {allOpen ? t("collapseAll") : t("expandAll")}
+          </Button>
+        </div>
+      )}
 
       <DndContext
         id={dndId}
@@ -270,12 +317,17 @@ export function CourseOutline({ courseId, initial }: { courseId: string; initial
                 key={mod.id}
                 courseId={courseId}
                 module={mod}
+                open={isOpen(mod)}
+                onToggle={() => toggleModule(mod.id)}
                 editing={editing}
                 setEditing={setEditing}
                 onRename={(title) => renameModuleLocal(mod.id, title)}
                 onDuplicate={() => run(() => duplicateModule(mod.id), undefined, t("copied"))}
                 onDelete={() => setToDelete({ kind: "module", id: mod.id })}
-                onAddLesson={() => setDraft({ kind: "lesson", moduleId: mod.id })}
+                onAddLesson={() => {
+                  changeOpen(new Set(open).add(mod.id));
+                  setDraft({ kind: "lesson", moduleId: mod.id });
+                }}
                 draftLessonTitle={
                   draft?.kind === "lesson" && draft.moduleId === mod.id
                     ? t("newLessonTitle", { n: lessonCount + 1 })
@@ -380,6 +432,8 @@ function RowMenu({ children, disabled }: { children: React.ReactNode; disabled?:
 type ModuleCardProps = {
   courseId: string;
   module: OutlineModule;
+  open: boolean;
+  onToggle: () => void;
   editing: string | null;
   setEditing: (id: string | null) => void;
   onRename: (title: string) => void;
@@ -397,7 +451,7 @@ type ModuleCardProps = {
 };
 
 function ModuleCard(props: ModuleCardProps) {
-  const { module: mod, editing, setEditing } = props;
+  const { module: mod, editing, setEditing, open } = props;
   const t = useTranslations("courses");
   const temp = isTemp(mod.id);
   const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } =
@@ -411,12 +465,22 @@ function ModuleCard(props: ModuleCardProps) {
       className={cn("list-none", isDragging && "relative z-10 opacity-80")}
     >
       <Card className="gap-0 rounded-2xl py-0">
-        <div className="flex items-center gap-1 border-b px-2 py-2 sm:px-3">
+        <div className={cn("flex items-center gap-1 px-2 py-2 sm:px-3", open && "border-b")}>
           {temp ? (
             <Saving />
           ) : (
             <DragHandle attributes={attributes} listeners={listeners} setRef={setActivatorNodeRef} />
           )}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 shrink-0"
+            onClick={props.onToggle}
+            aria-expanded={open}
+            aria-label={open ? t("collapseModule") : t("expandModule")}
+          >
+            <ChevronRight className={cn("transition-transform", open && "rotate-90")} aria-hidden="true" />
+          </Button>
           <InlineTitle
             value={mod.title}
             editing={editing === mod.id}
@@ -424,9 +488,14 @@ function ModuleCard(props: ModuleCardProps) {
             onSave={props.onRename}
             className="font-semibold"
           />
-          <span className="hidden shrink-0 text-sm text-muted-foreground sm:inline">
+          <button
+            type="button"
+            onClick={props.onToggle}
+            className="shrink-0 rounded-md px-1 text-sm text-muted-foreground hover:text-foreground"
+            aria-expanded={open}
+          >
             {t("lessonsCount", { count: mod.lessons.length })}
-          </span>
+          </button>
           <RowMenu disabled={temp}>
             <DropdownMenuItem onSelect={() => setEditing(mod.id)}>
               <Pencil aria-hidden="true" />
@@ -444,44 +513,48 @@ function ModuleCard(props: ModuleCardProps) {
           </RowMenu>
         </div>
 
-        <SortableContext items={mod.lessons.map((l) => L + l.id)} strategy={verticalListSortingStrategy}>
-          <ol ref={setZoneRef} className={cn("flex min-h-12 flex-col p-2", isOver && "bg-accent/50")}>
-            {mod.lessons.length === 0 && !props.draftLessonTitle && (
-              <li className="px-3 py-2 text-sm text-muted-foreground">{t("noLessons")}</li>
-            )}
-            {mod.lessons.map((lesson) => (
-              <LessonRow key={lesson.id} lesson={lesson} {...props} />
-            ))}
-            {props.draftLessonTitle && (
-              <li className="flex items-center gap-1 px-1 py-1">
-                <span className="size-8 shrink-0" />
-                <FileText className="size-4 shrink-0 text-primary" aria-hidden="true" />
-                <InlineTitle
-                  value={props.draftLessonTitle}
-                  editing
-                  saveUnchanged
-                  onEditingChange={() => {}}
-                  onSave={props.onSaveDraftLesson}
-                  onCancel={props.onCancelDraft}
-                  className="px-1"
-                />
-              </li>
-            )}
-          </ol>
-        </SortableContext>
+        {open && (
+          <SortableContext items={mod.lessons.map((l) => L + l.id)} strategy={verticalListSortingStrategy}>
+            <ol ref={setZoneRef} className={cn("flex min-h-12 flex-col p-2", isOver && "bg-accent/50")}>
+              {mod.lessons.length === 0 && !props.draftLessonTitle && (
+                <li className="px-3 py-2 text-sm text-muted-foreground">{t("noLessons")}</li>
+              )}
+              {mod.lessons.map((lesson) => (
+                <LessonRow key={lesson.id} lesson={lesson} {...props} />
+              ))}
+              {props.draftLessonTitle && (
+                <li className="flex items-center gap-1 px-1 py-1">
+                  <span className="size-8 shrink-0" />
+                  <FileText className="size-4 shrink-0 text-primary" aria-hidden="true" />
+                  <InlineTitle
+                    value={props.draftLessonTitle}
+                    editing
+                    saveUnchanged
+                    onEditingChange={() => {}}
+                    onSave={props.onSaveDraftLesson}
+                    onCancel={props.onCancelDraft}
+                    className="px-1"
+                  />
+                </li>
+              )}
+            </ol>
+          </SortableContext>
+        )}
 
-        <div className="px-2 pb-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={props.onAddLesson}
-            disabled={temp || Boolean(props.draftLessonTitle)}
-            className="text-primary"
-          >
-            <Plus aria-hidden="true" />
-            {t("addLesson")}
-          </Button>
-        </div>
+        {open && (
+          <div className="px-2 pb-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={props.onAddLesson}
+              disabled={temp || Boolean(props.draftLessonTitle)}
+              className="text-primary"
+            >
+              <Plus aria-hidden="true" />
+              {t("addLesson")}
+            </Button>
+          </div>
+        )}
       </Card>
     </li>
   );
