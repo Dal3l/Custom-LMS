@@ -515,4 +515,43 @@ export const tables: GrammarTable[] = [
     ],
     note: "**How do I get to** the museum? — **Take** bus 5 and **get off** at Park Street.",
   },
+  // 10.1
+  {
+    name: "pc-positive",
+    title: "Present Continuous: now",
+    subtitle: "am / is / are + verb-ing",
+    color: "violet",
+    columns: ["Who?", "be", "Example"],
+    rows: [
+      ["I", "**am** ('m)", "I**'m** watch**ing** a stream."],
+      ["he / she / it", "**is** ('s)", "She**'s** danc**ing**. It**'s** rain**ing**."],
+      ["you / we / they", "**are** ('re)", "They**'re** play**ing** football."],
+    ],
+    note: "Words: **now**, **right now**, **at the moment**, **Look!** · -ing: dance → danc**ing**, run → run**ning**",
+  },
+  // 10.2
+  {
+    name: "pc-questions",
+    title: "Present Continuous: − and ?",
+    color: "blue",
+    columns: ["", "Example", "Answer"],
+    rows: [
+      ["−", "I**'m not** wearing a hat. She **isn't** smiling.", ""],
+      ["?", "**Are** you wear**ing** sneakers?", "Yes, I **am**. / No, I**'m not**."],
+      ["?", "**Is** he sleep**ing**?", "Yes, he **is**. / No, he **isn't**."],
+      ["Wh-?", "**What are** you do**ing**?", "I'm doing my homework."],
+    ],
+  },
+  {
+    name: "ps-vs-pc",
+    title: "usually or now?",
+    subtitle: "Present Simple vs Present Continuous",
+    color: "green",
+    columns: ["", "Present Simple 🔁", "Present Continuous ▶️"],
+    rows: [
+      ["When?", "usually, every day, often", "now, right now, today, at the moment"],
+      ["Example", "I usually **wear** jeans.", "Today I**'m wearing** a dress."],
+      ["Example", "She **plays** tennis on Sunday.", "Look! She**'s playing** tennis now."],
+    ],
+  },
 ];
