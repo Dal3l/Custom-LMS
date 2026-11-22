@@ -3,25 +3,38 @@ import { getDefinition } from "@/features/exercises/definitions";
 import { md, problems, size } from "../content/kit";
 import path from "node:path";
 import { resolveAssets } from "../content/assets";
-import { course } from "../content/english-a1/course";
+import { course as a1 } from "../content/english-a1/course";
+import { course as a2 } from "../content/english-a2/course";
+
+// Every course with its folder and the lesson size its template asks for (blocks in class).
+const courses = [
+  { name: "english-a1", course: a1, inClass: [12, 30] },
+  { name: "english-a2", course: a2, inClass: [20, 40] },
+] as const;
 
 // Course content: every lesson loads (passes the schemas) and fits the lesson template.
 describe("course content", () => {
   // Pictures resolved as for loading (a made-up owner): every file must exist.
-  const root = path.resolve("content/english-a1");
   const owner = "00000000-0000-4000-8000-000000000000";
-  const lessons = course.modules.flatMap((m, mi) =>
-    m.lessons.map((l, li) => ({ n: `${mi + 1}.${li + 1}`, l: resolveAssets(l, { owner, root }).lesson })),
+  const root = path.resolve("content/english-a1");
+  const lessons = courses.flatMap(({ name, course, inClass }) =>
+    course.modules.flatMap((m, mi) =>
+      m.lessons.map((l, li) => ({
+        n: `${name} ${mi + (course.firstModule ?? 1)}.${li + 1}`,
+        inClass,
+        l: resolveAssets(l, { owner, root: path.resolve(`content/${name}`) }).lesson,
+      })),
+    ),
   );
 
   it.each(lessons)("$n passes the checks", ({ l }) => {
     expect(problems(l)).toEqual([]);
   });
 
-  it.each(lessons)("$n fits the template: 12–30 blocks in class, 5–14 at home", ({ l }) => {
+  it.each(lessons)("$n fits the template: blocks in class, 5–14 at home", ({ l, inClass }) => {
     const s = size(l);
-    expect(s.inClass).toBeGreaterThanOrEqual(12);
-    expect(s.inClass).toBeLessThanOrEqual(30);
+    expect(s.inClass).toBeGreaterThanOrEqual(inClass[0]);
+    expect(s.inClass).toBeLessThanOrEqual(inClass[1]);
     expect(s.homework).toBeGreaterThanOrEqual(5);
     expect(s.homework).toBeLessThanOrEqual(14);
   });
