@@ -47,6 +47,7 @@ export default lesson("a1-6.3", "Celebrity routines", () => [
       ["read", "emails"],
       ["a healthy", "snack"],
     ]),
+    gaps("Complete.", "1. A little food between meals: a [snack]\n2. Running and cycling are [cardio].\n3. She reads [emails] at 6 a.m. 📧\n4. Fruit and vegetables are [healthy].\n5. A lot of work: I'm very [busy]."),
   ]),
 
   section("Reading: How do they start the day?", [
@@ -88,7 +89,7 @@ export default lesson("a1-6.3", "Celebrity routines", () => [
       "Choose.",
       "1. The Rock [*gets/get] up at 4 a.m.\n2. Ronaldo [*doesn't/don't] sleep 8 hours at night.\n3. [*Does/Do] Tim Cook read emails?\n4. Obama [*often works/works often] late.\n5. I [*never get/get never] up at 4!",
     ),
-    gaps("Complete with the right form.", "1. Tim Cook [goes] to the gym. (go)\n2. Ronaldo [trains] every day. (train)\n3. The Rock [doesn't] work out in the evening. (not)\n4. [Does] Obama go to bed early? — No, he doesn't."),
+    gaps("Complete with the right form.", "1. Tim Cook [goes] to the gym. (go)\n2. Ronaldo [trains] every day. (train)\n3. The Rock [doesn't/does not] work out in the evening. (not)\n4. [Does] Obama go to bed early? — No, he doesn't."),
     drag(
       "Compare: me and The Rock.",
       "The Rock [gets] up at 4. I [get] up at 8. He [works] out every day. I [sometimes] work out. He [doesn't] eat fast food, but I do! 🍔",

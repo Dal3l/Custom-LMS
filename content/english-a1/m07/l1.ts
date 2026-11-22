@@ -70,7 +70,7 @@ export default lesson("a1-7.1", "I can do it!", () => [
       "Choose.",
       "1. She [*can swim/cans swim] very well.\n2. I [*can't/don't can] drive.\n3. [*Can you/Do you can] play the piano?\n4. Can he cook? — Yes, he [*can/does].\n5. We can [*speak/to speak] English.",
     ),
-    gaps("Look and write can or can't.", "1. 🐟 A fish [can] swim.\n2. 🐧 A penguin [can't] fly.\n3. 🦜 A parrot [can] talk.\n4. 🐱 A cat [can't] speak English. 😄"),
+    gaps("Look and write can or can't.", "1. 🐟 A fish [can] swim.\n2. 🐧 A penguin [can't/cannot] fly.\n3. 🦜 A parrot [can] talk.\n4. 🐱 A cat [can't/cannot] speak English. 😄"),
     order("Make sentences.", ["I can play the guitar.", "She can't ride a bike.", "Can you speak Chinese?"]),
   ]),
 

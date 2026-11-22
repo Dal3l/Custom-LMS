@@ -93,7 +93,7 @@ export default lesson("a1-6.2", "How often?", () => [
       "Choose.",
       "1. Arman [*doesn't/don't] drink water.\n2. [*Does/Do] she cook?\n3. Does he play football? — Yes, he [*does/do].\n4. My sister doesn't [*like/likes] coffee.",
     ),
-    gaps("Make it negative ❌.", "1. She plays tennis. → She [doesn't] play tennis.\n2. He drinks coffee. → He doesn't [drink] coffee.\n3. My cat eats fish. → My cat [doesn't] eat fish."),
+    gaps("Make it negative ❌.", "1. She plays tennis. → She [doesn't/does not] play tennis.\n2. He drinks coffee. → He doesn't [drink] coffee.\n3. My cat eats fish. → My cat [doesn't/does not] eat fish."),
     drag(
       "Complete the questions.",
       "1. [Does] your mom cook? — Yes, she does.\n2. How often [does] he do sport? — Twice a week.\n3. [Do] you walk to school? — No, I don't.\n4. When [does] she go to bed? — At 11.",

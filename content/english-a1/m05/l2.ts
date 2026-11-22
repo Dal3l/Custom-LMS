@@ -90,7 +90,7 @@ export default lesson("a1-5.2", "Study and work online", () => [
       "Choose.",
       "1. I [*don't/doesn't] work on Sunday.\n2. [*Do/Are] you study online?\n3. Do you have meetings? — Yes, I [*do/am].\n4. Do they work from home? — No, they [*don't/aren't].",
     ),
-    gaps("Make it negative ❌.", "1. I work in an office. → I [don't] work in an office.\n2. We have a meeting. → We [don't] have a meeting.\n3. They study online. → They [don't] study online."),
+    gaps("Make it negative ❌.", "1. I work in an office. → I [don't/do not] work in an office.\n2. We have a meeting. → We [don't/do not] have a meeting.\n3. They study online. → They [don't/do not] study online."),
     drag(
       "Complete the questions.",
       "1. [What] do you do? — I'm a programmer.\n2. [Where] do you work? — At home.\n3. [When] do you start? — At 10.\n4. [Do] you like your job? — Yes, I do!",

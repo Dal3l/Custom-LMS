@@ -106,7 +106,7 @@ export default lesson("a1-4.2", "Smart home", () => [
     ),
     gaps(
       "Read the ad again. Answer.",
-      "1. Is there a smart lock? — Yes, there [is].\n2. Is there a microwave? — No, there [isn't].\n3. Are there any smart lights? — Yes, there [are].\n4. Are there any pets now? — No, there [aren't].",
+      "1. Is there a smart lock? — Yes, there [is].\n2. Is there a microwave? — No, there [isn't/is not].\n3. Are there any smart lights? — Yes, there [are].\n4. Are there any pets now? — No, there [aren't/are not].",
     ),
     order("Make questions.", ["Is there a TV in your room?", "Are there any plants in your kitchen?", "Is there Wi-Fi in your school?"]),
   ]),

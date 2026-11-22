@@ -53,6 +53,12 @@ export default lesson("a1-8.3", "From hobby to business", () => [
       ["have", "an idea"],
       ["open", "an online shop"],
     ]),
+    quiz("Choose.", [
+      { q: "A person who buys from you is…", options: ["*a customer", "a hobby", "an order"] },
+      { q: "Made by hand, not in a factory:", options: ["*handmade", "online", "busy"] },
+      { q: "You get money for your work. You…", options: ["*earn money", "spend money", "save a hobby"] },
+      { q: "A shop on the internet:", options: ["*an online shop", "a channel", "a market"] },
+    ]),
   ]),
 
   section("Reading: Hobby to business", [

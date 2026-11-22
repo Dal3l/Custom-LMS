@@ -47,6 +47,12 @@ export default lesson("a1-10.1", "What are you doing?", () => [
       ["right now — at the moment", "▶️ = now"],
     ]),
     gaps("Write the -ing form.", "1. dance → [dancing]\n2. run → [running]\n3. sit → [sitting]\n4. take → [taking]\n5. play → [playing]\n6. smile → [smiling]"),
+    quiz("What are they doing? Choose.", [
+      { q: "🧍⏳🚏", options: ["*waiting for the bus", "running", "dancing"] },
+      { q: "🤳😁", options: ["*taking a selfie", "eating", "sleeping"] },
+      { q: "🎸🎤", options: ["*singing and playing the guitar", "cooking", "walking"] },
+      { q: "🪑📖", options: ["*sitting and reading", "standing and drinking", "running"] },
+    ]),
   ]),
 
   section("Grammar: Present Continuous", [
@@ -111,7 +117,7 @@ export default lesson("a1-10.1", "What are you doing?", () => [
 
   homework(
     [
-      gaps("Complete with am, is or are.", "1. I [am] doing my homework.\n2. My mom [is] cooking dinner.\n3. My brothers [are] playing games.\n4. It [is] snowing! ❄️"),
+      gaps("Complete with am, is or are.", "1. I [am/'m] doing my homework.\n2. My mom [is/'s] cooking dinner.\n3. My brothers [are/'re] playing games.\n4. It [is/'s] snowing! ❄️"),
       choose("Choose.", "1. Look! The cat [*is sleeping/sleeps] on my laptop!\n2. We [*'re watching/are watch] a film now.\n3. He's [*sitting/siting] next to me."),
     ],
     "Homework: Grammar",

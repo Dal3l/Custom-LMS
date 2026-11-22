@@ -150,8 +150,18 @@ export function gaps(title: string, source: string, extra?: Extra & { caseSensit
 }
 
 /** Choose in a list: "She [*is/are/am] happy." */
+/**
+ * Options in a fixed but mixed order: the right one is not always first. The
+ * order depends only on the texts, so loading again gives the same order.
+ */
+function mix(options: string[], seed: string): string[] {
+  return [...options].sort((a, b) => hashString(`${seed}|${a}`) - hashString(`${seed}|${b}`) || a.localeCompare(b));
+}
+
 export function choose(title: string, source: string, extra?: Extra): ContentBlock {
-  const built = buildGapSelect(source);
+  let gap = 0;
+  const mixed = source.replace(/\[([^\]]*\/[^\]]*)\]/g, (_, group: string) => `[${mix(group.split("/"), `${title}#${gap++}`).join("/")}]`);
+  const built = buildGapSelect(mixed);
   if (built.problems.length) throw new Error(`"${title}": every gap needs 2+ options and one * (${JSON.stringify(built.problems)})`);
   return { type: "gap_select", title, content: { ...built.content, ...attach(extra) }, key: built.key };
 }
@@ -167,7 +177,7 @@ export function quiz(title: string, questions: { q: string; options: string[] }[
   const correct: Record<string, string[]> = {};
   const list = questions.map(({ q, options }) => {
     const id = nextId();
-    const opts = options.map((o) => ({ id: nextId(), text: o.replace(/^\*/, ""), right: o.startsWith("*") }));
+    const opts = mix(options, `${title}#${q}`).map((o) => ({ id: nextId(), text: o.replace(/^\*/, ""), right: o.startsWith("*") }));
     correct[id] = opts.filter((o) => o.right).map((o) => o.id);
     if (!correct[id]!.length) throw new Error(`"${title}": "${q}" has no right option (*)`);
     return { id, text: q, multiple: correct[id]!.length > 1, options: opts.map(({ id: oid, text: t }) => ({ id: oid, text: t })) };

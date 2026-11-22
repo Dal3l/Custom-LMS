@@ -1,4 +1,5 @@
 import {
+  sort,
   box,
   choose,
   gaps,
@@ -52,6 +53,11 @@ export default lesson("a1-11.4", "Practical: Ordering food", () => [
       ["How is everything?", "Delicious, thank you!"],
       ["Would you like a dessert?", "No, thanks. Can we have the check, please?"],
     ]),
+    sort("Starter, main course or dessert? Sort. 🍽️", {
+      "🥗 Starter": ["soup", "salad"],
+      "🍝 Main course": ["steak", "pasta", "burger"],
+      "🍰 Dessert": ["ice cream", "cake", "cheesecake"],
+    }),
   ]),
 
   section("Dialogue: At the restaurant", [

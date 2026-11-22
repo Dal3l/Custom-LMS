@@ -95,7 +95,7 @@ export default lesson("a1-4.3", "Tiny houses", () => [
       "My dream house is [by] the sea. [There's] a big garden. [There are] three bedrooms. My room is [upstairs]. [Is there] a pool? Yes, of course! 🏊",
       ["Are there", "under"],
     ),
-    gaps("Complete with is, are, isn't or aren't.", "1. There [isn't] a bedroom in Kate's house. ❌\n2. There [are] big windows. ✅\n3. [Is] there a lake? — Yes, there is. ✅\n4. There [aren't] any shelves. ❌"),
+    gaps("Complete with is, are, isn't or aren't.", "1. There [isn't/is not] a bedroom in Kate's house. ❌\n2. There [are] big windows. ✅\n3. [Is] there a lake? — Yes, there is. ✅\n4. There [aren't/are not] any shelves. ❌"),
   ]),
 
   section("Let's talk: My dream house", [

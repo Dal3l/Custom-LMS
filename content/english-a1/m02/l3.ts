@@ -61,13 +61,13 @@ export default lesson("a1-2.3", "Lost and found", () => [
   ]),
 
   section("Video: Lost and found", [
-    tip("Watch the video once without the tasks, then again with them. Stop after each dialogue and ask: *What is lost? What color is it?*"),
-    video("Watch the video. People are at a lost and found.", "PFRD3s8SLs8"),
+    tip("Watch the video once without the tasks, then again with them. Pause and ask: *What is lost? What does it look like?*"),
+    video("Watch the video. A person reports a lost wallet.", "55DUJfo2O1I"),
     quiz("Watch again. Choose.", [
-      { q: "The people in the video…", options: ["*lose things", "buy things", "sell things"] },
-      { q: "The worker asks:", options: ["*What does it look like?", "How old are you?", "Where are you from?"] },
+      { q: "What is lost?", options: ["*a wallet", "a phone", "a dog"] },
+      { q: "Where is the person?", options: ["*at a police station", "at a supermarket", "at school"] },
     ]),
-    text("Talk to your teacher.", "- What things are lost in the video?\n- What color are they?\n- Are the people happy at the end? 😊"),
+    text("Talk to your teacher.", "- What does the wallet look like?\n- What's in the wallet?\n- Is the person happy at the end? 😊"),
   ]),
 
   section("Dialogue: My phone is lost!", [
@@ -164,7 +164,7 @@ export default lesson("a1-2.3", "Lost and found", () => [
         { q: "In the backpack:", options: ["*a laptop and keys", "a phone and a wallet", "sunglasses"] },
         { q: "Emma's last name is…", options: ["*Clark", "Clarke", "Brown"] },
       ]),
-      video("Watch another lost and found story.", "55DUJfo2O1I"),
+      video("Bonus: a slow English program about lost and found.", "KTXbtR-pRnE"),
     ],
     "Homework: Listening and video",
   ),

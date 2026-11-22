@@ -156,7 +156,7 @@ export default lesson("a1-12.4", "Final revision", () => [
   ),
   homework(
     [
-      gaps("Final review: complete.", "1. She [is] my best friend.\n2. He [has] two sisters.\n3. I [don't] like mornings.\n4. Look! They [are] dancing!\n5. We [were] at the park yesterday."),
+      gaps("Final review: complete.", "1. She [is] my best friend.\n2. He [has] two sisters.\n3. I [don't/do not] like mornings.\n4. Look! They [are] dancing!\n5. We [were] at the park yesterday."),
       trueFalse("Correct or not?", [
         ["She cans swim.", false],
         ["How many people are there?", true],
