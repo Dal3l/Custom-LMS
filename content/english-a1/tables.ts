@@ -554,4 +554,46 @@ export const tables: GrammarTable[] = [
       ["Example", "She **plays** tennis on Sunday.", "Look! She**'s playing** tennis now."],
     ],
   },
+  // 11.1
+  {
+    name: "countable",
+    title: "Countable or uncountable?",
+    color: "green",
+    columns: ["", "Countable 🔢 (1, 2, 3…)", "Uncountable 💧 (no numbers)"],
+    rows: [
+      ["Examples", "an apple, two eggs, three tomatoes", "milk, water, cheese, bread, rice, money"],
+      ["+", "There are **some** eggs.", "There's **some** milk."],
+      ["−", "There aren't **any** apples.", "There isn't **any** cheese."],
+      ["?", "Are there **any** bananas?", "Is there **any** juice?"],
+    ],
+    note: "Count with words: **a bottle of** water, **a piece of** cake, **a cup of** tea, **a loaf of** bread",
+  },
+  // 11.2
+  {
+    name: "how-much",
+    title: "How much? How many?",
+    color: "orange",
+    columns: ["", "", "Example"],
+    rows: [
+      ["🔢", "**How many** + countable", "**How many** eggs do we need? — Six."],
+      ["💧", "**How much** + uncountable", "**How much** milk is there? — A lot."],
+      ["💰", "**How much** is it / are they?", "**How much is** this hoodie? — It's $35."],
+      ["➕", "**a lot of** + both", "a lot **of** apples, a lot **of** money"],
+    ],
+    note: "$350 = three hundred **and** fifty dollars 🇬🇧 · three hundred fifty dollars 🇺🇸",
+  },
+  // 11.4
+  {
+    name: "restaurant",
+    title: "At a restaurant",
+    color: "pink",
+    columns: ["Waiter 🧑‍🍳", "You 🙂"],
+    rows: [
+      ["Are you ready to order?", "Yes. **I'd like** the soup, please."],
+      ["And to drink?", "**Can I have** a lemonade, please?"],
+      ["How is everything?", "It's delicious, thank you!"],
+      ["Anything else?", "No, thanks. **Can we have the check, please?** 🇺🇸 / **the bill** 🇬🇧"],
+    ],
+    note: "**a starter → a main course → a dessert** 🥗 → 🍝 → 🍰 · A tip = extra money for the waiter",
+  },
 ];
