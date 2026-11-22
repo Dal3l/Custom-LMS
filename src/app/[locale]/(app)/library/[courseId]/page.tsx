@@ -1,4 +1,4 @@
-import { ChevronLeft, ClipboardCheck, Eye, FileText } from "lucide-react";
+import { ChevronLeft, ChevronRight, ClipboardCheck, Eye, FileText } from "lucide-react";
 import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { CopyCourseButton } from "@/components/courses/copy-course-button";
@@ -49,12 +49,17 @@ export default async function LibraryCoursePage({ params }: PageProps<"/[locale]
 
       <div className="flex flex-col gap-4">
         {tree.modules.map((m) => (
-          <section key={m.id} className="flex flex-col gap-2 rounded-2xl border p-3">
-            <h2 className="px-1 font-semibold">{m.title}</h2>
+          // A module opens to show its lessons (folded at first, so the course reads at a glance).
+          <details key={m.id} className="group rounded-2xl border p-3">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-lg px-1 hover:bg-accent [&::-webkit-details-marker]:hidden">
+              <ChevronRight className="size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-90" aria-hidden="true" />
+              <h2 className="min-w-0 flex-1 font-semibold break-words">{m.title}</h2>
+              <span className="shrink-0 text-sm text-muted-foreground">{tc("lessonsCount", { count: m.lessons.length })}</span>
+            </summary>
             {m.lessons.length === 0 ? (
-              <p className="px-1 text-sm text-muted-foreground">{tc("noLessons")}</p>
+              <p className="mt-2 px-1 text-sm text-muted-foreground">{tc("noLessons")}</p>
             ) : (
-              <ul className="flex flex-col gap-1">
+              <ul className="mt-2 flex flex-col gap-1">
                 {m.lessons.map((l) => (
                   <li key={l.id}>
                     <Link
@@ -74,7 +79,7 @@ export default async function LibraryCoursePage({ params }: PageProps<"/[locale]
                 ))}
               </ul>
             )}
-          </section>
+          </details>
         ))}
       </div>
     </div>
