@@ -33,6 +33,10 @@ import l81 from "./m08/l1";
 import l82 from "./m08/l2";
 import l83 from "./m08/l3";
 import l84 from "./m08/l4";
+import l91 from "./m09/l1";
+import l92 from "./m09/l2";
+import l93 from "./m09/l3";
+import l94 from "./m09/l4";
 
 export const course: CourseFile = {
   id: "ed41ba8e-00d0-46e3-8314-6ed35197aeff",
@@ -50,5 +54,6 @@ export const course: CourseFile = {
     { title: "Habits", lessons: [l61, l62, l63, l64] },
     { title: "Skills and tech", lessons: [l71, l72, l73, l74] },
     { title: "Likes", lessons: [l81, l82, l83, l84] },
+    { title: "My city", lessons: [l91, l92, l93, l94] },
   ],
 };

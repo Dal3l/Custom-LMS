@@ -471,4 +471,48 @@ export const tables: GrammarTable[] = [
     ],
     note: "**She** likes **him**. **He** likes **her**. 💕",
   },
+  // 9.1
+  {
+    name: "directions",
+    title: "Giving directions",
+    subtitle: "Imperative: the verb without “you”",
+    color: "orange",
+    columns: ["", "Do ✅", "Example"],
+    rows: [
+      ["⬆️", "**Go straight** (on)", "**Go straight** along Main Street."],
+      ["⬅️", "**Turn left**", "**Turn left** at Green Street."],
+      ["➡️", "**Turn right**", "**Turn right** at the bank."],
+      ["🚶", "**Cross** the street", "**Cross** River Road."],
+      ["👀", "It's **on your left / right**.", "The museum is **on your left**."],
+      ["🚫", "**Don't** + verb", "**Don't** turn right! **Don't** cross here."],
+    ],
+    note: "Be polite: **Excuse me**, where's the bank? — Go straight, it's on your right. 🙂",
+  },
+  // 9.2
+  {
+    name: "prep-city",
+    title: "Where is it in the city?",
+    color: "blue",
+    columns: ["", "Example (look at the map)"],
+    rows: [
+      ["**next to**", "The café is **next to** the supermarket."],
+      ["**opposite**", "The supermarket is **opposite** the museum."],
+      ["**between**", "The pharmacy is **between** the school and Green Street."],
+      ["**near**", "The metro is **near** the cinema."],
+      ["**on the corner of**", "The bank is **on the corner of** Main Street and River Road."],
+    ],
+  },
+  {
+    name: "transport",
+    title: "How do you get there?",
+    color: "green",
+    columns: ["", "", "Example"],
+    rows: [
+      ["**by** + transport", "by bus, by metro, by taxi, by bike", "I go to school **by** bus. 🚌"],
+      ["**on foot**", "= walk", "I go to work **on foot**. 🚶"],
+      ["**take** the…", "take the bus / the metro / a taxi", "**Take** the metro to Central Station."],
+      ["**get on / get off**", "the bus, the metro", "**Get off** at the third stop."],
+    ],
+    note: "**How do I get to** the museum? — **Take** bus 5 and **get off** at Park Street.",
+  },
 ];
