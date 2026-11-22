@@ -97,7 +97,7 @@ export default lesson("a1-8.4", "Revision 7–8", () => [
     ),
     quiz("Read again. Choose.", [
       { q: "How many followers does Dana have?", options: ["*5,000", "500", "50,000"] },
-      { q: "“I love them!” — *them* =", options: ["*her followers", "the books", "her parents"] },
+      { q: "“I love them!” — “them” =", options: ["*her followers", "the books", "her parents"] },
       { q: "Why does she film on Saturday morning?", options: ["*the light is great", "she has free time", "her friends help her"] },
     ]),
   ]),

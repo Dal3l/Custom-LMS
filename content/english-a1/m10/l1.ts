@@ -64,8 +64,8 @@ export default lesson("a1-10.1", "What are you doing?", () => [
     ),
     drag(
       "Complete the story caption.",
-      "📸 *Hi from Paris! I ['m] sitting in a café. A man [is] playing the guitar. People [are] listening and smiling. My friend [is] taking photos. And I'm [drinking] hot chocolate! ☕*",
-      ["am", "drinks"],
+      "📸 Hi from Paris! I ['m] sitting in a café. A man [is] playing the guitar. People [are] listening and smiling. My friend [is] taking photos. And I'm [drinking] hot chocolate! ☕",
+      ["be", "drinks"],
     ),
   ]),
 

@@ -91,7 +91,7 @@ export default lesson("a1-7.3", "There's an app for that", () => [
     ),
     drag(
       "Complete the review.",
-      "⭐⭐⭐⭐ *LinguaPal is great! You [can] [download] it for free. You [sign] up with your email. It [can] check your pronunciation. But you [can't] use it without the internet.*",
+      "⭐⭐⭐⭐ LinguaPal is great! You [can] [download] it for free. You [sign] up with your email. It [can] check your pronunciation. But you [can't] use it without the internet.",
       ["cans", "delete", "log"],
     ),
   ]),

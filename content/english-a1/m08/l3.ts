@@ -38,7 +38,7 @@ export default lesson("a1-8.3", "From hobby to business", () => [
       ["make — sell — buy", "🛠️ — 💰 — 🛒", "She makes and sells candles."],
       ["an online shop", "🛍️💻"],
       ["a customer", "🙋 a person who buys"],
-      ["an order", "📦 *I have 20 orders this week!*"],
+      ["an order", "📦 I have 20 orders this week!"],
       ["a channel", "📺 on YouTube or TikTok"],
       ["money — earn money", "💵 get money for work"],
       ["handmade", "🖐️ made by hand, not in a factory"],

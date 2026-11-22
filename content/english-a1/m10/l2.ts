@@ -45,7 +45,7 @@ export default lesson("a1-10.2", "Outfit of the day", () => [
       ["glasses — sunglasses", "👓 — 🕶️"],
       ["a bag", "👜"],
       ["an outfit", "👕👖👟 all your clothes together"],
-      ["a fit — drip", "😎 slang: *Nice fit!* = nice outfit · *drip* = very cool style"],
+      ["a fit — drip", "😎 slang: Nice fit! = nice outfit · drip = very cool style"],
     ]),
     sort("Summer or winter? Sort.", {
       "☀️ Summer": ["shorts", "T-shirt", "sunglasses", "cap"],
