@@ -515,4 +515,113 @@ export const tables: GrammarTable[] = [
     ],
     note: "**How do I get to** the museum? — **Take** bus 5 and **get off** at Park Street.",
   },
+  // 10.1
+  {
+    name: "pc-positive",
+    title: "Present Continuous: now",
+    subtitle: "am / is / are + verb-ing",
+    color: "violet",
+    columns: ["Who?", "be", "Example"],
+    rows: [
+      ["I", "**am** ('m)", "I**'m** watch**ing** a stream."],
+      ["he / she / it", "**is** ('s)", "She**'s** danc**ing**. It**'s** rain**ing**."],
+      ["you / we / they", "**are** ('re)", "They**'re** play**ing** football."],
+    ],
+    note: "Words: **now**, **right now**, **at the moment**, **Look!** · -ing: dance → danc**ing**, run → run**ning**",
+  },
+  // 10.2
+  {
+    name: "pc-questions",
+    title: "Present Continuous: − and ?",
+    color: "blue",
+    columns: ["", "Example", "Answer"],
+    rows: [
+      ["−", "I**'m not** wearing a hat. She **isn't** smiling.", ""],
+      ["?", "**Are** you wear**ing** sneakers?", "Yes, I **am**. / No, I**'m not**."],
+      ["?", "**Is** he sleep**ing**?", "Yes, he **is**. / No, he **isn't**."],
+      ["Wh-?", "**What are** you do**ing**?", "I'm doing my homework."],
+    ],
+  },
+  {
+    name: "ps-vs-pc",
+    title: "usually or now?",
+    subtitle: "Present Simple vs Present Continuous",
+    color: "green",
+    columns: ["", "Present Simple 🔁", "Present Continuous ▶️"],
+    rows: [
+      ["When?", "usually, every day, often", "now, right now, today, at the moment"],
+      ["Example", "I usually **wear** jeans.", "Today I**'m wearing** a dress."],
+      ["Example", "She **plays** tennis on Sunday.", "Look! She**'s playing** tennis now."],
+    ],
+  },
+  // 11.1
+  {
+    name: "countable",
+    title: "Countable or uncountable?",
+    color: "green",
+    columns: ["", "Countable 🔢 (1, 2, 3…)", "Uncountable 💧 (no numbers)"],
+    rows: [
+      ["Examples", "an apple, two eggs, three tomatoes", "milk, water, cheese, bread, rice, money"],
+      ["+", "There are **some** eggs.", "There's **some** milk."],
+      ["−", "There aren't **any** apples.", "There isn't **any** cheese."],
+      ["?", "Are there **any** bananas?", "Is there **any** juice?"],
+    ],
+    note: "Count with words: **a bottle of** water, **a piece of** cake, **a cup of** tea, **a loaf of** bread",
+  },
+  // 11.2
+  {
+    name: "how-much",
+    title: "How much? How many?",
+    color: "orange",
+    columns: ["", "", "Example"],
+    rows: [
+      ["🔢", "**How many** + countable", "**How many** eggs do we need? — Six."],
+      ["💧", "**How much** + uncountable", "**How much** milk is there? — A lot."],
+      ["💰", "**How much** is it / are they?", "**How much is** this hoodie? — It's $35."],
+      ["➕", "**a lot of** + both", "a lot **of** apples, a lot **of** money"],
+    ],
+    note: "$350 = three hundred **and** fifty dollars 🇬🇧 · three hundred fifty dollars 🇺🇸",
+  },
+  // 11.4
+  {
+    name: "restaurant",
+    title: "At a restaurant",
+    color: "pink",
+    columns: ["Waiter 🧑‍🍳", "You 🙂"],
+    rows: [
+      ["Are you ready to order?", "Yes. **I'd like** the soup, please."],
+      ["And to drink?", "**Can I have** a lemonade, please?"],
+      ["How is everything?", "It's delicious, thank you!"],
+      ["Anything else?", "No, thanks. **Can we have the check, please?** 🇺🇸 / **the bill** 🇬🇧"],
+    ],
+    note: "**a starter → a main course → a dessert** 🥗 → 🍝 → 🍰 · A tip = extra money for the waiter",
+  },
+  // 12.1
+  {
+    name: "was-were",
+    title: "was / were",
+    subtitle: "be in the past",
+    color: "violet",
+    columns: ["", "I / he / she / it", "you / we / they"],
+    rows: [
+      ["+", "I **was** at home.", "We **were** at the cinema."],
+      ["−", "She **wasn't** at school.", "They **weren't** tired."],
+      ["?", "**Was** he at the party?", "**Were** you at the beach?"],
+      ["Answer", "Yes, he **was**. / No, he **wasn't**.", "Yes, we **were**. / No, we **weren't**."],
+    ],
+    note: "**yesterday** · **last** night / week / Saturday / year · two days **ago** · **in** 2015",
+  },
+  // 12.2
+  {
+    name: "past-simple",
+    title: "Past Simple: first steps",
+    color: "orange",
+    columns: ["", "Now", "In the past"],
+    rows: [
+      ["+ **ed**", "play, watch, live", "play**ed**, watch**ed**, liv**ed**"],
+      ["consonant + y → **ied**", "study, cry", "stud**ied**, cr**ied**"],
+      ["Different! (learn them)", "go, have, see, get", "**went**, **had**, **saw**, **got**"],
+    ],
+    note: "The same for all people: I / she / they play**ed**. · -ed sounds: /t/ watch**ed** · /d/ play**ed** · /ɪd/ want**ed**",
+  },
 ];

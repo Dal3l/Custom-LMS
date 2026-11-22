@@ -35,7 +35,7 @@ export default lesson("a1-3.3", "Generations", () => [
     ),
     words("Generations", [
       ["a generation", "👨‍👩‍👧 people born in the same years"],
-      ["born in…", "👶 *I was born in 2008.* (your birthday year)", "I was born in 2010."],
+      ["born in…", "👶 I was born in 2008. (your birthday year)", "I was born in 2010."],
       ["Baby Boomers", "📻 born 1946–1964"],
       ["Gen X", "📼 born 1965–1980"],
       ["Millennials", "📟 born 1981–1996 · also: Gen Y"],

@@ -79,9 +79,9 @@ export default lesson("a1-8.2", "Fans", () => [
       },
     ),
     quiz("Read again. Choose: who or what is it?", [
-      { q: "“I love them all!” — *them* =", options: ["*the seven members", "her parents", "the songs"] },
-      { q: "“I love watching him” — *him* =", options: ["*Jin-ho", "her dad", "a fan"] },
-      { q: "“she sings their songs with me” — *me* =", options: ["*Aruzhan", "her sister", "Jin-ho"] },
+      { q: "“I love them all!” — “them” =", options: ["*the seven members", "her parents", "the songs"] },
+      { q: "“I love watching him” — “him” =", options: ["*Jin-ho", "her dad", "a fan"] },
+      { q: "“she sings their songs with me” — “me” =", options: ["*Aruzhan", "her sister", "Jin-ho"] },
     ]),
     text("Talk to your teacher.", "- Is Aruzhan a big fan? Why do you think so?\n- Are you a fan of a band or a singer? Tell about them! 🎤\n- Is it OK to be “obsessed” with a band? 🤔"),
   ]),
@@ -139,7 +139,7 @@ export default lesson("a1-8.2", "Fans", () => [
       quiz("Listen and choose.", [
         { q: "Mia has two…", options: ["*tickets", "T-shirts", "albums"] },
         { q: "The concert is on…", options: ["*Saturday", "Friday", "Sunday"] },
-        { q: "“I can ask him” — *him* =", options: ["*Leo's dad", "Mia", "the singer"] },
+        { q: "“I can ask him” — “him” =", options: ["*Leo's dad", "Mia", "the singer"] },
       ]),
       video("Watch the grammar video: me, you, him, her, it, us, them.", "1vs7MQofKO8"),
     ],

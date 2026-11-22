@@ -301,6 +301,7 @@ export function problems(l: ContentLesson): string[] {
       if (b.type === "gap_input" && !json.includes('"t":"gap"')) out.push(`${where}: no gaps`);
       // Formatting works only in texts and notes; anywhere else ** or == would show as is.
       if (/\*\*|==/.test(json)) out.push(`${where}: ** or == outside a text — formatting doesn't work here`);
+      else if (/\*/.test(json)) out.push(`${where}: * outside a text — italics don't work here, it shows as a star`);
     });
   });
   return out;
