@@ -596,4 +596,32 @@ export const tables: GrammarTable[] = [
     ],
     note: "**a starter → a main course → a dessert** 🥗 → 🍝 → 🍰 · A tip = extra money for the waiter",
   },
+  // 12.1
+  {
+    name: "was-were",
+    title: "was / were",
+    subtitle: "be in the past",
+    color: "violet",
+    columns: ["", "I / he / she / it", "you / we / they"],
+    rows: [
+      ["+", "I **was** at home.", "We **were** at the cinema."],
+      ["−", "She **wasn't** at school.", "They **weren't** tired."],
+      ["?", "**Was** he at the party?", "**Were** you at the beach?"],
+      ["Answer", "Yes, he **was**. / No, he **wasn't**.", "Yes, we **were**. / No, we **weren't**."],
+    ],
+    note: "**yesterday** · **last** night / week / Saturday / year · two days **ago** · **in** 2015",
+  },
+  // 12.2
+  {
+    name: "past-simple",
+    title: "Past Simple: first steps",
+    color: "orange",
+    columns: ["", "Now", "In the past"],
+    rows: [
+      ["+ **ed**", "play, watch, live", "play**ed**, watch**ed**, liv**ed**"],
+      ["consonant + y → **ied**", "study, cry", "stud**ied**, cr**ied**"],
+      ["Different! (learn them)", "go, have, see, get", "**went**, **had**, **saw**, **got**"],
+    ],
+    note: "The same for all people: I / she / they play**ed**. · -ed sounds: /t/ watch**ed** · /d/ play**ed** · /ɪd/ want**ed**",
+  },
 ];
