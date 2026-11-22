@@ -61,4 +61,34 @@ export const tables: GrammarTable[] = [
     ],
     note: "**could** = more polite than can · always add **please** ✨",
   },
+  // 2.1
+  {
+    name: "past-cont",
+    title: "Past Continuous",
+    subtitle: "was / were + verb-ing — an action in progress in the past",
+    color: "teal",
+    columns: ["", "Example", "Answer"],
+    rows: [
+      ["+", "I **was reading**. They **were playing** games.", ""],
+      ["−", "She **wasn't sleeping**. We **weren't watching** TV.", ""],
+      ["?", "**Were** you **working** at 8 p.m.?", "Yes, I **was**. / No, I **wasn't**."],
+      ["Wh-?", "**What were** you **doing** at 9 last night?", "I was having dinner."],
+    ],
+    note: "I / he / she / it → **was** · you / we / they → **were**",
+  },
+  // 2.2
+  {
+    name: "when-while",
+    title: "when / while",
+    subtitle: "a long action + a short action",
+    color: "green",
+    columns: ["", "Example"],
+    rows: [
+      ["long 〰️ + short ⚡", "I **was walking** home **when** it **started** to rain."],
+      ["while + long 〰️", "**While** I **was walking** home, it **started** to rain."],
+      ["two long 〰️ 〰️", "I **was cooking while** my brother **was watching** TV."],
+      ["short ⚡ → short ⚡", "When the phone **rang**, I **answered** it. (one after the other)"],
+    ],
+    note: "〰️ long = Past Continuous · ⚡ short = Past Simple · **while** + long action",
+  },
 ];
