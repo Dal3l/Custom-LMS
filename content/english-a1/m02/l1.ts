@@ -173,7 +173,7 @@ export default lesson("a1-2.1", "What's in my bag?", () => [
       write("Write about your bag: What's in it? (25+ words)", 25, {
         read: "*Example:* This is my backpack. It's black. My laptop and my charger are in it. This is my water bottle, and these are my keys. My earbuds are in the bag too!",
       }),
-      record("Record a video-style answer: show (or describe) 5 things in your bag. *This is my… It's a…*", 90),
+      record("Record a video-style answer: show (or describe) 5 things in your bag. “This is my… It's a…”", 90),
     ],
     "Homework: Writing and speaking",
   ),

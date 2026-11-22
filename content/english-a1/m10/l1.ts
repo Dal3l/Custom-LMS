@@ -125,7 +125,7 @@ export default lesson("a1-10.1", "What are you doing?", () => [
   homework(
     [
       video("Watch the A1 lesson: Present Continuous.", "QILfPcah-CY"),
-      write("Look around you right now. Write 4 sentences: What are people doing? *My sister is…*", 20),
+      write("Look around you right now. Write 4 sentences: What are people doing? “My sister is…”", 20),
     ],
     "Homework: Video",
   ),

@@ -146,7 +146,7 @@ export default lesson("a1-5.2", "Study and work online", () => [
   homework(
     [
       video("Watch the first 3 minutes: a day of a remote worker. When does he start work?", "lB3WPZNwYFA"),
-      write("What things do you see in the video? Write 5 words: *a laptop, coffee…*", null),
+      write("What things do you see in the video? Write 5 words: “a laptop, coffee…”", null),
     ],
     "Homework: Video",
   ),

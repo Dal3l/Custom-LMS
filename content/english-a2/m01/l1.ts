@@ -95,7 +95,7 @@ export default lesson("a2-1.1", "What did you do?", () => [
   ]),
 
   section("Grammar: Did you…? I didn't…", [
-    quiz("Notice the rule 🔍 Look at the posts: *We didn't sleep much. I didn't cook.* What comes after didn't?", [
+    quiz("Notice the rule 🔍 Look at the posts: “We didn't sleep much. I didn't cook.” What comes after didn't?", [
       { q: "After didn't, the verb is…", options: ["*the base form: sleep, cook", "with -ed: slept, cooked", "with -ing: sleeping"] },
       { q: "“Did you cook?” — the question word is…", options: ["*Did", "Do", "Were"] },
     ]),

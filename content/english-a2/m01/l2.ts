@@ -87,7 +87,7 @@ export default lesson("a2-1.2", "Famous firsts", () => [
   ]),
 
   section("Grammar: Irregular verbs", [
-    quiz("Notice the rule 🔍 Look at the timeline: *Bell made… It flew… He said…* Which is true?", [
+    quiz("Notice the rule 🔍 Look at the timeline: “Bell made… It flew… He said…” Which is true?", [
       { q: "made, flew, said are…", options: ["*irregular — no -ed, we learn them", "regular — with -ed", "present forms"] },
     ]),
     table("irregular"),

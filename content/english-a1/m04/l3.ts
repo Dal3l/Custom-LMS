@@ -134,7 +134,7 @@ export default lesson("a1-4.3", "Tiny houses", () => [
   homework(
     [
       video("Watch: the smallest tiny house! How many rooms are there?", "nuDOv4kMahU"),
-      write("Write 3 sentences about the house in the video: *There's… There are… There isn't…*", null),
+      write("Write 3 sentences about the house in the video: “There's… There are… There isn't…”", null),
     ],
     "Homework: Video",
   ),

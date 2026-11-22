@@ -164,7 +164,7 @@ export default lesson("a1-10.3", "How are you feeling?", () => [
   homework(
     [
       video("Watch: 20 feelings and emotions in English.", "jgUyLoPH8_U"),
-      write("Write 5 feelings from the video and when you feel them: *I'm nervous before exams.*", 25),
+      write("Write 5 feelings from the video and when you feel them: “I'm nervous before exams.”", 25),
     ],
     "Homework: Video",
   ),
