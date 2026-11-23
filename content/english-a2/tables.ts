@@ -154,4 +154,36 @@ export const tables: GrammarTable[] = [
     ],
     note: "look + adjective: It looks **nice** — not “nicely” · look **like** + noun",
   },
+  // 4.1
+  {
+    name: "going-to",
+    title: "be going to",
+    subtitle: "plans and intentions: I've decided to do it",
+    color: "violet",
+    columns: ["", "Example", "Answer"],
+    rows: [
+      ["+", "I'**m going to learn** to drive. She'**s going to start** a blog.", ""],
+      ["−", "I'**m not going to eat** fast food. They **aren't going to move**.", ""],
+      ["?", "**Are** you **going to buy** a new phone?", "Yes, I **am**. / No, I'**m not**."],
+      ["Wh-?", "**What are** you **going to do** this summer?", "I'm going to travel."],
+      ["👀 I can see it", "Look at the clouds! It'**s going to rain**.", ""],
+    ],
+    note: "am / is / are + **going to** + verb · **gonna** = going to in fast speech",
+  },
+  // 4.2
+  {
+    name: "pc-future",
+    title: "Arrangements: Present Continuous",
+    subtitle: "plans with a time and other people — it's in the calendar 📅",
+    color: "green",
+    columns: ["", "Example"],
+    rows: [
+      ["📅 arrangement", "I'**m meeting** Ali **on Friday at 6**."],
+      ["🎫 ticket / booking", "We'**re flying** to Istanbul **next Monday**."],
+      ["?", "What **are** you **doing this weekend**?"],
+      ["−", "Sorry, I **can't** — I'**m working** on Saturday."],
+      ["going to: an idea, a plan", "I'**m going to visit** my grandma **some day** soon."],
+    ],
+    note: "Present Continuous = fixed time + place + people · **be going to** = my plan, my decision",
+  },
 ];
