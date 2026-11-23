@@ -27,8 +27,8 @@ export default lesson("a2-1.4", "Practical: At the hotel", () => [
     box("Today you will…", "- check in at a hotel 🏨\n- ask politely: *Could you…? Could I…?*\n- complain about a problem in the room 😤➡️🙂"),
     picture("A hotel reception", ["photos/hotel-reception.jpg"], "The reception desk of a hotel in Stockholm, Sweden 🇸🇪"),
     text(
-      "Talk about the photo.",
-      "- Who works here? What do guests do at the reception? 🛎️\n- Hotel, hostel or apartment — where do you like to stay? Why?\n- What's important for you in a hotel: breakfast, Wi-Fi, a pool, the view? 🍳📶🏊🌇",
+      "Talk to your teacher.",
+      "- What was the best or the worst place you stayed in? What happened? 🏨\n- Hotel, hostel or apartment — where do you like to stay? Why?\n- What's important for you in a hotel: breakfast, Wi-Fi, a pool, the view? 🍳📶🏊🌇",
     ),
   ]),
 

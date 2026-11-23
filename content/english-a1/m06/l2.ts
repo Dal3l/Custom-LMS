@@ -28,8 +28,8 @@ export default lesson("a1-6.2", "How often?", () => [
     box("Today you will…", "- say how often: *always, usually, often, sometimes, never*\n- ask *How often do you…? Does she…?*\n- do a habits survey 📊"),
     picture("Habits", ["photos/hab-sleep.jpg", "photos/hab-run.jpg", "photos/hab-cook.jpg", "photos/screen-man.jpg"]),
     text(
-      "Talk about the photos.",
-      "- What do the people do? *She sleeps. She runs…*\n- Which of these things do you do every day? 🔁\n- What's a good habit? What's a bad habit? 👍👎",
+      "Talk to your teacher.",
+      "- What do you do every day — without thinking? 🔁\n- What's a good habit you have? And a bad habit? 😅\n- What habit do you want to start? Why? 👍",
     ),
   ]),
 

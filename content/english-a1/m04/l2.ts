@@ -34,7 +34,7 @@ export default lesson("a1-4.2", "Smart home", () => [
       ["A smart bed can make your homework.", false],
     ]),
     tip("Let the student guess and argue: *I think it's real! — No, it's fake!* Then talk."),
-    text("Talk to your teacher.", "- What smart gadgets are in your home? 🏠\n- What gadget do you want? Why?"),
+    text("Talk to your teacher.", "- What smart gadgets are in your home? Which one is really useful? 🏠\n- Is a smart home a good idea? What's good, and what's bad? 🤔\n- What gadget do you want? Why?"),
   ]),
 
   section("Vocabulary: Home gadgets", [

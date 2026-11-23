@@ -28,10 +28,10 @@ export default lesson("a2-3.1", "Which is better?", () => [
     box("Today you will…", "- compare gadgets and apps: *cheaper, faster, better than…*\n- say what you prefer and why\n- choose a phone for a friend 📱"),
     picture("A phone from 2000 and a phone today", ["photos/phone-old.jpg", "photos/phone-new.jpg"], "Nokia 3310 (2000) and a modern smartphone"),
     text(
-      "Talk about the photos.",
-      "- Which phone is older? Which is more modern? 📱\n- What can you do with the new phone? And with the old one? 🐍 (the Snake game!)\n- Which is better for a child? For a grandma? For you? Why?",
+      "Talk to your teacher.",
+      "- How old were you when you got your first phone? What was it like? 📱\n- Is your phone now better than your first one? What's better — and what was better before?\n- Some people buy simple, old-style phones today. Why, do you think? Would you? 🤔\n- A 10-year-old wants a phone. Smartphone or a simple phone — what's better? Why?",
     ),
-    tip("Let the student compare with the words they know: *The new phone is big… the old phone is small.* Write 2–3 of their sentences on the board — after the grammar, make them better together: *The old phone is smaller than the new one.*"),
+    tip("Answer the questions too — tell about your first phone! Write 2–3 of the student's comparisons on the board as they say them (*My first phone was small… my phone now is big*) — after the grammar, make them better together: *My first phone was smaller than my phone now.*"),
   ]),
 
   section("Vocabulary: Describing gadgets", [

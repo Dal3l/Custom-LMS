@@ -29,7 +29,7 @@ export default lesson("a1-4.1", "Room tour", () => [
     picture("Look at the photo.", ["photos/room-living.jpg"], "A living room in Rio de Janeiro, Brazil 🇧🇷"),
     text(
       "Talk about the photo.",
-      "- What things do you see? Say 5 things! 👀\n- What colors are in the room?\n- Is it a nice room? Is it cozy? 🛋️\n- Is it like your living room? What's different?",
+      "- Do you like this room? What's nice for you, and what isn't? 🛋️\n- What's your favorite room at home? Why?\n- What's your favorite place in your room? 🪑\n- What's one thing you want for your room? ✨",
     ),
     tip("New words are OK here — help the student, then come back to the photo after the vocabulary."),
   ]),

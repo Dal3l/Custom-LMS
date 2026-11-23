@@ -28,7 +28,7 @@ export default lesson("a1-3.1", "Modern families", () => [
     picture("Look at the photos.", ["photos/fam-grandma.jpg", "photos/pet-dog.jpg", "photos/pet-cat.jpg"]),
     text(
       "Talk about the photos.",
-      "- Photo 1: Who are they, do you think? A grandmother and… ? 👵👧\n- Is the girl happy? Is the grandmother nice? 🙂\n- Photo 2 and 3: Is a dog or a cat a family member? 🐶🐱\n- Dog or cat — what's your favorite?",
+      "- Photo 1: Who are they, do you think? 👵👧\n- Who is your favorite person in your family? Why? ❤️\n- Is a pet a family member? Why / why not? 🐶🐱\n- What's a “modern family” for you? Are friends family too? 🤔",
     ),
     tip("Keep it light: the student doesn't have to talk about their real family. Made-up families and famous TV families are fine."),
   ]),

@@ -25,8 +25,8 @@ export default lesson("a1-9.4", "Practical: Taxi or metro?", () => [
     box("Today you will…", "- take a taxi in English 🚕\n- buy a metro ticket 🎫\n- say *Can you stop here, please?*"),
     picture("Look at the photo.", ["photos/tr-taxi.jpg"], "Taxis at an airport in New York 🇺🇸"),
     text(
-      "Talk about the photo.",
-      "- What color are the taxis? How many can you see? 🚕\n- Where are they, do you think? (Clue: people with suitcases 🧳)\n- Taxi or metro from the airport — what's better? Why?\n- Do you use taxi apps? Which one? 📱",
+      "Talk to your teacher.",
+      "- How do you get to the airport or the station: taxi, metro, bus? Why? 🚕🚇\n- Do you use taxi apps? Are taxis expensive in your city? 📱💸\n- What's good and what's bad about transport in your city? 🤔",
     ),
   ]),
 

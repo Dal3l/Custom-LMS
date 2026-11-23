@@ -33,7 +33,7 @@ export default lesson("a1-2.1", "What's in my bag?", () => [
       { q: "💻 + 📒 + 🖊️ + 🪪", options: ["*a student", "a football player", "a baby"] },
       { q: "🎧 + 🎮 + 🔋 + 🍫", options: ["*a gamer", "a teacher", "a tourist"] },
     ]),
-    text("Talk to your teacher.", "- Is your bag big or small? 👜\n- What 3 things are always in your bag?"),
+    text("Talk to your teacher.", "- What 3 things are always in your bag? 👜\n- What's the strangest thing in your bag right now? 😄\n- What's in your teacher's bag, do you think? Guess 3 things!"),
   ]),
 
   section("Vocabulary: Things in my bag", [

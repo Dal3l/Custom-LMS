@@ -27,7 +27,7 @@ export default lesson("a1-7.1", "I can do it!", () => [
     picture("Look at the photos.", ["photos/skill-juggle.jpg", "photos/skill-skate.jpg", "photos/skill-chess.jpg"]),
     text(
       "Talk about the photos.",
-      "- What do the people do in the photos? 🤹🛹♟️\n- Which skill is the most difficult? Which is the coolest? 😎\n- Which one do you want to learn?",
+      "- Which skill in the photos is the most difficult, do you think? Why? 🤹🛹♟️\n- What's your “secret skill”? 😎\n- What can your friend do, but you can't? 🤔\n- What skill do you want to learn this year? Why?",
     ),
   ]),
 

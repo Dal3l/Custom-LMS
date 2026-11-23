@@ -34,7 +34,7 @@ export default lesson("a1-1.4", "Practical: Sign me up", () => [
     tip("Let the student guess — the answers come in the lesson. Then talk."),
     text(
       "Talk to your teacher.",
-      "- What apps are on your phone? 📱\n- Is your name easy or difficult for English speakers? 🙂",
+      "- What clubs or classes are in your city? Which one is interesting for you? 🎨⚽🎸\n- Is your name easy or difficult for English speakers? Is there a short name for you? 🙂\n- Sign up online or at the reception — what's better for you? Why?",
     ),
   ]),
 

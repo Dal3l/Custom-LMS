@@ -29,7 +29,7 @@ export default lesson("a2-1.1", "What did you do?", () => [
     picture("Last weekend…", ["photos/wk-hike.jpg"], "Two friends after a hike in the mountains ⛰️"),
     text(
       "Talk about the photo.",
-      "- Where were they? What did they do, do you think?\n- How did they feel after the hike? 😄\n- Did you go out last weekend? Where?\n- What's a perfect weekend for you: active or lazy? 🛋️⛰️",
+      "- Do you like active weekends like this? Why / why not? ⛰️\n- What did you do last weekend? Was it a good weekend? Why?\n- What's a perfect weekend for you: active or lazy? 🛋️\n- What do you always want to do at the weekend — but never do? 😅",
     ),
     tip("Quick A1 review: *Where were you last Saturday? Was it fun?* The student answers with was / were."),
   ]),

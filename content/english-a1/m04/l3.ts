@@ -24,7 +24,7 @@ export default lesson("a1-4.3", "Tiny houses", () => [
   section("Warm-up: A tiny house", [
     box("Today you will…", "- read about life in a tiny house\n- review *there is / there are* and *in, on, under, next to…*\n- describe your dream house"),
     video("Watch a 1-minute tiny house tour. 🏡", "8pENzhIB_78"),
-    text("Talk to your teacher.", "- Is the house nice? Is it cozy? 🪵\n- Big house or tiny house — what do you want? Why?"),
+    text("Talk to your teacher.", "- Is a tiny house a good idea for you? Why / why not? 🪵\n- What 5 things do you really need in your home?\n- What's more important for you: a big house or a great place — the sea, the mountains, the city? 🌊🏔️🏙️"),
   ]),
 
   section("Vocabulary: Houses", [
