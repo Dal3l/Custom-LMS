@@ -82,5 +82,65 @@
     "author": "Unknown",
     "license": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File%3ASheep_Meadow%2C_Central_Park%2C_New_York_in_April_2004.jpg"
+  },
+  "phone-old.jpg": {
+    "title": "File:Nokia 3310 blue.jpg",
+    "author": "Michael Brandtner",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File%3ANokia_3310_blue.jpg"
+  },
+  "phone-new.jpg": {
+    "title": "File:Black smartphone in hand (Unsplash).jpg",
+    "author": "Dennis Cortés",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ABlack_smartphone_in_hand_%28Unsplash%29.jpg"
+  },
+  "world-everest.jpg": {
+    "title": "File:Everest North Face toward Base Camp Tibet Luca Galuzzi 2006 edit 1.jpg",
+    "author": "Luca Galuzzi",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AEverest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006_edit_1.jpg"
+  },
+  "world-burj.jpg": {
+    "title": "File:Burj Khalifa (16260269606).jpg",
+    "author": "Laika ac",
+    "license": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ABurj_Khalifa_%2816260269606%29.jpg"
+  },
+  "world-sahara.jpg": {
+    "title": "File:Sand dunes in the desert, Sahara Desert, Dakhla Oasis, Egypt.jpg",
+    "author": "Vyacheslav Argenberg",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ASand_dunes_in_the_desert%2C_Sahara_Desert%2C_Dakhla_Oasis%2C_Egypt.jpg"
+  },
+  "world-baikal.jpg": {
+    "title": "File:Lake Baikal in winter.jpg",
+    "author": "Sergey Pesterev",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ALake_Baikal_in_winter.jpg"
+  },
+  "world-amazon.jpg": {
+    "title": "File:Amazon River - 2018.jpg",
+    "author": "Alexander Gerst",
+    "license": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AAmazon_River_-_2018.jpg"
+  },
+  "country-village.jpg": {
+    "title": "File:Mid Devon , Houses ^ Countryside - geograph.org.uk - 2656281.jpg",
+    "author": "Lewis Clarke",
+    "license": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AMid_Devon_%2C_Houses_%5E_Countryside_-_geograph.org.uk_-_2656281.jpg"
+  },
+  "shop-clothes.jpg": {
+    "title": "File:Clothing store interior Son Moro Cala Millor.jpg",
+    "author": "Steffen Mokosch",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AClothing_store_interior_Son_Moro_Cala_Millor.jpg"
+  },
+  "city-astana.jpg": {
+    "title": "File:Astana (14935145827).jpg",
+    "author": "Alex J. Butler",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AAstana_%2814935145827%29.jpg"
   }
 }

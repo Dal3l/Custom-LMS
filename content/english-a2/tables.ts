@@ -91,4 +91,67 @@ export const tables: GrammarTable[] = [
     ],
     note: "〰️ long = Past Continuous · ⚡ short = Past Simple · **while** + long action",
   },
+  // 3.1
+  {
+    name: "comparatives",
+    title: "Comparatives",
+    subtitle: "compare two things: bigger than, more expensive than",
+    color: "blue",
+    columns: ["Adjective", "Rule", "Example"],
+    rows: [
+      ["short: cheap, fast", "+ **-er**", "It's **cheaper than** my phone."],
+      ["-e: nice, large", "+ **-r**", "This one is **nicer**."],
+      ["vowel + consonant: big, hot", "double + **-er**", "**bigger**, **hotter**"],
+      ["-y: easy, heavy", "y → **-ier**", "**easier**, **heavier**"],
+      ["long: expensive, popular", "**more** + adjective", "It's **more expensive than** the iPhone."],
+      ["good · bad · far", "irregular", "**better** · **worse** · **further**"],
+    ],
+    note: "**than**, not “that”: bigger **than** · **much** bigger = a lot bigger",
+  },
+  // 3.2
+  {
+    name: "superlatives",
+    title: "Superlatives",
+    subtitle: "the number one in a group: the biggest, the most…",
+    color: "orange",
+    columns: ["Adjective", "Comparative", "Superlative"],
+    rows: [
+      ["high", "high**er**", "**the** high**est**"],
+      ["big", "big**ger**", "**the** big**gest**"],
+      ["deep", "deep**er**", "**the** deep**est**"],
+      ["easy", "eas**ier**", "**the** eas**iest**"],
+      ["beautiful", "**more** beautiful", "**the most** beautiful"],
+      ["good · bad", "better · worse", "**the best** · **the worst**"],
+    ],
+    note: "the …-est **in** the world / **in** my family · the best film **I've ever seen**",
+  },
+  {
+    name: "as-as",
+    title: "as … as",
+    subtitle: "the same — or not the same",
+    color: "teal",
+    columns: ["", "Example", "Meaning"],
+    rows: [
+      ["= as … as", "My phone is **as fast as** yours.", "the same speed"],
+      ["≠ not as … as", "Astana is **not as warm as** Almaty.", "Almaty is warmer"],
+      ["≠ not as … as", "This test was**n't as difficult as** the last one.", "it was easier"],
+    ],
+    note: "as + adjective + as: **as big as**, **as good as** — no -er!",
+  },
+  // 3.4
+  {
+    name: "looks-feels",
+    title: "It looks great!",
+    subtitle: "look · feel · sound · smell · taste + adjective",
+    color: "pink",
+    columns: ["Verb", "Example"],
+    rows: [
+      ["👀 look", "That jacket **looks great** on you!"],
+      ["✋ feel", "These jeans **feel** really **comfortable**."],
+      ["👂 sound", "50% off? That **sounds amazing**!"],
+      ["👃 smell · 👅 taste", "The perfume **smells nice**. The pizza **tastes good**."],
+      ["+ like + noun", "You **look like** a film star! ⭐"],
+    ],
+    note: "look + adjective: It looks **nice** — not “nicely” · look **like** + noun",
+  },
 ];
