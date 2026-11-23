@@ -53,8 +53,13 @@ export default lesson("a2-2.3", "Urban legends", () => [
       ["prove", "show that it's true"],
       ["a rumor", "a story — nobody knows if it's true"],
       ["a myth", "a wrong idea that many people believe"],
+      ["a scientist", "a person who tests and studies things"],
+      ["a sewer", "pipes under the street for dirty water"],
     ]),
-    gaps("Complete.", "1. The video went [viral] — 10 million views in one day! 📈\n2. It wasn't a real photo. It was [fake]. ❌\n3. Scientists can [prove] it with tests. 🔬\n4. I don't [believe] you! 🤨"),
+    gaps(
+      "Complete.",
+      "1. The video went [viral] — 10 million views in one day! 📈\n2. It wasn't a real photo. It was [fake]. ❌\n3. Scientists can [prove] it with tests. 🔬\n4. I don't [believe] you! 🤨\n5. Is it true or just a [rumor/rumour]? 🗣️\n6. The photo of the monster was a [hoax] — a trick! 🎭\n7. A [scientist] tested the goldfish. 👩‍🔬\n8. Everyone believes it, but it's wrong. It's a [myth]. ❌",
+    ),
   ]),
 
   section("Reading: Myth busters", [
@@ -90,6 +95,8 @@ export default lesson("a2-2.3", "Urban legends", () => [
       { q: "Why can't you see the Great Wall from space?", options: ["*It isn't very wide.", "It's too short.", "It's under the clouds."] },
       { q: "What was the Nessie photo really?", options: ["*a toy with a model head", "a big fish", "a boat"] },
       { q: "When did the teenagers find the alligator?", options: ["*in winter", "in summer", "at night"] },
+      { q: "How often does lightning hit the Empire State Building?", options: ["*more than 20 times a year", "once a year", "never"] },
+      { q: "What could the goldfish do in the tests?", options: ["*find food and push buttons", "talk to people", "jump out of the water"] },
     ]),
     text("Talk to your teacher.", "- How many did you guess right in the warm-up? 🏆\n- Which fact surprised you the most? 😲\n- Do you know other “facts” that are myths?"),
   ]),
@@ -117,11 +124,11 @@ export default lesson("a2-2.3", "Urban legends", () => [
   section("Review: Module 2", [
     choose(
       "Choose.",
-      "1. The man [*was driving/drove] home when he saw a girl.\n2. [*While/When] he was driving, she didn't say anything.\n3. When they arrived, he [*turned/was turning] around.\n4. The teenagers [*were shoveling/shoveled] snow when they noticed the alligator.\n5. What [*were/was] you doing at 10 last night?",
+      "1. The man [*was driving/drove] home when he saw a girl.\n2. [*While/When] he was driving, she didn't say anything.\n3. When they arrived, he [*turned/was turning] around.\n4. The teenagers [*were shoveling/shoveled] snow when they noticed the alligator.\n5. What [*were/was] you doing at 10 last night?\n6. The girl [*was standing/stood] by the road in the rain.\n7. In 2003 Yang Liwei [*was flying/flew] around the Earth when he looked for the wall.\n8. When the old woman [*opened/was opening] the door, he told her the story.",
     ),
     gaps(
       "Complete with the right form.",
-      "1. It [was raining] when I left the house. (rain)\n2. While she was reading, the cat [jumped] on the table. (jump)\n3. I [wasn't listening/was not listening], so I didn't hear the question. (not listen)\n4. When the film [ended], we went home. (end)",
+      "1. It [was raining] when I left the house. (rain)\n2. While she was reading, the cat [jumped] on the table. (jump)\n3. I [wasn't listening/was not listening], so I didn't hear the question. (not listen)\n4. When the film [ended], we went home. (end)\n5. We [were sitting] by the campfire when we heard a strange noise. (sit)\n6. While I was walking home, I [saw] a strange light in the sky. (see)\n7. They [were telling] ghost stories when the lights went off. (tell)\n8. When I [heard] the story, I didn't believe it. (hear)",
     ),
     drag(
       "Retell the legend.",
@@ -159,17 +166,20 @@ export default lesson("a2-2.3", "Urban legends", () => [
       { q: "a trick, a fake story =", options: ["*a hoax", "a scientist", "a sewer"] },
       { q: "The video ___ viral.", options: ["*went", "made", "did"] },
       { q: "It ___ when I left the house.", options: ["*was raining", "rained", "were raining"] },
+      { q: "a wrong idea that many people believe =", options: ["*a myth", "a fact", "a scientist"] },
     ]),
     box("Word of the day: take it with a pinch of salt", "**take something with a pinch of salt** 🧂 = don't believe it 100%.\n\n*He says he saw Nessie. I take it with a pinch of salt!*"),
   ]),
 
   homework(
     [
-      gaps("Complete.", "1. a story that many people tell, but often isn't true: an urban [legend]\n2. ❌ not real: [fake]\n3. 🎭 a trick, a fake photo: a [hoax]\n4. 📈 spread very fast online: go [viral]"),
+      gaps("Complete.", "1. a story that many people tell, but often isn't true: an urban [legend]\n2. ❌ not real: [fake]\n3. 🎭 a trick, a fake photo: a [hoax]\n4. 📈 spread very fast online: go [viral]\n5. 🔬 show that something is true: [prove]\n6. 🤝 think something is true: [believe]"),
       trueFalse("From the lesson: true or myth?", [
         ["Goldfish remember things for only 3 seconds.", false],
         ["Lightning can hit the same building many times.", true],
         ["You can see the Great Wall from the Moon.", false],
+        ["Teenagers found an alligator in a New York sewer in 1935.", true],
+        ["The famous 1934 photo of Nessie was a toy submarine with a model head.", true],
       ]),
     ],
     "Homework: Vocabulary and reading",
@@ -183,7 +193,7 @@ export default lesson("a2-2.3", "Urban legends", () => [
   ),
   homework(
     [
-      choose("Choose.", "1. While I [*was walking/walked] home, I saw a strange light.\n2. She [*was sleeping/slept] when the phone rang.\n3. When he heard the noise, he [*called/was calling] the police.\n4. [*Were/Did] you watching the news?"),
+      choose("Choose.", "1. While I [*was walking/walked] home, I saw a strange light.\n2. She [*was sleeping/slept] when the phone rang.\n3. When he heard the noise, he [*called/was calling] the police.\n4. [*Were/Did] you watching the news?\n5. The video [*went/was going] viral in one day.\n6. [*While/When] we were watching the film, the lights went off."),
     ],
     "Homework: Grammar",
   ),

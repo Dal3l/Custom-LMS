@@ -51,8 +51,20 @@ export default lesson("a2-1.2", "Famous firsts", () => [
       ["photos/gagarin.jpg", "the first person in space"],
       ["photos/moon.jpg", "people on the Moon"],
       ["photos/bell-phone.jpg", "an early telephone"],
+      ["photos/baikonur.jpg", "Gagarin's rocket took off here"],
     ]),
-    gaps("Write the word.", "1. A person who invents things: an [inventor]\n2. Put a video on YouTube: [upload] it\n3. A plane goes up: it takes [off]\n4. A plane comes down: it [lands]"),
+    gaps(
+      "Write the word.",
+      "1. A person who invents things: an [inventor]\n2. Put a video on YouTube: [upload] it\n3. A plane goes up: it takes [off]\n4. A plane comes down: it [lands]\n5. Everyone knows her — she's [famous] ⭐\n6. The best or the fastest ever: a [record] 🏆\n7. It takes people into space: a [rocket/spaceship] 🚀\n8. Find something that exists: [discover] 🔍",
+    ),
+    match("Match the words and the meanings.", [
+      ["an inventor", "a person who makes new things"],
+      ["discover", "find something that exists"],
+      ["upload", "put a video on the internet"],
+      ["land", "come down to the ground"],
+      ["a record", "the best or the first ever"],
+      ["become", "start to be"],
+    ]),
   ]),
 
   section("Reading: Famous firsts", [
@@ -83,12 +95,15 @@ export default lesson("a2-1.2", "Famous firsts", () => [
       ["Gagarin's flight took 108 minutes.", true],
       ["Buzz Aldrin was the first person on the Moon.", false],
       ["The first YouTube video is about elephants.", true],
+      ["Neil Papworth sent the first text message from a phone.", false],
+      ["Bell's first words on the phone were to Mr. Watson.", true],
     ]),
   ]),
 
   section("Grammar: Irregular verbs", [
     quiz("Notice the rule 🔍 Look at the timeline: “Bell made… It flew… He said…” Which is true?", [
       { q: "made, flew, said are…", options: ["*irregular — no -ed, we learn them", "regular — with -ed", "present forms"] },
+      { q: "“Bell invented… Papworth sent…” — which verb is regular (-ed)?", options: ["*invented", "sent", "flew"] },
     ]),
     table("irregular"),
     match("Match: verb → past.", [
@@ -98,12 +113,14 @@ export default lesson("a2-1.2", "Famous firsts", () => [
       ["become", "became"],
       ["think", "thought"],
       ["find", "found"],
+      ["take", "took"],
+      ["teach", "taught"],
     ]),
-    gaps("Write the past.", "1. go → [went]\n2. see → [saw]\n3. take → [took]\n4. buy → [bought]\n5. come → [came]\n6. say → [said]"),
+    gaps("Write the past.", "1. go → [went]\n2. see → [saw]\n3. take → [took]\n4. buy → [bought]\n5. come → [came]\n6. say → [said]\n7. make → [made]\n8. get → [got]"),
     drag(
       "Complete the story.",
-      "In 1961, Yuri Gagarin [flew] into space. His rocket [took] off from Baikonur. After the flight, he [became] very famous. He [went] to many countries and [met] a lot of people.",
-      ["flied", "taked", "goed"],
+      "In 1961, Yuri Gagarin [flew] into space. His rocket [took] off from Baikonur. After the flight, he [became] very famous. He [went] to many countries and [met] a lot of people. Newspapers all over the world [wrote] about him, and he [gave] a lot of interviews. He [said] the Earth was beautiful and blue. 🌍",
+      ["flied", "taked", "goed", "sayed"],
     ),
   ]),
 
@@ -111,20 +128,22 @@ export default lesson("a2-1.2", "Famous firsts", () => [
     table("subject-q"),
     choose(
       "Choose.",
-      "1. Who [*invented/did invent] the telephone?\n2. What [*happened/did happen] in 1969?\n3. What did Bell [*invent/invented]?\n4. Who [*sent/did send] the first text message?",
+      "1. Who [*invented/did invent] the telephone?\n2. What [*happened/did happen] in 1969?\n3. What did Bell [*invent/invented]?\n4. Who [*sent/did send] the first text message?\n5. Who [*did Bell call/called Bell]? — Mr. Watson.\n6. Who [*walked/did walk] on the Moon first?\n7. What [*did the Wright brothers build/built the Wright brothers]?\n8. Who [*uploaded/did upload] “Me at the zoo”?",
     ),
-    order("Make questions.", ["Who flew into space first?", "What did the Wright brothers build?", "Who uploaded the first YouTube video?"]),
+    order("Make questions.", ["Who flew into space first?", "What did the Wright brothers build?", "Who uploaded the first YouTube video?", "What happened in 1961?", "Who did Gagarin meet?"]),
     quiz("Choose the right question for the answer.", [
       { q: "— Bell did.", options: ["*Who made the first phone call?", "Who did Bell call?", "What did Bell make?"] },
       { q: "— Mr. Watson.", options: ["*Who did Bell call?", "Who called Mr. Watson?", "What happened?"] },
+      { q: "— The Wright brothers.", options: ["*Who built the first plane?", "What did the Wright brothers build?", "Who did build the plane?"] },
+      { q: "— “Merry Christmas.”", options: ["*What did the first text message say?", "Who sent the first message?", "What happened in 1992?"] },
     ]),
   ]),
 
   section("Say it right: bought, thought", [
     box("🗣️ Say it right", "These past forms rhyme — they have the same long sound **/ɔː/** (like in *door*):\n\n**bought · thought · brought · taught · caught · fought**\n\nThe letters **-ought / -aught** are silent “gh”: *thought* = /θɔːt/"),
     sort("Same sound /ɔː/ or not? Sort. 🗣️", {
-      "/ɔː/ like door": ["bought", "thought", "taught", "caught"],
-      "different sound": ["flew", "said", "made"],
+      "/ɔː/ like door": ["bought", "thought", "taught", "caught", "brought"],
+      "different sound": ["flew", "said", "made", "found", "wrote"],
     }),
   ]),
 
@@ -147,18 +166,21 @@ export default lesson("a2-1.2", "Famous firsts", () => [
       { q: "fly → …", options: ["*flew", "flied", "flown"] },
       { q: "Who ___ the airplane?", options: ["*built", "did build", "build"] },
       { q: "bought = /bɔːt/ — it rhymes with…", options: ["*thought", "out", "boat"] },
+      { q: "___ did Bell call? — Mr. Watson.", options: ["*Who", "What", "When"] },
     ]),
     box("Word of the day: OG", "**OG** 😎 = *original* — the first, the classic one (slang).\n\n*“Me at the zoo” is the OG YouTube video!*"),
   ]),
 
   homework(
     [
-      gaps("Write the past.", "1. build → [built]\n2. send → [sent]\n3. become → [became]\n4. think → [thought]\n5. find → [found]"),
+      gaps("Write the past.", "1. build → [built]\n2. send → [sent]\n3. become → [became]\n4. think → [thought]\n5. find → [found]\n6. fly → [flew]\n7. teach → [taught]\n8. write → [wrote]"),
       match("Match the questions and the answers.", [
         ["Who invented the telephone?", "Bell."],
         ["What did Papworth send?", "A text message."],
         ["Who walked on the Moon first?", "Armstrong."],
         ["What happened in 1903?", "The first flight."],
+        ["Who flew into space in 1961?", "Gagarin."],
+        ["What did Jawed Karim upload?", "“Me at the zoo”."],
       ]),
     ],
     "Homework: Vocabulary and grammar",
@@ -166,7 +188,7 @@ export default lesson("a2-1.2", "Famous firsts", () => [
   homework(
     [
       video("Watch: the Past Simple of irregular verbs.", "rVrrpC2xqI0"),
-      choose("Choose.", "1. Who [*made/did make] the first call?\n2. What did they [*build/built]?\n3. She [*took/taked] a lot of photos."),
+      choose("Choose.", "1. Who [*made/did make] the first call?\n2. What did they [*build/built]?\n3. She [*took/taked] a lot of photos.\n4. We [*bought/buyed] new phones.\n5. Who [*did you see/saw you] at the party?\n6. He [*thought/thinked] it was a good idea."),
     ],
     "Homework: Grammar video",
   ),
@@ -180,6 +202,7 @@ export default lesson("a2-1.2", "Famous firsts", () => [
         { q: "When did Tereshkova fly into space?", options: ["*in 1963", "in 1961", "in 1969"] },
         { q: "What did she love before?", options: ["*skydiving", "football", "painting"] },
         { q: "How many times did she go around the Earth?", options: ["*48", "18", "4"] },
+        { q: "What was her call sign in space?", options: ["*“Chaika” — Seagull", "“Poyekhali”", "“Vostok”"] },
       ]),
     ],
     "Homework: Listening",

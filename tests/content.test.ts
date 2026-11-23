@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getDefinition } from "@/features/exercises/definitions";
-import { md, problems, size } from "../content/kit";
+import { items, md, minItems, problems, size } from "../content/kit";
 import path from "node:path";
 import { resolveAssets } from "../content/assets";
 import { course as a1 } from "../content/english-a1/course";
@@ -8,8 +8,8 @@ import { course as a2 } from "../content/english-a2/course";
 
 // Every course with its folder and the lesson size its template asks for (blocks in class).
 const courses = [
-  { name: "english-a1", course: a1, inClass: [12, 30] },
-  { name: "english-a2", course: a2, inClass: [20, 40] },
+  { name: "english-a1", course: a1, inClass: [12, 30], bigTasks: false },
+  { name: "english-a2", course: a2, inClass: [20, 40], bigTasks: true },
 ] as const;
 
 // Course content: every lesson loads (passes the schemas) and fits the lesson template.
@@ -17,11 +17,12 @@ describe("course content", () => {
   // Pictures resolved as for loading (a made-up owner): every file must exist.
   const owner = "00000000-0000-4000-8000-000000000000";
   const root = path.resolve("content/english-a1");
-  const lessons = courses.flatMap(({ name, course, inClass }) =>
+  const lessons = courses.flatMap(({ name, course, inClass, bigTasks }) =>
     course.modules.flatMap((m, mi) =>
       m.lessons.map((l, li) => ({
         n: `${name} ${mi + (course.firstModule ?? 1)}.${li + 1}`,
         inClass,
+        bigTasks,
         l: resolveAssets(l, { owner, root: path.resolve(`content/${name}`) }).lesson,
       })),
     ),
@@ -37,6 +38,15 @@ describe("course content", () => {
     expect(s.inClass).toBeLessThanOrEqual(inClass[1]);
     expect(s.homework).toBeGreaterThanOrEqual(5);
     expect(s.homework).toBeLessThanOrEqual(14);
+  });
+
+  // From A2 on, tasks are big enough to practise: 6+ gaps, 5+ statements, 4+ questions…
+  it.each(lessons.filter((x) => x.bigTasks))("$n: every task has enough questions", ({ l }) => {
+    const small = l.sections
+      .flatMap((s) => s.blocks)
+      .filter((b) => (items(b) ?? 99) < (minItems(b) ?? 0))
+      .map((b) => `${b.title}: ${items(b)} (min ${minItems(b)})`);
+    expect(small).toEqual([]);
   });
 
   it.each(lessons)("$n: the right answers of every exercise are accepted", ({ l }) => {

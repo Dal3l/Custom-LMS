@@ -37,6 +37,7 @@ export default lesson("a2-2.4", "Revision 1–2", () => [
       ["photos/hotel-reception.jpg", "check in"],
       ["photos/park.jpg", "people were sunbathing"],
       ["photos/legend-alligator.jpg", "found in a sewer in 1935"],
+      ["photos/first-flight.jpg", "the first airplane flight"],
     ]),
   ]),
 
@@ -47,24 +48,29 @@ export default lesson("a2-2.4", "Revision 1–2", () => [
       ["catch up", "with friends"],
       ["knock", "on the door"],
       ["go", "viral"],
+      ["binge-watch", "a series"],
+      ["fall", "asleep"],
     ]),
     sort("Sort the words.", {
       "😊 Feelings": ["embarrassed", "relieved", "scared", "confused"],
       "📖 Story words": ["suddenly", "at first", "finally", "in the end"],
       "🏨 Hotel": ["reservation", "key card", "check out", "room service"],
     }),
-    gaps("Write the word.", "1. sleep late on Sunday: have a [lie-in] 😴\n2. a fake story or photo: a [hoax] 🎭\n3. arrive too late for your train: [miss] it 🚆\n4. 🇺🇸 elevator = 🇬🇧 [lift]\n5. understand suddenly: [realize] 💡"),
+    gaps(
+      "Write the word.",
+      "1. sleep late on Sunday: have a [lie-in] 😴\n2. a fake story or photo: a [hoax] 🎭\n3. arrive too late for your train: [miss] it 🚆\n4. 🇺🇸 elevator = 🇬🇧 [lift]\n5. understand suddenly: [realize] 💡\n6. a person who invents things: an [inventor] 💡\n7. 🇬🇧 do the washing-up = 🇺🇸 do the [dishes] 🍽️\n8. not know where you are: get [lost] 🗺️",
+    ),
   ]),
 
   section("Grammar", [
     choose(
       "Past Simple: choose.",
-      "1. [*Did/Were] you go out last night?\n2. I [*didn't see/didn't saw] the match.\n3. Who [*invented/did invent] the telephone?\n4. What did she [*buy/bought]?",
+      "1. [*Did/Were] you go out last night?\n2. I [*didn't see/didn't saw] the match.\n3. Who [*invented/did invent] the telephone?\n4. What did she [*buy/bought]?\n5. We [*didn't have/didn't had] breakfast.\n6. Where [*did you go/you went] on holiday?\n7. Who [*did you meet/met you] at the café?\n8. The Wright brothers [*built/builded] the first plane.",
     ),
     gaps("Write the past.", "1. fly → [flew]\n2. think → [thought]\n3. fall → [fell]\n4. build → [built]\n5. lose → [lost]\n6. become → [became]"),
     choose(
       "Past Continuous or Past Simple? Choose.",
-      "1. I [*was having/had] a shower when the power went off.\n2. When the teacher came in, we [*stopped/were stopping] talking.\n3. [*While/When] I was waiting for the bus, I met an old friend.\n4. What [*were you doing/did you doing] at 9 p.m.?",
+      "1. I [*was having/had] a shower when the power went off.\n2. When the teacher came in, we [*stopped/were stopping] talking.\n3. [*While/When] I was waiting for the bus, I met an old friend.\n4. What [*were you doing/did you doing] at 9 p.m.?\n5. It [*was snowing/snowed] when we woke up.\n6. They [*weren't/didn't] listening to the teacher.\n7. When I heard the news, I [*called/was calling] my mom.\n8. My dad [*was cooking/cooked] while we were cleaning.",
     ),
     drag(
       "Complete the story.",
@@ -76,10 +82,14 @@ export default lesson("a2-2.4", "Revision 1–2", () => [
       ["While I was cooking, my brother was playing games.", true],
       ["Who did call you last night?", false],
       ["We were sleeping when the alarm rang.", true],
+      ["She was watch TV at 8.", false],
+      ["What did you buy?", true],
     ]),
     quiz("Choose the right question for the answer.", [
       { q: "— Bell invented it.", options: ["*Who invented the telephone?", "What did Bell invent?", "Who did invent the telephone?"] },
       { q: "— I was sleeping.", options: ["*What were you doing at 7 a.m.?", "What did you do at 7 a.m.?", "Were you sleep at 7 a.m.?"] },
+      { q: "— Gagarin did.", options: ["*Who flew into space first?", "Who did fly into space first?", "Where did Gagarin fly?"] },
+      { q: "— To Turkey.", options: ["*Where did you go on holiday?", "Who went to Turkey?", "Where you went on holiday?"] },
     ]),
   ]),
 
@@ -121,6 +131,8 @@ export default lesson("a2-2.4", "Revision 1–2", () => [
       { q: "1. Where did the man go on holiday?", options: ["*Turkey", "Italy", "Spain"] },
       { q: "2. How did the girl get to school?", options: ["*by car", "by bus", "on foot"] },
       { q: "3. Why didn't the woman answer the phone?", options: ["*She was making a cake.", "She was sleeping.", "Her phone was broken."] },
+      { q: "1. Why didn't the man go to Italy?", options: ["*The tickets were too expensive.", "The weather was bad.", "He didn't have a passport."] },
+      { q: "2. How long did the girl wait for the bus?", options: ["*30 minutes", "10 minutes", "an hour"] },
     ]),
   ]),
 
@@ -141,7 +153,13 @@ export default lesson("a2-2.4", "Revision 1–2", () => [
       "Speaking: talk for 1 minute about each topic 🗣️",
       "1. Your last holiday or weekend: *Where did you go? What did you do?*\n2. A time something went wrong: *What were you doing when…?*\n3. A famous person from history: *Who was he / she? What did he / she do?*",
     ),
-    order("Make questions.", ["Where did you go on your last holiday?", "What were you doing when I called?", "Who sent the first text message?"]),
+    order("Make questions.", [
+      "Where did you go on your last holiday?",
+      "What were you doing when I called?",
+      "Who sent the first text message?",
+      "Did you have a good weekend?",
+      "Were you sleeping at midnight?",
+    ]),
     tip("Look at the points for all the tasks together. Find the most difficult part (irregular verbs? was / were + -ing? when / while?) and go back to it in the next lesson."),
   ]),
 
@@ -171,20 +189,24 @@ export default lesson("a2-2.4", "Revision 1–2", () => [
           ["Lena was at the cinema when Tom called.", true],
           ["She saw a comedy.", false],
           ["Lena wants to meet on Sunday.", true],
+          ["Lena slept well after the film.", false],
+          ["Lena wants to go to the park.", true],
         ],
         { read: "💬 **Lena:** Hi Tom! Sorry I didn't answer — I was at the cinema when you called. We saw the new horror film. I didn't sleep all night! 😱 Do you want to go to the park on Sunday? We can catch up. 😊" },
       ),
       quiz("Choose.", [
         { q: "When Tom called, Lena…", options: ["*was watching a film", "watched a film", "was watch a film"] },
         { q: "The film was…", options: ["*scary", "funny", "boring"] },
+        { q: "Why didn't Lena answer the phone?", options: ["*She was at the cinema.", "She was sleeping.", "Her phone was broken."] },
+        { q: "What do they want to do on Sunday?", options: ["*catch up in the park", "go to the cinema", "watch a horror film"] },
       ]),
     ],
     "Homework: Reading",
   ),
   homework(
     [
-      gaps("Review: complete.", "1. [Did] you see the news? — No, I [didn't].\n2. I [was sleeping] when the alarm rang. (sleep)\n3. Who [made] the first phone call? (make)\n4. While we [were walking], it started to snow. (walk)"),
-      choose("Choose.", "1. Gagarin [*flew/flied] into space in 1961.\n2. She [*was reading/read] when the lights went off.\n3. What [*happened/did happen] in 1969?"),
+      gaps("Review: complete.", "1. [Did] you see the news? — No, I [didn't].\n2. I [was sleeping] when the alarm rang. (sleep)\n3. Who [made] the first phone call? (make)\n4. While we [were walking], it started to snow. (walk)\n5. We [didn't go/did not go] out last night. (not go)\n6. When I [saw] the spider, I screamed. (see)"),
+      choose("Choose.", "1. Gagarin [*flew/flied] into space in 1961.\n2. She [*was reading/read] when the lights went off.\n3. What [*happened/did happen] in 1969?\n4. I [*lost/losed] my keys yesterday.\n5. [*Were/Did] you working at 6?\n6. [*While/During] I was cooking, the phone rang."),
     ],
     "Homework: Review",
   ),

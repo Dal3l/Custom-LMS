@@ -56,15 +56,18 @@ export default lesson("a2-2.1", "What were you doing?", () => [
       ["take out", "the rubbish"],
       ["have", "a picnic"],
       ["scroll through", "social media"],
+      ["do", "the washing-up"],
+      ["lie", "on the sofa"],
     ]),
     sort("At home or outside? Sort. 🏠🌳", {
-      "🏠 at home": ["have a shower", "do the washing-up", "lie on the sofa", "chat online"],
-      "🌳 outside": ["sunbathe", "walk the dog", "wait for the bus", "have a picnic"],
+      "🏠 at home": ["have a shower", "do the washing-up", "lie on the sofa", "chat online", "cook dinner"],
+      "🌳 outside": ["sunbathe", "walk the dog", "wait for the bus", "have a picnic", "stand in a queue"],
     }),
     quiz("🇬🇧 or 🇺🇸? Choose the American word.", [
       { q: "🇬🇧 do the washing-up = 🇺🇸 …", options: ["*do the dishes", "do the plates", "make the dishes"] },
       { q: "🇬🇧 rubbish = 🇺🇸 …", options: ["*trash", "dust", "junk food"] },
       { q: "🇬🇧 a queue = 🇺🇸 …", options: ["*a line", "a row", "a group"] },
+      { q: "🇬🇧 have a shower = 🇺🇸 …", options: ["*take a shower", "make a shower", "do a shower"] },
     ]),
   ]),
 
@@ -94,6 +97,8 @@ export default lesson("a2-2.1", "What were you doing?", () => [
       { q: "Who was baking?", options: ["*Mrs. Lee", "Tom", "Aliya"] },
       { q: "Who had shampoo in their hair?", options: ["*Tom", "Mr. Brown", "Mrs. Lee"] },
       { q: "Who wasn't at home?", options: ["*Mr. Brown", "Aliya", "Tom"] },
+      { q: "Who was scrolling through Instagram?", options: ["*Aliya", "Aliya's friends", "Mrs. Lee"] },
+      { q: "Why did Mr. Brown walk to the 9th floor?", options: ["*The elevator wasn't working.", "He likes stairs.", "Max wanted to run."] },
     ]),
     text("Talk to your teacher.", "- Whose situation was the worst? Why? 😅\n- Was there a power cut in your home? What were you doing?\n- What can't you do without electricity? 🔌"),
   ]),
@@ -102,22 +107,23 @@ export default lesson("a2-2.1", "What were you doing?", () => [
     quiz("Notice the rule 🔍 Look at the chat: “I was baking a cake. I was having a shower. We were doing homework.” Which is true?", [
       { q: "These actions…", options: ["*were in progress at 8:15 — not finished", "started and finished at 8:15", "happen every day"] },
       { q: "We make this form with…", options: ["*was / were + verb-ing", "did + verb", "is / are + verb-ing"] },
+      { q: "I / he / she → was. You / we / they → …", options: ["*were", "was", "are"] },
     ]),
     table("past-cont"),
     choose(
       "Choose.",
-      "1. At 8:15 I [*was having/had have] a shower.\n2. My parents [*were watching/was watching] a film.\n3. [*Were/Did] you sleeping at midnight?\n4. She [*wasn't/didn't] working yesterday at 5.\n5. What [*were you doing/did you doing] at 9 p.m.?",
+      "1. At 8:15 I [*was having/had have] a shower.\n2. My parents [*were watching/was watching] a film.\n3. [*Were/Did] you sleeping at midnight?\n4. She [*wasn't/didn't] working yesterday at 5.\n5. What [*were you doing/did you doing] at 9 p.m.?\n6. The sun [*was shining/were shining] all day.\n7. We [*weren't/wasn't] waiting for the bus.\n8. [*Was/Were] your brother playing games?",
     ),
     gaps(
       "What were they doing at 8:15? Use the verbs.",
-      "1. Mrs. Lee [was baking] a cake. (bake)\n2. Tom [was having] a shower. (have)\n3. Aliya's friends [were doing] homework. (do)\n4. Mr. Brown [was walking] his dog. (walk)\n5. Max the dog [wasn't sleeping/was not sleeping]! (not sleep)",
+      "1. Mrs. Lee [was baking] a cake. (bake)\n2. Tom [was having] a shower. (have)\n3. Aliya's friends [were doing] homework. (do)\n4. Mr. Brown [was walking] his dog. (walk)\n5. Max the dog [wasn't sleeping/was not sleeping]! (not sleep)\n6. Aliya [was scrolling] through Instagram. (scroll)\n7. Aliya and her friends [weren't playing/were not playing] games. (not play)\n8. Mr. Brown and Max [were walking] in the park. (walk)",
     ),
     drag(
       "Complete the conversation.",
-      "A: I called you at 7. Where [were] you?\nB: I [was] at the gym. I [was] running, so I didn't hear the phone.\nA: And at 9?\nB: At 9 I [was] sleeping! 😴 Why? What [were] you doing?",
-      ["did", "are"],
+      "A: I called you at 7. Where [were] you?\nB: I [was] at the gym. I [was] running, so I didn't hear the phone.\nA: And at 9?\nB: At 9 I [was] sleeping! 😴 Why? What [were] you doing?\nA: I was at a café with Dana. We [were] having pizza.\nB: [Were] you talking about me? 😄\nA: No, we [weren't]!",
+      ["did", "are", "wasn't"],
     ),
-    order("Make questions.", ["What were you doing at 10 last night?", "Were you sleeping at midnight?", "Who was she talking to?"]),
+    order("Make questions.", ["What were you doing at 10 last night?", "Were you sleeping at midnight?", "Who was she talking to?", "Where were they going?", "Was it raining in the morning?"]),
   ]),
 
   section("Say it right: was / were", [
@@ -129,6 +135,8 @@ export default lesson("a2-2.1", "What were you doing?", () => [
       { q: "I was watching TV. → was is…", options: ["*weak /wəz/", "strong /wɒz/"] },
       { q: "Were you sleeping? — Yes, I was. → was is…", options: ["*strong /wɒz/", "weak /wəz/"] },
       { q: "We were having dinner. → were is…", options: ["*weak /wə/", "strong /wɜː/"] },
+      { q: "Were they playing? — Yes, they were. → were is…", options: ["*strong /wɜː/", "weak /wə/"] },
+      { q: "She was cooking. → was is…", options: ["*weak /wəz/", "strong /wɒz/"] },
     ]),
     tip("Say a sentence fast with weak forms, the student repeats: *I was having a shower — /aɪ wəz ˈhævɪŋ/*. Then short answers with strong forms: *Were you? — Yes, I was!*"),
   ]),
@@ -148,6 +156,8 @@ export default lesson("a2-2.1", "What were you doing?", () => [
       ["Mr. Hall was sitting with a friend.", true],
       ["Ms. Park was with other people.", false],
       ["There was chocolate on the keyboard.", true],
+      ["Mr. Hall was eating a chicken sandwich.", true],
+      ["Ms. Park was very hungry, she said.", false],
     ]),
   ]),
 
@@ -174,18 +184,21 @@ export default lesson("a2-2.1", "What were you doing?", () => [
       { q: "They ___ playing football at 5.", options: ["*were", "was", "did"] },
       { q: "___ you sleeping when I called?", options: ["*Were", "Did", "Was"] },
       { q: "🇺🇸 do the dishes = 🇬🇧 …", options: ["*do the washing-up", "take out the rubbish", "do the shopping"] },
+      { q: "She ___ working at 5. She was at home.", options: ["*wasn't", "weren't", "didn't"] },
     ]),
     box("Word of the day: caught red-handed", "**caught red-handed** 🔴✋ = someone saw you while you were doing something wrong.\n\n*Ms. Park was caught red-handed — there was chocolate on her keyboard!*"),
   ]),
 
   homework(
     [
-      gaps("Complete the phrases.", "1. walk the [dog] 🐕\n2. wait [for] the bus 🚏\n3. stand in a [queue] 🧍🧍\n4. take out the [rubbish/trash] 🗑️\n5. have a [picnic] 🧺"),
+      gaps("Complete the phrases.", "1. walk the [dog] 🐕\n2. wait [for] the bus 🚏\n3. stand in a [queue] 🧍🧍\n4. take out the [rubbish/trash] 🗑️\n5. have a [picnic] 🧺\n6. lie on the [sofa/grass] 🛋️\n7. scroll [through] social media 📱\n8. chat [online] 💬"),
       match("🇬🇧 → 🇺🇸 Match.", [
         ["do the washing-up", "do the dishes"],
         ["rubbish", "trash"],
         ["a queue", "a line"],
         ["have a shower", "take a shower"],
+        ["a flat", "an apartment"],
+        ["a lift", "an elevator"],
       ]),
     ],
     "Homework: Vocabulary",
@@ -193,8 +206,8 @@ export default lesson("a2-2.1", "What were you doing?", () => [
   homework(
     [
       video("Watch the grammar video: the Past Continuous.", "liX95VS4a14"),
-      choose("Choose.", "1. I [*was reading/were reading] at 10.\n2. We [*weren't/wasn't] sleeping.\n3. What [*was/were] he doing?\n4. [*Were/Was] they waiting for the bus?"),
-      gaps("Write the -ing form.", "1. have → [having]\n2. sit → [sitting]\n3. lie → [lying]\n4. swim → [swimming]\n5. write → [writing]"),
+      choose("Choose.", "1. I [*was reading/were reading] at 10.\n2. We [*weren't/wasn't] sleeping.\n3. What [*was/were] he doing?\n4. [*Were/Was] they waiting for the bus?\n5. My mom [*was cooking/cooking] dinner.\n6. [*Was/Did] it raining?"),
+      gaps("Write the -ing form.", "1. have → [having]\n2. sit → [sitting]\n3. lie → [lying]\n4. swim → [swimming]\n5. write → [writing]\n6. run → [running]\n7. make → [making]\n8. play → [playing]"),
     ],
     "Homework: Grammar",
   ),

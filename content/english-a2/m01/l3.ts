@@ -49,11 +49,13 @@ export default lesson("a2-1.3", "Travel fails", () => [
       ["get", "lost"],
       ["fall", "asleep"],
       ["wake up", "late"],
+      ["take", "the next flight"],
+      ["the flight", "was delayed"],
     ]),
-    gaps("Write the past.", "1. forget → [forgot]\n2. break → [broke]\n3. fall → [fell]\n4. wake → [woke]\n5. lose → [lost]"),
+    gaps("Write the past.", "1. forget → [forgot]\n2. break → [broke]\n3. fall → [fell]\n4. wake → [woke]\n5. lose → [lost]\n6. get → [got]\n7. leave → [left]\n8. sit → [sat]"),
     sort("Good news or bad news? Sort. 🍀😞", {
-      "🍀 Good news": ["Luckily, we found a hotel.", "The airline found my bag.", "We got a free upgrade."],
-      "😞 Bad news": ["Unfortunately, it rained.", "Our flight was delayed.", "I lost my passport."],
+      "🍀 Good news": ["Luckily, we found a hotel.", "The airline found my bag.", "We got a free upgrade.", "A kind man helped us.", "The sun came out."],
+      "😞 Bad news": ["Unfortunately, it rained.", "Our flight was delayed.", "I lost my passport.", "We missed the train.", "My phone died."],
     }),
   ]),
 
@@ -81,12 +83,17 @@ export default lesson("a2-1.3", "Travel fails", () => [
       ["Sofia couldn't speak Italian.", true],
       ["A woman helped Sofia.", false],
       ["Ben waited three days for his suitcase.", true],
+      ["Ben's suitcase went to Moscow.", true],
+      ["Ali slept on the second flight.", false],
     ]),
     order("Put Ali's story in order.", ["Ali arrived at the airport early.\nHe sat down near his gate.\nHe fell asleep.\nHe missed his flight.\nHe took the next flight."], "lines"),
     match("Who said it? Match.", [
       ["“I didn't sleep on that one!”", "Ali"],
       ["“A kind old man helped me.”", "Sofia"],
       ["“I had two of everything!”", "Ben"],
+      ["“My phone died — 0%!”", "Sofia"],
+      ["“I waited three days.”", "Ben"],
+      ["“My plane wasn't there.”", "Ali"],
     ]),
     text("Talk to your teacher.", "- Whose trip was the worst? Why? 🏆\n- What did these people do right? What can you learn from them? 💡"),
   ]),
@@ -103,13 +110,13 @@ export default lesson("a2-1.3", "Travel fails", () => [
   section("Review: Past Simple", [
     choose(
       "Choose.",
-      "1. We [*missed/missd] the train.\n2. I [*didn't find/didn't found] my passport.\n3. [*Did/Was] you get lost?\n4. Who [*helped/did help] Sofia?\n5. My phone [*died/dead] in the middle of the city.",
+      "1. We [*missed/missd] the train.\n2. I [*didn't find/didn't found] my passport.\n3. [*Did/Was] you get lost?\n4. Who [*helped/did help] Sofia?\n5. My phone [*died/dead] in the middle of the city.\n6. Where [*did Ben's suitcase go/went Ben's suitcase]?\n7. Ali [*fell/falled] asleep at the gate.\n8. They [*didn't speak/didn't spoke] Italian.",
     ),
-    gaps("Complete with the past.", "1. I [forgot] my charger. (forget)\n2. My suitcase [broke]. (break)\n3. We [woke] up late. (wake)\n4. He [fell] asleep at the airport. (fall)\n5. They [lost] their tickets. (lose)"),
+    gaps("Complete with the past.", "1. I [forgot] my charger. (forget)\n2. My suitcase [broke]. (break)\n3. We [woke] up late. (wake)\n4. He [fell] asleep at the airport. (fall)\n5. They [lost] their tickets. (lose)\n6. We [got] lost in the old town. (get)\n7. She [left] her bag on the bus. (leave)\n8. I [didn't sleep/did not sleep] on the plane. (not sleep)"),
     drag(
       "Complete the story with story words.",
-      "[First], we arrived at the station. [Then] we saw that our train was delayed. [After] that, we had lunch in a café. [In] the end, we arrived five hours late — but happy! 😄",
-      ["Last", "Before"],
+      "[First], we arrived at the station. [Then] we saw that our train was delayed. [After] that, we had lunch in a café. [Unfortunately], it started to rain. [Luckily], we had umbrellas! [In] the end, we arrived five hours late — but happy! 😄",
+      ["Last", "Before", "Suddenly"],
     ),
   ]),
 
@@ -137,14 +144,15 @@ export default lesson("a2-1.3", "Travel fails", () => [
       { q: "arrive too late for your plane =", options: ["*miss a flight", "lose a flight", "get a flight"] },
       { q: "fall → …", options: ["*fell", "falled", "fall"] },
       { q: "A good last sentence starts with…", options: ["*In the end,", "First,", "Then"] },
+      { q: "I ___ my charger at home. 🔌", options: ["*forgot", "lost", "missed"] },
     ]),
     box("Word of the day: the travel bug", "**the travel bug** 🐞✈️ = a strong wish to travel again and again.\n\n*After my trip to Japan, I caught the travel bug!*"),
   ]),
 
   homework(
     [
-      gaps("Complete.", "1. I [missed] my train. 🚆❌\n2. We got [lost] in the old town.\n3. The flight was [delayed] for two hours. ⏳\n4. [Luckily], a kind man helped us. 🍀"),
-      choose("Choose.", "1. I [*forgot/forgetted] my passport!\n2. [*Did/Do] you lose your bag?\n3. He [*didn't miss/didn't missed] the bus."),
+      gaps("Complete.", "1. I [missed] my train. 🚆❌\n2. We got [lost] in the old town.\n3. The flight was [delayed] for two hours. ⏳\n4. [Luckily], a kind man helped us. 🍀\n5. I [forgot] my charger at home. 🔌\n6. My suitcase [broke] at the airport. 💔"),
+      choose("Choose.", "1. I [*forgot/forgetted] my passport!\n2. [*Did/Do] you lose your bag?\n3. He [*didn't miss/didn't missed] the bus.\n4. We [*woke/waked] up late.\n5. She [*fell/felt] asleep on the train.\n6. [*Unfortunately/Luckily], it rained all week. 😞"),
     ],
     "Homework: Vocabulary and grammar",
   ),
@@ -158,6 +166,7 @@ export default lesson("a2-1.3", "Travel fails", () => [
         { q: "How long was the delay?", options: ["*four hours", "two hours", "one hour"] },
         { q: "Where was Mia's bag?", options: ["*on the wrong belt", "in Paris", "in the taxi"] },
         { q: "Who helped Mia?", options: ["*a police officer", "a taxi driver", "a shop assistant"] },
+        { q: "What did Mia see in London?", options: ["*Big Ben and a musical", "a football match", "the Tower only"] },
       ]),
       video("Bonus: the 20 funniest travel mistakes.", "9jWW0fZ5aT0"),
     ],

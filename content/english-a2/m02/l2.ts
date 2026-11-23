@@ -59,13 +59,18 @@ export default lesson("a2-2.2", "And then…", () => [
       ["😳", "embarrassed"],
       ["😮‍💨", "relieved"],
       ["😕", "confused"],
+      ["😊", "happy"],
+      ["😡", "angry"],
     ]),
     sort("Beginning, middle or end of a story? Sort.", {
-      "1️⃣ beginning": ["at first", "one day", "last summer"],
-      "⚡ middle": ["suddenly", "a few minutes later", "then"],
-      "🏁 end": ["finally", "in the end"],
+      "1️⃣ beginning": ["at first", "one day", "last summer", "it was a cold night"],
+      "⚡ middle": ["suddenly", "a few minutes later", "then", "after that"],
+      "🏁 end": ["finally", "in the end", "luckily, everything was OK"],
     }),
-    gaps("Complete.", "1. I [dropped] my phone, and the screen broke. 📱💔\n2. Somebody [knocked] on the door at midnight. 🚪\n3. Then I [realized] — it was my birthday! 🎂\n4. I fell on the stairs in front of everyone. I was so [embarrassed]! 😳"),
+    gaps(
+      "Complete.",
+      "1. I [dropped] my phone, and the screen broke. 📱💔\n2. Somebody [knocked] on the door at midnight. 🚪\n3. Then I [realized] — it was my birthday! 🎂\n4. I fell on the stairs in front of everyone. I was so [embarrassed]! 😳\n5. I [noticed] a strange man in a red hat. 👀\n6. [Suddenly], the lights went off. ⚡\n7. We waited for an hour. [Finally], the bus came. 🏁\n8. The film was very scary. I was [scared]! 😨",
+    ),
   ]),
 
   section("Reading: The wrong door", [
@@ -91,10 +96,14 @@ export default lesson("a2-2.2", "And then…", () => [
       ["Dan's key didn't open the door.", true],
       ["The woman was wearing pajamas.", true],
       ["Dan lives in building 7.", false],
+      ["Dan noticed a big dog.", true],
+      ["The woman was angry and shouted at Dan.", false],
     ]),
     quiz("Read again. Choose.", [
       { q: "How did Dan feel when he realized his mistake?", options: ["*embarrassed", "relieved", "scared"] },
       { q: "Why did Dan go to the wrong building?", options: ["*All the buildings on his street look the same.", "He was reading his phone.", "Somebody changed the number."] },
+      { q: "What was the weather like?", options: ["*cold and snowy", "rainy", "warm"] },
+      { q: "What did the woman give Dan?", options: ["*a cup of tea", "his key", "a map"] },
     ]),
   ]),
 
@@ -102,22 +111,29 @@ export default lesson("a2-2.2", "And then…", () => [
     quiz("Notice the rule 🔍 Look: “Dan was coming home late. … Suddenly, the door opened.” Which action was long and which was short?", [
       { q: "“was coming home” is…", options: ["*a long action — it was in progress", "a short action — it happened at one moment"] },
       { q: "“the door opened” is…", options: ["*a short action — it interrupts the long action", "a long action"] },
+      { q: "For the long action we use…", options: ["*the Past Continuous: was coming", "the Past Simple: came", "the Present Continuous: is coming"] },
     ]),
     table("when-while"),
     choose(
       "Choose.",
-      "1. I was sleeping [*when/while] the phone rang.\n2. [*While/When] we were having dinner, the lights went off.\n3. She [*was walking/walked] to school when she saw an accident.\n4. When he [*opened/was opening] the door, the dog ran in.\n5. They were talking [*while/when] the teacher was writing.",
+      "1. I was sleeping [*when/while] the phone rang.\n2. [*While/When] we were having dinner, the lights went off.\n3. She [*was walking/walked] to school when she saw an accident.\n4. When he [*opened/was opening] the door, the dog ran in.\n5. They were talking [*while/when] the teacher was writing.\n6. I [*dropped/was dropping] my phone while I was running.\n7. What were you doing [*when/while] I called?\n8. While she [*was cooking/cooked], she burned her finger.",
     ),
     gaps(
       "Past Simple or Past Continuous? Write the verbs.",
-      "1. I [was cooking] dinner when the phone rang. (cook)\n2. While we were walking in the park, it [started] to rain. (start)\n3. When she [saw] the spider, she screamed. (see)\n4. He [was driving] home when he noticed the police car. (drive)",
+      "1. I [was cooking] dinner when the phone rang. (cook)\n2. While we were walking in the park, it [started] to rain. (start)\n3. When she [saw] the spider, she screamed. (see)\n4. He [was driving] home when he noticed the police car. (drive)\n5. The children [were playing] when their mom called them. (play)\n6. While I was doing my homework, my friend [knocked] on the door. (knock)\n7. When the film ended, we [went] home. (go)\n8. She [was waiting] for the bus when she met her teacher. (wait)",
     ),
     drag(
       "Complete the story.",
-      "Last summer I [was] swimming in the sea [when] I saw something big in the water! At first I [was] scared. [While] I was swimming to the beach, I [realized] — it was a dolphin! 🐬",
-      ["did", "realizing", "during"],
+      "Last summer I [was] swimming in the sea [when] I saw something big in the water! At first I [was] scared. [While] I was swimming to the beach, I [realized] — it was a dolphin! 🐬 A few minutes [later], my friends [were] taking photos of it. [Finally], it swam away. What a day!",
+      ["did", "realizing", "during", "first"],
     ),
-    order("Make sentences.", ["I was walking home when it started to rain.", "While she was sleeping, someone knocked on the door.", "We were watching a film when the lights went off."]),
+    order("Make sentences.", [
+      "I was walking home when it started to rain.",
+      "While she was sleeping, someone knocked on the door.",
+      "We were watching a film when the lights went off.",
+      "He dropped his phone while he was running.",
+      "What were you doing when I called?",
+    ]),
   ]),
 
   section("Say it right: was_eating", [
@@ -129,6 +145,7 @@ export default lesson("a2-2.2", "And then…", () => [
       { q: "I was + …", options: ["*eating", "running"] },
       { q: "She woke + …", options: ["*up", "late"] },
       { q: "It happened when + …", options: ["*I was sleeping", "my mom called"] },
+      { q: "We got + …", options: ["*off the bus", "lost"] },
     ]),
     tip("Say the sentences slowly, then fast, linking the words: *He was_eating. I woke_up at_eight.* The student repeats. Then the student reads the first paragraph of the Dan story with linking."),
   ]),
@@ -142,10 +159,14 @@ export default lesson("a2-2.2", "And then…", () => [
       { q: "What was Kate doing when people started clapping?", options: ["*singing at a bus stop", "dancing in the street", "playing the guitar"] },
       { q: "What was Sam wearing?", options: ["*a nice shirt and pajama trousers", "a suit", "only pajamas"] },
       { q: "Why did Sam stand up?", options: ["*to catch his cat", "to answer the door", "to get some coffee"] },
+      { q: "What did Sam's boss say?", options: ["*“Nice pajamas!”", "“Nice cat!”", "“Call me later.”"] },
     ]),
     trueFalse("Listen again. True or false?", [
       ["Kate was listening to a podcast.", false],
       ["Sam's boss was angry.", false],
+      ["People clapped when Kate took off her headphones.", true],
+      ["Kate told the host the name of the song.", false],
+      ["Sam was having a video call when his cat jumped on the table.", true],
     ]),
   ]),
 
@@ -168,6 +189,7 @@ export default lesson("a2-2.2", "And then…", () => [
       { q: "I ___ TV when you called.", options: ["*was watching", "watched", "were watching"] },
       { q: "___ I was cooking, he was cleaning.", options: ["*While", "When", "During"] },
       { q: "😮‍💨 happy because a problem ended =", options: ["*relieved", "embarrassed", "confused"] },
+      { q: "When the phone ___, I answered it.", options: ["*rang", "was ringing", "ringed"] },
     ]),
     box("Word of the day: plot twist", "**a plot twist** 🌀 = something surprising in a story that changes everything.\n\n*Plot twist: the woman in the wrong flat became Dan's best friend!*"),
   ]),
@@ -179,15 +201,17 @@ export default lesson("a2-2.2", "And then…", () => [
         ["drop", "your phone"],
         ["realize", "your mistake"],
         ["a few minutes", "later"],
+        ["fall", "asleep"],
+        ["take off", "your headphones"],
       ]),
-      gaps("Write the feeling.", "1. I saw a big spider. I was [scared]. 😨\n2. I found my keys! I was so [relieved]. 😮‍💨\n3. I didn't understand the map. I was [confused]. 😕\n4. My friends had a party for me! I was [surprised]. 😲"),
+      gaps("Write the feeling.", "1. I saw a big spider. I was [scared]. 😨\n2. I found my keys! I was so [relieved]. 😮‍💨\n3. I didn't understand the map. I was [confused]. 😕\n4. My friends had a party for me! I was [surprised]. 😲\n5. I called my teacher “Mom”! I was so [embarrassed]. 😳\n6. Somebody took my seat! I was [angry]. 😡"),
     ],
     "Homework: Vocabulary",
   ),
   homework(
     [
       video("Watch the grammar video: when and while.", "VnsFJsmAmgk"),
-      choose("Choose.", "1. He was reading [*when/while] the lights went off.\n2. I [*was running/ran] when I fell.\n3. While she [*was waiting/waited] for the bus, she called her mom.\n4. When the teacher came in, we [*stopped/were stopping] talking."),
+      choose("Choose.", "1. He was reading [*when/while] the lights went off.\n2. I [*was running/ran] when I fell.\n3. While she [*was waiting/waited] for the bus, she called her mom.\n4. When the teacher came in, we [*stopped/were stopping] talking.\n5. [*While/When] I was cooking, my brother was cleaning.\n6. It [*was snowing/snowed] when we left the house."),
     ],
     "Homework: Grammar",
   ),
@@ -200,6 +224,7 @@ export default lesson("a2-2.2", "And then…", () => [
           ["He found a wallet on a bench.", true],
           ["The wallet belonged to a teacher.", false],
           ["Nurlan got a reward.", true],
+          ["Nurlan found the doctor's number on a business card.", true],
         ],
         {
           read: "🍀 **A lucky morning.** Last Saturday Nurlan was jogging in the park. While he was running past a bench, he noticed a black wallet on it. There was a lot of money inside and a driver's license. Nurlan called the number on a business card in the wallet. A man answered — he was a doctor, and he was looking for his wallet everywhere! He was so relieved. When they met, the doctor gave Nurlan two tickets to a football match as a thank-you. ⚽",
