@@ -153,4 +153,62 @@ export const tables: GrammarTable[] = [
     ],
     note: "**I'm afraid…** = I'm sorry to say · Soft words help: **a bit, quite, I think, unfortunately**",
   },
+  // 4.1
+  {
+    name: "future-continuous",
+    title: "Future Continuous",
+    subtitle: "will be + verb-ing — an action in progress at a moment in the future",
+    color: "blue",
+    columns: ["", "Example", "Answer"],
+    rows: [
+      ["+", "This time next year I**'ll be studying** in Seoul.", ""],
+      ["−", "Don't call at 8 — I **won't be working**, I'll be sleeping! 😴", ""],
+      ["?", "**Will** you **be using** the car tomorrow?", "Yes, I **will**. / No, I **won't**."],
+      ["⏰ when?", "**At 9 tomorrow**, **this time next week**, **in ten years' time**", ""],
+    ],
+    note: "Future Simple = one action: I'**ll call** you at 6. · Future Continuous = in progress: At 6 I'**ll be driving**.",
+  },
+  {
+    name: "time-clauses",
+    title: "when, as soon as, before + PRESENT",
+    subtitle: "the future after time words — but NO will!",
+    color: "pink",
+    columns: ["Time word", "Example"],
+    rows: [
+      ["**when**", "I'll call you **when** I **get** home. (not: when I will get)"],
+      ["**as soon as**", "**As soon as** the results **come** out, I'll tell you."],
+      ["**before / after**", "**Before** I **start** university, I'm going to travel."],
+      ["**until**", "I'll wait **until** you **finish**."],
+    ],
+    note: "Main part → **will / going to** · time part → **Present Simple**",
+  },
+  // 4.2
+  {
+    name: "future-forms",
+    title: "Talking about the future",
+    subtitle: "choose the form by what you mean",
+    color: "violet",
+    columns: ["Form", "When we use it", "Example"],
+    rows: [
+      ["**will**", "predictions, opinions; quick decisions; promises", "I think robots **will** do most of this work. · I'**ll** help you!"],
+      ["**be going to**", "plans; predictions with evidence now", "I'**m going to** study AI. · Look at the sky — it'**s going to** rain."],
+      ["**Present Continuous**", "fixed arrangements (time, place, people)", "I'**m meeting** my manager on Friday."],
+      ["**Present Simple**", "timetables and schedules", "The course **starts** on 1 September."],
+    ],
+  },
+  {
+    name: "how-sure",
+    title: "How sure are you?",
+    subtitle: "from 100% to 0%",
+    color: "green",
+    columns: ["", "Phrase", "Example"],
+    rows: [
+      ["100%", "**will definitely / be bound to**", "Prices **are bound to** go up."],
+      ["80%", "**will probably / be likely to**", "AI **is likely to** change many jobs."],
+      ["50%", "**may / might / could**", "My job **might** disappear. It **could** happen."],
+      ["20%", "**probably won't / be unlikely to**", "Teachers **are unlikely to** disappear."],
+      ["0%", "**definitely won't**", "Robots **definitely won't** feel love. (Or will they? 🤖)"],
+    ],
+    note: "Word order: I'll **probably** go · I **probably won't** go",
+  },
 ];
