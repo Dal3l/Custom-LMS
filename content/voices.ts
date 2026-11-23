@@ -47,6 +47,7 @@ export const SPEAKERS: Record<string, string> = {
   Kate: "Jessica",
   Sam: "Will",
   Lena: "Laura",
+  Ben: "Brian",
   // people by role
   Receptionist: "Alice",
   Barista: "Will",
@@ -80,6 +81,7 @@ export const SPEAKERS: Record<string, string> = {
   Pharmacist: "Alice",
   Doctor: "Eric",
   Interviewer: "Matilda",
+  Announcer: "Lily",
   // text without a speaker (a narrator, the numbers of the parts)
   Narrator: "Alice",
 };
