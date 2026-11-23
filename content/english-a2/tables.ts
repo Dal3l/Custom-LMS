@@ -442,4 +442,65 @@ export const tables: GrammarTable[] = [
     ],
     note: "**to**: want, hope, decide, need, plan, learn, would like · **-ing**: enjoy, finish, don't mind, keep, practice · love / like / hate: **-ing** (or to)",
   },
+  // 11.1
+  {
+    name: "who-which",
+    title: "who · which · that",
+    subtitle: "say which person or thing we mean",
+    color: "violet",
+    columns: ["", "Example"],
+    rows: [
+      ["👤 people: who / that", "She's the woman **who** won two Nobel Prizes."],
+      ["🎸 things: which / that", "It's the song **which** Keith wrote in his sleep."],
+      ["📍 places: where", "Dartford is the town **where** Mick and Keith met."],
+      ["✂️ no who / which?", "The records (**that**) Mick was carrying were by Chuck Berry."],
+    ],
+    note: "**that** = who or which (in speech) · the man who sings — not “the man who he sings”",
+  },
+  // 11.2
+  {
+    name: "mine-yours",
+    title: "mine · yours · something · nobody",
+    color: "orange",
+    columns: ["", "Example"],
+    rows: [
+      ["my → **mine**", "It's my bag. → It's **mine**."],
+      ["your → **yours** · his → **his** · her → **hers**", "Is this **yours**? — No, it's **hers**."],
+      ["our → **ours** · their → **theirs**", "This car is **ours**. That one is **theirs**."],
+      ["❓ whose", "**Whose** phone is this? — It's **Leo's** / It's **his**."],
+      ["some- / any- / no- / every-", "**something** · **anyone** · **nobody** · **everywhere**"],
+      ["✅ ❓ ❌", "I found **something**. Is **anyone** here? **Nobody** knows. I can't find it **anywhere**."],
+    ],
+    note: "no apostrophe: yours, hers, ours — not “your's” · **nobody** + positive verb: Nobody **knows** (not “nobody doesn't”)",
+  },
+  // 11.3
+  {
+    name: "the-places",
+    title: "the + places?",
+    subtitle: "the Nile — but Lake Baikal",
+    color: "teal",
+    columns: ["✅ the", "❌ no the"],
+    rows: [
+      ["rivers: **the** Nile, **the** Amazon", "lakes: Lake Baikal, Lake Balkhash"],
+      ["seas, oceans: **the** Caspian Sea, **the** Pacific", "one mountain: Mount Everest, Khan Tengri"],
+      ["mountain ranges: **the** Alps, **the** Andes", "countries: Kazakhstan, Japan, Turkey"],
+      ["deserts: **the** Sahara, **the** Atacama", "cities: Paris, Almaty, Tokyo"],
+      ["“plural” countries: **the** USA, **the** UK, **the** Netherlands", "continents: Asia, Europe, Africa"],
+    ],
+    note: "many of them → **the** (the Alps = many mountains) · one name → no **the** (Mount Everest)",
+  },
+  // 11.4
+  {
+    name: "airport",
+    title: "At the airport",
+    color: "blue",
+    columns: ["", "Phrases"],
+    rows: [
+      ["🛄 Check-in", "Can I see your passport, please? · How many bags are you checking in? · Window or aisle seat?"],
+      ["🔐 Security", "Please put your liquids in a bag. · Take off your belt. · Is this your bag?"],
+      ["🛫 Gate", "Flight KC 911 is now boarding at gate 12. · Please have your boarding pass ready."],
+      ["😩 Problems", "My flight is delayed / canceled. · I've missed my connection. · My bag didn't arrive."],
+    ],
+    note: "**check in** (verb) · **a check-in desk** (noun) · **board** = get on the plane",
+  },
 ];
