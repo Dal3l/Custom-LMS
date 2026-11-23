@@ -355,8 +355,8 @@ export const tables: GrammarTable[] = [
   // 9.1
   {
     name: "quantifiers",
-    title: "How much? How many?",
-    subtitle: "countable 🍎🍎 and uncountable 🥛 nouns",
+    title: "a few · a little · not much · not many",
+    subtitle: "How much / How many — you know from A1 · today: how much exactly?",
     color: "teal",
     columns: ["", "🍎 countable (apples, eggs)", "🥛 uncountable (sugar, water)"],
     rows: [
@@ -365,7 +365,7 @@ export const tables: GrammarTable[] = [
       ["➕ some, not many", "**a few** apples", "**a little** sugar"],
       ["➖", "not **many** apples", "not **much** sugar"],
     ],
-    note: "**much** and **many** — mostly in questions and negatives · in + sentences: **a lot of**",
+    note: "**a few** + 🍎 (a few eggs) · **a little** + 🥛 (a little milk) · ❌ sentences: **not much / not many** · ✅ sentences: **a lot of**",
   },
   // 9.2
   {
@@ -396,5 +396,50 @@ export const tables: GrammarTable[] = [
       ["❓ Your questions", "What would I do every day? · When could I start? · Is there any training?"],
     ],
     note: "Be positive: not “I can't…” → “I'm learning to…” 😊",
+  },
+  // 10.1
+  {
+    name: "adverbs",
+    title: "Adverbs: how do you do it?",
+    subtitle: "adjective → adverb",
+    color: "blue",
+    columns: ["Adjective", "Adverb", "Example"],
+    rows: [
+      ["quick · slow · careful", "+ **-ly**: quick**ly** · slow**ly** · careful**ly**", "She drives **carefully**."],
+      ["easy · happy", "y → **-ily**: eas**ily** · happ**ily**", "He passed the test **easily**."],
+      ["good", "**well** ⚠️", "You speak English **well**!"],
+      ["fast · hard · late · early", "the same: **fast · hard · late · early**", "He works **hard**. I got up **late**."],
+    ],
+    note: "adjective + noun: a **quick** runner · verb + adverb: he runs **quickly** · not “he runs quick”",
+  },
+  // 10.2
+  {
+    name: "ed-ing",
+    title: "bored or boring?",
+    subtitle: "-ed = how I feel · -ing = what makes me feel it",
+    color: "pink",
+    columns: ["-ed 🙂 the person", "-ing 🎬 the thing / the situation"],
+    rows: [
+      ["I'm **bored**. 😴", "The film is **boring**."],
+      ["The fans were **excited**. 🤩", "The concert was **exciting**."],
+      ["I'm **interested** in music.", "Music is **interesting**."],
+      ["She was **surprised**. 😲", "The news was **surprising**."],
+      ["We were **tired**. 😩", "The trip was **tiring**."],
+    ],
+    note: "I'm bor**ing** = people don't like talking to me! 😅 · I'm bor**ed** = I have nothing to do",
+  },
+  {
+    name: "verb-patterns",
+    title: "want to · enjoy -ing",
+    subtitle: "some verbs + to, some verbs + -ing",
+    color: "green",
+    columns: ["+ to + verb", "+ verb-ing"],
+    rows: [
+      ["I **want to** learn the guitar.", "I **enjoy playing** the guitar."],
+      ["We **hope to** see them live.", "I **love listening** to old songs."],
+      ["They **decided to** stop touring.", "They **finished recording** the album."],
+      ["I **need to** practice more.", "I **don't mind waiting**. · I **hate getting** up early."],
+    ],
+    note: "**to**: want, hope, decide, need, plan, learn, would like · **-ing**: enjoy, finish, don't mind, keep, practice · love / like / hate: **-ing** (or to)",
   },
 ];
