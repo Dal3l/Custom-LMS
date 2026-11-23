@@ -231,7 +231,7 @@ export default lesson("a2-5.2", "Maybe, maybe not", () => [
       video("Watch: will / won't for decisions, offers and promises.", "KADErmJElK0"),
       gaps(
         "Offer help or promise with I'll / I won't.",
-        "1. “I'm cold.” — [I'll] close the window.\n2. “I can't open this jar.” — Give it to me. [I'll] open it.\n3. “Don't be late!” — [I won't]. I promise!\n4. “I left my wallet at home.” — No problem, [I'll] pay.\n5. “It's a secret!” — Don't worry, [I won't] tell anyone.\n6. “My computer isn't working.” — [I'll] have a look at it.",
+        "1. “I'm cold.” — [I'll] close the window.\n2. “I can't open this jar.” — Give it to me. [I'll] open it.\n3. “Don't be late!” — [I won't/I will not]. I promise!\n4. “I left my wallet at home.” — No problem, [I'll] pay.\n5. “It's a secret!” — Don't worry, [I won't/I will not] tell anyone.\n6. “My computer isn't working.” — [I'll] have a look at it.",
       ),
     ],
     "Homework: Grammar — will",

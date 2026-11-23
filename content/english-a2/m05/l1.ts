@@ -131,7 +131,7 @@ export default lesson("a2-5.1", "In 2050", () => [
     drag(
       "Complete the predictions.",
       "In 2050, most cars [will] drive themselves. People [won't] need a driving license. Drones will [bring] our shopping. I [think] we will work only four days a week. I don't think people [will] stop meeting in real life — we'll [always] need friends! Will robots be our friends too? Maybe. They'll [probably] be good listeners! 🤖",
-      ["won't", "brings", "probable"],
+      ["don't", "brings", "probable"],
     ),
     order("Make predictions.", [
       "Robots will do the housework.",

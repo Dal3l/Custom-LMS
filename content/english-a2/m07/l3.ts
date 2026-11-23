@@ -135,7 +135,7 @@ export default lesson("a2-7.3", "Digital detox", () => [
     drag(
       "Complete the post.",
       "Day 5 of my detox! 📵 I've [already] read two books. I [haven't] missed TikTok at all — OK, a little. 😅 I've [just] come back from a walk with my dog. I've lived in this city [for] six years, but I've never noticed the beautiful old trees on my street! I've slept better [since] Monday. Have you tried a detox [yet]?",
-      ["yet", "since", "for", "didn't"],
+      ["still", "ago", "during", "didn't"],
     ),
   ]),
 

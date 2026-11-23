@@ -86,7 +86,7 @@ export default lesson("a2-8.2", "Good advice", () => [
       {
         read: [
           "## 💌 Ask Anna — your problems, my advice",
-          "**Arman, 19:** *I can't sleep. I go to bed at 1 a.m. after playing games, and then I lie awake for hours. In the morning I'm a zombie. 🧟 What should I do?*",
+          "**Arman, 24:** *I can't sleep. I go to bed at 1 a.m. after playing games, and then I lie awake for hours. In the morning I'm a zombie. 🧟 What should I do?*",
           "**Anna:** *You should stop playing an hour before bed — the light from the screen keeps your brain awake. You shouldn't drink energy drinks or coffee after 4 p.m. And try to go to bed at the same time every night — even on weekends!*",
           "**Zarina, 23:** *My flatmate never washes the dishes. The kitchen is a disaster! 🍝🍽️ It really gets on my nerves, but I don't want to argue.*",
           "**Anna:** *You shouldn't wait until you explode! 💥 You should talk it over calmly — maybe over a cup of tea. Make a cleaning plan together. Don't move out yet — first try to find a solution.*",

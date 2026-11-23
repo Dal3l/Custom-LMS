@@ -124,7 +124,7 @@ export default lesson("a2-12.2", "Choices", () => [
     drag(
       "Complete Aliya's message to her best friend.",
       "Big news! I've made a decision: I'm [going] to choose path C! 🎨 I'm [starting] a job at a design studio next Monday — it's all arranged. If I [save] enough money, I'll apply to Seoul in two years. My parents [might] not be happy at first, but I think they['ll] understand. I [won't] give up my dream! Will you [help] me with my portfolio? I promise I['ll] buy you coffee! ☕",
-      ["will start", "will save", "going"],
+      ["will start", "will save", "go"],
     ),
     order("Make sentences.", [
       "I'm going to study design.",
@@ -153,21 +153,21 @@ export default lesson("a2-12.2", "Choices", () => [
     tip("A long listening — about 2 minutes. Three people talk about a big decision. First listen: *What was each person's decision?* Second listen: *Do they regret it?*"),
     ...listening(
       "Listen to a podcast. Three people talk about a decision that changed their life.",
-      "**Host:** Welcome to “Turning Points”. Today three listeners tell us about the biggest decision of their lives. First, Daniyar.\n\n**Daniyar:** Hi! Five years ago I had a good job in a bank in Almaty. Good salary, nice office. But I was bored every single day. One day I decided to leave the bank and become a mountain guide. My parents thought I was crazy! 😅 The first year was hard — I didn't earn much. But now I have my own small company, and I'm never bored. I don't regret it at all.\n\n**Host:** Thank you, Daniyar. Next, Kate.\n\n**Kate:** My decision was about family. I lived in London, and I had a great job offer in New York. But my mum was ill, so I decided to stay in London. Sometimes I think: what will my life look like if I go to New York one day? Maybe I'll go in the future. But I'm happy I was with my mum when she needed me.\n\n**Host:** That's a beautiful story. And finally, Arman.\n\n**Arman:** Mine is smaller, but it changed everything. Two years ago, I decided to start learning English seriously — twenty minutes every day. I was afraid I was too old — I was thirty-five! But now I can watch films without subtitles, and next month I'm starting a new job in an international company. If you're thinking about starting something — start today!\n\n**Host:** Great advice! Thank you all.",
+      "**Host:** Welcome to “Turning Points”. Today three listeners tell us about the biggest decision of their lives. First, Daniyar.\n\n**Daniyar:** Hi! Five years ago I had a good job in a bank in Almaty. Good salary, nice office. But I was bored every single day. One day I decided to leave the bank and become a mountain guide. My parents thought I was crazy! 😅 The first year was hard — I didn't earn much. But now I have my own small company, and I'm never bored. I don't regret it at all.\n\n**Host:** Thank you, Daniyar. Next, Kate.\n\n**Kate:** My decision was about family. I lived in London, and I had a great job offer in New York. But my mum was ill, so I decided to stay in London. Sometimes I think: what will my life look like if I go to New York one day? Maybe I'll go in the future. But I'm happy I was with my mum when she needed me.\n\n**Host:** That's a beautiful story. And finally, Ruslan.\n\n**Ruslan:** Mine is smaller, but it changed everything. Two years ago, I decided to start learning English seriously — twenty minutes every day. I was afraid I was too old — I was thirty! But now I can watch films without subtitles, and next month I'm starting a new job in an international company. If you're thinking about starting something — start today!\n\n**Host:** Great advice! Thank you all.",
     ),
     quiz("Listen and choose.", [
       { q: "What was Daniyar's job before?", options: ["*He worked in a bank.", "He was a teacher.", "He was a mountain guide."] },
       { q: "What does Daniyar have now?", options: ["*his own small company", "a job in a bank", "a new office in Almaty"] },
       { q: "Why did Kate stay in London?", options: ["*Her mum was ill.", "She didn't like New York.", "She got a better job in London."] },
-      { q: "How old was Arman when he started learning English seriously?", options: ["*thirty-five", "twenty-five", "forty-five"] },
-      { q: "What is Arman starting next month?", options: ["*a new job in an international company", "a course in London", "a gap year"] },
+      { q: "How old was Ruslan when he started learning English seriously?", options: ["*thirty", "twenty-five", "forty-five"] },
+      { q: "What is Ruslan starting next month?", options: ["*a new job in an international company", "a course in London", "a gap year"] },
     ]),
     trueFalse("Listen again. True or false?", [
       ["Daniyar was bored at the bank.", true],
       ["Daniyar's parents loved his idea.", false],
       ["Kate regrets staying in London.", false],
       ["Kate might go to New York in the future.", true],
-      ["Arman studies English for twenty minutes every day.", true],
+      ["Ruslan studies English for twenty minutes every day.", true],
     ]),
   ]),
 

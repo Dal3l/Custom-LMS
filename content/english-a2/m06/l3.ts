@@ -84,7 +84,7 @@ export default lesson("a2-6.3", "Extreme sports", () => [
       {
         read: [
           "## 🚀🪂 The jump from the edge of space",
-          "On 14 October 2012, an Austrian skydiver, **Felix Baumgartner**, did something nobody had done before. He went up in a small capsule under a giant balloon from Roswell, in the USA. After more than two hours, he was about **39 kilometers** above the Earth — four times higher than planes fly. Below him, he could see the curve of our planet. 🌍",
+          "On 14 October 2012, an Austrian skydiver, **Felix Baumgartner**, did something completely new. He went up in a small capsule under a giant balloon from Roswell, in the USA. After more than two hours, he was about **39 kilometers** above the Earth — four times higher than planes fly. Below him, he could see the curve of our planet. 🌍",
           "Then he stepped out — and jumped. 😱",
           "He fell for more than four minutes before he opened his parachute. At one moment, he was falling at **1,357 km/h** — faster than the speed of sound! He was the first person to break the sound barrier without a plane or a car. 💥",
           "Was it dangerous? Very. Felix wore a special suit, like an astronaut's. Without it, he couldn't survive — there's almost no air up there. He and his team trained for years.",
