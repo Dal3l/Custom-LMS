@@ -9,6 +9,7 @@
 //
 // Ids are made from the lesson's name and a counter, so loading the same
 // lesson again gives the same ids.
+import { createHash } from "node:crypto";
 import type { ExerciseTypeId } from "@/features/exercises/catalog";
 import { getDefinition } from "@/features/exercises/definitions";
 import { hashString } from "@/features/exercises/shuffle";
@@ -258,8 +259,19 @@ export function video(title: string, youtubeId: string | null, caption = ""): Co
  * with the note's eye, to read along.
  */
 export function listening(title: string, script: string): ContentBlock[] {
-  return [audio(title, "🎧 Audio coming soon — your teacher reads the dialogue."), note("Audio script", script)];
+  // The recording (scripts/content/tts.mjs) is named after the script, so a changed script needs a new one.
+  const file = `audio/${createHash("sha256").update(script).digest("hex").slice(0, 16)}.mp3`;
+  const block: ContentBlock = {
+    type: "audio",
+    title,
+    content: { file: { path: `asset:${file}`, name: "listening.mp3", size: 0, mime: "audio/mpeg" }, caption: AUDIO_SOON },
+    key: null,
+  };
+  return [block, note("Audio script", script)];
 }
+
+/** The caption of a listening without its recording yet (see resolveAssets). */
+export const AUDIO_SOON = "🎧 Audio coming soon — your teacher reads the dialogue.";
 
 /** A place for audio (the file is added later); the script goes into a hidden note next to it. */
 export function audio(title: string, caption = ""): ContentBlock {

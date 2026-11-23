@@ -6,7 +6,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { md, type ContentLesson } from "./kit";
+import { AUDIO_SOON, md, type ContentLesson } from "./kit";
 
 export type Upload = { storagePath: string; file: string; mime: string };
 
@@ -51,6 +51,15 @@ export function resolveAssets<L extends ContentLesson>(lesson: L, options: { own
     if (Array.isArray(value)) return value.map(walk);
     if (!value || typeof value !== "object") return value;
     const obj = value as Record<string, unknown>;
+    // A listening: its recording is used once it's made (scripts/content/tts.mjs); until then, no file.
+    if (obj.type === "audio" && obj.content && typeof obj.content === "object") {
+      const content = obj.content as { file: { path: string } | null; caption: string };
+      if (content.file?.path.startsWith("asset:")) {
+        const made = existsSync(path.join(options.root, "assets", content.file.path.slice("asset:".length)));
+        const next = made ? { file: walk(content.file), caption: content.caption === AUDIO_SOON ? "" : content.caption } : { file: null, caption: content.caption };
+        return { ...obj, content: next };
+      }
+    }
     if (typeof obj.path === "string" && obj.path.startsWith("asset:")) {
       const rel = obj.path.slice("asset:".length);
       const credit = rel.startsWith("photos/") ? credits[rel.slice("photos/".length)] : undefined;

@@ -1,0 +1,82 @@
+// Voices of the listenings (ElevenLabs premade voices — free to use in paid
+// plans, commercial licence included). Every speaker in a script needs a voice
+// here; in one dialogue two speakers never share a voice (the next free voice
+// of the same kind is taken).
+
+export type VoiceKind = "female" | "male" | "neutral";
+type Voice = { id: string; name: string; kind: VoiceKind };
+
+export const VOICES: Voice[] = [
+  { id: "EXAVITQu4vr4xnSDxMaL", name: "Sarah", kind: "female" },
+  { id: "FGY2WhTYpPnrIDTdsKH5", name: "Laura", kind: "female" },
+  { id: "cgSgspJ2msm6clMCkdW9", name: "Jessica", kind: "female" },
+  { id: "Xb7hH8MSUJpSbSDYk0k2", name: "Alice", kind: "female" },
+  { id: "XrExE9yKIg1WjnnlVkGX", name: "Matilda", kind: "female" },
+  { id: "hpp4J3VqNfWAUOO0d1Us", name: "Bella", kind: "female" },
+  { id: "pFZP5JQG7iQjIQuC4Bku", name: "Lily", kind: "female" },
+  { id: "TX3LPaxmHKxFdv7VOQHJ", name: "Liam", kind: "male" },
+  { id: "bIHbv24MWmeRgasZH58o", name: "Will", kind: "male" },
+  { id: "IKne3meq5aSn9XLyUdCD", name: "Charlie", kind: "male" },
+  { id: "iP95p4xoKVk53GoZ742B", name: "Chris", kind: "male" },
+  { id: "cjVigY5qzO86Huf0OWal", name: "Eric", kind: "male" },
+  { id: "CwhRBWXzGAHq8TQ4Fs17", name: "Roger", kind: "male" },
+  { id: "nPczCjzI2devNBz1zQrb", name: "Brian", kind: "male" },
+  { id: "JBFqnCBsd6RMkjVDRZzb", name: "George", kind: "male" },
+  { id: "onwK4e9ZLuTAKqWW03F9", name: "Daniel", kind: "male" },
+  { id: "pqHfZKP75CvOlQylNhV4", name: "Bill", kind: "male" },
+  { id: "SAz9YHcvj6GT2YYXdXww", name: "River", kind: "neutral" },
+];
+
+/** Speaker → the voice they usually get. */
+export const SPEAKERS: Record<string, string> = {
+  // the course characters — always the same voice
+  Leo: "Liam",
+  Mia: "Jessica",
+  Aigerim: "Sarah",
+  Dana: "Laura",
+  Arman: "Will",
+  Kenji: "Charlie",
+  Daniyar: "Chris",
+  Emma: "Lily",
+  Tom: "Eric",
+  Sara: "Bella",
+  Laura: "Matilda",
+  Asel: "Bella",
+  Dina: "Sarah",
+  Anna: "Lily",
+  Kate: "Jessica",
+  Sam: "Will",
+  Lena: "Laura",
+  // people by role
+  Receptionist: "Alice",
+  Barista: "Will",
+  Worker: "Roger",
+  Waiter: "Eric",
+  Driver: "Roger",
+  Owner: "Bill",
+  Support: "Matilda",
+  Assistant: "Bella",
+  Shop: "Bella",
+  Host: "Daniel",
+  Reporter: "Daniel",
+  Storyteller: "George",
+  Detective: "George",
+  Grandma: "Lily",
+  Man: "Brian",
+  Woman: "Matilda",
+  Boy: "Liam",
+  Girl: "Jessica",
+  "Student A": "Liam",
+  "Student B": "Jessica",
+  "Tourist 1": "Charlie",
+  "Tourist 2": "Laura",
+  "Tourist 3": "Eric",
+  "Mr. Hall": "Chris",
+  "Ms. Park": "Bella",
+  "Mr. Brown": "Bill",
+  "Ms. Lee": "Matilda",
+  "Mrs. Lee": "Matilda",
+  Bot: "River",
+  // text without a speaker (a narrator, the numbers of the parts)
+  Narrator: "Alice",
+};
