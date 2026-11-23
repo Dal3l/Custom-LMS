@@ -33,7 +33,7 @@ export default lesson("a1-11.2", "How much is it?", () => [
       ["In the USA, you can pay with dollars only in cash.", false],
     ]),
     picture("Euro coins and banknotes", ["photos/money-euro.jpg"]),
-    text("Talk to your teacher.", "- Do you pay with cash, a card or your phone? 💵💳📱\n- What do you buy online?"),
+    text("Talk to your teacher.", "- Do you pay with cash, a card or your phone? Why? 💵💳📱\n- What do you buy online? What do you never buy online? 🛒\n- Is it easy for you to save money? 💰"),
   ]),
 
   section("Vocabulary: Numbers and money", [

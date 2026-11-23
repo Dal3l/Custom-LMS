@@ -32,33 +32,33 @@ export default lesson("a2-0.1", "Entry test: A1 check", () => [
   section("Grammar: present", [
     choose(
       "be, have, can: choose.",
-      "1. My sister [*is/are/am] a nurse.\n2. They [*have/has/are] two dogs.\n3. [*Are/Is/Do] you from Almaty?\n4. She [*can/cans/can to] play the guitar.\n5. There [*are/is/be] three bedrooms in our flat.",
+      "1. My sister [*is/are/am] a nurse.\n2. They [*have/has/are] two dogs.\n3. [*Are/Is/Do] you from Almaty?\n4. She [*can/cans/can to] play the guitar.\n5. There [*are/is/be] three bedrooms in our flat.\n6. My dad [*has got/have got/is] a new car.",
     ),
     choose(
       "Present Simple: choose.",
-      "1. He [*works/work/working] in a bank.\n2. We [*don't/doesn't/not] eat meat.\n3. [*Does/Do/Is] your brother play football?\n4. I [*always get/get always/always gets] up at 7.",
+      "1. He [*works/work/working] in a bank.\n2. We [*don't/doesn't/not] eat meat.\n3. [*Does/Do/Is] your brother play football?\n4. I [*always get/get always/always gets] up at 7.\n5. My mom [*watches/watchs/watch] the news every evening.\n6. Where [*do/does/are] your parents live?",
     ),
     choose(
       "Present Simple or Present Continuous? Choose.",
-      "1. Look! It [*'s raining/rains].\n2. I usually [*wear/'m wearing] jeans.\n3. What [*are you doing/do you do] right now?\n4. She [*plays/is playing] tennis every Saturday.",
+      "1. Look! It [*'s raining/rains].\n2. I usually [*wear/'m wearing] jeans.\n3. What [*are you doing/do you do] right now?\n4. She [*plays/is playing] tennis every Saturday.\n5. Shh! The baby [*is sleeping/sleeps].\n6. We [*don't usually go/aren't usually going] out on Mondays.",
     ),
     choose(
       "in, on or at? Choose.",
-      "1. I get up [*at/on/in] 7 o'clock.\n2. We have English [*on/in/at] Monday.\n3. I go to bed late [*at/on/in] night.\n4. It's cold [*in/on/at] winter.",
+      "1. I get up [*at/on/in] 7 o'clock.\n2. We have English [*on/in/at] Monday.\n3. I go to bed late [*at/on/in] night.\n4. It's cold [*in/on/at] winter.\n5. My birthday is [*in/on/at] May.\n6. See you [*on/in/at] Friday evening!",
     ),
-    gaps("Complete with one word.", "1. How [much] is this T-shirt? — $15.\n2. How [many] apples do we need?\n3. Is there [any] milk in the fridge?\n4. I love [them]! (my cats)\n5. This is my [sister's] room. (sister)"),
+    gaps("Complete with one word.", "1. How [much] is this T-shirt? — $15.\n2. How [many] apples do we need?\n3. Is there [any] milk in the fridge?\n4. I love [them]! (my cats)\n5. This is my [sister's] room. (sister)\n6. Can you help [me], please? (I)"),
   ]),
 
   section("Grammar: past", [
     choose(
       "was / were: choose.",
-      "1. I [*was/were] at home yesterday.\n2. We [*were/was] at the cinema last night.\n3. [*Were/Was] you tired?\n4. The film [*wasn't/weren't] good.",
+      "1. I [*was/were] at home yesterday.\n2. We [*were/was] at the cinema last night.\n3. [*Were/Was] you tired?\n4. The film [*wasn't/weren't] good.\n5. My grandparents [*were/was] born in 1960.\n6. Where [*was/were] your phone? — In my bag.",
     ),
-    gaps("Write the past.", "1. play → [played]\n2. go → [went]\n3. have → [had]\n4. watch → [watched]\n5. see → [saw]"),
+    gaps("Write the past.", "1. play → [played]\n2. go → [went]\n3. have → [had]\n4. watch → [watched]\n5. see → [saw]\n6. study → [studied]\n7. eat → [ate]\n8. buy → [bought]"),
     drag(
       "Complete the story.",
-      "Last summer I [was] in Turkey with my family. The weather [was] hot. We [went] to the beach every day. My brother [played] volleyball, and I [had] a lot of ice cream! 🍦",
-      ["were", "goes", "play"],
+      "Last summer I [was] in Turkey with my family. The weather [was] hot. We [went] to the beach every day. My brother [played] volleyball, and I [had] a lot of ice cream! 🍦 In the evenings we [watched] films and [ate] fish. It [was] a great holiday!",
+      ["were", "goes", "play", "eated"],
     ),
   ]),
 
@@ -77,18 +77,19 @@ export default lesson("a2-0.1", "Entry test: A1 check", () => [
 
   section("Vocabulary", [
     sort("Sort the words.", {
-      "👨‍👩‍👧 Family": ["cousin", "aunt", "grandpa"],
-      "🏠 Home": ["kitchen", "wardrobe", "balcony"],
-      "🍎 Food": ["cheese", "bread", "carrot"],
-      "🏙️ City": ["pharmacy", "museum", "bus stop"],
+      "👨‍👩‍👧 Family": ["cousin", "aunt", "grandpa", "nephew"],
+      "🏠 Home": ["kitchen", "wardrobe", "balcony", "fridge"],
+      "🍎 Food": ["cheese", "bread", "carrot", "rice"],
+      "🏙️ City": ["pharmacy", "museum", "bus stop", "bank"],
     }),
-    gaps("Write the word.", "1. 🧥 You wear it when it's cold: a [coat/jacket]\n2. 🚇 An underground train: the [metro/subway/underground]\n3. 🍳 The meal in the morning: [breakfast]\n4. 👕👖👟 All your clothes together: an [outfit]"),
+    gaps("Write the word.", "1. 🧥 You wear it when it's cold: a [coat/jacket]\n2. 🚇 An underground train: the [metro/subway/underground]\n3. 🍳 The meal in the morning: [breakfast]\n4. 👕👖👟 All your clothes together: an [outfit]\n5. 👩‍⚕️ She works in a hospital: a [doctor/nurse]\n6. 🗓️ The day after Monday: [Tuesday]"),
     match("Match the opposites.", [
       ["cheap", "expensive"],
       ["busy", "quiet"],
       ["early", "late"],
       ["always", "never"],
       ["love", "hate"],
+      ["old", "new"],
     ]),
     quiz("Choose the right word.", [
       { q: "You buy medicine at a…", options: ["*pharmacy", "museum", "bakery"] },
@@ -122,11 +123,12 @@ export default lesson("a2-0.1", "Entry test: A1 check", () => [
       { q: "Asel is a…", options: ["*designer", "teacher", "doctor"] },
       { q: "Mars is…", options: ["*her cat", "her sister", "a café"] },
       { q: "Right now she's…", options: ["*drinking tea", "skiing", "at the gym"] },
+      { q: "Who can't ski?", options: ["*Asel's friends", "Asel", "Asel's sister"] },
     ]),
   ]),
 
   section("Writing and speaking", [
-    order("Make sentences.", ["Where were you last weekend?", "She doesn't like coffee.", "How often do you go to the gym?"]),
+    order("Make sentences.", ["Where were you last weekend?", "She doesn't like coffee.", "How often do you go to the gym?", "There are two bedrooms in my flat.", "What are you doing right now?"]),
     write("Reply to Asel. Tell her about you: your job or study, your day, and your last weekend. (40+ words)", 40),
     text(
       "Speaking: talk to your teacher for 2 minutes 🗣️",
@@ -141,8 +143,8 @@ export default lesson("a2-0.1", "Entry test: A1 check", () => [
 
   homework(
     [
-      gaps("Review: complete.", "1. She [is] my best friend.\n2. He [has] two brothers.\n3. I [don't/do not] like mornings.\n4. Look! They [are] dancing!\n5. We [were] at the park yesterday."),
-      choose("Choose.", "1. How [*much/many] money do you have?\n2. There [*aren't/isn't] any eggs.\n3. I can [*swim/to swim]."),
+      gaps("Review: complete.", "1. She [is] my best friend.\n2. He [has] two brothers.\n3. I [don't/do not] like mornings.\n4. Look! They [are] dancing!\n5. We [were] at the park yesterday.\n6. [Did] you go out last night?"),
+      choose("Choose.", "1. How [*much/many] money do you have?\n2. There [*aren't/isn't] any eggs.\n3. I can [*swim/to swim].\n4. How [*many/much] friends do you have?\n5. She [*doesn't/don't] eat meat.\n6. We [*went/goed] to the park on Sunday."),
       write("Write 3 things you want to learn in English this year and why. (25+ words)", 25),
       record("Record a 1-minute introduction: who you are and why you learn English. 🎤", 60),
     ],
@@ -155,6 +157,8 @@ export default lesson("a2-0.1", "Entry test: A1 check", () => [
         ["Did you see the film?", true],
         ["I was at home last night.", true],
         ["They was happy.", false],
+        ["He can speaks English.", false],
+        ["There are some apples in the fridge.", true],
       ]),
     ],
     "Homework: Grammar check",

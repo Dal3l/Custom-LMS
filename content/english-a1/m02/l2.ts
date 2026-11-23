@@ -36,7 +36,7 @@ export default lesson("a1-2.2", "These are my favorites", () => [
       { q: "🦓 A zebra is black and…", options: ["*white", "brown", "gray"] },
     ]),
     tip("Let the student guess — the colors come next in the vocabulary."),
-    text("Talk to your teacher.", "- What's your favorite thing? Is it new or old? 👟\n- Do you watch unboxing videos? 📦"),
+    text("Talk to your teacher.", "- What's your favorite thing? Why is it special for you? 👟🎧\n- What's an old thing you love? Why? 🧸\n- Do you watch unboxing videos? Are they fun or boring? 📦"),
   ]),
 
   section("Vocabulary: Colors and describing words", [

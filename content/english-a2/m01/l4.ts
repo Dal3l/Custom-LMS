@@ -27,8 +27,8 @@ export default lesson("a2-1.4", "Practical: At the hotel", () => [
     box("Today you will…", "- check in at a hotel 🏨\n- ask politely: *Could you…? Could I…?*\n- complain about a problem in the room 😤➡️🙂"),
     picture("A hotel reception", ["photos/hotel-reception.jpg"], "The reception desk of a hotel in Stockholm, Sweden 🇸🇪"),
     text(
-      "Talk about the photo.",
-      "- Who works here? What do guests do at the reception? 🛎️\n- Hotel, hostel or apartment — where do you like to stay? Why?\n- What's important for you in a hotel: breakfast, Wi-Fi, a pool, the view? 🍳📶🏊🌇",
+      "Talk to your teacher.",
+      "- What was the best or the worst place you stayed in? What happened? 🏨\n- Hotel, hostel or apartment — where do you like to stay? Why?\n- What's important for you in a hotel: breakfast, Wi-Fi, a pool, the view? 🍳📶🏊🌇",
     ),
   ]),
 
@@ -54,32 +54,38 @@ export default lesson("a2-1.4", "Practical: At the hotel", () => [
       ["room", "service"],
       ["the air", "conditioning"],
       ["breakfast is", "included"],
+      ["a late", "checkout"],
     ]),
     quiz("Choose.", [
       { q: "A room with two beds:", options: ["*a twin room", "a single room", "a double room"] },
       { q: "🇺🇸 elevator = 🇬🇧 …", options: ["*lift", "stairs", "hall"] },
       { q: "You leave the hotel. You…", options: ["*check out", "check in", "book"] },
+      { q: "You order food to your room. It's…", options: ["*room service", "check-in", "a reservation"] },
+      { q: "You don't pay extra for breakfast. Breakfast is…", options: ["*included", "broken", "booked"] },
     ]),
   ]),
 
   section("Useful phrases: Polite requests", [
     table("requests"),
     sort("Guest or receptionist? Who says it? Sort. 🧳🛎️", {
-      "🧳 Guest": ["I have a reservation.", "Could I have a late checkout?", "The AC doesn't work."],
-      "🛎️ Receptionist": ["Can I see your passport?", "Here's your key card.", "Enjoy your stay!"],
+      "🧳 Guest": ["I have a reservation.", "Could I have a late checkout?", "The AC doesn't work.", "What's the Wi-Fi password?"],
+      "🛎️ Receptionist": ["Can I see your passport?", "Here's your key card.", "Enjoy your stay!", "Breakfast is from 7 to 10."],
     }),
     choose(
       "Choose the more polite request.",
-      "1. [*Could you/You must] call a taxi for me, please?\n2. [*Could I/I want to] have an extra towel?\n3. [*Would you mind/Please you] waiting a moment?",
+      "1. [*Could you/You must] call a taxi for me, please?\n2. [*Could I/I want to] have an extra towel?\n3. [*Would you mind/Please you] waiting a moment?\n4. [*Could you/You will] tell me the Wi-Fi password?\n5. [*Could I/I need to] pay by card?\n6. [*Can you/You can] help me with my bags, please?",
     ),
-    gaps("Complete the requests.", "1. [Could] you help me with my bags, please?\n2. Could I [have] a room with a view?\n3. Can you [wake] me up at 7, please?"),
+    gaps(
+      "Complete the requests.",
+      "1. [Could] you help me with my bags, please?\n2. Could I [have] a room with a view?\n3. Can you [wake] me up at 7, please?\n4. Would you [mind] calling a taxi?\n5. Could you [tell] me the Wi-Fi password?\n6. [Could/Can] I pay by card, please?",
+    ),
   ]),
 
   section("Dialogue: Checking in", [
     tip("Read the dialogue with the student: you are the receptionist. Then change roles."),
     gaps(
       "Read the dialogue. Complete the booking card.",
-      "🏨 Guest: [Aigerim Bekova]\n🛏️ Room: [double/a double room/double room]\n🌙 Nights: [three/3]\n🍳 Breakfast: [7–10/7-10/from 7 to 10]\n🔢 Room number: [512]",
+      "🏨 Guest: [Aigerim Bekova]\n🛏️ Room: [double/a double room/double room]\n🌙 Nights: [three/3]\n🍳 Breakfast: [7–10/7-10/from 7 to 10]\n🍽️ Breakfast floor: [first/1st/the first floor/first floor]\n🔢 Room number: [512]\n🌊 View: [sea/sea view/a sea view]",
       {
         read: [
           "## 🛎️ At the reception",
@@ -99,6 +105,8 @@ export default lesson("a2-1.4", "Practical: At the hotel", () => [
       ["Aigerim doesn't have a reservation.", false],
       ["Breakfast is included.", true],
       ["The lift is on the right.", false],
+      ["Aigerim asked for a room with a sea view.", true],
+      ["The Wi-Fi password is on the key card.", true],
     ]),
     order(
       "Put the dialogue in order.",
@@ -116,8 +124,12 @@ export default lesson("a2-1.4", "Practical: At the hotel", () => [
       { q: "What's the first problem?", options: ["*The AC doesn't work.", "The room is dirty.", "The TV is broken."] },
       { q: "What's missing in the bathroom?", options: ["*towels", "soap", "a mirror"] },
       { q: "When can Aigerim check out on Sunday?", options: ["*at 2", "at 12", "at 6"] },
+      { q: "When is Aigerim's flight?", options: ["*at 6 p.m.", "at 2 p.m.", "at 10 a.m."] },
     ]),
-    gaps("Listen again. Complete Aigerim's phrases.", "1. I'm sorry, but there's a [problem].\n2. The air conditioning doesn't [work].\n3. [Could] I have a late checkout?"),
+    gaps(
+      "Listen again. Complete the phrases.",
+      "1. I'm sorry, but there's a [problem].\n2. The air conditioning doesn't [work].\n3. [Could] I have a late checkout?\n4. Oh, I'm [sorry] about that.\n5. Could you [wait] ten minutes?\n6. We'll bring some towels right [away].",
+    ),
   ]),
 
   section("Video: At a hotel", [
@@ -138,14 +150,15 @@ export default lesson("a2-1.4", "Practical: At the hotel", () => [
       { q: "More polite:", options: ["*Could you call a taxi, please?", "Call a taxi.", "You call a taxi."] },
       { q: "You arrive at a hotel. You…", options: ["*check in", "check out", "book out"] },
       { q: "A problem: “The AC…”", options: ["*doesn't work", "isn't working well please", "not work"] },
+      { q: "🇬🇧 lift = 🇺🇸 …", options: ["*elevator", "stairs", "escalator"] },
     ]),
     box("Word of the day: staycation", "**a staycation** 🏨🏙️ = a holiday in your own city — for example, a weekend in a hotel near your home.\n\n*No money for a big trip? Let's have a staycation!*"),
   ]),
 
   homework(
     [
-      gaps("Complete.", "1. I have a [reservation] for two nights.\n2. Check-[out] is at 12.\n3. A room with two beds is a [twin] room.\n4. 🇺🇸 elevator = 🇬🇧 [lift]"),
-      choose("Choose.", "1. [*Could/Do] you help me?\n2. [*Could I/Can you I] have a towel?\n3. The Wi-Fi [*doesn't/isn't] work."),
+      gaps("Complete.", "1. I have a [reservation/booking] for two nights.\n2. Check-[out] is at 12.\n3. A room with two beds is a [twin] room.\n4. 🇺🇸 elevator = 🇬🇧 [lift]\n5. Food to your room: room [service] 🍽️\n6. You open your door with a key [card] 💳"),
+      choose("Choose.", "1. [*Could/Do] you help me?\n2. [*Could I/Can you I] have a towel?\n3. The Wi-Fi [*doesn't/isn't] work.\n4. Breakfast is [*included/including].\n5. Could I have a [*late/later] checkout?\n6. [*Would you mind/Could you mind] waiting?"),
     ],
     "Homework: Vocabulary",
   ),
@@ -165,6 +178,7 @@ export default lesson("a2-1.4", "Practical: At the hotel", () => [
           ["Breakfast wasn't included.", false],
           ["The room was quiet.", false],
           ["The staff fixed the problem.", true],
+          ["The hotel is far from the old town.", false],
         ],
         { read: "⭐⭐⭐⭐ **Great location, noisy room** — *The hotel is in the center, near the old town. Breakfast was included and delicious! 🥐 Unfortunately, our first room was very noisy — there was a bar under the window. 🎶 We called the reception and they gave us a new room on the 6th floor. The staff were very kind. I recommend it!*" },
       ),

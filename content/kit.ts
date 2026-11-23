@@ -9,6 +9,7 @@
 //
 // Ids are made from the lesson's name and a counter, so loading the same
 // lesson again gives the same ids.
+import { createHash } from "node:crypto";
 import type { ExerciseTypeId } from "@/features/exercises/catalog";
 import { getDefinition } from "@/features/exercises/definitions";
 import { hashString } from "@/features/exercises/shuffle";
@@ -258,8 +259,19 @@ export function video(title: string, youtubeId: string | null, caption = ""): Co
  * with the note's eye, to read along.
  */
 export function listening(title: string, script: string): ContentBlock[] {
-  return [audio(title, "🎧 Audio coming soon — your teacher reads the dialogue."), note("Audio script", script)];
+  // The recording (scripts/content/tts.mjs) is named after the script, so a changed script needs a new one.
+  const file = `audio/${createHash("sha256").update(script).digest("hex").slice(0, 16)}.mp3`;
+  const block: ContentBlock = {
+    type: "audio",
+    title,
+    content: { file: { path: `asset:${file}`, name: "listening.mp3", size: 0, mime: "audio/mpeg" }, caption: AUDIO_SOON },
+    key: null,
+  };
+  return [block, note("Audio script", script)];
 }
+
+/** The caption of a listening without its recording yet (see resolveAssets). */
+export const AUDIO_SOON = "🎧 Audio coming soon — your teacher reads the dialogue.";
 
 /** A place for audio (the file is added later); the script goes into a hidden note next to it. */
 export function audio(title: string, caption = ""): ContentBlock {
@@ -323,4 +335,48 @@ export function size(l: ContentLesson): { inClass: number; homework: number } {
   const count = (kind: "lesson" | "homework") =>
     l.sections.filter((s) => s.kind === kind).flatMap((s) => s.blocks).filter((b) => b.type !== "note").length;
   return { inClass: count("lesson"), homework: count("homework") };
+}
+
+/** How many questions an auto-checked task has (gaps, statements, pairs, words…); null for other blocks. */
+export function items(b: ContentBlock): number | null {
+  // The keys are built in this file; their shapes per type are known.
+  const k = b.key as {
+    answers: Record<string, unknown>;
+    correct: Record<string, unknown>;
+    pairs: unknown[];
+    groups: { items: string }[];
+    mode: string;
+    tasks: { source: string }[];
+  } | null;
+  if (!k) return null;
+  switch (b.type) {
+    case "gap_input":
+    case "gap_select":
+    case "gap_drag":
+    case "true_false":
+      return Object.keys(k.answers).length;
+    case "multiple_choice":
+      return Object.keys(k.correct).length;
+    case "matching":
+      return k.pairs.length;
+    case "categorize":
+      return k.groups.reduce((n, g) => n + g.items.split("\n").filter(Boolean).length, 0);
+    case "ordering":
+      return k.mode === "lines" ? k.tasks[0]!.source.split("\n").length : k.tasks.length;
+    default:
+      return null;
+  }
+}
+
+/**
+ * The fewest questions a task should have, so students practise properly
+ * (English A2 and later). Short on purpose: "Notice the rule" (the student
+ * guesses the rule) and a check after a video; picture matching needs 5.
+ */
+export function minItems(b: ContentBlock): number | null {
+  if (/^(Notice the rule|After the video)/.test(b.title)) return null;
+  const pictures = b.type === "matching" && (b.key as { pairs: { left: { kind: string } }[] }).pairs.some((p) => p.left.kind === "image");
+  if (pictures) return 5;
+  const min: Record<string, number> = { gap_input: 6, gap_select: 6, gap_drag: 6, multiple_choice: 4, true_false: 5, matching: 6, categorize: 8, ordering: 5 };
+  return min[b.type] ?? null;
 }

@@ -28,8 +28,8 @@ export default lesson("a1-5.1", "A day in the life", () => [
     box("Today you will…", "- name things you do every day\n- say *I get up at 7. We have lunch at 1.*\n- describe your day — like a “day in the life” video 🎥"),
     picture("Three photos from a day.", ["photos/day-alarm.jpg", "photos/day-breakfast.jpg", "photos/day-study.jpg"]),
     text(
-      "Talk about the photos.",
-      "- Photo 1: What time is it? ⏰ Is it early?\n- Photo 2: Is it a good breakfast? What's your breakfast? 🍳\n- Photo 3: Is she at school or at home? 📚\n- What's your favorite time of the day? Why?",
+      "Talk to your teacher.",
+      "- What time do you get up? Is it easy or difficult for you? ⏰\n- What's your breakfast? Is it a good breakfast? 🍳\n- Where do you study or work — at home, at school, in an office? Where is better for you? 📚\n- What's your favorite time of the day? Why?",
     ),
   ]),
 

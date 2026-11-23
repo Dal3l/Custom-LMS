@@ -27,8 +27,8 @@ export default lesson("a1-5.4", "Practical: At a coffee shop", () => [
     box("Today you will…", "- read a coffee shop menu\n- order a drink and food: *Can I have…? I'd like…*\n- answer the barista's questions\n- play “barista and guest” 🎭"),
     picture("Look at the photo.", ["photos/cafe-counter.jpg"], "A coffee shop in the USA 🇺🇸"),
     text(
-      "Talk about the photo.",
-      "- Who is the man? What's his job? 👨‍🍳\n- What's in his hand? 🥤\n- Is the café nice? Is it big or small?\n- Do you go to coffee shops? Which one is your favorite? ☕",
+      "Talk to your teacher.",
+      "- Do you go to coffee shops? Why — for coffee, for friends, for work? ☕\n- What's your favorite drink there? 🥤\n- Is a coffee shop a good place to study or work? Why / why not?\n- Coffee or tea — what are you? 😄",
     ),
   ]),
 

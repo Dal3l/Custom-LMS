@@ -25,8 +25,8 @@ export default lesson("a1-11.1", "What's in your fridge?", () => [
     box("Today you will…", "- name food and drinks 🍎🧀🥛\n- say *There's some milk. There aren't any eggs.*\n- tell what's in your fridge"),
     picture("Look at the photo.", ["photos/food-fridge.jpg"], "A big family fridge"),
     text(
-      "Talk about the photo.",
-      "- What can you see in the fridge? Say 5 things! 👀\n- Is it a healthy fridge? 🥦\n- Is your fridge full or empty right now? 😅\n- What's always in your fridge?",
+      "Talk to your teacher.",
+      "- What's always in your fridge? 🧀\n- What does your fridge say about you? Healthy? Lazy? A good cook? 😄\n- Who does the shopping in your family? Who cooks?\n- What's your favorite food when you're tired? 🍫",
     ),
   ]),
 

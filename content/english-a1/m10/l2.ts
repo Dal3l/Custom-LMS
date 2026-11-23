@@ -27,7 +27,7 @@ export default lesson("a1-10.2", "Outfit of the day", () => [
     picture("Street style in Harajuku, Tokyo 🇯🇵", ["photos/fit-harajuku.jpg", "photos/fit-harajuku2.jpg"]),
     text(
       "Talk about the photos.",
-      "- What colors can you see? 🎨\n- Which outfit do you like? Why?\n- Is it a good outfit for winter or for summer? ❄️☀️\n- Do people in your city wear clothes like this?",
+      "- Which outfit do you like? Why? 👗\n- What's your style: comfortable, sporty, classic or something else? 😎\n- What clothes do you wear every day? What do you never wear? 🙅\n- Is fashion important for you? Why / why not?",
     ),
   ]),
 

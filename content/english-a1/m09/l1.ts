@@ -27,8 +27,8 @@ export default lesson("a1-9.1", "My city", () => [
     box("Today you will…", "- name places in a city\n- give directions: *Go straight. Turn left.*\n- explain the way to a place in your city 🗺️"),
     picture("Places in a city", ["photos/city-pharmacy.jpg", "photos/city-supermarket.jpg", "photos/city-museum.jpg"]),
     text(
-      "Talk about the photos.",
-      "- What places are in the photos? Do you know the words?\n- Photo 1: The pharmacy is in New York, but the sign is in two languages. Can you read it? 😄\n- What's your favorite place in your city? Why?\n- Is there a museum near your home? A supermarket?",
+      "Talk to your teacher.",
+      "- What's your favorite place in your city? Why? 🏙️\n- What place isn't near your home, but you want it there? (a park, a gym, a café…)\n- A friend from another country visits you. Where do you go together? 🗺️",
     ),
   ]),
 

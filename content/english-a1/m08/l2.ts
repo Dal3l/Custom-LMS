@@ -28,7 +28,7 @@ export default lesson("a1-8.2", "Fans", () => [
     picture("Fans", ["photos/fan-concert.jpg", "photos/fan-cosplay.jpg"], "A big concert and a fan convention"),
     text(
       "Talk about the photos.",
-      "- Photo 1: Where are the people? How do they feel? 🤩\n- Photo 2: What can fans do at a convention? (buy things, meet stars, wear costumes…)\n- Do you go to concerts? Which one is your dream concert? 🎫\n- Are you a fan of a band, a team or a series?",
+      "- Do you like big events like these? Why / why not? 🤩\n- What's your dream concert? 🎫\n- Are you a fan of a band, a team or a series? Why do you like it? ❤️\n- What do fans do for their stars? Is it OK, or is it too much? 🤔",
     ),
   ]),
 
