@@ -26,6 +26,10 @@ export default lesson("b1-4.4", "Revision 3–4", () => [
       "- check what you've learned in modules 3 and 4 ✅\n- try new parts of the **B1 Preliminary** exam 🎓\n- start your project: *A letter to future me* ✉️",
     ),
     text(
+      "Game: Hot seat 🔥",
+      "Pick a card and talk for 1 minute without stopping! Your teacher times you. ⏱️\n\n🃏 Something I used to do as a child\n🃏 Something I'm getting used to now\n🃏 What I'll be doing this time next year\n🃏 A complaint I made (or wanted to make)\n🃏 A job robots will probably do in 20 years\n\nThen your teacher takes a card. 😄",
+    ),
+    text(
       "Talk to your teacher.",
       "- Which habit from your childhood have you kept — and which one have you happily lost? 🔄\n- Which lesson in these two modules made you think the most? Why?\n- Be honest: are you more nostalgic about the past or excited about the future?",
     ),

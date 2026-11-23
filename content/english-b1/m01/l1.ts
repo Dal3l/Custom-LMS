@@ -28,6 +28,13 @@ export default lesson("b1-1.1", "What have you been up to?", () => [
       "Today you will…",
       "- talk about what you've been doing lately: *I've been learning… I've been working on…* 🔄\n- learn phrasal verbs for life changes: *take up, give up, catch up* 📈\n- catch up with an old friend — in English! ☕",
     ),
+    quiz("Emoji game 🎲 Guess the phrasal verb! (You'll learn them today.)", [
+      { q: "🎸➕😀 = start a new hobby", options: ["*take up", "give up", "put off"] },
+      { q: "🚬❌ = stop doing something", options: ["*give up", "take up", "catch up"] },
+      { q: "☕👫🗣️ = meet a friend and share news", options: ["*catch up", "sign up", "settle in"] },
+      { q: "⏳📅➡️ = do it later, not now", options: ["*put off", "take up", "burn out"] },
+      { q: "📝✅🏫 = register for a course", options: ["*sign up", "give up", "keep up"] },
+    ]),
     text(
       "Talk to your teacher.",
       "- What's one new thing in your life this year — a hobby, a habit, a series, a person? How did it start?\n- Is there something you keep putting off? Why do you think you avoid it? 😅\n- Who haven't you seen for a long time that you'd really love to catch up with? What would you ask them first?",

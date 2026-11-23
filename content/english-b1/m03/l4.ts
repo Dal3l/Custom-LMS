@@ -28,6 +28,10 @@ export default lesson("b1-3.4", "Practical: Complaining politely", () => [
       "- complain politely — and get what you want 😤➡️😊\n- use phrases like *I'm afraid…, I'd like a refund, Would you mind…?* 🗣️\n- practice complaints in a shop, a restaurant and on the phone ☎️",
     ),
     text(
+      "Game: The 60-second drama 😤🎭",
+      "Choose a tiny, silly problem and complain about it as DRAMATICALLY as you can for 30 seconds. Your teacher reacts.\n\n- ☕ My coffee is 2 degrees too hot.\n- 🧦 My new socks are slightly different colors.\n- 📶 The Wi-Fi was slow for 3 seconds.\n- 🍕 There are only 7 olives on my pizza, not 8.\n\nThen your teacher complains — and YOU calm them down. 😄 Was it polite? We'll learn how to do it properly today!",
+    ),
+    text(
       "Talk to your teacher.",
       "- When did you last complain about something — in a shop, a café, online? Did it work?\n- Some people never complain; others complain about everything. Which are you? 😅\n- Is it easier to complain face to face, on the phone or in writing? Why?",
     ),

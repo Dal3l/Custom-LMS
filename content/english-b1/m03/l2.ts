@@ -28,6 +28,12 @@ export default lesson("b1-3.2", "Getting used to it", () => [
       "Today you will…",
       "- talk about moving to a new country, city or job 🧳\n- use *be used to* and *get used to*: *I'm getting used to the cold!* 🥶\n- give advice to someone new in your city 🗺️",
     ),
+    quiz("Culture quiz 🌍 Where is it normal?", [
+      { q: "People usually take off their shoes when they enter a home.", options: ["*Japan", "the USA", "the UK"] },
+      { q: "Cars drive on the left side of the road.", options: ["*the UK", "France", "the USA"] },
+      { q: "A tip of 15–20% in restaurants is expected.", options: ["*the USA", "Japan", "China"] },
+      { q: "The sauna is a big part of national culture.", options: ["*Finland", "Spain", "Brazil"] },
+    ]),
     text(
       "Talk to your teacher.",
       "- Have you ever moved — to a new city, school, job or country? What was the hardest thing at first?\n- What would surprise a foreigner most about life in your country? 🤔\n- Imagine you move abroad tomorrow. What would you miss most — food, people, a place, a habit?",

@@ -25,6 +25,13 @@ export default lesson("b1-1.4", "Practical: Small talk", () => [
       "Today you will…",
       "- start, keep going and end a conversation with someone new 💬\n- use question tags: *It's busy today, isn't it?* 🏷️\n- practice small talk at a party and at a conference 🥂",
     ),
+    trueFalse("Small talk around the world 🌍 True or false? Guess!", [
+      ["In the UK, the weather is a very common small talk topic.", true],
+      ["In most countries, asking a stranger about their salary is polite small talk.", false],
+      ["“How are you?” in the USA is often just a greeting, not a real question.", true],
+      ["Silence in a conversation feels comfortable in every culture.", false],
+      ["Asking “Where are you from?” is a common way to start talking to a stranger.", true],
+    ]),
     text(
       "Talk to your teacher.",
       "- Do you enjoy talking to people you don't know? Where is it easy for you — and where is it hard?\n- What topics are safe for small talk in your country? Which topics are a bad idea? 🙊\n- What's the most awkward conversation you've ever had with a stranger? What happened? 😬",

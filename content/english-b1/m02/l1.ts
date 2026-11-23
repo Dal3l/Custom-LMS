@@ -27,6 +27,13 @@ export default lesson("b1-2.1", "It had already started", () => [
       "Today you will…",
       "- tell stories about bad (and lucky) days 🍀😩\n- use the Past Perfect: *When I got there, the train **had** already **left**!* ⏪\n- learn phrasal verbs for trips: *set off, run out of, turn back* 🧳",
     ),
+    order("Emoji story 😩 Put the worst morning in order — then tell it!", [[
+      "⏰😴 The alarm didn't ring.",
+      "😱🏃 I woke up at 8:50 and ran out of the house.",
+      "🚌💨 I got to the bus stop, but the bus had just left.",
+      "🌧️☔ It started to rain, and I had no umbrella.",
+      "🏢🚪 When I finally got to work, the meeting had already finished!",
+    ].join("\n")], "lines"),
     text(
       "Talk to your teacher.",
       "- Have you ever arrived somewhere just too late — for a train, a flight, a concert, an exam? What happened next? 🏃\n- Are you usually early, on time or late? Has being late ever cost you something important?\n- What's the luckiest thing that has ever happened to you by chance? 🍀",

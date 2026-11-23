@@ -29,6 +29,10 @@ export default lesson("b1-4.1", "This time next year", () => [
       "- talk about your plans for study and work 🎓💼\n- say what you'll be doing at a moment in the future: *This time next year I'll be living in…* 🔮\n- use *when, as soon as, before* + present: *I'll call you when I **get** home.* ⏰",
     ),
     text(
+      "Game: Crystal ball 🔮",
+      "Your teacher is a fortune teller! Choose three cards — your teacher makes predictions about your next year. Then swap and predict your teacher's future.\n\n🃏 work · 🃏 travel · 🃏 love · 🃏 money · 🃏 health · 🃏 a surprise\n\n*I can see… Next spring you'll… By December you'll be…* — do you believe the predictions? 😄",
+    ),
+    text(
       "Talk to your teacher.",
       "- Think about this day exactly one year ago. Where were you, and what were you worried about? Did it all turn out OK?\n- What's one thing you really want to be different in your life one year from now? 🌱\n- Do you like making long-term plans, or do you prefer to see what happens? Why?",
     ),
