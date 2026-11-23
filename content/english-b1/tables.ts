@@ -108,4 +108,49 @@ export const tables: GrammarTable[] = [
       ["**meanwhile**", "at the same time, somewhere else", "**Meanwhile**, his wife was calling the police."],
     ],
   },
+  // 3.1
+  {
+    name: "used-to",
+    title: "used to and would",
+    subtitle: "past habits and states that are NOT true now",
+    color: "violet",
+    columns: ["", "Example", "Note"],
+    rows: [
+      ["+", "I **used to** play outside every day.", "but now I don't"],
+      ["−", "We **didn't use to** have a car.", "no -d after didn't!"],
+      ["?", "**Did** you **use to** watch cartoons?", "Yes, I **did**. / No, I **didn't**."],
+      ["would", "Every summer we **would** go to the village.", "only for repeated **actions**"],
+      ["❌ would", "I **used to** have long hair. (not: I would have long hair)", "states → only used to"],
+    ],
+    note: "One action at one time → Past Simple: I **went** to Paris in 2010. (not used to)",
+  },
+  // 3.2
+  {
+    name: "be-get-used-to",
+    title: "used to · be used to · get used to",
+    subtitle: "three different meanings!",
+    color: "teal",
+    columns: ["Form", "Meaning", "Example"],
+    rows: [
+      ["**used to** + verb", "a past habit (not now)", "I **used to live** in a village."],
+      ["**be used to** + -ing / noun", "it's normal for me now, not strange", "I'**m used to getting** up early. I'**m used to** the cold."],
+      ["**get used to** + -ing / noun", "it's becoming normal — a process", "I'**m getting used to driving** on the left."],
+    ],
+    note: "After **be / get used to** → **-ing** or a noun: I can't **get used to waking** up at 6! · It **took** me a year **to get used to** it.",
+  },
+  // 3.4
+  {
+    name: "complaints",
+    title: "Complaining politely",
+    subtitle: "be clear, be calm, ask for what you want",
+    color: "orange",
+    columns: ["Step", "Phrases"],
+    rows: [
+      ["1️⃣ start", "**Excuse me, I'm afraid** there's a problem with… · **I'd like to make a complaint** about…"],
+      ["2️⃣ explain", "**It doesn't work.** · **It's broken / damaged.** · **I ordered … but I got …** · **We've been waiting for** forty minutes."],
+      ["3️⃣ ask", "**Could you** change it, please? · **I'd like a refund / a replacement.** · **Would you mind** checking again?"],
+      ["4️⃣ if nothing happens", "**Could I speak to the manager**, please? · **I'm not happy with** this answer."],
+    ],
+    note: "**I'm afraid…** = I'm sorry to say · Soft words help: **a bit, quite, I think, unfortunately**",
+  },
 ];
