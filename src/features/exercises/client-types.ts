@@ -19,4 +19,9 @@ export type ExerciseViewerProps<Content, Answer = unknown> = {
   /** With check: true the answer is checked now; resolves with the verdict (null if it failed). */
   onAnswer?: (answer: Answer, options: { check: boolean }) => Promise<CheckResult | null> | void;
   result?: CheckResult | null;
+  /**
+   * TEACHER ONLY: the right answers (in the shape of an answer), shown as quiet
+   * hints — on hover, or a light green mark. Never set in a student's view.
+   */
+  hint?: Answer | null;
 };

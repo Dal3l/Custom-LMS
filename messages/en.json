@@ -880,7 +880,9 @@
     "showNote": "Show the note to students",
     "hideNote": "Hide the note from students",
     "noteShown": "The note is shown to students",
-    "noteHidden": "The note is hidden from students"
+    "noteHidden": "The note is hidden from students",
+    "hintsOn": "Answer hints: on (only you see them)",
+    "hintsOff": "Answer hints: off"
   },
   "board": {
     "lessonBoard": "Lesson whiteboard",

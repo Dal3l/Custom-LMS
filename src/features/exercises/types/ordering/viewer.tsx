@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { ExerciseViewerProps } from "../../client-types";
+import { HintTip } from "../../teacher-hint";
 import type { OrderingAnswer, OrderingContent } from "./schema";
 
 type Piece = OrderingContent["tasks"][number]["pieces"][number];
@@ -16,7 +17,7 @@ type Piece = OrderingContent["tasks"][number]["pieces"][number];
  * Tap pieces in the right order: they move into the answer line. Tap a piece in
  * the line to send it back; drag pieces in the line to change their order.
  */
-export function OrderingViewer({ content, answer, onAnswer, result }: ExerciseViewerProps<OrderingContent, OrderingAnswer>) {
+export function OrderingViewer({ content, answer, onAnswer, result, hint }: ExerciseViewerProps<OrderingContent, OrderingAnswer>) {
   const t = useTranslations("exercises.ordering");
   const [values, setValues] = useState<Record<string, string[]>>(answer?.values ?? {});
   const several = content.tasks.length > 1;
@@ -32,6 +33,7 @@ export function OrderingViewer({ content, answer, onAnswer, result }: ExerciseVi
       {content.tasks.map((task, i) => (
         <li key={task.id} className="flex flex-col gap-2">
           {several && <span className="text-sm font-medium tabular-nums text-muted-foreground">{i + 1}.</span>}
+          <HintTip text={hint && rightOrder(task.pieces, hint.values[task.id], content.mode)} className="flex w-full flex-col">
           <OrderTask
             pieces={task.pieces}
             mode={content.mode}
@@ -41,10 +43,19 @@ export function OrderingViewer({ content, answer, onAnswer, result }: ExerciseVi
             verdict={result?.parts[task.id]}
             label={several ? t(content.mode === "words" ? "sentence" : "list", { n: i + 1 }) : t("answer")}
           />
+          </HintTip>
         </li>
       ))}
     </ol>
   );
+}
+
+/** Teacher's hint: the pieces in the right order, as one text. */
+function rightOrder(pieces: Piece[], ids: string[] | undefined, mode: OrderingContent["mode"]) {
+  const text = new Map(pieces.map((p) => [p.id, p.text]));
+  const list = (ids ?? []).map((id) => text.get(id) ?? "");
+  if (!list.length) return null;
+  return mode === "lines" ? list.map((l, i) => `${i + 1}. ${l}`).join("\n") : list.join(" ");
 }
 
 function OrderTask({

@@ -80,3 +80,19 @@ describe("right answers shown by the teacher", () => {
     expect(Object.values(result.parts).every((v) => v === true)).toBe(true);
   });
 });
+
+describe("teacher's hints", () => {
+  it("typed gaps list every accepted answer", () => {
+    const { content, key } = buildGapInput("Penguins [are] birds. They [don't / do not] fly.", false);
+    const def = getDefinition("gap_input")!;
+    expect(def.grading!.hint!(content, key)).toEqual({ values: { g1: "are", g2: "don't / do not" } });
+  });
+
+  it("other types use the full right answer", () => {
+    for (const [type, { content, key }] of cases) {
+      const grading = getDefinition(type)!.grading!;
+      if (grading.hint) continue;
+      expect(grading.check(content, key, grading.solution(content, key)).correct).toBe(true);
+    }
+  });
+});

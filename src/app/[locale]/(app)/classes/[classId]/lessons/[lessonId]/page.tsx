@@ -19,7 +19,7 @@ import { HomeworkReview } from "@/components/homework/homework-review";
 import { chatUnread } from "@/features/chat/actions";
 import { getHomeworkReview, getMyLessonHomeworks, listLessonHomeworks } from "@/features/homework/queries";
 import { markHomeworkNotificationsRead } from "@/features/notifications/actions";
-import { revealedSolutions } from "@/features/lessons/grade";
+import { revealedSolutions, teacherHints } from "@/features/lessons/grade";
 import { withNotes } from "@/features/lessons/notes";
 import { getStudentLesson } from "@/features/lessons/queries";
 import { Link } from "@/i18n/navigation";
@@ -67,8 +67,11 @@ export default async function ClassLessonPage({
   const revealed = state?.revealed ?? [];
   const exerciseIds = lesson.sections.flatMap((s) => s.exercises.map((e) => e.id));
   // Access to this lesson in the class is confirmed above (RLS + class lesson).
-  const [solutions, marks, sentHomeworks, myHomeworks] = await Promise.all([
+  const homeworkIds = homeworkPart?.sections.flatMap((s) => s.exercises.map((e) => e.id)) ?? [];
+  const [solutions, hints, marks, sentHomeworks, myHomeworks] = await Promise.all([
     revealedSolutions(lessonId, revealed),
+    // Right answers as hints: ONLY for the class's teacher, never for students.
+    cls.isTeacher ? teacherHints(lessonId, [...exerciseIds, ...homeworkIds]) : Promise.resolve({}),
     listClassMarks(classId, exerciseIds),
     cls.isTeacher && state ? listLessonHomeworks(classId, lessonId) : Promise.resolve([]),
     cls.isTeacher ? Promise.resolve([]) : getMyLessonHomeworks(classId, lessonId, profile.id),
@@ -218,6 +221,7 @@ export default async function ClassLessonPage({
         <TeacherClassLesson
           {...common}
           students={cls.students}
+          hints={hints}
           initialAnswers={savedAnswers as Awaited<ReturnType<typeof getClassLessonAnswers>>}
           homework={{
             sections: homeworkPart?.sections ?? [],

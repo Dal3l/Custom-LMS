@@ -6,10 +6,11 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { ExerciseViewerProps } from "../../client-types";
 import { verdictClass } from "../../result-styles";
+import { HintTip } from "../../teacher-hint";
 import type { GapSelectAnswer, GapSelectContent } from "./schema";
 
 /** Text with a dropdown in each gap; a choice is checked right away. */
-export function GapSelectViewer({ content, answer, onAnswer, result }: ExerciseViewerProps<GapSelectContent, GapSelectAnswer>) {
+export function GapSelectViewer({ content, answer, onAnswer, result, hint }: ExerciseViewerProps<GapSelectContent, GapSelectAnswer>) {
   const t = useTranslations("exercises.gaps");
   const [values, setValues] = useState<Record<string, number>>(answer?.values ?? {});
 
@@ -20,8 +21,10 @@ export function GapSelectViewer({ content, answer, onAnswer, result }: ExerciseV
         const n = Number(part.id.slice(1));
         const verdict = result?.parts[part.id];
         const value = values[part.id];
+        const right = hint?.values[part.id];
         return (
-          <span key={part.id} className="relative mx-0.5 inline-block align-baseline">
+          <HintTip key={part.id} text={right === undefined ? null : part.options[right]} className="mx-0.5 align-baseline">
+          <span className="relative inline-block align-baseline">
             <select
               value={value ?? ""}
               disabled={!onAnswer}
@@ -49,6 +52,7 @@ export function GapSelectViewer({ content, answer, onAnswer, result }: ExerciseV
             </select>
             <ChevronDown className="pointer-events-none absolute top-1/2 right-2 size-4 -translate-y-1/2 opacity-60" aria-hidden="true" />
           </span>
+          </HintTip>
         );
       })}
     </p>

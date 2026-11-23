@@ -39,16 +39,23 @@ const usePlace = () => {
 
 export function PlaceArea({
   onPlace,
+  onSelect,
   disabled = false,
   children,
 }: {
   /** target null = back to the word bank */
   onPlace: (itemId: string, target: string | null) => void;
+  /** the word that is tapped (selected) now, or null */
+  onSelect?: (itemId: string | null) => void;
   disabled?: boolean;
   children: React.ReactNode;
 }) {
   const id = useId();
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelectedState] = useState<string | null>(null);
+  const setSelected = (value: string | null) => {
+    setSelectedState(value);
+    onSelect?.(value);
+  };
   const [dragging, setDragging] = useState<{ id: string; label: React.ReactNode } | null>(null);
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 4 } }),
@@ -131,6 +138,7 @@ export function Chip({
       {...listeners}
       onClick={onClick}
       disabled={disabled}
+      data-hint={id}
       aria-pressed={slot ? undefined : isSelected}
       aria-label={slot ? t("placedWord", { word: String(label) }) : String(label)}
       className={cn(
@@ -150,12 +158,15 @@ export function Slot({
   id,
   label,
   verdict,
+  hinted = false,
   className,
   children,
 }: {
   id: string;
   label: string;
   verdict?: boolean | null;
+  /** the teacher's hint: the word under the pointer belongs here */
+  hinted?: boolean;
   className?: string;
   children?: React.ReactNode;
 }) {
@@ -180,6 +191,7 @@ export function Slot({
         ready && "cursor-pointer border-primary/60 bg-accent/40",
         isOver && "border-primary bg-accent",
         empty && verdict === false && "border-destructive",
+        hinted && "border-solid border-emerald-400 bg-emerald-50 dark:bg-emerald-950/40",
         className,
       )}
     >
