@@ -321,4 +321,35 @@ export const tables: GrammarTable[] = [
     ],
     note: "should + verb (no to): You should **drink** more water.",
   },
+  // 8.1
+  {
+    name: "have-to-must",
+    title: "have to · must · don't have to · mustn't",
+    subtitle: "rules and obligations",
+    color: "orange",
+    columns: ["", "Example", "Meaning"],
+    rows: [
+      ["✅ have to", "I **have to** wear a uniform. She **has to** work on Saturdays.", "a rule, it's necessary"],
+      ["✅ must", "You **must** wear a helmet. I **must** call Mom!", "a strong rule / I feel it's important"],
+      ["🆓 don't have to", "You **don't have to** come. We **don't have to** wear a tie.", "it's not necessary — you can choose"],
+      ["⛔ mustn't", "You **mustn't** use your phone in the exam.", "it's not allowed — don't do it!"],
+      ["❓", "**Do** you **have to** work tomorrow? — Yes, I **do**.", ""],
+    ],
+    note: "**don't have to** ≠ **mustn't**! · past: I **had to** get up early (not “musted”)",
+  },
+  // 8.2
+  {
+    name: "should",
+    title: "should · shouldn't",
+    subtitle: "advice and opinions",
+    color: "green",
+    columns: ["", "Example"],
+    rows: [
+      ["💡 advice", "You **should** sleep more. You **shouldn't** drink coffee at night."],
+      ["❓ ask for advice", "What **should** I do? **Should** I call him?"],
+      ["🤔 opinion", "I think you **should** tell her. I **don't think** you **should** go."],
+      ["⚖️ should vs must", "You **should** wear a coat. (good idea) · You **must** wear a seatbelt. (a rule!)"],
+    ],
+    note: "should + verb (no to): You should **go** — not “should to go”",
+  },
 ];
