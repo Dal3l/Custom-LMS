@@ -503,4 +503,36 @@ export const tables: GrammarTable[] = [
     ],
     note: "**check in** (verb) · **a check-in desk** (noun) · **board** = get on the plane",
   },
+  // 12.1
+  {
+    name: "first-conditional",
+    title: "If it rains, we'll stay home",
+    subtitle: "First Conditional: a real possibility in the future",
+    color: "blue",
+    columns: ["if + Present Simple", "will / won't + verb"],
+    rows: [
+      ["**If** it **rains**,", "we'**ll stay** home. 🌧️"],
+      ["**If** you **don't hurry**,", "you'**ll miss** the bus. 🚌"],
+      ["**If** I **have** time,", "I **might** call you. (not sure)"],
+      ["What **will** you **do**", "**if** your flight **is** canceled?"],
+      ["We'**ll go** to the beach", "**if** it's sunny. (if at the end — no comma)"],
+    ],
+    note: "**not** “If it will rain” ❌ — after **if** use the **present**: If it **rains** ✅",
+  },
+  // 12.2
+  {
+    name: "future-review",
+    title: "Talking about the future",
+    subtitle: "all the future forms of the course in one table",
+    color: "violet",
+    columns: ["Form", "When?", "Example"],
+    rows: [
+      ["**going to**", "a plan, a decision I made before", "I'**m going to** study medicine."],
+      ["**Present Continuous**", "an arrangement (time, place, people)", "I'**m meeting** Ali on Friday."],
+      ["**will**", "a prediction / a decision now / a promise", "It'**ll be** fine. · I'**ll help** you!"],
+      ["**might**", "maybe — not sure", "I **might** move abroad."],
+      ["**If** + present, **will**", "a condition", "**If** I **pass**, I'**ll celebrate**!"],
+    ],
+    note: "Plan → going to · Calendar → Present Continuous · Opinion / now → will · Not sure → might",
+  },
 ];
