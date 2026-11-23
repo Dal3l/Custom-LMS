@@ -186,4 +186,50 @@ export const tables: GrammarTable[] = [
     ],
     note: "Present Continuous = fixed time + place + people · **be going to** = my plan, my decision",
   },
+  // 5.1
+  {
+    name: "will",
+    title: "will / won't: predictions",
+    subtitle: "what we think about the future",
+    color: "blue",
+    columns: ["", "Example", "Answer"],
+    rows: [
+      ["+", "Robots **will do** the housework. I'**ll be** rich! 😄", ""],
+      ["−", "People **won't drive** cars. (won't = will not)", ""],
+      ["?", "**Will** we **live** on Mars?", "Yes, we **will**. / No, we **won't**."],
+      ["🤔 I think…", "**I think** it **will** rain. **I don't think** it **will** rain.", ""],
+      ["✅ sure → 🤷 not sure", "will **definitely** · will **probably** · **probably won't**", ""],
+    ],
+    note: "will + verb (no to, no -s): She **will go** — not “she will goes” · I don't think… **will** (not “I think… won't”)",
+  },
+  // 5.2
+  {
+    name: "might-will",
+    title: "might · will for decisions",
+    subtitle: "maybe — and decisions at the moment of speaking",
+    color: "orange",
+    columns: ["", "Example"],
+    rows: [
+      ["🤷 might = maybe", "I **might go** to the party. (I'm not sure.)"],
+      ["🤷 might not", "It **might not** rain. Take an umbrella anyway!"],
+      ["⚡ decide now", "The phone is ringing. — I'**ll get** it!"],
+      ["🙋 offer", "Your bag looks heavy. I'**ll help** you."],
+      ["🤞 promise", "I **won't tell** anyone. I'**ll call** you tonight!"],
+    ],
+    note: "might + verb (no to): I **might stay** · decided before → **going to**; decide now → **will**",
+  },
+  // 5.4
+  {
+    name: "arrangements",
+    title: "Making arrangements",
+    color: "pink",
+    columns: ["", "Phrases"],
+    rows: [
+      ["💡 suggest", "**Shall we** go to the cinema? · **How about** Saturday? · **Why don't we** meet at 6?"],
+      ["✅ yes", "Sounds good! · **That works for me.** · Great idea!"],
+      ["❌ no (politely)", "**I'm afraid I can't** — I'm working. · Sorry, I'm busy then."],
+      ["🔁 change plans", "**Can we make it** 7 instead? · Something came up — **can we move it** to Sunday?"],
+    ],
+    note: "How about **+ -ing / a time**: How about **going** for a walk? · How about **Friday**?",
+  },
 ];
