@@ -25,7 +25,7 @@ const only = args.includes("--only") ? args[args.indexOf("--only") + 1]!.split("
 
 const MODEL = "eleven_multilingual_v2";
 /** A1 a little slower, so beginners can follow. */
-const SPEED: Record<string, number> = { "english-a1": 0.9, "english-a2": 0.95 };
+const SPEED: Record<string, number> = { "english-a1": 0.9, "english-a2": 0.95, "english-b1": 1 };
 const PAUSE = 0.6; // seconds between lines
 const PART_PAUSE = 1.5; // before "1.", "2.", … in scripts with parts
 const root = path.resolve("content", courseName);

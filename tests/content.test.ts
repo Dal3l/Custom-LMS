@@ -5,11 +5,13 @@ import path from "node:path";
 import { resolveAssets } from "../content/assets";
 import { course as a1 } from "../content/english-a1/course";
 import { course as a2 } from "../content/english-a2/course";
+import { course as b1 } from "../content/english-b1/course";
 
 // Every course with its folder and the lesson size its template asks for (blocks in class).
 const courses = [
   { name: "english-a1", course: a1, inClass: [12, 30], bigTasks: false },
   { name: "english-a2", course: a2, inClass: [20, 40], bigTasks: true },
+  { name: "english-b1", course: b1, inClass: [20, 40], bigTasks: true },
 ] as const;
 
 // Course content: every lesson loads (passes the schemas) and fits the lesson template.
