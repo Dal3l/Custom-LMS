@@ -64,4 +64,48 @@ export const tables: GrammarTable[] = [
     ],
     note: "Voice goes **down** ↘ = I'm sure, just checking · voice goes **up** ↗ = a real question",
   },
+  // 2.1
+  {
+    name: "past-perfect",
+    title: "Past Perfect",
+    subtitle: "had + 3rd form — something that happened BEFORE another moment in the past",
+    color: "pink",
+    columns: ["", "Example", "Answer"],
+    rows: [
+      ["+", "When I arrived, the film **had** already **started**.", ""],
+      ["−", "I was hungry because I **hadn't eaten** all day.", ""],
+      ["?", "**Had** you ever **been** abroad before that trip?", "Yes, I **had**. / No, I **hadn't**."],
+      ["⏱️ order", "1️⃣ The train **had left**. 2️⃣ We **got** to the station.", "We got to the station, but the train **had left**."],
+    ],
+    note: "**I'd** = I had · Typical words: **already, just, never, before, by the time, when, because**",
+  },
+  // 2.2
+  {
+    name: "narrative-tenses",
+    title: "Telling a story",
+    subtitle: "three past tenses working together",
+    color: "green",
+    columns: ["Tense", "What it does", "Example"],
+    rows: [
+      ["Past Continuous", "the background: what was happening", "It **was raining** and people **were hurrying** home."],
+      ["Past Simple", "the main events, one after another", "Suddenly a dog **ran** into the road and a car **stopped**."],
+      ["Past Perfect", "something earlier — a step back", "The dog **had escaped** from a garden nearby."],
+    ],
+    note: "**while** + Past Continuous · **when / as soon as / after** + Past Simple · **by the time** + Past Simple → Past Perfect",
+  },
+  {
+    name: "time-linkers",
+    title: "Linking a story",
+    subtitle: "words that show WHEN",
+    color: "orange",
+    columns: ["Linker", "Meaning", "Example"],
+    rows: [
+      ["**as soon as**", "immediately after", "**As soon as** I saw him, I knew something was wrong."],
+      ["**by the time**", "before or at that moment", "**By the time** the police arrived, the thief had gone."],
+      ["**while**", "during the same time", "**While** we were waiting, it started to snow."],
+      ["**eventually**", "in the end, after a long time", "We **eventually** found the hotel at midnight."],
+      ["**in the end**", "finally, after problems", "**In the end**, everything was OK."],
+      ["**meanwhile**", "at the same time, somewhere else", "**Meanwhile**, his wife was calling the police."],
+    ],
+  },
 ];
