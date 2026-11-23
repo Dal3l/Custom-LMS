@@ -79,6 +79,7 @@ export const SPEAKERS: Record<string, string> = {
   Bot: "River",
   Pharmacist: "Alice",
   Doctor: "Eric",
+  Interviewer: "Matilda",
   // text without a speaker (a narrator, the numbers of the parts)
   Narrator: "Alice",
 };

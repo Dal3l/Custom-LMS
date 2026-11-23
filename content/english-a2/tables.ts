@@ -352,4 +352,49 @@ export const tables: GrammarTable[] = [
     ],
     note: "should + verb (no to): You should **go** — not “should to go”",
   },
+  // 9.1
+  {
+    name: "quantifiers",
+    title: "How much? How many?",
+    subtitle: "countable 🍎🍎 and uncountable 🥛 nouns",
+    color: "teal",
+    columns: ["", "🍎 countable (apples, eggs)", "🥛 uncountable (sugar, water)"],
+    rows: [
+      ["❓", "How **many** apples?", "How **much** sugar?"],
+      ["➕➕ a lot", "**a lot of** apples / **many** apples", "**a lot of** sugar"],
+      ["➕ some, not many", "**a few** apples", "**a little** sugar"],
+      ["➖", "not **many** apples", "not **much** sugar"],
+    ],
+    note: "**much** and **many** — mostly in questions and negatives · in + sentences: **a lot of**",
+  },
+  // 9.2
+  {
+    name: "too-enough",
+    title: "too · too much · enough",
+    subtitle: "more than we want — or less than we need",
+    color: "orange",
+    columns: ["", "Example"],
+    rows: [
+      ["⬆️ too + adjective", "I'm **too tired** to study. The coffee is **too hot**."],
+      ["⬆️ too much + 🥛", "I drink **too much** coffee. I spend **too much** time online."],
+      ["⬆️ too many + 🍎", "I eat **too many** sweets. There are **too many** cars."],
+      ["✅ adjective + enough", "I'm not **fit enough** to run 10 km."],
+      ["✅ enough + noun", "I don't get **enough sleep**. We have **enough** chairs."],
+    ],
+    note: "**too** = a problem 😟 (not “very”!) · **enough** goes **after** an adjective, **before** a noun",
+  },
+  // 9.4
+  {
+    name: "interview",
+    title: "Job interview phrases",
+    color: "violet",
+    columns: ["", "Phrases"],
+    rows: [
+      ["🎤 Interviewer", "Tell me about yourself. · Why do you want this job? · What are your strengths? · Have you ever worked in a team?"],
+      ["🙋 You: about you", "I'm good at… · I'm interested in… · I've worked as a… for… · I'm a hard-working / friendly / organized person."],
+      ["💪 Strengths", "I'm good with people. · I learn fast. · I can speak three languages."],
+      ["❓ Your questions", "What would I do every day? · When could I start? · Is there any training?"],
+    ],
+    note: "Be positive: not “I can't…” → “I'm learning to…” 😊",
+  },
 ];
