@@ -28,6 +28,10 @@ export default lesson("b1-4.3", "School of the future", () => [
       "- read about how schools are changing around the world 🏫🌍\n- watch a video about the classroom of the future 🎥\n- design your ideal school — and write a proposal ✍️",
     ),
     text(
+      "Game: Would you rather…? 🏫",
+      "Choose — and explain why!\n\n- …have school 4 days a week but 2 hours longer each day, OR 5 normal days?\n- …learn from an AI tutor at home, OR from a strict teacher in class?\n- …have no homework but exams every month, OR homework every day but no exams?\n- …study only subjects you love, OR all subjects equally?\n- …have lessons outside in all weathers, OR always in a classroom?",
+    ),
+    text(
       "Talk to your teacher.",
       "- What's one thing you learned at school that you still use every day? And one thing you've never used? 😅\n- Who was the best teacher you ever had? What made them special?\n- If you could change one thing about the schools in your country, what would it be?",
     ),

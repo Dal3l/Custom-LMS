@@ -27,6 +27,12 @@ export default lesson("b1-3.3", "Life before smartphones", () => [
       "Today you will…",
       "- listen to a grandmother and her grandson compare their worlds 👵📱\n- read about a week without a phone 📵\n- discuss what technology has given us — and taken away 🤔",
     ),
+    quiz("Guess the year! 📅", [
+      { q: "The first text message (SMS) was sent in…", options: ["*1992", "1982", "2002"] },
+      { q: "YouTube started in…", options: ["*2005", "1999", "2011"] },
+      { q: "The first iPhone came out in…", options: ["*2007", "2001", "2012"] },
+      { q: "Instagram started in…", options: ["*2010", "2004", "2016"] },
+    ]),
     text(
       "Talk to your teacher.",
       "- Be honest: how many hours a day do you spend on your phone? Do you think it's too much? 📱\n- What's the first thing you do with your phone in the morning — and the last thing at night?\n- If your phone disappeared for a week, what would be the hardest part? And what might be the best part?",

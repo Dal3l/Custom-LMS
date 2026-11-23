@@ -27,6 +27,10 @@ export default lesson("b1-1.2", "I think vs I'm thinking", () => [
       "- describe personality: *reliable, stubborn, easy-going…* 🧩\n- use state verbs: *I know, I believe, it seems* — and *I think* vs *I'm thinking* 🧠\n- choose between *I've read* and *I've been reading* 📚",
     ),
     text(
+      "Game: This or that? ⚡",
+      "Answer fast — no thinking! Then your teacher guesses your personality. 🧩\n\n☕ coffee or 🍵 tea? · 🐦 early bird or 🦉 night owl? · 📞 call or 💬 text? · 🗺️ plan everything or 🎲 improvise? · 🎉 big party or 🍕 pizza with two friends? · 🏔️ mountains or 🏖️ beach? · 📚 book or 🎬 film? · 🐶 dogs or 🐱 cats?\n\nNow swap: ask your teacher the same questions — and describe THEIR personality!",
+    ),
+    text(
       "Talk to your teacher.",
       "- Describe yourself in three words. Would your best friend choose the same three? What about your mom? 🤔\n- In what ways are you like your parents — and in what ways are you completely different?\n- Has your personality changed in the last five years? What changed it — a person, a job, a difficult moment?",
     ),

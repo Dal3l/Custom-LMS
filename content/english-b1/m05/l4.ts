@@ -27,6 +27,15 @@ export default lesson("b1-5.4", "Practical: Emails that work", () => [
       "Today you will…",
       "- write emails that sound right: formal 👔 or informal 😊\n- ask, apologize and finish politely ✉️\n- write an email like in the **B1 Preliminary** exam (Part 1) 🎓",
     ),
+    trueFalse("Spot the email disaster 😬 Read Tom's email to a company. Is it OK? True = OK, false = a problem.", [
+      ["“hey guys!!!” is a good start for a job application.", false],
+      ["“i want the job, its cool” is clear and polite.", false],
+      ["Tom forgot to attach his CV — that's a problem.", true],
+      ["Ending with “bye lol 😂” is fine in a formal email.", false],
+      ["A subject line like “Application: Junior Developer” would help.", true],
+    ], {
+      read: "📧 **Subject:** (no subject)\n\nhey guys!!!\n\ni want the job, its cool. i can code and stuff. call me.\n\nbye lol 😂\nTom\n\n*(no attachment)*",
+    }),
     text(
       "Talk to your teacher.",
       "- How many emails or work messages do you get a day? Which ones do you hate answering? 📥\n- Have you ever sent a message to the wrong person — or in the wrong style? What happened? 😬\n- What makes an email annoying: too long, too short, too formal, too many emojis…?",

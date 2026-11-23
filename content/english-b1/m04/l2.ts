@@ -26,6 +26,13 @@ export default lesson("b1-4.2", "Robots at work", () => [
       "Today you will…",
       "- talk about AI, robots and the future of work 🤖💼\n- choose the right future form: *will, going to, I'm meeting…* 🔮\n- say how sure you are: *It's likely to… It might… It's bound to…* 📊",
     ),
+    trueFalse("AI today 🤖 True or false? Guess!", [
+      ["AI can write computer code.", true],
+      ["AI can translate between many languages.", true],
+      ["Today's AI systems have real feelings, like humans.", false],
+      ["In some cities, taxis without a human driver already carry passengers.", true],
+      ["A computer beat the world chess champion for the first time in 2020.", false],
+    ]),
     text(
       "Talk to your teacher.",
       "- Do you use AI in your study or work? What for — and what do you never use it for? 🤖\n- Which part of your job (or your future job) would you happily give to a robot? Which part never?\n- If your job disappeared tomorrow, what would you like to do instead?",

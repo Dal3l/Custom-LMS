@@ -28,6 +28,10 @@ export default lesson("b1-5.3", "Dream job vs real job", () => [
       "- hear two people who left safe jobs for their dream jobs 🎢\n- discuss: money or meaning — what matters more? 💸❤️\n- write an article about your dream job ✍️",
     ),
     text(
+      "Game: Would you take it? 💼",
+      "Your teacher reads job offers. Say YES or NO — and why!\n\n1. 💰💰💰 A huge salary, but you work every weekend.\n2. 🏝️ A job on a tropical island, but the pay is very low.\n3. 🎮 Testing games all day, but in a tiny dark office.\n4. 🧑‍💻 Work from home, but you never meet your colleagues.\n5. 🐼 Looking after pandas, but you have to move to another country.\n\nWhich one is closest to your dream job?",
+    ),
+    text(
       "Talk to your teacher.",
       "- What did you want to be when you were seven? What happened to that dream? 🚀\n- If money wasn't a problem, what would you do every day?\n- Do you know anyone who changed careers completely? Were they happier afterwards?",
     ),

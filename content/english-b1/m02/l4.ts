@@ -25,6 +25,14 @@ export default lesson("b1-2.4", "Revision 1–2", () => [
       "Today you will…",
       "- check what you've learned in modules 1 and 2 ✅\n- try tasks like in the **Cambridge B1 Preliminary** exam 🎓\n- start your project: *A story that changed me* 📖",
     ),
+    trueFalse("Warm-up: find the mistakes! ✅❌ Correct or not?", [
+      ["I've been knowing him for years.", false],
+      ["When we arrived, the film had already started.", true],
+      ["You're Dana's sister, aren't you?", true],
+      ["While I walked home, it was starting to rain.", false],
+      ["How long have you been learning English?", true],
+      ["She was tired because she has worked all day.", false],
+    ]),
     text(
       "Talk to your teacher.",
       "- What have you been doing in English outside our lessons lately — series, music, games, chatting? 🎧\n- Which was more useful for your real life: the small talk lesson or the storytelling lessons? Why?\n- What's one thing you still find difficult? Be honest! 🙂",

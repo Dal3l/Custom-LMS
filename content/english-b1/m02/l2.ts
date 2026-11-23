@@ -28,6 +28,14 @@ export default lesson("b1-2.2", "Breaking news", () => [
       "Today you will…",
       "- understand and retell news stories 📰\n- use three past tenses together to tell a story 🎬\n- link a story with *as soon as, by the time, eventually…* 🔗",
     ),
+    match("Headline game 📰 Match the two halves of each headline.", [
+      ["Cat travels 200 km", "to find its old home"],
+      ["Grandmother, 82,", "finishes her first marathon"],
+      ["Lost wallet returned", "with a thank-you note inside"],
+      ["Storm closes airport", "for two days"],
+      ["Teenager invents", "a robot that cleans beaches"],
+      ["Police find stolen painting", "in a garage"],
+    ]),
     text(
       "Talk to your teacher.",
       "- How do you usually get the news — TV, apps, Telegram, friends? Do you trust it? 📱\n- What's a news story you remember from this year? Why did it stay in your head?\n- Good news or bad news: which do people share more online? Why do you think so?",

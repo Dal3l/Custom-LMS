@@ -29,6 +29,10 @@ export default lesson("b1-5.2", "I managed to…", () => [
       "- tell stories about challenges and success 💪\n- use *could, was able to, managed to*: *It was hard, but I **managed to** finish!* 🏁\n- learn phrasal verbs for difficult moments: *carry on, give in, get over* 🧗",
     ),
     text(
+      "Rank it! 🧗 From easiest to hardest — for YOU",
+      "Put these challenges in order from 1 (easiest) to 6 (hardest). Then compare with your teacher — and explain!\n\n🏃 run 10 km · 🎤 sing in front of 100 people · 🗣️ speak English for a whole day · 📵 live without your phone for a week · 🥦 eat only vegetables for a month · 🧊 swim in icy water\n\nWhich one have you already managed to do? 💪",
+    ),
+    text(
       "Talk to your teacher.",
       "- What's something you're really proud of — something that was difficult at the time? 🏆\n- What could you do as a child that you can't do now? (do the splits, draw, speak another language…) 🤸\n- When things get really hard, do you usually carry on or give up? Give an example.",
     ),

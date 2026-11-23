@@ -26,6 +26,12 @@ export default lesson("b1-5.1", "What does it take?", () => [
       "Today you will…",
       "- talk about what different jobs need: skills, rules, sacrifices 💼\n- use *need to, needn't, be allowed to, be supposed to* 📋\n- play “What's my job?” 🕵️",
     ),
+    quiz("Emoji jobs 🕵️ Guess the job!", [
+      { q: "✈️🎧📡🗼", options: ["*air traffic controller", "pilot", "taxi driver"] },
+      { q: "🐘💉🌿🥾", options: ["*wildlife vet", "zookeeper", "farmer"] },
+      { q: "🎮🐞📝🔁", options: ["*video game tester", "app designer", "teacher"] },
+      { q: "🌬️⚙️🧗🔧", options: ["*wind turbine technician", "mountain guide", "electrician at home"] },
+    ]),
     text(
       "Talk to your teacher.",
       "- Which job do you think is the hardest in the world? Why — the stress, the hours, the responsibility? 🏋️\n- What's a rule at your work or school that you think is silly? What rule would you add? 📏\n- Would you do a job you love for half the money? Where's your limit? 💸",

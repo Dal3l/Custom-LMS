@@ -27,6 +27,12 @@ export default lesson("b1-1.3", "Generation gaps", () => [
       "Today you will…",
       "- read about three generations of one family 👵👨👧\n- discuss: is life easier for young people today? 🤔\n- write a short article — like in the B1 Preliminary exam ✍️",
     ),
+    quiz("Quick quiz: which generation? 👵👨👧", [
+      { q: "Born in 1955 — which generation?", options: ["*Baby Boomers", "Gen X", "Gen Z"] },
+      { q: "Born in 1990 — which generation?", options: ["*millennials", "Baby Boomers", "Gen Z"] },
+      { q: "Which generation grew up with smartphones from childhood?", options: ["*Gen Z", "Gen X", "Baby Boomers"] },
+      { q: "Born in 1972 — which generation?", options: ["*Gen X", "millennials", "Gen Z"] },
+    ]),
     text(
       "Talk to your teacher.",
       "- What's one thing your parents' generation does better than yours? And one thing they do worse?\n- What advice from an older person has really helped you? And what advice did you ignore? 😅\n- What do you think people your age will be criticized for in 30 years?",
