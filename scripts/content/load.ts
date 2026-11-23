@@ -5,6 +5,10 @@
 //   node --env-file=.env.local scripts/content/run.mjs english-a1 --only 1.1,1.2 --replace
 //   node --env-file=.env.local scripts/content/run.mjs english-a1 --check      only check, load nothing
 //   CONTENT_OWNER_ID=<teacher> … --as <new uuid>                                  a copy under another id
+//   node --env-file=.env.local scripts/content/run.mjs english-a1 --titles     only (re)name modules and lessons
+//
+// Modules and lessons are numbered on the platform: "Module 2: Stories",
+// "1. What were you doing?" (an entry module 0 keeps its plain title).
 //
 // A lesson already on the platform is left alone (the teacher may have edited
 // it in the builder) unless --replace is given.
@@ -26,6 +30,16 @@ export type CourseFile = {
   cover?: string;
   modules: { title: string; lessons: (ContentLesson & { slug: string })[] }[];
 };
+
+/** The module's title on the platform: "Module 3: Plans" (module 0 — an entry test — has no number). */
+export function moduleTitle(n: number, title: string): string {
+  return n > 0 ? `Module ${n}: ${title}` : title;
+}
+
+/** The lesson's title on the platform: "2. Bucket list" (no number in module 0). */
+export function lessonTitle(moduleNumber: number, li: number, title: string): string {
+  return moduleNumber > 0 ? `${li + 1}. ${title}` : title;
+}
 
 const args = process.argv.slice(2);
 const name = args.find((a) => !a.startsWith("--"));
@@ -99,7 +113,7 @@ async function main() {
   );
 
   // The cover: a public picture in the "course-covers" bucket, named by its content.
-  if (course.cover) {
+  if (course.cover && !flag("--titles")) {
     const { readFile } = await import("node:fs/promises");
     const { createHash } = await import("node:crypto");
     const bytes = await readFile(path.resolve(`content/${name}/assets/${course.cover}`));
@@ -114,25 +128,33 @@ async function main() {
   }
 
   // Pictures go up first (same file → same path: uploading again just replaces it).
-  for (const u of uploads.values()) {
+  for (const u of flag("--titles") ? [] : uploads.values()) {
     const { readFile } = await import("node:fs/promises");
     must(
       await db.storage.from("lesson-media").upload(u.storagePath, await readFile(u.file), { contentType: u.mime, upsert: true }),
       `upload ${path.basename(u.file)}`,
     );
   }
-  if (uploads.size) console.log(`↑ ${uploads.size} file(s)`);
+  if (uploads.size && !flag("--titles")) console.log(`↑ ${uploads.size} file(s)`);
 
   for (const [mi, m] of course.modules.entries()) {
     // 3) Modules and lessons are found by their place in the course.
+    const mn = mi + (course.firstModule ?? 1);
+    const mTitle = moduleTitle(mn, m.title);
     let mod = must(await db.from("modules").select("id").eq("course_id", course.id).eq("position", mi).maybeSingle(), "module");
-    if (!mod) mod = one(await db.from("modules").insert({ course_id: course.id, title: m.title, position: mi }).select("id").single(), "add module");
-    else must(await db.from("modules").update({ title: m.title }).eq("id", mod.id), "rename module");
+    if (!mod) mod = one(await db.from("modules").insert({ course_id: course.id, title: mTitle, position: mi }).select("id").single(), "add module");
+    else must(await db.from("modules").update({ title: mTitle }).eq("id", mod.id), "rename module");
 
-    for (const [li, l] of m.lessons.entries()) {
-      const n = `${mi + (course.firstModule ?? 1)}.${li + 1}`;
+    for (const [li, l0] of m.lessons.entries()) {
+      const n = `${mn}.${li + 1}`;
+      const l = { ...l0, title: lessonTitle(mn, li, l0.title) };
       if (only && !only.has(n)) continue;
       let row = must(await db.from("lessons").select("id").eq("module_id", mod.id).eq("position", li).maybeSingle(), "lesson");
+      // --titles: only the names, the lesson itself stays as it is.
+      if (flag("--titles")) {
+        if (row) must(await db.from("lessons").update({ title: l.title }).eq("id", row.id), "rename lesson");
+        continue;
+      }
       if (row) {
         const { count } = await db.from("sections").select("id", { count: "exact", head: true }).eq("lesson_id", row.id);
         if ((count ?? 0) > 0 && !flag("--replace")) {
@@ -164,6 +186,7 @@ async function main() {
       console.log(`↑ ${n} ${l.title}: loaded`);
     }
   }
+  if (flag("--titles")) console.log("↑ titles");
   console.log(`Done: https://linguaroom.vercel.app/ru/courses/${course.id}`);
 }
 

@@ -46,6 +46,10 @@ import l111 from "./m11/l1";
 import l112 from "./m11/l2";
 import l113 from "./m11/l3";
 import l114 from "./m11/l4";
+import l121 from "./m12/l1";
+import l122 from "./m12/l2";
+import l123 from "./m12/l3";
+import l124 from "./m12/l4";
 
 export const course: CourseFile = {
   id: "5b0c2f7e-8a41-4d6e-9c3b-2e7a1f6d4a92",
@@ -69,5 +73,6 @@ export const course: CourseFile = {
     { title: "Healthy life", lessons: [l91, l92, l93, l94] },
     { title: "How we do things", lessons: [l101, l102, l103, l104] },
     { title: "People and places", lessons: [l111, l112, l113, l114] },
+    { title: "What if?", lessons: [l121, l122, l123, l124] },
   ],
 };
