@@ -76,19 +76,19 @@ export default lesson("b1-2.2", "Breaking news", () => [
     tip("A long listening — over 2 minutes, three stories. First listen: *What is each story about? Good news or bad news?* Second listen: the tasks. Then show the script and find one example of each tense: Past Continuous, Past Simple, Past Perfect."),
     ...listening(
       "Listen to the evening news on City Radio. There are three stories.",
-      "**Reporter:** Good evening. This is City Radio, and here is the news.\n\nOur first story: a hiker who went missing in the mountains near Almaty has been found alive. Twenty-four-year-old Ruslan Akhmetov set off on Saturday morning for a one-day walk. He had told his family he would be back by eight in the evening. When he didn't come home, his sister called the rescue service. More than fifty volunteers searched for him all night. Eventually, on Sunday afternoon, a helicopter spotted him near a river. He had fallen and hurt his leg, and his phone battery had died. Ruslan said he had survived by drinking river water and staying in one place. Doctors say he will be fine.\n\nNext, a story with a happy ending for one café owner. On Tuesday morning, while Asel Nurlanova was opening her café, she noticed that the back door was broken. Someone had stolen the coffee machine during the night! As soon as she posted the news on social media, hundreds of people shared it. By the time the police arrived, a witness had already called with information. The thief had tried to sell the machine online. Police arrested a 30-year-old man on Wednesday, and the machine is now back in the café. Customers have been coming in all week to show their support.\n\nAnd finally: a dog called Rex has surprised everyone in the town of Kokshetau. Rex had escaped from his garden in March and was missing for three months. His owners had put up posters and offered a reward, but nobody called. Then, last Friday, while the family was having dinner, they heard scratching at the door. It was Rex — thin and dirty, but very happy. Nobody knows where he had been. His owners say he is now eating everything in the fridge.\n\nThat's all from us. More news at nine.",
+      "**Reporter:** Good evening. This is City Radio, and here is the news.\n\nOur first story: a hiker who went missing in the mountains near Almaty has been found alive. Twenty-four-year-old Ruslan Akhmetov set off on Saturday morning for a one-day walk. He had told his family he would be back by eight in the evening. When he didn't come home, his sister called the rescue service. More than fifty volunteers searched for him all night. Eventually, on Sunday afternoon, a helicopter spotted him near a river. He had fallen and hurt his leg, and his phone battery had died. Ruslan said he had survived by drinking river water and staying in one place. Doctors say he will be fine.\n\nNext, a story with a happy ending for one café owner. On Tuesday morning, while Dina Seitova was opening her café, she noticed that the back door was broken. Someone had stolen the coffee machine during the night! As soon as she posted the news on social media, hundreds of people shared it. By the time the police arrived, a witness had already called with information. The thief had tried to sell the machine online. Police arrested a 30-year-old man on Wednesday, and the machine is now back in the café. Customers have been coming in all week to show their support.\n\nAnd finally: a dog called Rex has surprised everyone in the town of Kokshetau. Rex had escaped from his garden in March and was missing for three months. His owners had put up posters and offered a reward, but nobody called. Then, last Friday, while the family was having dinner, they heard scratching at the door. It was Rex — thin and dirty, but very happy. Nobody knows where he had been. His owners say he is now eating everything in the fridge.\n\nThat's all from us. More news at nine.",
     ),
     quiz("Listen and choose.", [
       { q: "How long was Ruslan missing?", options: ["*about a day and a half", "a week", "three days"] },
       { q: "How did the rescuers find Ruslan?", options: ["*A helicopter spotted him.", "He called his sister.", "A dog found him."] },
-      { q: "What did the thief steal from Asel's café?", options: ["*the coffee machine", "money", "the front door"] },
+      { q: "What did the thief steal from Dina's café?", options: ["*the coffee machine", "money", "the front door"] },
       { q: "How did the police find the thief?", options: ["*A witness called with information.", "They saw him on camera.", "He came back to the café."] },
       { q: "How long was Rex missing?", options: ["*three months", "three weeks", "one year"] },
     ]),
     trueFalse("Listen again. True or false?", [
       ["Ruslan had planned a one-day walk.", true],
       ["Ruslan's phone had stopped working.", true],
-      ["Asel noticed the broken door when she was closing the café.", false],
+      ["Dina noticed the broken door when she was closing the café.", false],
       ["The thief had tried to sell the machine online.", true],
       ["Someone called the family about Rex after they put up posters.", false],
       ["The family knows exactly where Rex had been.", false],
@@ -96,7 +96,7 @@ export default lesson("b1-2.2", "Breaking news", () => [
   ]),
 
   section("Grammar: Telling a story", [
-    quiz("Notice the rule 🔍 Look: “While Asel was opening her café, she noticed that the back door was broken. Someone had stolen the coffee machine.”", [
+    quiz("Notice the rule 🔍 Look: “While Dina was opening her café, she noticed that the back door was broken. Someone had stolen the coffee machine.”", [
       { q: "“was opening” — what is it?", options: ["*the background: an action in progress", "the main event", "something earlier"] },
       { q: "“noticed” — what is it?", options: ["*a main event of the story", "the background", "something earlier"] },
       { q: "“had stolen” — what is it?", options: ["*something that happened earlier, before she noticed", "the background", "the next event"] },
@@ -107,7 +107,7 @@ export default lesson("b1-2.2", "Breaking news", () => [
       "1. It [*was snowing/had snowed] heavily when we left the house. ❄️\n2. While I [*was cooking/cooked], the lights suddenly went out.\n3. When I got to the party, Leo [*had already gone/was already going] home.\n4. She [*opened/was opening] the letter and started to cry.\n5. We [*were walking/had walked] along the beach when we saw a dolphin. 🐬\n6. He was tired because he [*had been/was being] awake all night.\n7. As soon as the alarm [*rang/had been ringing], everyone ran outside.\n8. The road was closed because there [*had been/was being] an accident.",
     ),
     sort("Background, main event or earlier? Sort the sentences from the news. 🎬", {
-      "🌄 background (Past Continuous)": ["Asel was opening her café.", "The family was having dinner.", "Volunteers were searching all night."],
+      "🌄 background (Past Continuous)": ["Dina was opening her café.", "The family was having dinner.", "Volunteers were searching all night."],
       "⚡ main event (Past Simple)": ["A helicopter spotted him.", "They heard scratching at the door.", "Police arrested a man."],
       "⏪ earlier (Past Perfect)": ["He had fallen and hurt his leg.", "Someone had stolen the coffee machine.", "Rex had escaped from his garden."],
     }),

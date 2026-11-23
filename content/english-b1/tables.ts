@@ -211,4 +211,51 @@ export const tables: GrammarTable[] = [
     ],
     note: "Word order: I'll **probably** go · I **probably won't** go",
   },
+  // 5.1
+  {
+    name: "obligation",
+    title: "Rules and freedom",
+    subtitle: "necessary, not necessary, allowed, expected",
+    color: "orange",
+    columns: ["Meaning", "Phrase", "Example"],
+    rows: [
+      ["✅ necessary", "**have to / need to**", "Nurses **need to** stay calm."],
+      ["🆗 not necessary", "**don't have to / don't need to / needn't**", "You **needn't** wear a suit — it's casual."],
+      ["⛔ not allowed", "**mustn't / aren't allowed to / can't**", "You **aren't allowed to** use your phone here."],
+      ["🟢 allowed", "**are allowed to / can**", "We **are allowed to** work from home on Fridays."],
+      ["📋 expected (but people don't always do it)", "**be supposed to**", "I**'m supposed to** start at 9, but I'm often late! 😅"],
+    ],
+    note: "**needn't** + verb (no to): You **needn't come**. · **don't need to** + verb: You **don't need to come**.",
+  },
+  // 5.2
+  {
+    name: "past-ability",
+    title: "could, was able to, managed to",
+    subtitle: "ability in the past",
+    color: "teal",
+    columns: ["", "When", "Example"],
+    rows: [
+      ["**could**", "a general ability in the past", "I **could** swim when I was five."],
+      ["**was able to / managed to**", "success in ONE difficult situation", "The exam was hard, but I **managed to** pass. (not: I could pass)"],
+      ["**couldn't / wasn't able to**", "no ability — general or one time", "I **couldn't** sleep last night."],
+      ["**had to / didn't have to**", "past necessary / not necessary", "We **had to** wait two hours. I **didn't have to** pay."],
+    ],
+    note: "**managed to** = it was difficult, but I did it! 💪",
+  },
+  // 5.4
+  {
+    name: "emails",
+    title: "Emails: formal or informal?",
+    color: "blue",
+    columns: ["", "Formal 👔", "Informal 😊"],
+    rows: [
+      ["start", "**Dear Mr. Smith, / Dear Sir or Madam,**", "**Hi Leo! / Hey Mia,**"],
+      ["why you write", "**I am writing to** ask about…", "**Just a quick message to** say…"],
+      ["ask", "**Could you please** send me…? **I would be grateful if** you could…", "**Can you** send me…?"],
+      ["say sorry", "**I apologize for** the delay.", "**Sorry for** not writing sooner!"],
+      ["finish", "**I look forward to hearing from you.**", "**Write soon! / Talk soon!**"],
+      ["sign off", "**Kind regards, / Yours sincerely,**", "**Best, / Love, / See you!**"],
+    ],
+    note: "Formal emails: **no contractions** (I am, not I'm), no emojis, no slang",
+  },
 ];
