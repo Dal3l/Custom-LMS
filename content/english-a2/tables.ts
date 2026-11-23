@@ -232,4 +232,124 @@ export const tables: GrammarTable[] = [
     ],
     note: "How about **+ -ing / a time**: How about **going** for a walk? · How about **Friday**?",
   },
+  // 6.1
+  {
+    name: "pp-ever",
+    title: "Present Perfect: experiences",
+    subtitle: "have / has + 3rd form — in your life, we don't say when",
+    color: "violet",
+    columns: ["", "Example", "Answer"],
+    rows: [
+      ["+", "I'**ve been** to Japan. She'**s tried** sushi.", ""],
+      ["−", "I'**ve never seen** snow. He **hasn't flown** in a plane.", ""],
+      ["?", "**Have** you **ever ridden** a horse?", "Yes, I **have**. / No, I **haven't**."],
+      ["he / she / it", "**Has** she **ever been** to Paris?", "Yes, she **has**. / No, she **hasn't**."],
+    ],
+    note: "**ever** = in your life (questions) · **never** = not in your life · I've **been to** = I went and came back",
+  },
+  {
+    name: "participles",
+    title: "The 3rd form",
+    subtitle: "regular: + ed · irregular: learn them!",
+    color: "orange",
+    columns: ["Verb", "Past", "3rd form"],
+    rows: [
+      ["visit · try", "visited · tried", "**visited · tried**"],
+      ["be · go", "was / were · went", "**been · gone**"],
+      ["see · eat", "saw · ate", "**seen · eaten**"],
+      ["do · swim", "did · swam", "**done · swum**"],
+      ["fly · ride", "flew · rode", "**flown · ridden**"],
+      ["meet · win", "met · won", "**met · won**"],
+    ],
+    note: "Many 3rd forms = the past: bought, made, had, met · some are new: seen, eaten, been, done",
+  },
+  // 6.2
+  {
+    name: "pp-ps",
+    title: "Present Perfect or Past Simple?",
+    subtitle: "in my life — or at a time in the past",
+    color: "green",
+    columns: ["", "Example"],
+    rows: [
+      ["🌍 in my life (no time)", "I'**ve been** to Turkey. **Have** you **ever tried** surfing?"],
+      ["📅 when? (a time)", "I **went** there **in 2022**. I **tried** it **last summer**."],
+      ["a conversation", "— **Have** you **ever been** to Italy? — Yes, I **have**. — When **did** you **go**? — I **went** two years ago."],
+    ],
+    note: "yesterday, last…, in 2020, … ago, when? → **Past Simple** · ever, never, in my life → **Present Perfect**",
+  },
+  // 7.1
+  {
+    name: "just-already-yet",
+    title: "just · already · yet",
+    subtitle: "Present Perfect for news and updates",
+    color: "blue",
+    columns: ["", "Example", "Where?"],
+    rows: [
+      ["⚡ just = a moment ago", "I'**ve just** got a new job!", "before the 3rd form"],
+      ["✅ already = sooner than expected", "She'**s already** finished her homework.", "before the 3rd form"],
+      ["❓ yet (questions)", "**Have** you **finished yet**?", "at the end"],
+      ["❌ yet (negatives)", "I **haven't** seen it **yet**.", "at the end"],
+    ],
+    note: "News: I've **just**… → details: I **got** it yesterday! (Past Simple when we say when)",
+  },
+  // 7.2
+  {
+    name: "for-since",
+    title: "for · since",
+    subtitle: "How long have you…? — from the past until now",
+    color: "teal",
+    columns: ["", "Example"],
+    rows: [
+      ["⏳ for + a period", "I've lived here **for** ten years. · **for** two months · **for** a long time"],
+      ["📍 since + a start point", "I've known Dana **since** 2019. · **since** Monday · **since** I was a child"],
+      ["❓ How long…?", "**How long have** you **had** your phone? — **For** a year. / **Since** January."],
+      ["⚠️ not the Present", "I've lived here for 10 years. — not “I live here for 10 years”"],
+    ],
+    note: "for = how much time ⏳ · since = from when 📍",
+  },
+  // 7.4
+  {
+    name: "doctor",
+    title: "At the doctor's",
+    color: "pink",
+    columns: ["", "Phrases"],
+    rows: [
+      ["🩺 Doctor", "What's the matter? · How long have you had it? · Let me have a look."],
+      ["🤒 Patient", "I've got a headache / a sore throat / a temperature. · I feel sick. · My back hurts."],
+      ["⏳ How long?", "I've had it **since** Tuesday. · I've felt sick **for** two days."],
+      ["💡 Advice", "You **should** rest. · You **shouldn't** go to work. · Take this twice a day."],
+    ],
+    note: "should + verb (no to): You should **drink** more water.",
+  },
+  // 8.1
+  {
+    name: "have-to-must",
+    title: "have to · must · don't have to · mustn't",
+    subtitle: "rules and obligations",
+    color: "orange",
+    columns: ["", "Example", "Meaning"],
+    rows: [
+      ["✅ have to", "I **have to** wear a uniform. She **has to** work on Saturdays.", "a rule, it's necessary"],
+      ["✅ must", "You **must** wear a helmet. I **must** call Mom!", "a strong rule / I feel it's important"],
+      ["🆓 don't have to", "You **don't have to** come. We **don't have to** wear a tie.", "it's not necessary — you can choose"],
+      ["⛔ mustn't", "You **mustn't** use your phone in the exam.", "it's not allowed — don't do it!"],
+      ["❓", "**Do** you **have to** work tomorrow? — Yes, I **do**.", ""],
+    ],
+    note: "**don't have to** ≠ **mustn't**! · past: I **had to** get up early (not “musted”)",
+  },
+  // 8.2
+  {
+    name: "should",
+    title: "should · shouldn't",
+    subtitle: "advice and opinions",
+    color: "green",
+    columns: ["", "Example"],
+    rows: [
+      ["💡 advice", "You **should** sleep more. You **shouldn't** drink coffee at night."],
+      ["❓ ask for advice", "What **should** I do? **Should** I call him?"],
+      ["🤔 opinion", "I think you **should** tell her. I **don't think** you **should** go."],
+      ["⚖️ should vs must", "You **should** wear a coat. (good idea) · You **must** wear a seatbelt. (a rule!)"],
+    ],
+    note: "should + verb (no to): You should **go** — not “should to go”",
+  },
 ];
