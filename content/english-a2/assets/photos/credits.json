@@ -166,5 +166,35 @@
     "author": "USDA",
     "license": "Public domain",
     "source": "https://commons.wikimedia.org/wiki/File%3ALots_to_Learn_at_Farm_Lot_59_%2820221021-FPAC-LSC-0387%29.jpg"
+  },
+  "fut-car.jpg": {
+    "title": "File:Waymo self-driving car front view.gk.jpg",
+    "author": "Grendelkhan",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AWaymo_self-driving_car_front_view.gk.jpg"
+  },
+  "fut-drone.jpg": {
+    "title": "File:Zipline Drone Launch.jpg",
+    "author": "Roksenhorn",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AZipline_Drone_Launch.jpg"
+  },
+  "fut-farm.jpg": {
+    "title": "File:Greenhub, Agritechnica 2023, Hanover (P1140976).jpg",
+    "author": "Matti Blume",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AGreenhub%2C_Agritechnica_2023%2C_Hanover_%28P1140976%29.jpg"
+  },
+  "fut-robot.jpg": {
+    "title": "File:Ameca Generation 1.jpg",
+    "author": "Willy Jackson",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AAmeca_Generation_1.jpg"
+  },
+  "fut-solar.jpg": {
+    "title": "File:Rooftop Solar Panels.jpg",
+    "author": "EY418",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ARooftop_Solar_Panels.jpg"
   }
 }
