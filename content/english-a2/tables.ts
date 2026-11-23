@@ -232,4 +232,49 @@ export const tables: GrammarTable[] = [
     ],
     note: "How about **+ -ing / a time**: How about **going** for a walk? · How about **Friday**?",
   },
+  // 6.1
+  {
+    name: "pp-ever",
+    title: "Present Perfect: experiences",
+    subtitle: "have / has + 3rd form — in your life, we don't say when",
+    color: "violet",
+    columns: ["", "Example", "Answer"],
+    rows: [
+      ["+", "I'**ve been** to Japan. She'**s tried** sushi.", ""],
+      ["−", "I'**ve never seen** snow. He **hasn't flown** in a plane.", ""],
+      ["?", "**Have** you **ever ridden** a horse?", "Yes, I **have**. / No, I **haven't**."],
+      ["he / she / it", "**Has** she **ever been** to Paris?", "Yes, she **has**. / No, she **hasn't**."],
+    ],
+    note: "**ever** = in your life (questions) · **never** = not in your life · I've **been to** = I went and came back",
+  },
+  {
+    name: "participles",
+    title: "The 3rd form",
+    subtitle: "regular: + ed · irregular: learn them!",
+    color: "orange",
+    columns: ["Verb", "Past", "3rd form"],
+    rows: [
+      ["visit · try", "visited · tried", "**visited · tried**"],
+      ["be · go", "was / were · went", "**been · gone**"],
+      ["see · eat", "saw · ate", "**seen · eaten**"],
+      ["do · swim", "did · swam", "**done · swum**"],
+      ["fly · ride", "flew · rode", "**flown · ridden**"],
+      ["meet · win", "met · won", "**met · won**"],
+    ],
+    note: "Many 3rd forms = the past: bought, made, had, met · some are new: seen, eaten, been, done",
+  },
+  // 6.2
+  {
+    name: "pp-ps",
+    title: "Present Perfect or Past Simple?",
+    subtitle: "in my life — or at a time in the past",
+    color: "green",
+    columns: ["", "Example"],
+    rows: [
+      ["🌍 in my life (no time)", "I'**ve been** to Turkey. **Have** you **ever tried** surfing?"],
+      ["📅 when? (a time)", "I **went** there **in 2022**. I **tried** it **last summer**."],
+      ["a conversation", "— **Have** you **ever been** to Italy? — Yes, I **have**. — When **did** you **go**? — I **went** two years ago."],
+    ],
+    note: "yesterday, last…, in 2020, … ago, when? → **Past Simple** · ever, never, in my life → **Present Perfect**",
+  },
 ];

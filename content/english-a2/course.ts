@@ -22,6 +22,10 @@ import l51 from "./m05/l1";
 import l52 from "./m05/l2";
 import l53 from "./m05/l3";
 import l54 from "./m05/l4";
+import l61 from "./m06/l1";
+import l62 from "./m06/l2";
+import l63 from "./m06/l3";
+import l64 from "./m06/l4";
 
 export const course: CourseFile = {
   id: "5b0c2f7e-8a41-4d6e-9c3b-2e7a1f6d4a92",
@@ -39,5 +43,6 @@ export const course: CourseFile = {
     { title: "Better or worse?", lessons: [l31, l32, l33, l34] },
     { title: "Plans", lessons: [l41, l42, l43, l44] },
     { title: "The future", lessons: [l51, l52, l53, l54] },
+    { title: "Experiences", lessons: [l61, l62, l63, l64] },
   ],
 };

@@ -196,5 +196,47 @@
     "author": "EY418",
     "license": "CC BY-SA 4.0",
     "source": "https://commons.wikimedia.org/wiki/File%3ARooftop_Solar_Panels.jpg"
+  },
+  "exp-bungee.jpg": {
+    "title": "File:Bungee Jumping from Gorsabrua (Gorsa Bridge).JPG",
+    "author": "Lyngenfjord Bungee",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ABungee_Jumping_from_Gorsabrua_%28Gorsa_Bridge%29.JPG"
+  },
+  "exp-diving.jpg": {
+    "title": "File:Florida Keys National Marine Sanctuary scuba diver filmng coral reef nursery.png",
+    "author": "Mitchell Tartt / NOAA",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File%3AFlorida_Keys_National_Marine_Sanctuary_scuba_diver_filmng_coral_reef_nursery.png"
+  },
+  "exp-climbing.jpg": {
+    "title": "File:Rock climber Phra Nang 1.jpg",
+    "author": "kallerna",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ARock_climber_Phra_Nang_1.jpg"
+  },
+  "exp-paragliding.jpg": {
+    "title": "File:Parapente - 166.jpg",
+    "author": "William Crochot (Medium69)",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AParapente_-_166.jpg"
+  },
+  "bl-aurora.jpg": {
+    "title": "File:Northern lights curtain over Nordmo in Bjerkvik, Narvik, Nordland, Norway, 2023 September.jpg",
+    "author": "Ximonic (Simo Räsänen)",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ANorthern_lights_curtain_over_Nordmo_in_Bjerkvik%2C_Narvik%2C_Nordland%2C_Norway%2C_2023_September.jpg"
+  },
+  "bl-balloons.jpg": {
+    "title": "File:Hot air balloon in Cappadocia 02.jpg",
+    "author": "Bernard Gagnon",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AHot_air_balloon_in_Cappadocia_02.jpg"
+  },
+  "bl-machu.jpg": {
+    "title": "File:Machu Picchu, Perú, 2015-07-30, DD 47.JPG",
+    "author": "Diego Delso",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AMachu_Picchu%2C_Per%C3%BA%2C_2015-07-30%2C_DD_47.JPG"
   }
 }
