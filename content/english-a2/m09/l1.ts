@@ -104,7 +104,7 @@ export default lesson("a2-9.1", "How much sugar?", () => [
 
   section("Grammar: a few, a little, not much, not many", [
     tip("Countable / uncountable nouns and *How much / How many* are A1 — just check them in 1 minute: *How ___ eggs? How ___ water?* Today's new part: **a few / a little** and **not much / not many**."),
-    quiz("Notice the rule 🔍 Look at the texts: “Leo eats a little chocolate… Arman eats a few eggs… I don't eat much meat… Arman doesn't eat many sweets.” Which is true?", [
+    quiz("Notice the rule 🔍 Look at the texts: “Leo eats a little chocolate… Ruslan eats a few eggs… I don't eat much meat… Ruslan doesn't eat many sweets.” Which is true?", [
       { q: "a few + …", options: ["*things we can count: a few eggs, a few cookies", "things we can't count: a few sugar", "all nouns"] },
       { q: "a little + …", options: ["*things we can't count: a little cheese, a little sugar", "things we can count: a little apples", "people"] },
       { q: "In negative sentences we usually say…", options: ["*not much / not many: I don't eat much meat", "a lot of: I don't eat a lot of… only", "a few: I don't eat a few meat"] },
@@ -132,17 +132,17 @@ export default lesson("a2-9.1", "How much sugar?", () => [
       [
         ["skips breakfast", "Leo"],
         ["drinks a lot of juice", "Madina"],
-        ["eats a lot of protein", "Arman"],
+        ["eats a lot of protein", "Ruslan"],
         ["eats junk food at night", "Leo"],
         ["has fruit yogurt for breakfast", "Madina"],
-        ["cooks at home", "Arman"],
+        ["cooks at home", "Ruslan"],
       ],
       {
         read: [
           "## 🍽️ What I eat in a day",
           "**🎮 Leo, 20, student.** *I usually skip breakfast — I don't have time. At university I have a few energy drinks and a sandwich. Dinner is pasta with a lot of ketchup. 🍝 Then I play games until 2 a.m. and eat chips and a little chocolate… OK, a lot of chocolate. 😅*",
           "**🧘‍♀️ Madina, 28, office manager.** *I try to eat healthily! For breakfast I have a fruit yogurt and a big glass of orange juice. 🧃 For lunch — a salad. In the afternoon I drink two more juices and eat a granola bar. I don't eat much meat. I don't understand why I'm always hungry!*",
-          "**🏋️ Arman, 35, trainer.** *I cook at home almost every day. Breakfast: eggs, bread and a little cheese. Lunch: chicken or beans with rice and a lot of vegetables. 🥦 I drink a lot of water — about two liters. I don't eat many sweets, but on Sundays I have a big piece of my mom's cake! 🍰*",
+          "**🏋️ Ruslan, 32, trainer.** *I cook at home almost every day. Breakfast: eggs, bread and a little cheese. Lunch: chicken or beans with rice and a lot of vegetables. 🥦 I drink a lot of water — about two liters. I don't eat many sweets, but on Sundays I have a big piece of my mom's cake! 🍰*",
         ].join("\n\n"),
       },
     ),
@@ -150,10 +150,10 @@ export default lesson("a2-9.1", "How much sugar?", () => [
       ["Leo has dinner with a lot of ketchup.", true],
       ["Madina eats a lot of meat.", false],
       ["Madina has a lot of hidden sugar in her day.", true],
-      ["Arman drinks about two liters of water.", true],
-      ["Arman never eats cake.", false],
+      ["Ruslan drinks about two liters of water.", true],
+      ["Ruslan never eats cake.", false],
     ]),
-    text("Talk to your teacher.", "- Who has the healthiest day? Who has the most hidden sugar? Why?\n- Give one piece of advice to Leo, Madina and Arman. *You should… You shouldn't…* 💡\n- Whose day is the most like yours? 😅"),
+    text("Talk to your teacher.", "- Who has the healthiest day? Who has the most hidden sugar? Why?\n- Give one piece of advice to Leo, Madina and Ruslan. *You should… You shouldn't…* 💡\n- Whose day is the most like yours? 😅"),
   ]),
 
   section("Say it right: vegetable", [

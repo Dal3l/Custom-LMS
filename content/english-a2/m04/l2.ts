@@ -120,7 +120,7 @@ export default lesson("a2-4.2", "My week ahead", () => [
     drag(
       "Complete the chat.",
       "A: Hi! What [are] you doing on Saturday?\nB: I'm [working] in the morning. Why?\nA: We're [having] a barbecue in the evening. Do you want to come? 🍖\nB: Sounds great! Who's [coming]?\nA: Dana and Leo. Leo [is] bringing his guitar. 🎸\nB: Perfect! I'm not [doing] anything in the evening.\nA: Great! We're [meeting] at the park at 6.\nB: See you [there]! 👋",
-      ["do", "work", "are"],
+      ["do", "work", "does"],
     ),
     order("Make sentences.", [
       "What are you doing this weekend?",

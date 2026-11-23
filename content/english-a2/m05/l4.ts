@@ -135,7 +135,7 @@ export default lesson("a2-5.4", "Practical: Making arrangements", () => [
     ]),
     gaps(
       "Listen again. Complete the phrases.",
-      "1. [Shall] we take her out for dinner?\n2. How [about] the Georgian restaurant?\n3. Why [don't] we meet at six?\n4. I'm [afraid] I can't at six.\n5. Can we [make] it seven?\n6. Seven [works] for me.",
+      "1. [Shall] we take her out for dinner?\n2. How [about] the Georgian restaurant?\n3. Why [don't/do not] we meet at six?\n4. I'm [afraid] I can't at six.\n5. Can we [make] it seven?\n6. Seven [works] for me.",
     ),
   ]),
 

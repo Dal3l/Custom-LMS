@@ -106,18 +106,18 @@ export default lesson("a2-3.3", "City vs country", () => [
   section("Listening: Radio phone-in", [
     ...listening(
       "Listen to a radio show. People call and give their opinion.",
-      "**Host:** Good morning! Today's question: city or country — where is life better? Our first caller is Aigerim. Good morning, Aigerim!\n\n**Aigerim:** Good morning! I live in Astana, and for me the city is better. There are more jobs, better hospitals and better schools. My kids can choose from ten sports clubs! 🏊\n\n**Host:** But isn't the city more stressful?\n\n**Aigerim:** Sometimes, yes. The winter is long and cold, and the traffic is bad at 6 p.m. But I can't imagine living without theaters and shopping centers. 😄\n\n**Host:** Thank you, Aigerim! Our next caller is Daniyar.\n\n**Daniyar:** Hi! Well, I don't agree with Aigerim. I moved from Almaty to my grandfather's village last year. Life is slower and healthier. I grow my own vegetables, and I go running in the mountains every morning. 🏃\n\n**Host:** Don't you miss the city?\n\n**Daniyar:** I miss my friends and good coffee! ☕ But I go to Almaty once a month. For me, that's the perfect balance.",
+      "**Host:** Good morning! Today's question: city or country — where is life better? Our first caller is Madina. Good morning, Madina!\n\n**Madina:** Good morning! I live in Astana, and for me the city is better. There are more jobs, better hospitals and better schools. My kids can choose from ten sports clubs! 🏊\n\n**Host:** But isn't the city more stressful?\n\n**Madina:** Sometimes, yes. The winter is long and cold, and the traffic is bad at 6 p.m. But I can't imagine living without theaters and shopping centers. 😄\n\n**Host:** Thank you, Madina! Our next caller is Daniyar.\n\n**Daniyar:** Hi! Well, I don't agree with Madina. I moved from Almaty to my grandfather's village last year. Life is slower and healthier. I grow my own vegetables, and I go running in the mountains every morning. 🏃\n\n**Host:** Don't you miss the city?\n\n**Daniyar:** I miss my friends and good coffee! ☕ But I go to Almaty once a month. For me, that's the perfect balance.",
     ),
     quiz("Listen and choose.", [
-      { q: "Where does Aigerim live?", options: ["*in Astana", "in Almaty", "in a village"] },
-      { q: "What's bad in Aigerim's city, she says?", options: ["*the long winter and the traffic", "the schools", "the hospitals"] },
+      { q: "Where does Madina live?", options: ["*in Astana", "in Almaty", "in a village"] },
+      { q: "What's bad in Madina's city, she says?", options: ["*the long winter and the traffic", "the schools", "the hospitals"] },
       { q: "When did Daniyar move to the village?", options: ["*last year", "ten years ago", "last month"] },
       { q: "What does Daniyar miss?", options: ["*his friends and good coffee", "the theaters", "his job"] },
     ]),
     trueFalse("Listen again. True or false?", [
-      ["Aigerim's kids can choose from ten sports clubs.", true],
-      ["Aigerim thinks the city is never stressful.", false],
-      ["Daniyar agrees with Aigerim.", false],
+      ["Madina's kids can choose from ten sports clubs.", true],
+      ["Madina thinks the city is never stressful.", false],
+      ["Daniyar agrees with Madina.", false],
       ["Daniyar grows his own vegetables.", true],
       ["Daniyar goes to Almaty once a week.", false],
     ]),

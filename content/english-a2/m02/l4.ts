@@ -205,7 +205,7 @@ export default lesson("a2-2.4", "Revision 1–2", () => [
   ),
   homework(
     [
-      gaps("Review: complete.", "1. [Did] you see the news? — No, I [didn't].\n2. I [was sleeping] when the alarm rang. (sleep)\n3. Who [made] the first phone call? (make)\n4. While we [were walking], it started to snow. (walk)\n5. We [didn't go/did not go] out last night. (not go)\n6. When I [saw] the spider, I screamed. (see)"),
+      gaps("Review: complete.", "1. [Did] you see the news? — No, I [didn't/did not].\n2. I [was sleeping] when the alarm rang. (sleep)\n3. Who [made] the first phone call? (make)\n4. While we [were walking], it started to snow. (walk)\n5. We [didn't go/did not go] out last night. (not go)\n6. When I [saw] the spider, I screamed. (see)"),
       choose("Choose.", "1. Gagarin [*flew/flied] into space in 1961.\n2. She [*was reading/read] when the lights went off.\n3. What [*happened/did happen] in 1969?\n4. I [*lost/losed] my keys yesterday.\n5. [*Were/Did] you working at 6?\n6. [*While/During] I was cooking, the phone rang."),
     ],
     "Homework: Review",

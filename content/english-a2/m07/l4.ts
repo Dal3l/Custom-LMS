@@ -78,7 +78,7 @@ export default lesson("a2-7.4", "Practical: At the doctor's", () => [
     ),
     gaps(
       "Complete the doctor's advice.",
-      "1. You've got a temperature. You [should] stay in bed. 🛌\n2. You [shouldn't] go to the gym this week. ❌🏋️\n3. Drink a lot of water and [rest]. 💧\n4. Take this medicine three [times] a day. 💊\n5. If you don't feel better in three days, come [back]. 🔁\n6. You've got a cold — you [shouldn't] eat ice cream! 🍦😄",
+      "1. You've got a temperature. You [should] stay in bed. 🛌\n2. You [shouldn't/should not] go to the gym this week. ❌🏋️\n3. Drink a lot of water and [rest]. 💧\n4. Take this medicine three [times] a day. 💊\n5. If you don't feel better in three days, come [back]. 🔁\n6. You've got a cold — you [shouldn't/should not] eat ice cream! 🍦😄",
     ),
   ]),
 
@@ -131,7 +131,7 @@ export default lesson("a2-7.4", "Practical: At the doctor's", () => [
     ]),
     gaps(
       "Listen again. Complete the phrases.",
-      "1. How can I [help] you?\n2. How long have you [had] these symptoms?\n3. Have you [ever] had a cat allergy before?\n4. You don't need a [prescription].\n5. You [shouldn't] drive after you take them.\n6. If it doesn't get better in a week, you should [see] a doctor.",
+      "1. How can I [help] you?\n2. How long have you [had] these symptoms?\n3. Have you [ever] had a cat allergy before?\n4. You don't need a [prescription].\n5. You [shouldn't/should not] drive after you take them.\n6. If it doesn't get better in a week, you should [see] a doctor.",
     ),
   ]),
 
