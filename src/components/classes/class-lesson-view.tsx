@@ -47,7 +47,7 @@ import { LessonPicker } from "./lesson-picker";
 import { HomeworkFooter, HomeworkPick, receivedBy, SendHomeworkDialog } from "@/components/homework/send-homework";
 import type { SentHomework } from "@/features/homework/queries";
 import { GroupOverview } from "./group-overview";
-import { BoardDialog, BoardTool, TimerTool, ToolButton } from "./lesson-tools";
+import { BoardDialog, BoardTool, HintsTool, TimerTool, ToolButton, useHintsOn } from "./lesson-tools";
 import { DictionaryTool, WordAdderProvider } from "@/components/vocabulary/dictionary-tool";
 import { LiveStudentsBar } from "./live-students-bar";
 
@@ -89,8 +89,11 @@ export function TeacherClassLesson({
   students,
   initialAnswers,
   homework,
+  hints,
   ...props
 }: CommonProps & {
+  /** right answers for the teacher's hints, by exercise (lesson and homework) */
+  hints: Record<string, unknown>;
   students: ClassStudent[];
   initialAnswers: StudentAnswers;
   /** the lesson's homework part and what was already sent */
@@ -108,6 +111,7 @@ export function TeacherClassLesson({
   // Whose answers are shown (the teacher always looks at a student's work).
   const [viewing, setViewing] = useState<string | null>(students[0]?.id ?? null);
   const [pointerOn, setPointerOn] = useState(false);
+  const [hintsOn, setHintsOn] = useHintsOn();
   const [boardOpen, setBoardOpen] = useState(false);
   // The lesson's homework: shown as its own group of sections; ticked exercises are sent.
   const homeworkIds = homework.sections.flatMap((s) => s.exercises.map((e) => e.id));
@@ -268,9 +272,11 @@ export function TeacherClassLesson({
             extraGroup={{ label: th("partTitle"), sections: homework.sections }}
             review={viewing ? (live.answers[viewing] ?? {}) : undefined}
             solutions={props.solutions}
+            hints={hintsOn ? hints : undefined}
             focus={focus}
             tools={
               <>
+                <HintsTool on={hintsOn} onChange={setHintsOn} />
                 {students.length > 0 && (
                   <ToolButton label={tl("pointer")} pressed={pointerOn} onClick={() => setPointerOn(!pointerOn)}>
                     <MousePointer2 aria-hidden="true" />

@@ -1,8 +1,8 @@
 "use client";
 
-import { Presentation, Timer, TimerOff } from "lucide-react";
+import { Lightbulb, LightbulbOff, Presentation, Timer, TimerOff } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { forwardRef, useEffect, useState, useTransition } from "react";
+import { forwardRef, useEffect, useState, useSyncExternalStore, useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,6 +35,51 @@ export const ToolButton = forwardRef<
     </Button>
   );
 });
+
+const HINTS_STORAGE = "linguaroom:teacher-hints";
+
+/**
+ * The teacher's answer hints are on (remembered on this device). Off is handy
+ * while sharing the screen with students.
+ */
+export function useHintsOn() {
+  const on = useSyncExternalStore(subscribeHints, readHints, () => true);
+  const change = (value: boolean) => {
+    hintsMemory = value;
+    try {
+      localStorage.setItem(HINTS_STORAGE, value ? "on" : "off");
+    } catch {
+      // storage blocked: the choice lasts until the page is reloaded
+    }
+    hintListeners.forEach((l) => l());
+  };
+  return [on, change] as const;
+}
+
+let hintsMemory = true;
+const hintListeners = new Set<() => void>();
+function subscribeHints(listener: () => void) {
+  hintListeners.add(listener);
+  return () => hintListeners.delete(listener);
+}
+function readHints() {
+  try {
+    const saved = localStorage.getItem(HINTS_STORAGE);
+    return saved === null ? hintsMemory : saved !== "off";
+  } catch {
+    return hintsMemory;
+  }
+}
+
+/** Turns the teacher's answer hints on and off. */
+export function HintsTool({ on, onChange }: { on: boolean; onChange: (on: boolean) => void }) {
+  const t = useTranslations("live");
+  return (
+    <ToolButton label={on ? t("hintsOn") : t("hintsOff")} pressed={on} onClick={() => onChange(!on)}>
+      {on ? <Lightbulb aria-hidden="true" /> : <LightbulbOff aria-hidden="true" />}
+    </ToolButton>
+  );
+}
 
 /** The whiteboard button. The teacher's press opens the board for the class too. */
 export function BoardTool({ open, onOpen }: { open: boolean; onOpen: () => void }) {

@@ -90,6 +90,11 @@ export function solveGapInput(_content: GapInputContent, key: GapInputKey): GapI
   return { values: Object.fromEntries(Object.entries(key.answers).map(([gap, list]) => [gap, list[0] ?? ""])) };
 }
 
+/** Teacher's hints: every accepted answer of a gap, e.g. "didn't / did not". */
+export function hintGapInput(_content: GapInputContent, key: GapInputKey): GapInputAnswer {
+  return { values: Object.fromEntries(Object.entries(key.answers).map(([gap, list]) => [gap, list.join(" / ")])) };
+}
+
 export const gapInputDefinition: ExerciseDefinition<GapInputContent, GapInputKey, GapInputAnswer> = {
   id: "gap_input",
   contentSchema: gapInputContentSchema,
@@ -99,6 +104,7 @@ export const gapInputDefinition: ExerciseDefinition<GapInputContent, GapInputKey
     answerSchema: gapInputAnswerSchema,
     check: checkGapInput,
     solution: solveGapInput,
+    hint: hintGapInput,
     // The tries count toward revealing the answer, so the saved ones are used, not the browser's.
     prepare: (answer, saved) => ({ ...answer, attempts: saved?.attempts ?? {} }),
     afterCheck: recordAttempts,

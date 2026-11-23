@@ -7,6 +7,7 @@ import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { ExerciseViewerProps } from "../../client-types";
 import { mediaUrl, type MediaFile } from "../../media";
+import { HINT_MARK, HintTip, useHintHover } from "../../teacher-hint";
 import type { MatchingAnswer, MatchingContent } from "./schema";
 
 type LeftItem = MatchingContent["left"][number];
@@ -27,7 +28,7 @@ const PAIR_COLORS = [
  * pair and move up together. Tap a pair to separate it. "Check" colours pairs
  * green or red.
  */
-export function MatchingViewer({ content, answer, onAnswer, result }: ExerciseViewerProps<MatchingContent, MatchingAnswer>) {
+export function MatchingViewer({ content, answer, onAnswer, result, hint }: ExerciseViewerProps<MatchingContent, MatchingAnswer>) {
   const t = useTranslations("exercises.matching");
   const [values, setValues] = useState<Record<string, string>>(answer?.values ?? {});
   const [selected, setSelected] = useState<Selection>(null);
@@ -38,6 +39,17 @@ export function MatchingViewer({ content, answer, onAnswer, result }: ExerciseVi
   const pairs = content.left.filter((l) => values[l.id] && rightText.has(values[l.id]!));
   const freeLeft = content.left.filter((l) => !values[l.id]);
   const freeRight = content.right.filter((r) => r.text && !pairedRight.has(r.id));
+
+  // Teacher's hints: the partner of the item under the pointer (or tapped) is green.
+  // Pairs are compared by text: two right items may say the same.
+  const hover = useHintHover();
+  const rightOf = (leftId: string) => rightText.get(hint?.values[leftId] ?? "");
+  const pointed = hover.active ? { side: hover.active[0] === "l" ? "left" : "right", id: hover.active.slice(2) } : selected;
+  const hinted = (side: "left" | "right", id: string) => {
+    if (!hint || !pointed || pointed.side === side) return false;
+    const want = pointed.side === "left" ? rightOf(pointed.id) : rightText.get(pointed.id);
+    return want !== undefined && want === (side === "left" ? rightOf(id) : rightText.get(id));
+  };
 
   function update(next: Record<string, string>) {
     setValues(next);
@@ -65,13 +77,14 @@ export function MatchingViewer({ content, answer, onAnswer, result }: ExerciseVi
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3" {...(hint ? hover.handlers : {})}>
       {pairs.length > 0 && (
         <ul className="flex flex-col gap-2" aria-label={t("pairs")}>
           {pairs.map((l, i) => {
             const verdict = result?.parts[l.id];
             return (
               <li key={l.id}>
+                <HintTip text={rightOf(l.id)} className="flex w-full">
                 <button
                   type="button"
                   disabled={disabled}
@@ -98,6 +111,7 @@ export function MatchingViewer({ content, answer, onAnswer, result }: ExerciseVi
                   </span>
                   <span className="font-medium">{rightText.get(values[l.id]!)}</span>
                 </button>
+                </HintTip>
               </li>
             );
           })}
@@ -110,14 +124,30 @@ export function MatchingViewer({ content, answer, onAnswer, result }: ExerciseVi
           <div className="grid grid-cols-2 gap-2">
             <div className="flex flex-col gap-2" role="group" aria-label={t("leftColumn")}>
               {freeLeft.map((l) => (
-                <Item key={l.id} active={selected?.side === "left" && selected.id === l.id} disabled={disabled} onTap={() => tap("left", l.id)} label={leftLabel(l, t("picture"))}>
+                <Item
+                  key={l.id}
+                  hintId={`l:${l.id}`}
+                  hinted={hinted("left", l.id)}
+                  active={selected?.side === "left" && selected.id === l.id}
+                  disabled={disabled}
+                  onTap={() => tap("left", l.id)}
+                  label={leftLabel(l, t("picture"))}
+                >
                   <LeftContent item={l} />
                 </Item>
               ))}
             </div>
             <div className="flex flex-col gap-2" role="group" aria-label={t("rightColumn")}>
               {freeRight.map((r) => (
-                <Item key={r.id} active={selected?.side === "right" && selected.id === r.id} disabled={disabled} onTap={() => tap("right", r.id)} label={r.text}>
+                <Item
+                  key={r.id}
+                  hintId={`r:${r.id}`}
+                  hinted={hinted("right", r.id)}
+                  active={selected?.side === "right" && selected.id === r.id}
+                  disabled={disabled}
+                  onTap={() => tap("right", r.id)}
+                  label={r.text}
+                >
                   <span className="font-medium">{r.text}</span>
                 </Item>
               ))}
@@ -137,12 +167,16 @@ function leftLabel(item: LeftItem, picture: string) {
 
 /** A tappable card in a column. Contains other controls (audio), so it is a div with button behaviour. */
 function Item({
+  hintId,
+  hinted,
   active,
   disabled,
   onTap,
   label,
   children,
 }: {
+  hintId: string;
+  hinted: boolean;
   active: boolean;
   disabled: boolean;
   onTap: () => void;
@@ -156,6 +190,7 @@ function Item({
       aria-pressed={active}
       aria-disabled={disabled || undefined}
       aria-label={label}
+      data-hint={hintId}
       onClick={onTap}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -167,6 +202,7 @@ function Item({
         "flex min-h-12 touch-manipulation items-center justify-center rounded-xl border-2 bg-card p-2 text-center transition-colors select-none",
         !disabled && "cursor-pointer hover:border-primary/60",
         active && "border-primary bg-accent ring-3 ring-ring/40",
+        hinted && !active && HINT_MARK,
       )}
     >
       {children}

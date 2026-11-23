@@ -7,9 +7,10 @@ import { trueFalseLabels } from "./labels";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { ExerciseViewerProps } from "../../client-types";
+import { HINT_MARK, HINT_RING } from "../../teacher-hint";
 import type { TrueFalseAnswer, TrueFalseContent } from "./schema";
 
-export function TrueFalseViewer({ content, answer, onAnswer, result }: ExerciseViewerProps<TrueFalseContent, TrueFalseAnswer>) {
+export function TrueFalseViewer({ content, answer, onAnswer, result, hint }: ExerciseViewerProps<TrueFalseContent, TrueFalseAnswer>) {
   const t = useTranslations("exercises.trueFalse");
   const lessonLabels = trueFalseLabels(useLessonLanguage());
   const label = (v: boolean) => (lessonLabels ? lessonLabels[v ? 0 : 1] : v ? t("true") : t("false"));
@@ -51,6 +52,8 @@ export function TrueFalseViewer({ content, answer, onAnswer, result }: ExerciseV
                   className={cn(
                     "min-h-10 rounded-lg border px-4 text-sm font-medium transition-colors hover:bg-accent disabled:cursor-default disabled:hover:bg-transparent",
                     value === v && "border-primary bg-primary text-primary-foreground hover:bg-primary",
+                    // Teacher's hint: the right button is lightly green.
+                    hint?.values[s.id] === v && (value === v ? HINT_RING : `${HINT_MARK} text-emerald-900`),
                   )}
                 >
                   {label(v)}

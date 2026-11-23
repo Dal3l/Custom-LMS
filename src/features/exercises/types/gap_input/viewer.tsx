@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { MAX_ATTEMPTS } from "../../checking";
 import type { ExerciseViewerProps } from "../../client-types";
 import { verdictClass } from "../../result-styles";
+import { HintTip } from "../../teacher-hint";
 import type { GapInputAnswer, GapInputContent } from "./schema";
 
 /**
@@ -14,7 +15,7 @@ import type { GapInputAnswer, GapInputContent } from "./schema";
  * Right and revealed gaps are locked. The answer (words + earlier tries) is
  * kept by the lesson player, so this view just shows it.
  */
-export function GapInputViewer({ content, answer, onAnswer, result }: ExerciseViewerProps<GapInputContent, GapInputAnswer>) {
+export function GapInputViewer({ content, answer, onAnswer, result, hint }: ExerciseViewerProps<GapInputContent, GapInputAnswer>) {
   const t = useTranslations("exercises.gaps");
   const values = answer?.values ?? {};
   const attempts = answer?.attempts ?? {};
@@ -35,6 +36,7 @@ export function GapInputViewer({ content, answer, onAnswer, result }: ExerciseVi
         const value = shown ?? values[part.id] ?? "";
         return (
           <span key={part.id} className="mx-0.5 inline-flex items-center gap-1 align-baseline">
+            <HintTip text={hint?.values[part.id]}>
             <input
               type="text"
               value={value}
@@ -53,6 +55,7 @@ export function GapInputViewer({ content, answer, onAnswer, result }: ExerciseVi
                 shown ? "border-amber-400 bg-amber-50 text-amber-900" : verdictClass(verdict),
               )}
             />
+            </HintTip>
             {tries.length > 0 && !right && (
               <Popover>
                 <PopoverTrigger asChild>

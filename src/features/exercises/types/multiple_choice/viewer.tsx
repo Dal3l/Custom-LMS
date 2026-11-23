@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { ExerciseViewerProps } from "../../client-types";
+import { HINT_MARK, HINT_RING } from "../../teacher-hint";
 import type { MultipleChoiceAnswer, MultipleChoiceContent } from "./schema";
 
 /** Questions with options: round buttons for one right answer, squares for several. */
@@ -13,6 +14,7 @@ export function MultipleChoiceViewer({
   answer,
   onAnswer,
   result,
+  hint,
 }: ExerciseViewerProps<MultipleChoiceContent, MultipleChoiceAnswer>) {
   const t = useTranslations("exercises.choice");
   const [selected, setSelected] = useState<Record<string, string[]>>(answer?.selected ?? {});
@@ -43,6 +45,8 @@ export function MultipleChoiceViewer({
             <div role={q.multiple ? "group" : "radiogroup"} aria-label={q.text || t("question", { n: qi + 1 })} className="flex flex-col gap-1.5">
               {q.options.map((o) => {
                 const on = chosen.includes(o.id);
+                // Teacher's hint: the right options are lightly green.
+                const right = hint?.selected[q.id]?.includes(o.id) ?? false;
                 return (
                   <button
                     key={o.id}
@@ -56,6 +60,7 @@ export function MultipleChoiceViewer({
                       on && "border-primary bg-accent",
                       on && verdict === true && "border-emerald-500 bg-emerald-50",
                       on && verdict === false && "border-destructive bg-destructive/10",
+                      right && (on ? HINT_RING : HINT_MARK),
                     )}
                   >
                     <span

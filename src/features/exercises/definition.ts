@@ -31,6 +31,11 @@ export type ExerciseDefinition<Content = unknown, Key = unknown, Answer = unknow
     prepare?: (answer: Answer, saved: Answer | null) => Answer;
     /** A complete right answer, shown when the teacher reveals the answers. */
     solution: (content: Content, key: Key) => Answer;
+    /**
+     * The right answers as the teacher's hints (only the teacher sees them),
+     * when they differ from `solution` (e.g. every accepted variant of a gap).
+     */
+    hint?: (content: Content, key: Key) => Answer;
     /** Updates the answer after a check (e.g. remembers a wrong try). */
     afterCheck?: (answer: Answer, result: CheckResult) => Answer;
   };

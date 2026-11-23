@@ -41,6 +41,7 @@ export function LessonPlayer({
   onSectionChange,
   exerciseMenu,
   solutions,
+  hints,
   pointer,
   resets,
   stickyTop,
@@ -71,6 +72,8 @@ export function LessonPlayer({
   exerciseMenu?: (exercise: StudentExercise, sectionId: string) => React.ReactNode;
   /** Right answers the teacher revealed, by exercise. */
   solutions?: Record<string, Solution>;
+  /** TEACHER ONLY: right answers shown as quiet hints in the exercises, by exercise. */
+  hints?: Record<string, unknown>;
   /** The teacher's pointer (students' view). */
   pointer?: { exerciseId: string; x: number; y: number } | null;
   /** "Reset answers": a new number for an exercise clears it (and drops its waiting save). */
@@ -244,6 +247,7 @@ export function LessonPlayer({
               review={review && !inExtra ? { saved: review[exercise.id] } : undefined}
               menu={exerciseMenu?.(exercise, active.id)}
               solution={solutions?.[exercise.id]}
+              hint={hints?.[exercise.id]}
               pointer={pointer?.exerciseId === exercise.id ? pointer : null}
               note={notes?.[exercise.id]}
               persist={
@@ -359,6 +363,7 @@ function PlayerExercise({
   solution,
   pointer,
   note,
+  hint,
 }: {
   exercise: StudentExercise;
   number: string;
@@ -369,6 +374,7 @@ function PlayerExercise({
   solution?: Solution;
   pointer?: { x: number; y: number } | null;
   note?: React.ReactNode;
+  hint?: unknown;
 }) {
   if (exercise.type === "note") return <NoteCard exercise={exercise} menu={menu} />;
   const extra = (
@@ -378,8 +384,8 @@ function PlayerExercise({
       {pointer && <PointerDot x={pointer.x} y={pointer.y} />}
     </>
   );
-  if (review) return <ReviewExercise exercise={exercise} number={number} saved={review.saved} menu={menu} extra={extra} />;
-  return <AnswerExercise exercise={exercise} number={number} persist={persist} menu={menu} extra={extra} />;
+  if (review) return <ReviewExercise exercise={exercise} number={number} saved={review.saved} menu={menu} extra={extra} hint={hint} />;
+  return <AnswerExercise exercise={exercise} number={number} persist={persist} menu={menu} extra={extra} hint={hint} />;
 }
 
 /**
@@ -457,12 +463,14 @@ function ReviewExercise({
   saved,
   menu,
   extra,
+  hint,
 }: {
   exercise: StudentExercise;
   number: string;
   saved: SavedAnswer | undefined;
   menu?: React.ReactNode;
   extra?: React.ReactNode;
+  hint?: unknown;
 }) {
   const t = useTranslations("player");
   const meta = exerciseMeta(exercise.type);
@@ -495,7 +503,9 @@ function ReviewExercise({
         </div>
         {meta?.group !== "material" && <AttachmentViewer value={content.attachment as Attachment | null | undefined} />}
         {ui && (
-          <div className={cn(isAutoChecked(exercise.type) && "pointer-events-none")}>
+          // Read-only. With hints the pointer must reach the exercise (hover shows them);
+          // its controls are disabled anyway.
+          <div className={cn(isAutoChecked(exercise.type) && hint === undefined && "pointer-events-none")}>
             <ui.Viewer
               // Viewers keep their own copy of the answer: remount when it changes.
               key={JSON.stringify(answer)}
@@ -503,6 +513,7 @@ function ReviewExercise({
               content={exercise.content}
               answer={answer}
               result={result}
+              hint={hint}
             />
           </div>
         )}
@@ -518,12 +529,14 @@ function AnswerExercise({
   persist,
   menu,
   extra,
+  hint,
 }: {
   exercise: StudentExercise;
   number: string;
   persist?: Persist;
   menu?: React.ReactNode;
   extra?: React.ReactNode;
+  hint?: unknown;
 }) {
   const t = useTranslations("player");
   const meta = exerciseMeta(exercise.type);
@@ -649,6 +662,7 @@ function AnswerExercise({
             answer={answer}
             onAnswer={mode ? onAnswer : undefined}
             result={result}
+            hint={hint}
           />
         )}
         {showCheckButton && (

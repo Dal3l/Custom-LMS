@@ -1,6 +1,7 @@
 import "server-only";
 import { z } from "zod";
 import type { CheckResult } from "@/features/exercises/checking";
+import type { ExerciseDefinition } from "@/features/exercises/definition";
 import { getDefinition } from "@/features/exercises/definitions";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
@@ -89,21 +90,43 @@ async function readKey(exerciseId: string) {
 export type Solution = { answer: unknown; result: CheckResult };
 
 export async function revealedSolutions(lessonId: string, exerciseIds: string[]): Promise<Record<string, Solution>> {
-  if (exerciseIds.length === 0) return {};
+  const out: Record<string, Solution> = {};
+  for (const e of await loadGradable(lessonId, exerciseIds)) {
+    const answer = e.grading.solution(e.content, e.key);
+    out[e.id] = { answer, result: e.grading.check(e.content, e.key, answer) };
+  }
+  return out;
+}
+
+/**
+ * The right answers of a lesson's exercises in the shape each viewer shows as
+ * the teacher's hints (all accepted variants where there are several).
+ * TEACHER ONLY: call only after checking that the user teaches this class.
+ */
+export async function teacherHints(lessonId: string, exerciseIds: string[]): Promise<Record<string, unknown>> {
+  const out: Record<string, unknown> = {};
+  for (const e of await loadGradable(lessonId, exerciseIds)) {
+    out[e.id] = (e.grading.hint ?? e.grading.solution)(e.content, e.key);
+  }
+  return out;
+}
+
+/** Exercises with their answer keys, read with server rights. Call only after an access check. */
+async function loadGradable(lessonId: string, exerciseIds: string[]) {
+  if (exerciseIds.length === 0) return [];
   const { data } = await createAdminClient()
     .from("exercises")
     .select("id, type, content, exercise_keys(answer_key)")
     .eq("lesson_id", lessonId)
     .in("id", exerciseIds);
-  const out: Record<string, Solution> = {};
+  const out: { id: string; content: unknown; key: unknown; grading: NonNullable<ExerciseDefinition["grading"]> }[] = [];
   for (const e of data ?? []) {
     const def = getDefinition(e.type);
     if (!def?.grading || !def.keySchema || !e.exercise_keys) continue;
     const content = def.contentSchema.safeParse(e.content);
     const key = def.keySchema.safeParse(e.exercise_keys.answer_key);
     if (!content.success || !key.success) continue;
-    const answer = def.grading.solution(content.data, key.data);
-    out[e.id] = { answer, result: def.grading.check(content.data, key.data, answer) };
+    out.push({ id: e.id, content: content.data, key: key.data, grading: def.grading });
   }
   return out;
 }
