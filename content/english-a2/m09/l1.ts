@@ -23,7 +23,7 @@ import {
 // 9.1 How much sugar? — a READING-focused lesson: two longer texts (hidden sugar; three food diaries). G: much / many, a lot of, a few / a little. V: food and nutrition. Say it right: lost syllables (vegetable, chocolate). No listening or video in class.
 export default lesson("a2-9.1", "How much sugar?", () => [
   section("Warm-up: Guess the sugar!", [
-    box("Today you will…", "- read about hidden sugar and real food diaries 📖\n- ask *How much…? How many…?* and use *a few, a little, a lot of*\n- talk honestly about what you eat 🍎🍫"),
+    box("Today you will…", "- read about hidden sugar and real food diaries 📖\n- review *How much / How many* from A1 — and learn *a few, a little, not much, not many*\n- talk honestly about what you eat 🍎🍫"),
     quiz("How many teaspoons of sugar? Guess! 🥄 (1 teaspoon = about 4 g)", [
       { q: "🥤 a can of cola (330 ml)", options: ["*about 9", "about 2", "about 20"] },
       { q: "🧃 a glass of orange juice (250 ml)", options: ["*about 5", "0 — it's fruit!", "about 15"] },
@@ -88,9 +88,9 @@ export default lesson("a2-9.1", "How much sugar?", () => [
       ["skip a meal", "⏭️🍽️ not eat breakfast, lunch or dinner"],
       ["go on a diet", "🥗⚖️ eat less to lose weight"],
     ]),
-    sort("Countable or uncountable? Sort. 🍎🥛", {
-      "🍎 countable": ["apple", "egg", "cookie", "vegetable", "banana"],
-      "🥛 uncountable": ["sugar", "water", "bread", "rice", "cheese"],
+    sort("Healthy or unhealthy habit? Sort. 💚🍟", {
+      "💚 healthy": ["home-cooked meals", "fresh vegetables", "a small portion", "nuts as a snack", "drinking water"],
+      "🍟 unhealthy": ["junk food every day", "skipping breakfast", "a lot of salt", "fatty snacks at night", "sweet drinks"],
     }),
     match("Match.", [
       ["have a sweet", "tooth"],
@@ -102,20 +102,21 @@ export default lesson("a2-9.1", "How much sugar?", () => [
     ]),
   ]),
 
-  section("Grammar: How much? How many?", [
-    quiz("Notice the rule 🔍 Look at the text: “a lot of sugar… many healthy foods… a little, not a lot… How many teaspoons?” Which is true?", [
-      { q: "We say How many with…", options: ["*things we can count: teaspoons, apples", "things we can't count: sugar, water", "all nouns"] },
-      { q: "We say How much with…", options: ["*things we can't count: sugar, juice", "things we can count: eggs", "people"] },
-      { q: "a little sugar / a few cookies means…", options: ["*some, but not much / not many", "a lot", "zero"] },
+  section("Grammar: a few, a little, not much, not many", [
+    tip("Countable / uncountable nouns and *How much / How many* are A1 — just check them in 1 minute: *How ___ eggs? How ___ water?* Today's new part: **a few / a little** and **not much / not many**."),
+    quiz("Notice the rule 🔍 Look at the texts: “Leo eats a little chocolate… Arman eats a few eggs… I don't eat much meat… Arman doesn't eat many sweets.” Which is true?", [
+      { q: "a few + …", options: ["*things we can count: a few eggs, a few cookies", "things we can't count: a few sugar", "all nouns"] },
+      { q: "a little + …", options: ["*things we can't count: a little cheese, a little sugar", "things we can count: a little apples", "people"] },
+      { q: "In negative sentences we usually say…", options: ["*not much / not many: I don't eat much meat", "a lot of: I don't eat a lot of… only", "a few: I don't eat a few meat"] },
     ]),
     table("quantifiers"),
     choose(
       "Choose.",
-      "1. How [*much/many] sugar do you eat?\n2. How [*many/much] eggs do we need?\n3. I drink [*a lot of/many] water every day.\n4. There's only [*a little/a few] milk left. 🥛\n5. I ate [*a few/a little] cookies with my tea. 🍪\n6. We don't have [*much/many] time.\n7. She doesn't eat [*many/much] vegetables.\n8. Can I have [*a little/a few] salt, please? 🧂",
+      "1. I drink [*a lot of/many] water every day.\n2. There's only [*a little/a few] milk left. 🥛\n3. I ate [*a few/a little] cookies with my tea. 🍪\n4. We don't have [*much/many] time.\n5. She doesn't eat [*many/much] vegetables.\n6. Can I have [*a little/a few] salt, please? 🧂\n7. I know [*a few/a little] good recipes.\n8. There isn't [*much/many] juice in the fridge.",
     ),
     gaps(
       "Complete with much, many, a few or a little.",
-      "1. How [much] water do you drink a day? 💧\n2. How [many] cups of coffee do you have? ☕\n3. I only had [a few] chips — just five! 🍟\n4. Add [a little] honey to your tea. 🍯\n5. There aren't [many] apples in the fridge. 🍎\n6. I don't eat [much] meat. 🥩\n7. We have [a few] minutes before the lesson. ⏰\n8. He puts [a little] sugar in his coffee — just half a teaspoon. 🥄",
+      "1. I don't drink [much] water — only one glass a day. 💧\n2. There aren't [many] cafés near my office. ☕\n3. I only had [a few] chips — just five! 🍟\n4. Add [a little] honey to your tea. 🍯\n5. There aren't [many] apples in the fridge. 🍎\n6. I don't eat [much] meat. 🥩\n7. We have [a few] minutes before the lesson. ⏰\n8. He puts [a little] sugar in his coffee — just half a teaspoon. 🥄",
     ),
     drag(
       "Complete the conversation.",
@@ -183,7 +184,7 @@ export default lesson("a2-9.1", "How much sugar?", () => [
 
   section("Wrap-up", [
     quiz("Quick quiz. Choose.", [
-      { q: "How ___ sugar?", options: ["*much", "many", "a few"] },
+      { q: "Add ___ honey. 🍯", options: ["*a little", "a few", "many"] },
       { q: "I ate ___ cookies.", options: ["*a few", "a little", "much"] },
       { q: "love sweet food =", options: ["*have a sweet tooth", "skip a meal", "go on a diet"] },
       { q: "chocolate has ___ syllables when we say it.", options: ["*2", "3", "4"] },
@@ -199,7 +200,7 @@ export default lesson("a2-9.1", "How much sugar?", () => [
       ),
       choose(
         "Choose.",
-        "1. How [*many/much] bananas did you buy?\n2. There's [*a little/a few] coffee left.\n3. I don't drink [*much/many] juice.\n4. She has [*a few/a little] good friends.\n5. We ate [*a lot of/many] pizza!\n6. How [*much/many] does it cost?",
+        "1. I bought [*a few/a little] bananas.\n2. There's [*a little/a few] coffee left.\n3. I don't drink [*much/many] juice.\n4. She has [*a few/a little] good friends.\n5. We ate [*a lot of/many] pizza!\n6. There aren't [*many/much] eggs in the fridge.",
       ),
     ],
     "Homework: Vocabulary and grammar",

@@ -355,8 +355,8 @@ export const tables: GrammarTable[] = [
   // 9.1
   {
     name: "quantifiers",
-    title: "How much? How many?",
-    subtitle: "countable 🍎🍎 and uncountable 🥛 nouns",
+    title: "a few · a little · not much · not many",
+    subtitle: "How much / How many — you know from A1 · today: how much exactly?",
     color: "teal",
     columns: ["", "🍎 countable (apples, eggs)", "🥛 uncountable (sugar, water)"],
     rows: [
@@ -365,7 +365,7 @@ export const tables: GrammarTable[] = [
       ["➕ some, not many", "**a few** apples", "**a little** sugar"],
       ["➖", "not **many** apples", "not **much** sugar"],
     ],
-    note: "**much** and **many** — mostly in questions and negatives · in + sentences: **a lot of**",
+    note: "**a few** + 🍎 (a few eggs) · **a little** + 🥛 (a little milk) · ❌ sentences: **not much / not many** · ✅ sentences: **a lot of**",
   },
   // 9.2
   {
