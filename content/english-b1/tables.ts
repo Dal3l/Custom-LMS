@@ -288,4 +288,62 @@ export const tables: GrammarTable[] = [
     ],
     note: "After a modal → **be** + 3rd form: It **can be done**. (not: It can done)",
   },
+  // 7.1
+  {
+    name: "verb-patterns",
+    title: "-ing or to?",
+    subtitle: "some verbs take -ing, some take to + verb",
+    color: "teal",
+    columns: ["Pattern", "Verbs", "Example"],
+    rows: [
+      ["verb + **-ing**", "enjoy, avoid, mind, finish, keep, can't stand, miss, suggest", "I **enjoy spending** time with my friends."],
+      ["verb + **to**", "decide, want, hope, agree, refuse, promise, offer, plan, learn", "She **refused to talk** to me."],
+      ["preposition + **-ing**", "good at, interested in, before, after, without", "He left **without saying** goodbye."],
+    ],
+    note: "**I'd like / I'd love + to**: I'd love **to meet** her. · **like / love / hate**: both are OK: I love **dancing** / **to dance**.",
+  },
+  {
+    name: "remember-stop-try",
+    title: "Change of meaning",
+    subtitle: "remember, forget, stop, try",
+    color: "orange",
+    columns: ["Verb", "+ -ing", "+ to"],
+    rows: [
+      ["**remember**", "I **remember meeting** her. (a memory from the past)", "**Remember to call** her! (don't forget a task)"],
+      ["**forget**", "I'll never **forget seeing** the sea. (a memory)", "I **forgot to lock** the door! (a task)"],
+      ["**stop**", "I **stopped eating** sugar. (no more sugar)", "I **stopped to eat** a sandwich. (in order to eat)"],
+      ["**try**", "**Try drinking** tea — it might help. (an experiment)", "I **tried to call**, but she didn't answer. (an effort)"],
+    ],
+  },
+  // 7.2
+  {
+    name: "make-let-allow",
+    title: "make, let, allow",
+    subtitle: "who decides?",
+    color: "pink",
+    columns: ["Verb", "Meaning", "Example"],
+    rows: [
+      ["**make** sb **do**", "force someone (no to!)", "My parents **made me do** my homework."],
+      ["**let** sb **do**", "give permission (no to!)", "They **let me stay** out late."],
+      ["**allow** sb **to do**", "give permission (with to)", "We **weren't allowed to use** phones at dinner."],
+      ["**want / ask / tell** sb **to do**", "a wish / request / order", "Mom **wants me to study** medicine."],
+    ],
+    note: "**make / let** + verb **without to** · **allow / want / ask / tell** + **to**",
+  },
+  // 7.4
+  {
+    name: "agree-disagree",
+    title: "Agreeing and disagreeing",
+    subtitle: "from strong to soft",
+    color: "green",
+    columns: ["", "Phrases"],
+    rows: [
+      ["👍 agree strongly", "**Absolutely! · I couldn't agree more. · Exactly!**"],
+      ["🙂 agree partly", "**I see what you mean, but… · You have a point, but… · That's true to some extent.**"],
+      ["🤔 disagree politely", "**I'm not sure about that. · I see it differently. · I'm afraid I don't agree.**"],
+      ["👎 disagree strongly", "**I totally disagree.** (careful — it can sound rude!)"],
+      ["🤝 find a compromise", "**How about…? · What if we…? · Let's meet halfway.**"],
+    ],
+    note: "Soft words make it polite: **I think, maybe, a bit, perhaps** · Never: “You're wrong!” 🙅",
+  },
 ];
