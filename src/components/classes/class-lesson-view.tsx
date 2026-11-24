@@ -14,7 +14,8 @@ import {
   Undo2,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, useTransition } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, useTransition } from "react";
+import { SlotPortal } from "@/components/app-shell/header-portal";
 import { toast } from "sonner";
 import { LessonPlayer } from "@/components/lesson-player/lesson-player";
 import { Button } from "@/components/ui/button";
@@ -38,7 +39,8 @@ import { checkMode, isAutoChecked } from "@/features/exercises/catalog";
 import type { SavedAnswer, StudentAnswers } from "@/features/lessons/answers-shared";
 import type { Solution } from "@/features/lessons/grade";
 import type { StudentSection } from "@/features/lessons/queries";
-import { BoardsProvider } from "@/features/board/boards";
+import { BoardsProvider, type IncomingView } from "@/features/board/boards";
+import { lessonBoard } from "@/features/board/items";
 import { ClassMarksProvider } from "@/features/live/class-marks";
 import { useStudentLive } from "@/features/live/student-live";
 import { useTeacherLive } from "@/features/live/teacher-live";
@@ -113,6 +115,8 @@ export function TeacherClassLesson({
   const [pointerOn, setPointerOn] = useState(false);
   const [hintsOn, setHintsOn] = useHintsOn();
   const [boardOpen, setBoardOpen] = useState(false);
+  // Wide screens: the students sit in the top bar, next to the lesson's title.
+  const wide = useWideScreen();
   // The lesson's homework: shown as its own group of sections; ticked exercises are sent.
   const homeworkIds = homework.sections.flatMap((s) => s.exercises.map((e) => e.id));
   const homeworkSectionIds = new Set(homework.sections.map((s) => s.id));
@@ -218,6 +222,20 @@ export function TeacherClassLesson({
 
   const spinner = <Loader2 className="animate-spin" aria-hidden="true" />;
 
+  const studentsBar = (inHeader: boolean) => (
+    <LiveStudentsBar
+      students={students}
+      sections={props.sections}
+      lessonId={lessonId}
+      online={live.online}
+      status={live.status}
+      answers={live.answers}
+      viewing={viewing}
+      onView={switchTo}
+      inHeader={inHeader}
+    />
+  );
+
   function footer(section: StudentSection, isLast: boolean) {
     if (homeworkSectionIds.has(section.id)) {
       return inClass ? <HomeworkFooter picked={picked.size} sent={homework.sent} answersHref={homework.answersHref ?? null} onOpen={() => setSending(true)} /> : null;
@@ -255,7 +273,7 @@ export function TeacherClassLesson({
   return (
     <WordAdderProvider place={{ language: props.language, courseId, lessonId, classId }} students={students}>
     <ClassMarksProvider classId={classId} userId={userId} otherUserId={viewing} isTeacher initial={props.marks}>
-    <BoardsProvider classId={classId} userId={userId} isTeacher otherUserId={viewing}>
+    <BoardsProvider classId={classId} userId={userId} isTeacher otherUserId={viewing} bringHere={inClass && students.length > 0 ? live.sendBoardView : undefined}>
       <div className="flex flex-col gap-4">
 
         <div
@@ -306,18 +324,7 @@ export function TeacherClassLesson({
                 <DictionaryTool />
               </>
             }
-            stickyTop={
-              <LiveStudentsBar
-                students={students}
-                sections={props.sections}
-                lessonId={lessonId}
-                online={live.online}
-                status={live.status}
-                answers={live.answers}
-                viewing={viewing}
-                onView={switchTo}
-              />
-            }
+            stickyTop={wide ? undefined : studentsBar(false)}
             exerciseMenu={(exercise, sectionId) => {
               // Tools act on the class, so only in a lesson the class has (not while looking ahead).
               if (!inClass) return null;
@@ -396,6 +403,7 @@ export function TeacherClassLesson({
           />
         </div>
       </div>
+      {wide && <SlotPortal id="lesson-students-slot">{studentsBar(true)}</SlotPortal>}
       <BoardDialog lessonId={lessonId} open={boardOpen} onOpenChange={setBoardOpen} />
       {inClass && (
         <SendHomeworkDialog
@@ -440,12 +448,14 @@ export function StudentClassLesson({
 }: CommonProps & { savedAnswers: Record<string, SavedAnswer>; initialShow: string | null; teacherId: string }) {
   const { classId, lessonId, userId } = props;
   const studentLive = useStudentLive();
+  const tBoard = useTranslations("board");
   const [done] = useSynced(props.doneSections);
   const [saved, setSaved] = useState(savedAnswers);
   const [resets, setResets] = useState<Record<string, number>>({});
   const [pointer, setPointer] = useState<{ exerciseId: string; x: number; y: number } | null>(null);
   const pointerTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [boardOpen, setBoardOpen] = useState(false);
+  const [incomingView, setIncomingView] = useState<IncomingView | null>(null);
   const [focus, setFocus] = useState(() =>
     initialShow && props.initialSectionId
       ? { sectionId: props.initialSectionId, exerciseId: initialShow, nonce: 0 }
@@ -459,6 +469,12 @@ export function StudentClassLesson({
       if (m.classId !== classId || m.lessonId !== lessonId) return;
       if (m.kind === "show") setFocus({ sectionId: m.sectionId, exerciseId: m.exerciseId, nonce: Date.now() });
       if (m.kind === "board") setBoardOpen(true);
+      if (m.kind === "boardView") {
+        // "Bring students here": the lesson board opens if needed, then moves to the teacher's place.
+        if (m.board === lessonBoard(lessonId)) setBoardOpen(true);
+        setIncomingView({ board: m.board, view: m.view, at: Date.now() });
+        toast(tBoard("broughtByTeacher"));
+      }
       if (m.kind === "reset") {
         setSaved((prev) => {
           const next = { ...prev };
@@ -475,7 +491,7 @@ export function StudentClassLesson({
         pointerTimer.current = setTimeout(() => setPointer(null), 4000);
       }
     });
-  }, [studentLive, classId, lessonId]);
+  }, [studentLive, classId, lessonId, tBoard]);
 
   // Tell the teacher where the student is; clear it when leaving the lesson.
   const setLocation = studentLive?.setLocation;
@@ -488,7 +504,7 @@ export function StudentClassLesson({
   return (
     <WordAdderProvider place={{ language: props.language, courseId: props.courseId, lessonId, classId }}>
     <ClassMarksProvider classId={classId} userId={userId} otherUserId={teacherId} isTeacher={false} initial={props.marks}>
-    <BoardsProvider classId={classId} userId={userId} isTeacher={false} otherUserId={teacherId}>
+    <BoardsProvider classId={classId} userId={userId} isTeacher={false} otherUserId={teacherId} incomingView={incomingView}>
       {studentLive?.status === "offline" && <StudentOffline />}
       <LessonPlayer
         language={props.language}
@@ -514,4 +530,15 @@ export function StudentClassLesson({
     </ClassMarksProvider>
     </WordAdderProvider>
   );
+}
+
+const WIDE = "(min-width: 1024px)";
+function subscribeWide(onChange: () => void) {
+  const mql = window.matchMedia(WIDE);
+  mql.addEventListener("change", onChange);
+  return () => mql.removeEventListener("change", onChange);
+}
+/** Screens where the top bar has room for the students (Tailwind's lg). */
+function useWideScreen() {
+  return useSyncExternalStore(subscribeWide, () => window.matchMedia(WIDE).matches, () => false);
 }

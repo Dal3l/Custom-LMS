@@ -12,9 +12,23 @@ export type ResetMessage = { lessonId: string; exerciseId: string };
 /** The teacher opened the lesson whiteboard for everyone. */
 export type BoardMessage = { lessonId: string };
 
+/** "Bring students here": the teacher's place on an endless board (x, y: top-left corner; zoom). */
+export type BoardViewMessage = { lessonId: string; board: string; view: { x: number; y: number; zoom: number } };
+
+/** A board view that came over the network, checked (null: not a usable view). */
+export function boardViewOf(payload: unknown): BoardViewMessage | null {
+  const p = payload as Partial<BoardViewMessage> | null;
+  const v = p?.view;
+  const ok = (n: unknown, min: number, max: number) => typeof n === "number" && Number.isFinite(n) && n >= min && n <= max;
+  if (!p || typeof p.lessonId !== "string" || typeof p.board !== "string" || !v) return null;
+  if (!ok(v.x, -1000, 1000) || !ok(v.y, -1000, 1000) || !ok(v.zoom, 0.1, 10)) return null;
+  return { lessonId: p.lessonId, board: p.board, view: { x: v.x, y: v.y, zoom: v.zoom } };
+}
+
 /** Messages a student's lesson page receives from the teacher. */
 export type LiveMessage =
   | ({ kind: "board"; classId: string } & BoardMessage)
+  | ({ kind: "boardView"; classId: string } & BoardViewMessage)
   | ({ kind: "show"; classId: string } & ShowMessage)
   | ({ kind: "pointer"; classId: string } & PointerMessage)
   | ({ kind: "reset"; classId: string } & ResetMessage);

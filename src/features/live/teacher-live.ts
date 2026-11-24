@@ -145,6 +145,17 @@ export function useTeacherLive({
     void channel.current?.send({ type: "broadcast", event: "board", payload: { lessonId } });
   }, [lessonId]);
 
+  /** "Bring students here": students' copies of this board move to the teacher's view. */
+  const sendBoardView = useCallback(
+    async (board: string, view: { x: number; y: number; zoom: number }) => {
+      const room = channel.current;
+      if (!room) return false;
+      const r = await room.send({ type: "broadcast", event: "boardView", payload: { lessonId, board, view } });
+      return r === "ok";
+    },
+    [lessonId],
+  );
+
   const show = useCallback(
     async (message: Omit<ShowMessage, "lessonId">) => {
       const room = channel.current;
@@ -155,5 +166,5 @@ export function useTeacherLive({
     [lessonId],
   );
 
-  return { answers, online, status, show, sendPointer, resetExercise, openBoardForAll };
+  return { answers, online, status, show, sendPointer, resetExercise, openBoardForAll, sendBoardView };
 }

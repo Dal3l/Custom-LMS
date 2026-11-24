@@ -130,6 +130,15 @@ test.describe("lesson extras", () => {
     const studentBoard = sp.locator(`[data-board="lesson:${lesson!.id}"]`);
     await expect(studentBoard.locator("path")).toHaveCount(1);
 
+    // "Bring students here": the teacher zooms in, and the student's board follows; then back.
+    const studentZoom = sp.getByRole("dialog", { name: "Доска урока" }).getByRole("group", { name: "Масштаб" });
+    await teacherBoard.getByRole("button", { name: "Приблизить" }).click();
+    await teacherBoard.getByRole("button", { name: "Позвать учеников сюда" }).click();
+    await expect(studentZoom).toContainText("150%");
+    await teacherBoard.getByRole("button", { name: "Отдалить" }).click();
+    await teacherBoard.getByRole("button", { name: "Позвать учеников сюда" }).click();
+    await expect(studentZoom).toContainText("100%");
+
     // Text: click on the board, type, Enter.
     const surface = teacherBoard.getByRole("img", { name: "Доска урока" });
     const box = (await surface.boundingBox())!;
