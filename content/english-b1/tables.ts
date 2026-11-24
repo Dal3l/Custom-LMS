@@ -464,4 +464,62 @@ export const tables: GrammarTable[] = [
     ],
     note: "In speech, **have** is weak: must've /ˈmʌstəv/, might've /ˈmaɪtəv/, can't have /ˈkɑːntəv/",
   },
+  // 11.1
+  {
+    name: "relative-clauses",
+    title: "who, which, where, whose, when",
+    subtitle: "relative clauses give more information about a noun",
+    color: "violet",
+    columns: ["Word", "For", "Example"],
+    rows: [
+      ["**who / that**", "people", "The woman **who** runs the café is my aunt."],
+      ["**which / that**", "things, animals", "It's a city **which** never sleeps."],
+      ["**where**", "places", "That's the park **where** we met."],
+      ["**whose**", "possession (= his / her / their)", "He's the man **whose** dog ate my sandwich!"],
+      ["**when**", "times", "I remember the day **when** we moved here."],
+    ],
+  },
+  {
+    name: "non-defining",
+    title: "With or without commas?",
+    subtitle: "defining vs non-defining relative clauses",
+    color: "pink",
+    columns: ["", "Defining (no commas)", "Non-defining (with commas)"],
+    rows: [
+      ["meaning", "**necessary** — tells us WHICH one", "**extra** information — we already know which one"],
+      ["example", "The city **where I was born** is small.", "Almaty**, where I was born,** is a big city."],
+      ["that?", "**that** is OK: the book **that** I read", "**never that**: Astana**, which** (not that) is the capital, …"],
+    ],
+    note: "Without the extra information, the sentence still works: Almaty is a big city. ✅",
+  },
+  // 11.2
+  {
+    name: "both-either-neither",
+    title: "both, either, neither",
+    subtitle: "talking about two things",
+    color: "green",
+    columns: ["Word", "Meaning", "Example"],
+    rows: [
+      ["**both (… and …)**", "the two ✅✅", "**Both** bags are reusable. · I use **both** a bike **and** the bus."],
+      ["**either (… or …)**", "one or the other ✅❓", "You can take **either** the paper bag **or** the cotton one."],
+      ["**neither (… nor …)**", "not one and not the other ❌❌", "**Neither** option is perfect. · **Neither** plastic **nor** paper is ideal."],
+      ["**so / neither do I**", "agreeing", "I recycle. — **So do I.** · I don't drive. — **Neither do I.**"],
+    ],
+    note: "**neither** + positive verb: **Neither** of them **is** cheap. (not: neither… isn't)",
+  },
+  // 11.4
+  {
+    name: "presentations",
+    title: "Giving a presentation",
+    subtitle: "signposts that help your audience follow you",
+    color: "orange",
+    columns: ["Stage", "Phrases"],
+    rows: [
+      ["👋 start", "**Today I'm going to talk about… · My presentation has three parts.**"],
+      ["➡️ move on", "**First of all… · Moving on to… · Next, let's look at… · Finally…**"],
+      ["💡 examples", "**For example… · As you can see in this photo… · Let me give you an example.**"],
+      ["🏁 finish", "**To sum up… · In conclusion… · Thank you for listening. Any questions?**"],
+    ],
+    note: "Speak slowly, look at people, pause after each part. A good talk = **say what you'll say, say it, say what you said**.",
+  },
 ];
