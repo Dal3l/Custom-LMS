@@ -346,4 +346,45 @@ export const tables: GrammarTable[] = [
     ],
     note: "Soft words make it polite: **I think, maybe, a bit, perhaps** · Never: “You're wrong!” 🙅",
   },
+  // 8.1
+  {
+    name: "second-conditional",
+    title: "Second Conditional",
+    subtitle: "imaginary or unlikely situations — now or in the future",
+    color: "violet",
+    columns: ["", "If + Past Simple", "would + verb"],
+    rows: [
+      ["+", "If I **had** a million dollars,", "I**'d travel** around the world."],
+      ["−", "If I **didn't have** to work,", "I **wouldn't get up** so early."],
+      ["?", "What **would** you **do**", "if you **won** the lottery?"],
+      ["advice", "If I **were** you,", "I**'d say** sorry."],
+    ],
+    note: "**If I were / If she were** — the best form in exams · **could / might** are also possible: If I had time, I **could** help you.",
+  },
+  // 8.2
+  {
+    name: "conditionals",
+    title: "Real or imaginary?",
+    subtitle: "zero, first and second conditional",
+    color: "blue",
+    columns: ["Type", "Form", "Example"],
+    rows: [
+      ["0 — always true", "If + present, **present**", "If you heat ice, it **melts**."],
+      ["1 — a real possibility", "If + present, **will**", "If it rains tomorrow, we**'ll stay** at home."],
+      ["2 — imaginary / unlikely", "If + past, **would**", "If I lived by the sea, I**'d swim** every day."],
+    ],
+    note: "Real chance → **1st** · just a dream → **2nd**: If I **get** the job, I'll move. (it's possible) · If I **got** a job in Paris, I'd move. (unlikely)",
+  },
+  {
+    name: "unless-in-case",
+    title: "unless, as long as, in case",
+    color: "orange",
+    columns: ["Word", "Meaning", "Example"],
+    rows: [
+      ["**unless**", "if… not", "I won't go **unless** you come too. (= if you don't come)"],
+      ["**as long as**", "only if", "You can borrow my car **as long as** you drive carefully."],
+      ["**in case**", "because it might happen", "Take an umbrella **in case** it rains. ☔"],
+    ],
+    note: "No **will** after unless / as long as / in case: **unless it rains** (not unless it will rain)",
+  },
 ];
