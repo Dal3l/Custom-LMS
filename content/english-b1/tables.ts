@@ -435,4 +435,33 @@ export const tables: GrammarTable[] = [
     ],
     note: "Spell names: **A for Apple, B for Bravo…** · Numbers: say them in groups: **seven-oh-one, four-five-six…**",
   },
+  // 10.1
+  {
+    name: "deduction",
+    title: "It must be… / It can't be…",
+    subtitle: "guessing about now — how sure are you?",
+    color: "violet",
+    columns: ["How sure?", "Modal", "Example"],
+    rows: [
+      ["✅ almost sure it's true", "**must** + verb", "The lights are on. They **must be** at home."],
+      ["🤔 maybe", "**might / may / could** + verb", "It **might be** a strawberry. It **could be** a raspberry."],
+      ["❌ almost sure it's NOT true", "**can't** + verb", "He **can't be** hungry — he's just eaten!"],
+      ["now, in progress", "**must / might be** + -ing", "She's not answering. She **must be sleeping**."],
+    ],
+    note: "The opposite of must is **can't** (not mustn't!): It **must** be true. ↔ It **can't** be true.",
+  },
+  // 10.2
+  {
+    name: "past-deduction",
+    title: "It must have happened…",
+    subtitle: "guessing about the PAST: modal + have + 3rd form",
+    color: "orange",
+    columns: ["How sure?", "Form", "Example"],
+    rows: [
+      ["✅ almost sure", "**must have** + 3rd form", "The ground is wet. It **must have rained** in the night."],
+      ["🤔 maybe", "**might / may / could have** + 3rd form", "She's late. She **might have missed** the bus."],
+      ["❌ almost sure it didn't happen", "**can't / couldn't have** + 3rd form", "He **can't have stolen** it — he was with me all day!"],
+    ],
+    note: "In speech, **have** is weak: must've /ˈmʌstəv/, might've /ˈmaɪtəv/, can't have /ˈkɑːntəv/",
+  },
 ];

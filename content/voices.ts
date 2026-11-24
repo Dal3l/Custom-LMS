@@ -89,5 +89,6 @@ export const SPEAKERS: Record<string, string> = {
   Interviewer: "Matilda",
   Announcer: "Lily",
   // text without a speaker (a narrator, the numbers of the parts)
-  Narrator: "Alice",
+  Narrator: "River",
+  Guide: "George",
 };
