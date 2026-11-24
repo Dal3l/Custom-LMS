@@ -161,6 +161,11 @@ test.describe("lessons in a class", () => {
     await expect(page.getByRole("navigation").getByLabel("Секция завершена")).toHaveCount(1);
     await expect(page.getByRole("button", { name: "Завершить урок" })).toHaveCount(0); // only in the last section
     await page.getByRole("button", { name: /Дальше/ }).click();
+    // "Back" returns to the previous section, and "Next" goes forward again.
+    await page.getByRole("button", { name: /Назад:/ }).click();
+    await expect(page.getByRole("button", { name: "Завершить урок" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: /Назад:/ })).toHaveCount(0); // first section: no "Back"
+    await page.getByRole("button", { name: /Дальше/ }).click();
     await page.getByRole("button", { name: "Завершить урок" }).click();
     await expect(page.getByText("Урок завершён")).toBeVisible();
 
@@ -232,6 +237,8 @@ test.describe("lessons in a class", () => {
     await expect(page).toHaveURL(/tab=ready/);
     await page.getByRole("link", { name: new RegExp(title) }).click();
     await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
+    // Modules are folded: open "Unit 1" first.
+    await page.getByText("Unit 1").click();
     await page.getByRole("link", { name: /Hello/ }).click();
     await expect(page.getByRole("heading", { level: 1, name: "Hello" })).toBeVisible();
     await page.getByRole("link", { name: "К курсу" }).click();
@@ -239,6 +246,7 @@ test.describe("lessons in a class", () => {
     await expect(page).toHaveURL(/\/ru\/courses\/[0-9a-f-]{36}$/);
     await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
     cleanup.courses.push(page.url().split("/").pop()!);
+    await page.getByRole("button", { name: "Развернуть модуль" }).first().click();
     await expect(page.getByRole("link", { name: "Hello" })).toBeVisible();
   });
 });

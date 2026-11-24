@@ -641,6 +641,7 @@
     "backToEditor": "К редактированию",
     "sections": "Секции урока",
     "next": "Дальше: {title}",
+    "previous": "Назад: {title}",
     "score": "{right} из {total}",
     "emptyLesson": "В уроке пока нет секций.",
     "emptySection": "В этой секции пока нет заданий.",
