@@ -387,4 +387,52 @@ export const tables: GrammarTable[] = [
     ],
     note: "No **will** after unless / as long as / in case: **unless it rains** (not unless it will rain)",
   },
+  // 9.1
+  {
+    name: "reported-statements",
+    title: "Reported speech",
+    subtitle: "when we tell what someone said, the tense often goes one step back",
+    color: "violet",
+    columns: ["Direct speech", "Reported speech"],
+    rows: [
+      ["“I **am** tired.”", "She said (that) she **was** tired."],
+      ["“I **work** in a bank.”", "He said he **worked** in a bank."],
+      ["“I**'m leaving**.”", "She said she **was leaving**."],
+      ["“I**'ve finished**.” / “I **finished**.”", "He said he **had finished**."],
+      ["“I**'ll** call you.”", "She said she **would** call me."],
+      ["“I **can** help.”", "He said he **could** help."],
+    ],
+    note: "**say** (something): She **said** she was tired. · **tell** + person: She **told me** she was tired. · Also: **here → there, today → that day, tomorrow → the next day**",
+  },
+  // 9.2
+  {
+    name: "reported-questions",
+    title: "Reported questions and requests",
+    color: "teal",
+    columns: ["Direct", "Reported"],
+    rows: [
+      ["“**Do** you **like** your job?”", "She asked me **if** I **liked** my job."],
+      ["“**Where do** you **live**?”", "He asked me **where** I **lived**. (no do!)"],
+      ["“Please **wait** here.”", "She **asked me to wait** there."],
+      ["“**Don't** be late!”", "He **told me not to be** late."],
+      ["“I'll help you.”", "She **offered to help** me. · He **promised to help** me."],
+      ["“You should rest.”", "The doctor **advised me to rest**."],
+    ],
+    note: "Reported questions have the word order of a normal sentence: asked me where **I lived** (not where did I live) · no question mark",
+  },
+  // 9.4
+  {
+    name: "phone-messages",
+    title: "On the phone: taking a message",
+    color: "blue",
+    columns: ["", "Caller 📞", "Receiver 🎧"],
+    rows: [
+      ["start", "**Hello, could I speak to** Mr. Park, please?", "**I'm afraid he's not available** at the moment."],
+      ["message", "**Could I leave a message?**", "**Can I take a message?** · **Who's calling, please?**"],
+      ["details", "**Could you tell him (that)…** · **Could you ask him to call me back?**", "**Could you spell that, please?** · **Let me read that back to you.**"],
+      ["finish", "**Thanks for your help.**", "**I'll make sure he gets the message.**"],
+      ["pass it on", "", "**Leo called. He said he'd be late. He asked you to call him back.**"],
+    ],
+    note: "Spell names: **A for Apple, B for Bravo…** · Numbers: say them in groups: **seven-oh-one, four-five-six…**",
+  },
 ];
