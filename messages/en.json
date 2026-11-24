@@ -641,6 +641,7 @@
     "backToEditor": "Back to editing",
     "sections": "Lesson sections",
     "next": "Next: {title}",
+    "previous": "Back: {title}",
     "score": "{right} of {total}",
     "emptyLesson": "This lesson has no sections yet.",
     "emptySection": "This section has no tasks yet.",

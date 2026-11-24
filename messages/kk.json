@@ -641,6 +641,7 @@
     "backToEditor": "Өңдеуге оралу",
     "sections": "Сабақ бөлімдері",
     "next": "Келесі: {title}",
+    "previous": "Артқа: {title}",
     "score": "{total} ішінен {right}",
     "emptyLesson": "Сабақта әлі бөлім жоқ.",
     "emptySection": "Бұл бөлімде әлі тапсырма жоқ.",

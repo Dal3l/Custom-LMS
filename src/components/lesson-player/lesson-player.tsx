@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Check, CircleCheck, CloudOff, EyeOff, Loader2, StickyNote } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, CircleCheck, CloudOff, EyeOff, Loader2, StickyNote } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { toast } from "sonner";
@@ -122,6 +122,7 @@ export function LessonPlayer({
   const index = group.findIndex((s) => s.id === activeId);
   const active = index >= 0 ? group[index]! : null;
   const next = index >= 0 ? group[index + 1] : undefined;
+  const previous = index > 0 ? group[index - 1] : undefined;
 
   // A reset exercise must not save its old answer after all.
   const resetKey = JSON.stringify(resets ?? {});
@@ -260,9 +261,17 @@ export function LessonPlayer({
         </ol>
       )}
 
-      {(next || sectionFooter) && (
+      {(next || previous || sectionFooter) && (
         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-wrap gap-2">{sectionFooter?.(active, !next)}</div>
+          <div className="flex flex-wrap gap-2">
+            {previous && (
+              <Button variant="outline" size="lg" className="max-w-full" onClick={() => select(previous.id)}>
+                <ArrowLeft aria-hidden="true" />
+                <span className="truncate">{t("previous", { title: previous.title })}</span>
+              </Button>
+            )}
+            {sectionFooter?.(active, !next)}
+          </div>
           {next && (
             <Button size="lg" onClick={() => select(next.id)}>
               {t("next", { title: next.title })}
