@@ -258,4 +258,34 @@ export const tables: GrammarTable[] = [
     ],
     note: "Formal emails: **no contractions** (I am, not I'm), no emojis, no slang",
   },
+  // 6.1
+  {
+    name: "passive",
+    title: "The passive",
+    subtitle: "be + 3rd form — when the action is more important than WHO does it",
+    color: "violet",
+    columns: ["", "Active", "Passive"],
+    rows: [
+      ["Present Simple", "They **make** chocolate here.", "Chocolate **is made** here."],
+      ["Past Simple", "Bell **invented** the telephone.", "The telephone **was invented** by Bell."],
+      ["−", "They **don't grow** coffee in the UK.", "Coffee **isn't grown** in the UK."],
+      ["?", "Where **do** they **make** it?", "Where **is** it **made**?"],
+    ],
+    note: "**by** + the person — only when it's important: The film was directed **by** a 23-year-old!",
+  },
+  // 6.2
+  {
+    name: "passive-more",
+    title: "More passives",
+    subtitle: "the same idea: be + 3rd form",
+    color: "pink",
+    columns: ["Form", "Passive", "Example"],
+    rows: [
+      ["Present Perfect", "**has / have been** + 3rd form", "The video **has been shared** a million times."],
+      ["can / could", "**can / could be** + 3rd form", "Photos **can be changed** with AI."],
+      ["must / should", "**must / should be** + 3rd form", "Facts **should be checked** before you share."],
+      ["will", "**will be** + 3rd form", "The results **will be published** tomorrow."],
+    ],
+    note: "After a modal → **be** + 3rd form: It **can be done**. (not: It can done)",
+  },
 ];
