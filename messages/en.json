@@ -883,7 +883,9 @@
     "noteShown": "The note is shown to students",
     "noteHidden": "The note is hidden from students",
     "hintsOn": "Answer hints: on (only you see them)",
-    "hintsOff": "Answer hints: off"
+    "hintsOff": "Answer hints: off",
+    "previousStudents": "Earlier students",
+    "moreStudents": "More students"
   },
   "board": {
     "lessonBoard": "Lesson whiteboard",
@@ -918,7 +920,12 @@
     "image": "Insert a picture",
     "imageFailed": "Could not add the picture. Please try again.",
     "imageTooBig": "The picture is too big — pick a smaller one.",
-    "fit": "Show the whole drawing"
+    "fit": "Show the whole drawing",
+    "bringHere": "Bring students here",
+    "bringHereHint": "Students' boards move to the place you see now",
+    "broughtHere": "Students now see this place on the board",
+    "bringHereFailed": "Couldn't reach the students — check the connection",
+    "broughtByTeacher": "The teacher moved your board to their place"
   },
   "timer": {
     "title": "Timer",

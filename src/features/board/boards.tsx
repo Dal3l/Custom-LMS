@@ -3,7 +3,10 @@
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { isItemData, isPersonalBoard, type BoardItem, type BoardItemData } from "./items";
+import { isItemData, isPersonalBoard, type BoardItem, type BoardItemData, type View } from "./items";
+
+/** Where the teacher asked the students to look on a board ("Bring students here"). */
+export type IncomingView = { board: string; view: View; at: number };
 
 /**
  * Drawings of a class lesson: loads each board when it is shown, saves new
@@ -28,6 +31,10 @@ type BoardsApi = {
   clear: (board: string) => void;
   /** Saves a picture for the boards of this class; its path, or null. */
   uploadImage: (file: Blob, ext: string) => Promise<string | null>;
+  /** The teacher: moves the students' copy of a board to this view (true: sent). */
+  bringHere?: (board: string, view: View) => Promise<boolean>;
+  /** A student: the last view the teacher sent. */
+  incomingView: IncomingView | null;
 };
 
 const Ctx = createContext<BoardsApi | null>(null);
@@ -62,12 +69,16 @@ export function BoardsProvider({
   userId,
   isTeacher,
   otherUserId,
+  bringHere,
+  incomingView = null,
   children,
 }: {
   classId: string;
   userId: string;
   isTeacher: boolean;
   otherUserId: string | null;
+  bringHere?: (board: string, view: View) => Promise<boolean>;
+  incomingView?: IncomingView | null;
   children: React.ReactNode;
 }) {
   const [supabase] = useState(() => createClient());
@@ -249,8 +260,10 @@ export function BoardsProvider({
         const { error } = await supabase.storage.from(BOARD_IMAGES).upload(path, file, { contentType: file.type });
         return error ? null : path;
       },
+      bringHere,
+      incomingView,
     }),
-    [boards, supabase, classId, userId, isTeacher, otherUserId, put],
+    [boards, supabase, classId, userId, isTeacher, otherUserId, put, bringHere, incomingView],
   );
 
   return <Ctx.Provider value={api}>{children}</Ctx.Provider>;

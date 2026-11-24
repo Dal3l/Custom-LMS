@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
+  boardViewOf,
   classTopic,
   combineStatus,
   isNewlyOpened,
@@ -180,6 +181,10 @@ export function StudentLiveProvider({
         channel.on("broadcast", { event: "board" }, ({ payload }) => {
           const m = payload as BoardMessage;
           if (onLesson(m.lessonId)) listeners.current.forEach((l) => l({ kind: "board", ...m, classId }));
+        });
+        channel.on("broadcast", { event: "boardView" }, ({ payload }) => {
+          const m = boardViewOf(payload);
+          if (m && onLesson(m.lessonId)) listeners.current.forEach((l) => l({ kind: "boardView", ...m, classId }));
         });
         channel.on("broadcast", { event: "reset" }, ({ payload }) => {
           const m = payload as ResetMessage;

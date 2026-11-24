@@ -122,18 +122,30 @@ export default async function ClassLessonPage({
           <ChevronLeft className="size-4" aria-hidden="true" />
           <span className="max-w-28 truncate max-md:sr-only">{cls.name}</span>
         </Link>
-        <h1 className="min-w-0 truncate text-base font-semibold sm:text-lg" title={lesson.lesson.title}>
+        <h1
+          className={cn("min-w-0 truncate text-base font-semibold sm:text-lg", cls.isTeacher && "lg:max-w-56 lg:shrink-0")}
+          title={lesson.lesson.title}
+        >
           {lesson.lesson.title}
         </h1>
         {live && (
-          <Badge className="shrink-0 max-sm:hidden">
+          <Badge className={cn("shrink-0 max-sm:hidden", cls.isTeacher && "lg:px-1.5")} title={t("live")}>
             <Radio aria-hidden="true" />
-            {t("live")}
+            <span className={cls.isTeacher ? "lg:sr-only" : undefined}>{t("live")}</span>
           </Badge>
         )}
+        {/* Wide screens: the teacher's students go here (see TeacherClassLesson). */}
+        {cls.isTeacher && <div id="lesson-students-slot" className="flex w-0 min-w-0 flex-1 max-lg:hidden" />}
         <div className="ml-auto flex shrink-0 items-center gap-1">
-          <ChatButton classId={classId} className={cls.name} me={profile.id} isTeacher={cls.isTeacher} initialUnread={unread[classId] ?? 0} />
-          {cls.call_url && <CallButton url={cls.call_url} size="sm" compact />}
+          <ChatButton
+            classId={classId}
+            className={cls.name}
+            me={profile.id}
+            isTeacher={cls.isTeacher}
+            initialUnread={unread[classId] ?? 0}
+            iconOnly={cls.isTeacher}
+          />
+          {cls.call_url && <CallButton url={cls.call_url} size="sm" compact iconOnly={cls.isTeacher} />}
           {cls.isTeacher && (
             <>
               <LessonPicker
@@ -144,6 +156,7 @@ export default async function ClassLessonPage({
                 size="sm"
                 icon="list"
                 compact
+                iconOnly
               />
               {state && <ClassLessonControls classId={classId} lessonId={lessonId} finished={finished} />}
             </>

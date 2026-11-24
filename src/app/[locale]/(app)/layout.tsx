@@ -29,7 +29,7 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
         <NavigationProgress />
       </Suspense>
       <AppSidebar role={profile.role} />
-      <SidebarInset>
+      <SidebarInset className="min-w-0">
         <header className="sticky top-0 z-10 flex h-14 items-center gap-2 border-b bg-background/90 px-3 backdrop-blur sm:px-4">
           <SidebarTrigger className="size-10 md:hidden [&_svg]:size-5" />
           {/* Pages can put their own title and buttons here (e.g. a lesson). */}

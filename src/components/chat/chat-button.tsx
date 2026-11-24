@@ -20,12 +20,15 @@ export function ChatButton({
   me,
   isTeacher,
   initialUnread,
+  iconOnly = false,
 }: {
   classId: string;
   className: string;
   me: string;
   isTeacher: boolean;
   initialUnread: number;
+  /** only the icon on screens below 2xl (a busy top bar) */
+  iconOnly?: boolean;
 }) {
   const t = useTranslations("chat");
   const [open, setOpen] = useState(false);
@@ -45,7 +48,7 @@ export function ChatButton({
     <Sheet open={open} onOpenChange={setOpen}>
       <Button variant="outline" size="sm" className="relative" aria-label={label} title={label} onClick={() => setOpen(true)}>
         <MessageCircle aria-hidden="true" />
-        <span className="max-md:sr-only">{t("button")}</span>
+        <span className={iconOnly ? "max-2xl:sr-only" : "max-md:sr-only"}>{t("button")}</span>
         {unread > 0 && (
           <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-semibold text-white tabular-nums" aria-hidden="true">
             {unread > 99 ? "99+" : unread}

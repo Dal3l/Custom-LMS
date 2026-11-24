@@ -39,6 +39,7 @@ test.describe("students page", () => {
   test("add students, put them into classes", async ({ page, browser }, testInfo) => {
     const stamp = `${Date.now()}-${testInfo.project.name}`.replace(/[^a-z0-9-]/gi, "");
     stamps.push(stamp);
+    const phone = testInfo.project.name === "phone";
     const db = admin();
     const { data: users } = await db.auth.admin.listUsers({ perPage: 200 });
     const teacherId = users.users.find((u) => u.email === teacher.email)!.id;
@@ -86,8 +87,13 @@ test.describe("students page", () => {
     await dialog.getByRole("button", { name: "Готово" }).click();
     const row = list.getByRole("listitem").filter({ hasText: third.name });
     await expect(row).toContainText("Не в классе");
-    await row.getByRole("button", { name: `Действия: ${third.name}` }).click();
-    await page.getByRole("menuitem", { name: "Убрать из списка" }).click();
+    // Wide screens: the actions are right on the row; phones: in the "…" menu.
+    if (phone) {
+      await row.getByRole("button", { name: `Действия: ${third.name}` }).click();
+      await page.getByRole("menuitem", { name: "Убрать из списка" }).click();
+    } else {
+      await row.getByRole("button", { name: "Убрать из списка" }).click();
+    }
     await expect(row).toHaveCount(0);
 
     // The class card opens the class's info page; there: Students / Homework / Settings.
@@ -101,8 +107,12 @@ test.describe("students page", () => {
     // Deleting a student's account: gone for good (and off the list).
     await page.goto("/ru/students");
     const secondRow = list.getByRole("listitem").filter({ hasText: second.name });
-    await secondRow.getByRole("button", { name: `Действия: ${second.name}` }).click();
-    await page.getByRole("menuitem", { name: "Удалить аккаунт" }).click();
+    if (phone) {
+      await secondRow.getByRole("button", { name: `Действия: ${second.name}` }).click();
+      await page.getByRole("menuitem", { name: "Удалить аккаунт" }).click();
+    } else {
+      await secondRow.getByRole("button", { name: `Удалить аккаунт: ${second.name}` }).click();
+    }
     await page.getByRole("alertdialog").getByRole("button", { name: "Удалить навсегда" }).click();
     await expect(page.getByText(`Аккаунт ученика ${second.name} удалён`)).toBeVisible();
     await expect(secondRow).toHaveCount(0);

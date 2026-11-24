@@ -123,15 +123,48 @@ export function StudentsDirectory({
                   <span className="text-sm text-amber-700">{t("noClass")}</span>
                 )}
               </div>
-              {s.classes.length === 0 && (
-                <Button size="sm" variant="outline" className="max-sm:hidden" onClick={() => setPlacing(s)}>
+              {/* Wide screens: the actions right on the student's row. */}
+              <div className="flex shrink-0 items-center gap-1.5 max-md:hidden">
+                {s.classes[0] && (
+                  <Button size="sm" variant="outline" asChild>
+                    <Link href={`/classes/${s.classes[0].id}/students/${s.id}`}>
+                      <BookA aria-hidden="true" />
+                      {t("progress")}
+                    </Link>
+                  </Button>
+                )}
+                <Button size="sm" variant="outline" onClick={() => setPlacing(s)} disabled={pending}>
                   <FolderPlus aria-hidden="true" />
                   {t("toClass")}
                 </Button>
-              )}
+                {s.classes.length === 0 && (
+                  <Button size="sm" variant="outline" onClick={() => remove(s)} disabled={pending}>
+                    <UserMinus aria-hidden="true" />
+                    {t("removeFromList")}
+                  </Button>
+                )}
+                <Button
+                  size="icon-sm"
+                  variant="ghost"
+                  className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                  onClick={() => setDeleting(s)}
+                  disabled={pending}
+                  aria-label={`${t("deleteAccount")}: ${s.fullName || t("noName")}`}
+                  title={t("deleteAccount")}
+                >
+                  <Trash2 aria-hidden="true" />
+                </Button>
+              </div>
+              {/* Phones: the same actions in the "…" menu. */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" aria-label={t("actions", { name: s.fullName || t("noName") })} disabled={pending}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="md:hidden"
+                    aria-label={t("actions", { name: s.fullName || t("noName") })}
+                    disabled={pending}
+                  >
                     <MoreHorizontal aria-hidden="true" />
                   </Button>
                 </DropdownMenuTrigger>

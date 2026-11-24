@@ -7,6 +7,7 @@ import {
   Highlighter,
   ImagePlus,
   Loader2,
+  LocateFixed,
   Maximize,
   Minus,
   Pencil,
@@ -681,6 +682,7 @@ export function BoardToolbar({
   aspect = 0.625,
   onImage,
   imageBusy = false,
+  onBringHere,
 }: {
   tools: Tool[];
   tool: Tool | null;
@@ -693,6 +695,8 @@ export function BoardToolbar({
   aspect?: number;
   onImage?: (file: File) => void;
   imageBusy?: boolean;
+  /** The teacher: "Bring students here" — their boards move to this view. */
+  onBringHere?: () => void;
 }) {
   const t = useTranslations("board");
   const file = useRef<HTMLInputElement>(null);
@@ -759,6 +763,12 @@ export function BoardToolbar({
           </Button>
         </span>
       )}
+      {onBringHere && (
+        <Button type="button" size="sm" variant="outline" className="mx-1" title={t("bringHereHint")} onClick={onBringHere}>
+          <LocateFixed aria-hidden="true" />
+          <span className="max-sm:sr-only">{t("bringHere")}</span>
+        </Button>
+      )}
       {state.canRemoveAll && (
         <Button type="button" size="icon-sm" variant="ghost" aria-label={t("clear")} title={t("clear")} disabled={state.items.length === 0} onClick={() => state.change([{ clear: true }])}>
           <Trash2 aria-hidden="true" />
@@ -774,10 +784,28 @@ export { useBoardItems };
 export function Whiteboard({ board, label, aspect = 0.625 }: { board: string; label: string; aspect?: number }) {
   const t = useTranslations("board");
   const state = useBoardItems(board);
+  const api = useBoards();
   const [tool, setTool] = useState<Tool | null>("pen");
   const [color, setColor] = useState<string>(BOARD_COLORS[1]);
-  const [view, setView] = useState<View>(START_VIEW);
+  // A student: the teacher's "Bring students here" moves this board to the teacher's view
+  // (also when it made the board open just now).
+  const incoming = api?.incomingView ?? null;
+  const [view, setView] = useState<View>(() =>
+    incoming && incoming.board === board && Date.now() - incoming.at < 15_000 ? incoming.view : START_VIEW,
+  );
+  const [seenIncoming, setSeenIncoming] = useState(incoming);
+  if (incoming !== seenIncoming) {
+    setSeenIncoming(incoming);
+    if (incoming?.board === board) setView(incoming.view);
+  }
   const [busy, setBusy] = useState(false);
+  const bring = api?.isTeacher ? api.bringHere : undefined;
+
+  async function bringHere() {
+    if (!bring) return;
+    if (await bring(board, view)) toast.success(t("broughtHere"));
+    else toast.error(t("bringHereFailed"));
+  }
 
   async function addImage(file: File) {
     if (busy) return;
@@ -813,6 +841,7 @@ export function Whiteboard({ board, label, aspect = 0.625 }: { board: string; la
         aspect={aspect}
         onImage={(f) => void addImage(f)}
         imageBusy={busy}
+        onBringHere={bring ? () => void bringHere() : undefined}
       />
       <div className="overflow-hidden rounded-xl border bg-white">
         <BoardSurface
