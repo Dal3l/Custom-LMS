@@ -10,6 +10,10 @@ import l21 from "./m02/l1";
 import l22 from "./m02/l2";
 import l23 from "./m02/l3";
 import l24 from "./m02/l4";
+import l31 from "./m03/l1";
+import l32 from "./m03/l2";
+import l33 from "./m03/l3";
+import l34 from "./m03/l4";
 
 export const course: CourseFile = {
   id: "16c4b34d-a422-4384-b9a2-880ea4c250ad",
@@ -24,5 +28,6 @@ export const course: CourseFile = {
     { title: "Start: B1 check", lessons: [l01] },
     { title: "First impressions", lessons: [l11, l12, l13, l14] },
     { title: "Against the odds", lessons: [l21, l22, l23, l24] },
+    { title: "The creative mind", lessons: [l31, l32, l33, l34] },
   ],
 };
