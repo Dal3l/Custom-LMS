@@ -52,7 +52,7 @@ function lines(doc: Doc): Line[] {
       let speaker = out.length && !out[out.length - 1]!.part ? out[out.length - 1]!.speaker : "Narrator";
       let rest = g;
       let part = false;
-      if (bold && /^[A-Z][\w. ]{0,20}:$/.test(first.text!.trim())) {
+      if (bold && /^[A-Z][\w. '-]{0,20}:$/.test(first.text!.trim())) {
         speaker = first.text!.trim().slice(0, -1);
         rest = g.slice(1);
       } else if (bold && /^\d+\.$/.test(first.text!.trim())) {

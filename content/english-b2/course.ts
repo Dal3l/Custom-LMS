@@ -2,6 +2,10 @@
 // Loaded with: node --env-file=.env.local scripts/content/run.mjs english-b2
 import type { CourseFile } from "../../scripts/content/load";
 import l01 from "./m00/l0";
+import l11 from "./m01/l1";
+import l12 from "./m01/l2";
+import l13 from "./m01/l3";
+import l14 from "./m01/l4";
 
 export const course: CourseFile = {
   id: "16c4b34d-a422-4384-b9a2-880ea4c250ad",
@@ -12,5 +16,8 @@ export const course: CourseFile = {
   firstModule: 0,
   description:
     "English after B1 for older teens (15+) and adults: personality and decisions, science and health, money and work, media, crime and justice, society and the power of words. Real debates by the rules. An entry test + 12 modules × 4 lessons, 60 minutes each + homework. Ready for the Cambridge B2 First format.",
-  modules: [{ title: "Start: B1 check", lessons: [l01] }],
+  modules: [
+    { title: "Start: B1 check", lessons: [l01] },
+    { title: "First impressions", lessons: [l11, l12, l13, l14] },
+  ],
 };
