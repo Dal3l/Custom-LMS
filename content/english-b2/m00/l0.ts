@@ -148,7 +148,7 @@ export default lesson("b2-0.1", "Entry test: B1 check", () => [
       {
         read: [
           "## 🗓️ Four days, not five: what happened when we tried it",
-          "*by Kenji Watanabe, team leader at an IT company in Almaty*",
+          "*by Kenji Tanaka, team leader at an IT company in Almaty*",
           "A year ago, our director came into the office with an unusual idea. \"What if we worked four days a week,\" she said, \"for the same salary?\" Most of us laughed. We were already busy, and some projects were late. How could we do the same work in less time? But she was serious. She had read about trials in several countries, and she wanted to try it for six months.",
           "The rules were simple. We would work Monday to Thursday, eight hours a day — not ten. Our salaries would stay the same. If our results got worse, we would go back to the old system.",
           "The first month was chaotic. We realized how much time we had been wasting. Our weekly meeting, for example, used to last two hours, and half of it was people talking about things that didn't concern them. We cut it to thirty minutes. We stopped sending emails for every small question and started using a shared list of tasks instead. Some of my colleagues turned off their notifications for two hours every morning so they could concentrate. \"I didn't know I could work like this,\" one developer told me. \"I used to check my phone every five minutes.\"",
