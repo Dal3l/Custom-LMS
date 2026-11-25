@@ -329,4 +329,51 @@ export const tables: GrammarTable[] = [
     ],
     note: "Stay calm, use the agent's name, and always get a name, a number and the next step.",
   },
+  // 6.1
+  {
+    name: "passive-forms",
+    title: "The passive in all tenses",
+    subtitle: "be (in the right form) + 3rd form",
+    color: "green",
+    columns: ["Tense", "Passive", "Example"],
+    rows: [
+      ["Present Continuous", "**am / is / are being + 3rd form**", "A new bridge **is being built**."],
+      ["Past Continuous", "**was / were being + 3rd form**", "The road **was being repaired**."],
+      ["Present Perfect", "**has / have been + 3rd form**", "The painting **has been found**."],
+      ["Past Perfect", "**had been + 3rd form**", "My bike **had been stolen**."],
+      ["Future Perfect", "**will have been + 3rd form**", "By June, it **will have been finished**."],
+      ["after modals", "**can / must / should be + 3rd form**", "Every story **should be checked**."],
+    ],
+    note: "Who did it? Add by + person only if it's important: The video was made by a 16-year-old.",
+  },
+  {
+    name: "reporting-passive",
+    title: "Reporting carefully",
+    subtitle: "when something isn't proven",
+    color: "orange",
+    columns: ["Pattern", "Example"],
+    rows: [
+      ["**It is said / believed / reported / thought / expected that…**", "**It is believed that** the fire started in the kitchen."],
+      ["**He / She / It is said to + verb** (now)", "The singer **is said to be** very shy."],
+      ["**is said to be + -ing** (in progress now)", "The band **is rumored to be planning** a tour."],
+      ["**is said to have + 3rd form** (the past)", "The thief **is thought to have escaped** by car."],
+      ["**is said to have been + 3rd form** (past passive)", "The painting **is believed to have been stolen** in 2003."],
+    ],
+    note: "Verbs: say · believe · think · report · expect · know · consider · rumor · allege",
+  },
+  // 6.2
+  {
+    name: "have-done",
+    title: "have / get something done",
+    subtitle: "someone else does it for you",
+    color: "teal",
+    columns: ["Pattern", "Meaning", "Example"],
+    rows: [
+      ["**have + object + 3rd form**", "💰 a service: you pay, someone else does it", "I'm **having my car repaired**."],
+      ["**get + object + 3rd form**", "💰 the same, a bit more informal", "I **got my hair cut** yesterday."],
+      ["**have + object + 3rd form**", "😱 a bad experience: it happened to you", "He **had his phone stolen** on the bus."],
+      ["**get + 3rd form**", "🔄 become / happen", "We **got lost**. · They **got married**. · He **got fired**."],
+    ],
+    note: "All tenses work: I'm having it done · I've had it done · I'll have it done. Compare: I repaired it (myself) — I had it repaired (by someone).",
+  },
 ];
