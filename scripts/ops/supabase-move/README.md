@@ -13,8 +13,9 @@ Run from the repository root, in this order:
 1. `node scripts/ops/supabase-move/apply.mjs` — applies `supabase/migrations/*.sql` to the new project.
 2. `node scripts/ops/supabase-move/authcopy.mjs` — copies Auth settings (site URL, redirect URLs, Google sign-in, auto-confirm).
 3. `node scripts/ops/supabase-move/copyfiles.mjs` — copies Storage files that are not there yet (safe to run again).
-4. `node scripts/ops/supabase-move/migrate.mjs` — empties the new tables and copies all rows (auth.users, auth.identities, public, private).
-5. `node scripts/ops/supabase-move/verify.mjs` — compares every table, row by row.
+4. `node scripts/ops/supabase-move/grants.mjs --apply` — copies the old project's exact grants (new Supabase projects get fewer automatic grants; without this the secret key gets “permission denied”). Run without `--apply` to only compare.
+5. `node scripts/ops/supabase-move/migrate.mjs` — empties the new tables and copies all rows (auth.users, auth.identities, public, private).
+6. `node scripts/ops/supabase-move/verify.mjs` — compares every table, row by row.
 
 Then: new keys in Vercel (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`,
 `SUPABASE_SECRET_KEY`) and in `.env.local`; `regions` in `vercel.json`; the Google OAuth
