@@ -64,4 +64,51 @@ export const tables: GrammarTable[] = [
     ],
     note: "Show, don't tell: a short example is worth ten adjectives.",
   },
+  // 2.1
+  {
+    name: "ppc-past",
+    title: "Past Perfect Continuous",
+    subtitle: "had been + verb-ing — an activity that was going on up to a moment in the past",
+    color: "violet",
+    columns: ["", "Example", "Note"],
+    rows: [
+      ["+", "We**'d been driving** for seven hours **when** the car broke down.", "how long, up to that moment"],
+      ["−", "She **hadn't been sleeping** well, so she looked tired.", "a reason for a past situation"],
+      ["?", "How long **had** you **been waiting** when the bus came?", ""],
+      ["vs Past Perfect Simple", "By then we **had visited** six cities. · He **had** already **left**.", "a finished result, how many"],
+    ],
+    note: "State verbs (know, believe, own…) → Past Perfect Simple: She had known him for years. (not had been knowing)",
+  },
+  // 2.2
+  {
+    name: "so-such",
+    title: "so / such… that",
+    subtitle: "very + a result",
+    color: "orange",
+    columns: ["Structure", "Example"],
+    rows: [
+      ["**so** + adjective / adverb", "The hill was **so** steep **that** my legs were shaking. · She spoke **so** fast **that**…"],
+      ["**so** much / many / little / few + noun", "There were **so many** people **that** we couldn't get in."],
+      ["**such** a / an + adjective + noun", "It was **such a** strange day **that** I wrote it down."],
+      ["**such** + adjective + plural / uncountable noun", "They're **such** kind people! · We had **such** terrible weather **that**…"],
+    ],
+    note: "In speech, “that” is often left out: It was so cold (that) the lake froze.",
+  },
+  {
+    name: "story-linkers",
+    title: "Telling a story well",
+    subtitle: "comment adverbs and linkers",
+    color: "teal",
+    columns: ["Job", "Words"],
+    rows: [
+      ["💬 your comment", "**luckily, unfortunately, surprisingly, amazingly, obviously, frankly**"],
+      ["👂 what you heard", "**apparently** (= people say / I read that)"],
+      ["🤞 a wish", "**hopefully** (= I hope that…)"],
+      ["⏱️ the start", "**at first, in the beginning, one day**"],
+      ["⚡ the moment", "**the moment, as soon as, suddenly, the next thing I knew**"],
+      ["🔀 at the same time", "**meanwhile, while**"],
+      ["🏁 the end", "**eventually** (after a long time), **in the end, at last** (finally — and I'm happy!)"],
+    ],
+    note: "Put comment adverbs first, with a comma: Luckily, nobody was hurt.",
+  },
 ];
