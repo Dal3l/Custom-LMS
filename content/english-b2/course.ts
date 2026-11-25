@@ -1,0 +1,16 @@
+// English B2 — the course loaded into the library (see docs/courses/english-b2/).
+// Loaded with: node --env-file=.env.local scripts/content/run.mjs english-b2
+import type { CourseFile } from "../../scripts/content/load";
+import l01 from "./m00/l0";
+
+export const course: CourseFile = {
+  id: "16c4b34d-a422-4384-b9a2-880ea4c250ad",
+  title: "English B2",
+  language: "en",
+  level: "B2",
+  cover: "cover.png",
+  firstModule: 0,
+  description:
+    "English after B1 for older teens (15+) and adults: personality and decisions, science and health, money and work, media, crime and justice, society and the power of words. Real debates by the rules. An entry test + 12 modules × 4 lessons, 60 minutes each + homework. Ready for the Cambridge B2 First format.",
+  modules: [{ title: "Start: B1 check", lessons: [l01] }],
+};
