@@ -69,6 +69,7 @@ export const SPEAKERS: Record<string, string> = {
   Assistant: "Bella",
   Shop: "Bella",
   Host: "Daniel",
+  Helen: "Alice",
   Reporter: "Daniel",
   Storyteller: "George",
   Detective: "George",

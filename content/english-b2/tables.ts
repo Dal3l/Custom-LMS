@@ -219,4 +219,50 @@ export const tables: GrammarTable[] = [
     ],
     note: "Ban “That won't work.” Say: “That might work if…”",
   },
+  // 4.1
+  {
+    name: "future-perfect",
+    title: "Future Perfect and Future Continuous",
+    subtitle: "finished by then — or in progress then",
+    color: "blue",
+    columns: ["Form", "Use", "Example"],
+    rows: [
+      ["**will have + 3rd form**", "✅ finished BEFORE a point in the future", "By 2050, the population **will have reached** ten billion."],
+      ["**won't have + 3rd form**", "❌ not finished by then", "I **won't have finished** the book by Monday."],
+      ["**will be + -ing**", "⏳ in progress AT a point in the future", "This time tomorrow, I'**ll be flying** to Seoul."],
+      ["**will have been + -ing**", "📏 how long, up to a point in the future", "In June, I'**ll have been working** here for ten years."],
+    ],
+    note: "Time words: by 2050 · by then · by the time + present (by the time you arrive) · this time next week",
+  },
+  {
+    name: "probability",
+    title: "How likely is it?",
+    subtitle: "from certain to impossible",
+    color: "orange",
+    columns: ["How likely", "Phrases", "Example"],
+    rows: [
+      ["💯 almost certain", "**be bound to** · **be certain to** · **there's no doubt that**", "It's **bound to** rain."],
+      ["👍 probable", "**be likely to** · **there's a good chance that** · **will probably**", "Prices are **likely to** rise."],
+      ["📅 planned", "**be set to** · **be due to**", "The law is **set to** change next year."],
+      ["👎 improbable", "**be unlikely to** · **I doubt (that)** · **probably won't**", "I **doubt** he'll come."],
+      ["🚫 almost impossible", "**there's no / little chance that** · **it's highly unlikely that**", "It's **highly unlikely that** we'll live on Mars by 2030."],
+    ],
+    note: "Word order: he'll probably come · he probably won't come",
+  },
+  // 4.2
+  {
+    name: "future-in-past",
+    title: "The future in the past",
+    subtitle: "plans seen from the past",
+    color: "violet",
+    columns: ["Form", "Meaning", "Example"],
+    rows: [
+      ["**was / were going to**", "a plan (often it didn't happen)", "I **was going to** call you, but I forgot."],
+      ["**was / were about to** · **on the point of + -ing**", "very soon, just before", "We **were about to** leave when the phone rang."],
+      ["**would**", "the future seen from the past", "She knew she **would** miss him."],
+      ["**was / were due to**", "planned for a time (timetables)", "The train **was due to** arrive at six."],
+      ["**was / were supposed to**", "expected, but it didn't happen", "You **were supposed to** be here at nine!"],
+    ],
+    note: "Often + but: I was going to…, but something came up.",
+  },
 ];
