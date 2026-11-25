@@ -265,4 +265,68 @@ export const tables: GrammarTable[] = [
     ],
     note: "Often + but: I was going to…, but something came up.",
   },
+  // 5.1
+  {
+    name: "past-modals",
+    title: "Regrets and criticism",
+    subtitle: "modal + have + 3rd form",
+    color: "teal",
+    columns: ["Form", "Meaning", "Example"],
+    rows: [
+      ["**needn't have + 3rd form**", "✅ it happened, but it wasn't necessary", "I **needn't have bought** milk — we had two bottles."],
+      ["**didn't need to + verb**", "❌ it wasn't necessary (usually it didn't happen)", "It was a holiday, so I **didn't need to get up** early."],
+      ["**should / ought to have + 3rd form**", "😔 it was a good idea, but you didn't do it", "I **should have checked** the price."],
+      ["**shouldn't have + 3rd form**", "🤦 it was a bad idea, but you did it", "I **shouldn't have sold** my guitar."],
+      ["**could have + 3rd form**", "🚪 a chance you missed · 😠 criticism", "We **could have gone** to Busan. · You **could have told** me!"],
+    ],
+    note: "Say it: should've /ˈʃʊdəv/ · could've /ˈkʊdəv/ · never write “should of”!",
+  },
+  // 5.2
+  {
+    name: "obligation",
+    title: "Rules and obligation",
+    subtitle: "what you must, can and can't do",
+    color: "blue",
+    columns: ["Form", "Meaning", "Example"],
+    rows: [
+      ["**be supposed to**", "📋 a rule or expectation (often broken)", "We're **supposed to** start at nine, but nobody does."],
+      ["**be allowed to** · **not be allowed to**", "✅ permission · 🚫 no permission", "We **aren't allowed to** use our phones in meetings."],
+      ["**be obliged to** · **be required to**", "⚖️ a formal or legal duty", "Employers **are obliged to** pay for overtime."],
+      ["**have no choice but to**", "🚪 there's only one option", "We **had no choice but to** close the shop."],
+      ["**make sb do** · **let sb do**", "💪 force · 👍 allow", "My boss **made me redo** it. · She **lets us work** from home."],
+      ["**be made to do**", "💪 passive of make — note the **to**!", "I **was made to wait** for an hour."],
+    ],
+    note: "let has no passive: say “we're allowed to”, not “we're let to”.",
+  },
+  // 5.4
+  {
+    name: "formal-email",
+    title: "A formal email",
+    subtitle: "polite, clear and firm",
+    color: "violet",
+    columns: ["Part", "Phrases"],
+    rows: [
+      ["👋 start", "**Dear Sir or Madam,** (name unknown) · **Dear Mr. / Ms. Ortiz,** (name known)"],
+      ["🎯 reason", "**I am writing to complain about / to inquire about…** · **I am writing with regard to…**"],
+      ["📋 details", "**According to…** · **However, …** · **Furthermore, …** · **As a result, …**"],
+      ["🙏 request", "**I would be grateful if you could…** · **I would like to request…** · **I would appreciate a prompt reply.**"],
+      ["🏁 end", "**I look forward to hearing from you.** · **Yours faithfully,** (Sir or Madam) · **Yours sincerely,** (name) · US: **Sincerely,**"],
+    ],
+    note: "No contractions, no emojis, no exclamation marks. Formal words: receive (not get), contact (not get in touch), request (not ask for).",
+  },
+  {
+    name: "complaint-call",
+    title: "Complaining on the phone",
+    subtitle: "polite but firm",
+    color: "pink",
+    columns: ["Step", "Phrases"],
+    rows: [
+      ["📞 explain", "**I'm calling about…** · **I'm afraid there's a problem with…**"],
+      ["📅 facts", "**It was supposed to arrive on…** · **I've already tried…** · **This is my third call.**"],
+      ["✋ say no politely", "**I'm sorry, but that's not really acceptable.** · **I understand it's not your fault, but…**"],
+      ["🎯 say what you want", "**What I'd like is…** · **Could I speak to someone who can make that decision?**"],
+      ["✅ confirm", "**Just to confirm: …** · **Could you give me a reference number?** · **Thank you, I really appreciate it.**"],
+    ],
+    note: "Stay calm, use the agent's name, and always get a name, a number and the next step.",
+  },
 ];

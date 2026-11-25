@@ -70,6 +70,7 @@ export const SPEAKERS: Record<string, string> = {
   Shop: "Bella",
   Host: "Daniel",
   Helen: "Alice",
+  "Dr. Klein": "Lily",
   Reporter: "Daniel",
   Storyteller: "George",
   Detective: "George",
