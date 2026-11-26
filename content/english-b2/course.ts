@@ -34,6 +34,10 @@ import l81 from "./m08/l1";
 import l82 from "./m08/l2";
 import l83 from "./m08/l3";
 import l84 from "./m08/l4";
+import l91 from "./m09/l1";
+import l92 from "./m09/l2";
+import l93 from "./m09/l3";
+import l94 from "./m09/l4";
 
 export const course: CourseFile = {
   id: "16c4b34d-a422-4384-b9a2-880ea4c250ad",
@@ -54,5 +58,6 @@ export const course: CourseFile = {
     { title: "The media", lessons: [l61, l62, l63, l64] },
     { title: "Relationships and comebacks", lessons: [l71, l72, l73, l74] },
     { title: "Health and science", lessons: [l81, l82, l83, l84] },
+    { title: "Crime and justice", lessons: [l91, l92, l93, l94] },
   ],
 };
