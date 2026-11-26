@@ -157,3 +157,22 @@ export function parseAiTranslation(content: string): string[] | null {
     return null;
   }
 }
+
+// ---------------------------------------------------------------------------
+// Which language to translate into.
+// ---------------------------------------------------------------------------
+
+/** Languages a word can be translated into (the interface languages). */
+export const TRANSLATION_TARGETS = ["ru", "kk", "en"] as const;
+
+/**
+ * The language to translate a lesson word into: the interface language — but
+ * when the interface is in the lesson's own language (an English lesson with
+ * the interface in English), the language the user chose before (`saved`),
+ * else the first one that differs from the lesson's.
+ */
+export function translationTarget(locale: string, lessonLanguage: string, saved?: string | null): string {
+  if (locale !== lessonLanguage) return locale;
+  if (saved && saved !== lessonLanguage && (TRANSLATION_TARGETS as readonly string[]).includes(saved)) return saved;
+  return TRANSLATION_TARGETS.find((l) => l !== lessonLanguage) ?? "en";
+}
