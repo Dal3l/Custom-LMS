@@ -424,4 +424,48 @@ export const tables: GrammarTable[] = [
     ],
     note: "Softeners: a bit · a little · slightly · I think · to be honest. Talk about the action, not the person.",
   },
+  // 8.1
+  {
+    name: "mixed-conditionals",
+    title: "Mixed conditionals",
+    subtitle: "the past affects the present — or the other way round",
+    color: "violet",
+    columns: ["Type", "Form", "Example"],
+    rows: [
+      ["⏪➡️⏺️ past condition → present result", "**If + had + 3rd form, … would + verb**", "If I **had slept** more, I **would feel** better now."],
+      ["⏺️➡️⏪ present situation → past result", "**If + Past Simple, … would have + 3rd form**", "If I **were** more organized, I **would have finished** on time."],
+      ["compare: Third Conditional (past → past)", "**If + had + 3rd form, … would have + 3rd form**", "If I **had slept** more, I **would have passed** yesterday."],
+    ],
+    note: "Never “would” in the if-part: If I would have slept ❌ → If I had slept ✅",
+  },
+  {
+    name: "wishes",
+    title: "I wish… If only…",
+    subtitle: "regrets and wishes",
+    color: "pink",
+    columns: ["Form", "Meaning", "Example"],
+    rows: [
+      ["**wish / if only + Past Simple**", "🙁 the present is not as I want", "I **wish** I **lived** near the sea."],
+      ["**wish / if only + had + 3rd form**", "⏪ a regret about the past", "I **wish** I **had gone** to bed earlier."],
+      ["**wish / if only + would + verb**", "🙄 an annoying habit — I want someone (or something) to change", "I **wish** you **would stop** checking your phone!"],
+      ["**wish + could + verb**", "💭 an ability I don't have", "I **wish** I **could** swim."],
+    ],
+    note: "Not about yourself with would: I wish I would… ❌ → I wish I could… / I wish I did… ✅. If only = a stronger wish.",
+  },
+  // 8.2
+  {
+    name: "conditional-linkers",
+    title: "Beyond if",
+    subtitle: "unless · as long as · provided · in case…",
+    color: "teal",
+    columns: ["Word", "Meaning", "Example"],
+    rows: [
+      ["**unless**", "= if… not", "You won't get better **unless** you rest."],
+      ["**as long as · provided / providing (that) · on condition that**", "= only if", "You can go **as long as** you're back by ten."],
+      ["**supposing / suppose**", "= imagine if (often unreal)", "**Supposing** you lost your passport, what would you do?"],
+      ["**otherwise**", "= if not, then…", "Hurry up, **otherwise** we'll be late."],
+      ["**in case**", "🛡️ do it now, because something might happen", "Take a jacket **in case** it gets cold."],
+    ],
+    note: "About the future, use the present after these words: as long as you rest (not will rest). Unless + positive verb: unless you rest (not unless you don't rest).",
+  },
 ];
