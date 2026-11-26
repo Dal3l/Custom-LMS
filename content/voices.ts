@@ -74,6 +74,8 @@ export const SPEAKERS: Record<string, string> = {
   Newsreader: "Brian",
   "Dr. Omarov": "Roger",
   "Dr. Ahmed": "Bill",
+  Agent: "Brian",
+  Timur: "Will",
   "Speaker 1": "Matilda",
   "Speaker 2": "Charlie",
   "Speaker 3": "Lily",
