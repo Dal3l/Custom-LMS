@@ -376,4 +376,52 @@ export const tables: GrammarTable[] = [
     ],
     note: "All tenses work: I'm having it done · I've had it done · I'll have it done. Compare: I repaired it (myself) — I had it repaired (by someone).",
   },
+  // 7.1
+  {
+    name: "reporting-verbs",
+    title: "Reporting verbs",
+    subtitle: "each verb has its own pattern",
+    color: "pink",
+    columns: ["Pattern", "Verbs", "Example"],
+    rows: [
+      ["**+ -ing**", "deny · admit · suggest · recommend", "He **denied taking** the money."],
+      ["**+ preposition + -ing**", "accuse sb **of** · blame sb **for** · apologize **for** · insist **on** · thank sb **for**", "She **accused me of lying**."],
+      ["**+ to + verb**", "agree · refuse · offer · promise · threaten", "He **refused to apologize**."],
+      ["**+ object + to + verb**", "warn · remind · advise · persuade · encourage · tell", "Mum **reminded me to call** Grandma."],
+      ["**+ that + sentence**", "admit · explain · complain · insist · suggest · promise", "He **explained that** he'd been stressed."],
+    ],
+    note: "Negative: warn sb NOT to do · deny doing (no not!) · suggest -ing or that sb (should) do — never “suggest to do”.",
+  },
+  // 7.2
+  {
+    name: "reported-tenses",
+    title: "Reported speech: change the tense or not?",
+    subtitle: "“I'm tired.” → She says / said…",
+    color: "blue",
+    columns: ["Situation", "Tense", "Example"],
+    rows: [
+      ["the reporting verb is in the present (**says, thinks, claims**)", "✋ no change", "She **says** she **is** tired."],
+      ["past reporting verb, the situation is finished or may have changed", "⏪ one step back", "In 2015 he **said** he **was** 12."],
+      ["past reporting verb, still true now", "🤝 change or keep", "She **said** she **loves / loved** chocolate."],
+      ["a general truth or fact", "✋ usually no change", "The teacher **said** water **boils** at 100°."],
+      ["questions · requests", "if / wh- + normal word order · (not) to + verb", "She **asked where I lived**. · He **asked me not to tell** anyone."],
+    ],
+    note: "One step back: am → was · will → would · can → could · have done / did → had done. In exams, the backshift is always safe.",
+  },
+  // 7.4
+  {
+    name: "tactful-language",
+    title: "Saying it tactfully",
+    subtitle: "honest and kind at the same time",
+    color: "green",
+    columns: ["You want to…", "Phrases"],
+    rows: [
+      ["✋ raise a problem", "**I'm afraid there's an issue I need to raise.** · **I've noticed that…** · **There seems to be…**"],
+      ["🙏 ask someone to change", "**Would you mind -ing…?** · **I was wondering if you could…** · **It might be a good idea to…**"],
+      ["🤔 disagree softly", "**I'm not sure that's the best…** · **I see where you're coming from, but…** · **I see it a bit differently.**"],
+      ["👂 take criticism", "**That's fair.** · **I take your point.** · **Thanks for telling me. Can I ask…?**"],
+      ["💗 apologize", "**I'm really sorry — I didn't realize…** · **I should have…** · **It won't happen again.**"],
+    ],
+    note: "Softeners: a bit · a little · slightly · I think · to be honest. Talk about the action, not the person.",
+  },
 ];
