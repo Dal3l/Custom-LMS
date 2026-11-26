@@ -615,4 +615,36 @@ export const tables: GrammarTable[] = [
     ],
     note: "Never invent numbers. Rephrase the question, answer in about 30 seconds, stay calm.",
   },
+  // 12.1
+  {
+    name: "contrast-purpose",
+    title: "Linkers of contrast and purpose",
+    subtitle: "connect ideas like a B2 writer",
+    color: "green",
+    columns: ["Linker", "+ what?", "Example"],
+    rows: [
+      ["**although / even though**", "a clause", "**Although** it was raining, we went out."],
+      ["**despite / in spite of**", "a noun · -ing · the fact that", "**Despite** the rain / **being** tired / **the fact that** it rained…"],
+      ["**whereas / while**", "a clause (a contrast between two things)", "I love cities, **whereas** my sister prefers villages."],
+      ["**However, · Nevertheless,**", "a new sentence", "The job pays well. **However,** the hours are long."],
+      ["**to · in order to · so as to** (**not to**)", "a verb", "I left early **so as not to** miss the train."],
+      ["**so that**", "a clause (often with can / could / will / would)", "She spoke slowly **so that** everyone **could** understand."],
+    ],
+    note: "Comparatives: the more…, the more… · far / much / a lot better (big difference) · slightly / a bit better (small) · not nearly as… as · twice as… as",
+  },
+  // 12.2
+  {
+    name: "writing-checklist",
+    title: "B2 First Writing: the checklist",
+    subtitle: "two tasks · 140–190 words each · 1 h 20 min",
+    color: "violet",
+    columns: ["Criterion", "Ask yourself…"],
+    rows: [
+      ["📋 **Content** (0–5)", "Did I answer THIS question? Did I include every point — and my own idea in the essay?"],
+      ["🎯 **Communicative Achievement** (0–5)", "Does the text do its job? Right register for the reader? An article interesting, a review with a recommendation, a report with headings?"],
+      ["🧱 **Organisation** (0–5)", "Paragraphs with topic sentences? A range of linkers? A logical introduction and conclusion?"],
+      ["💬 **Language** (0–5)", "A range of grammar and vocabulary, used accurately? (linkers, cleft sentences, participle clauses — naturally, not forced)"],
+    ],
+    note: "Plan 5 min · write · count the words · proofread 5 min (verbs, plurals, articles, spelling).",
+  },
 ];
