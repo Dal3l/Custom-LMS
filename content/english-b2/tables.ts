@@ -566,4 +566,53 @@ export const tables: GrammarTable[] = [
     ],
     note: "The participle and the main verb need the SAME subject: Walking home, I saw a fox ✅ — Walking home, a fox appeared ❌",
   },
+  // 11.1
+  {
+    name: "cleft-sentences",
+    title: "Cleft sentences",
+    subtitle: "move the important part into the spotlight",
+    color: "orange",
+    columns: ["Pattern", "Example"],
+    rows: [
+      ["**What + clause + is / was + …**", "**What I need is** a holiday. · **What happened was** (that) the bus broke down."],
+      ["**What + subject + did + was + (to) verb**", "**What she did was call** the police."],
+      ["**It is / was + person + who…**", "**It was Madina who** designed the posters."],
+      ["**It is / was + thing / place / time + that…**", "**It's the noise that** I hate. · **It was in Seoul that** they met."],
+      ["**All + clause + is…** · **The thing / problem / reason is (that)…**", "**All I want is** some sleep. · **The thing is,** I'm broke."],
+    ],
+    note: "Stress the important part: What I NEED is a HOLiday. No extra “it”: What I need it is ❌",
+  },
+  // 11.2
+  {
+    name: "inversion",
+    title: "Inversion for emphasis",
+    subtitle: "negative word first → question word order",
+    color: "violet",
+    columns: ["Starts with…", "Example"],
+    rows: [
+      ["**Never (before) / Rarely / Seldom**", "**Never have I** seen such a crowd. · **Rarely do we** get a chance like this."],
+      ["**Not only… but (also)…**", "**Not only did he** win, **but he also** broke the record."],
+      ["**No sooner… than** · **Hardly / Scarcely… when**", "**No sooner had we** arrived **than** it started to rain."],
+      ["**Little**", "**Little did they know** it was a test."],
+      ["**Only then / Only when…**", "**Only then did I** realize my mistake."],
+      ["**Under no circumstances / In no way**", "**Under no circumstances should you** open this door."],
+    ],
+    note: "Mainly for writing, speeches and formal English. Normal: I have never seen… → Inverted: Never have I seen…",
+  },
+  // 11.4
+  {
+    name: "pitch-language",
+    title: "Pitching and handling questions",
+    subtitle: "short, clear, persuasive",
+    color: "blue",
+    columns: ["Step", "Phrases"],
+    rows: [
+      ["🪝 hook", "**Imagine…** · **Last month, a woman…** · **Did you know that…?**"],
+      ["❗ problem → 💡 solution", "**Here's the problem.** · **What I'm proposing is simple: …** · **So, how does it work?**"],
+      ["📊 evidence", "**We've already tested it.** · **Not only did…, but…** · **In six weeks, …**"],
+      ["🎯 the ask", "**What we're asking for today is…** · **In return, we'll…** · **Thank you. I'd be happy to take your questions.**"],
+      ["🙋 questions", "**That's a great question / a fair concern.** · **If I understand correctly, you're asking…** · **I don't have that figure with me, but I'll send it…**"],
+    ],
+    note: "Never invent numbers. Rephrase the question, answer in about 30 seconds, stay calm.",
+  },
 ];
