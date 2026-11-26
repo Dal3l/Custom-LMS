@@ -1119,7 +1119,13 @@
       "failed": "Не получилось. Проверьте интернет и попробуйте ещё раз.",
       "added": "«{term}» добавлено в словарь",
       "alreadyThere": "«{term}» уже есть в словаре",
-      "addedForStudents": "«{term}» добавлено в {count, plural, one {словарь # ученика} other {словари # учеников}}"
+      "addedForStudents": "«{term}» добавлено в {count, plural, one {словарь # ученика} other {словари # учеников}}",
+      "translateTo": "Перевод на:",
+      "languages": {
+        "ru": "Русский",
+        "kk": "Қазақша",
+        "en": "English"
+      }
     },
     "tabs": "Какие слова показать",
     "tab": {

@@ -1119,7 +1119,13 @@
       "failed": "Болмады. Интернетті тексеріп, қайта көріңіз.",
       "added": "«{term}» сөздікке қосылды",
       "alreadyThere": "«{term}» сөздікте бар",
-      "addedForStudents": "«{term}» {count, plural, other {# оқушының сөздігіне}} қосылды"
+      "addedForStudents": "«{term}» {count, plural, other {# оқушының сөздігіне}} қосылды",
+      "translateTo": "Аудару тілі:",
+      "languages": {
+        "ru": "Русский",
+        "kk": "Қазақша",
+        "en": "English"
+      }
     },
     "tabs": "Қандай сөздерді көрсету",
     "tab": {

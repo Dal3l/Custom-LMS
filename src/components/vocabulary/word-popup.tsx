@@ -16,7 +16,7 @@ import type { ClassStudent } from "@/features/classes/queries";
 import { addWord } from "@/features/vocabulary/actions";
 import { canLookUp, type Lookup } from "@/features/vocabulary/lookup";
 import type { WordPlace } from "@/features/vocabulary/schemas";
-import { isTranslatable, sentenceAround } from "@/features/vocabulary/translate";
+import { isTranslatable, sentenceAround, TRANSLATION_TARGETS, translationTarget } from "@/features/vocabulary/translate";
 import { cn } from "@/lib/utils";
 import { SpeakButton } from "./speak-button";
 
@@ -25,6 +25,16 @@ type Selected = { term: string; context: string | null; top: number; bottom: num
 type Found = { variants: string[]; transcription: string; audioUrl: string | null };
 
 const WIDTH = 320;
+/** The translation language chosen when the interface is in the lesson's language (this browser only). */
+const TARGET_KEY = "linguaroom.translateTo";
+
+function savedTarget(): string | null {
+  try {
+    return window.localStorage.getItem(TARGET_KEY);
+  } catch {
+    return null;
+  }
+}
 
 /** The selected word as it should go to the dictionary: no spaces or punctuation around it. */
 function cleanSelection(text: string): string {
@@ -153,7 +163,19 @@ function PopupCard({
   const t = useTranslations("vocabulary.popup");
   const locale = useLocale();
   const forTeacher = students !== undefined;
-  const translatable = place.language !== locale;
+  // An English lesson with the interface in English: translate into another language the user picks.
+  const sameLanguage = place.language === locale;
+  const [target, setTarget] = useState(() => translationTarget(locale, place.language, sameLanguage ? savedTarget() : null));
+  const translatable = target !== place.language;
+  function chooseTarget(lang: string) {
+    setTarget(lang);
+    setLoading(true);
+    try {
+      window.localStorage.setItem(TARGET_KEY, lang);
+    } catch {
+      // not saved: the choice still works until the page is closed
+    }
+  }
   const [found, setFound] = useState<Found | null>(null);
   const [loading, setLoading] = useState(translatable);
   const [translation, setTranslation] = useState("");
@@ -176,7 +198,7 @@ function PopupCard({
       const [tr, lookup] = await Promise.all([
         translatable
           ? get<{ variants: string[] }>(
-              `/api/translate?term=${encodeURIComponent(term)}&from=${place.language}&to=${locale}` +
+              `/api/translate?term=${encodeURIComponent(term)}&from=${place.language}&to=${target}` +
                 (context ? `&context=${encodeURIComponent(context)}` : ""),
             )
           : Promise.resolve(null),
@@ -191,7 +213,7 @@ function PopupCard({
     return () => {
       cancelled = true;
     };
-  }, [term, context, place.language, locale, translatable]);
+  }, [term, context, place.language, target, translatable]);
 
   function add() {
     startTransition(async () => {
@@ -255,6 +277,26 @@ function PopupCard({
           <X aria-hidden="true" />
         </Button>
       </div>
+
+      {sameLanguage && (
+        <div className="flex items-center gap-1 text-xs text-muted-foreground" role="group" aria-label={t("translateTo")}>
+          <span>{t("translateTo")}</span>
+          {TRANSLATION_TARGETS.filter((l) => l !== place.language).map((l) => (
+            <button
+              key={l}
+              type="button"
+              aria-pressed={target === l}
+              onClick={() => target !== l && chooseTarget(l)}
+              className={cn(
+                "rounded-full border px-2 py-0.5 transition-colors",
+                target === l ? "border-primary bg-primary/10 text-primary" : "hover:bg-accent",
+              )}
+            >
+              {t(`languages.${l}`)}
+            </button>
+          ))}
+        </div>
+      )}
 
       {loading ? (
         <p className="flex items-center gap-2 text-muted-foreground">

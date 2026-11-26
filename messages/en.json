@@ -1119,7 +1119,13 @@
       "failed": "Something went wrong. Check your connection and try again.",
       "added": "“{term}” added to the dictionary",
       "alreadyThere": "“{term}” is already in the dictionary",
-      "addedForStudents": "“{term}” added to {count, plural, one {# student's dictionary} other {# students' dictionaries}}"
+      "addedForStudents": "“{term}” added to {count, plural, one {# student's dictionary} other {# students' dictionaries}}",
+      "translateTo": "Translate into:",
+      "languages": {
+        "ru": "Русский",
+        "kk": "Қазақша",
+        "en": "English"
+      }
     },
     "tabs": "Which words to show",
     "tab": {
