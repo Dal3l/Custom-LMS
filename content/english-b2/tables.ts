@@ -534,4 +534,36 @@ export const tables: GrammarTable[] = [
     ],
     note: "Short questions, direct answers: “Yes, but…” beats a long speech that avoids the question.",
   },
+  // 10.1
+  {
+    name: "relative-advanced",
+    title: "Relative clauses: the next level",
+    subtitle: "prepositions · whose · whom · most of which",
+    color: "teal",
+    columns: ["Pattern", "Example"],
+    rows: [
+      ["**preposition + which / whom** (formal)", "the city **in which** I live · the person **to whom** I spoke"],
+      ["preposition at the end (informal)", "the city (that) I live **in** · the person I spoke **to**"],
+      ["**whose** + noun (possession)", "a neighbor **whose** dog barks all night"],
+      ["**some / most / all / none / both of + whom / which**", "my friends, **most of whom** live abroad · two parks, **neither of which**…"],
+      ["**, which** = the whole idea before it", "The bus was late, **which** made me late for work."],
+    ],
+    note: "After a preposition: which (things) or whom (people) — never that or who. who's = who is ≠ whose.",
+  },
+  // 10.2
+  {
+    name: "participle-clauses",
+    title: "Participle clauses",
+    subtitle: "shorter, more elegant sentences",
+    color: "green",
+    columns: ["Form", "Meaning", "Example"],
+    rows: [
+      ["**-ing …,**", "⏺️ at the same time · because", "**Feeling** homesick, he called his mum."],
+      ["**Having + 3rd form …,**", "⏪ before the main action", "**Having lived** abroad, she speaks three languages."],
+      ["**3rd form …,**", "🔁 passive meaning", "**Built** in 1890, the house is still standing."],
+      ["**Not + -ing / Not having…**", "➖ negative", "**Not knowing** the way, we asked for help."],
+      ["**noun + -ing / 3rd form**", "✂️ short relative clause", "the man **standing** there · a book **written** in 1961"],
+    ],
+    note: "The participle and the main verb need the SAME subject: Walking home, I saw a fox ✅ — Walking home, a fox appeared ❌",
+  },
 ];
