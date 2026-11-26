@@ -46,6 +46,10 @@ import l111 from "./m11/l1";
 import l112 from "./m11/l2";
 import l113 from "./m11/l3";
 import l114 from "./m11/l4";
+import l121 from "./m12/l1";
+import l122 from "./m12/l2";
+import l123 from "./m12/l3";
+import l124 from "./m12/l4";
 
 export const course: CourseFile = {
   id: "16c4b34d-a422-4384-b9a2-880ea4c250ad",
@@ -69,5 +73,6 @@ export const course: CourseFile = {
     { title: "Crime and justice", lessons: [l91, l92, l93, l94] },
     { title: "Living together", lessons: [l101, l102, l103, l104] },
     { title: "The power of words", lessons: [l111, l112, l113, l114] },
+    { title: "Looking ahead", lessons: [l121, l122, l123, l124] },
   ],
 };
