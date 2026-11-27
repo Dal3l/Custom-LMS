@@ -6,6 +6,10 @@ import l11 from "./m01/l1";
 import l12 from "./m01/l2";
 import l13 from "./m01/l3";
 import l14 from "./m01/l4";
+import l21 from "./m02/l1";
+import l22 from "./m02/l2";
+import l23 from "./m02/l3";
+import l24 from "./m02/l4";
 
 export const course: CourseFile = {
   id: "13794922-8171-4daa-a64a-00dab942e840",
@@ -19,5 +23,6 @@ export const course: CourseFile = {
   modules: [
     { title: "Start: B2 check", lessons: [l01] },
     { title: "Who we are", lessons: [l11, l12, l13, l14] },
+    { title: "Risk and reward", lessons: [l21, l22, l23, l24] },
   ],
 };
