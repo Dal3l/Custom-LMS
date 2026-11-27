@@ -180,4 +180,40 @@ export const tables: GrammarTable[] = [
     ],
     note: "Never give something for nothing: every concession comes with a condition (if… then…, provided that…).",
   },
+  // 4.1
+  {
+    name: "future-probability",
+    title: "The future: how sure and how soon?",
+    subtitle: "C1 ways to talk about what's coming",
+    color: "violet",
+    columns: ["Form", "Example", "Meaning"],
+    rows: [
+      ["⏱️ be on the verge / brink of + -ing / noun", "We're **on the verge of** a revolution. The company is **on the brink of** collapse.", "very soon (brink — often something bad)"],
+      ["📅 be set to + inf.", "Prices **are set to** rise next year.", "planned or very likely (news style)"],
+      ["🗓️ be due to + inf.", "The report **is due to** be published on Monday.", "scheduled, expected at a time"],
+      ["🎯 be bound to + inf.", "Robots **are bound to** change this job.", "certain (the speaker's opinion)"],
+      ["📈 be (un)likely to / there's every chance that", "AI **is likely to** replace some tasks. **There's every chance that** we'll adapt.", "probable"],
+      ["🔁 future perfect continuous", "By 2030, I**'ll have been working** here for twenty years.", "duration up to a future point"],
+      ["🔮 future continuous", "This time next year, we**'ll be using** new software.", "in progress at a future time"],
+    ],
+    note: "on the verge of + -ing / noun (not + infinitive): We're on the verge of finding a solution.",
+  },
+  // 4.2
+  {
+    name: "be-to",
+    title: "be to: plans, orders and fate",
+    subtitle: "formal future — news, rules and stories",
+    color: "blue",
+    columns: ["Use", "Example", "Note"],
+    rows: [
+      ["🏛️ official plans", "The minister **is to visit** Almaty next week.", "news and announcements"],
+      ["📜 rules and orders", "Employees **are to** wear badges. You **are not to** leave early.", "formal, strong"],
+      ["❓ asking for instructions", "What **am I to** do? Where **are we to** sit?", "What should I…?"],
+      ["🔗 if + be to", "**If we are to** succeed, we need more time.", "if we want to…"],
+      ["⏳ was / were to + inf.", "She **was to become** a famous designer.", "fate — it happened later"],
+      ["💔 was / were to have + V3", "The launch **was to have taken** place in May.", "a plan that didn't happen"],
+      ["⚡ be about to / be on the point of", "We **were about to** leave when he called.", "very near future"],
+    ],
+    note: "News headlines drop be: Minister to visit Almaty = The minister is to visit Almaty.",
+  },
 ];
