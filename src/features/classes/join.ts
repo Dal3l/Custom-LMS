@@ -1,11 +1,12 @@
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { checkStudentSeat } from "@/features/billing/access";
 import { INVITE_TOKEN_RE } from "./credentials";
 
 // Invite links are handled with the secret key, but only after the server has
 // checked who the user is. The token itself is the permission to join.
 
-export type InviteInfo = { classId: string; className: string; teacherName: string; full: boolean };
+export type InviteInfo = { classId: string; className: string; teacherId: string; teacherName: string; full: boolean };
 
 /** Class and teacher names for an enabled invite link, or null. */
 export async function getInviteInfo(token: string): Promise<InviteInfo | null> {
@@ -13,7 +14,7 @@ export async function getInviteInfo(token: string): Promise<InviteInfo | null> {
   const admin = createAdminClient();
   const { data } = await admin
     .from("class_invites")
-    .select("class:classes(id, name, kind, teacher:profiles!classes_teacher_id_fkey(full_name), class_members(count))")
+    .select("class:classes(id, name, kind, teacher_id, teacher:profiles!classes_teacher_id_fkey(full_name), class_members(count))")
     .eq("token", token)
     .eq("enabled", true)
     .maybeSingle();
@@ -22,6 +23,7 @@ export async function getInviteInfo(token: string): Promise<InviteInfo | null> {
   return {
     classId: c.id,
     className: c.name,
+    teacherId: c.teacher_id,
     teacherName: c.teacher?.full_name ?? "",
     full: c.kind === "individual" && (c.class_members[0]?.count ?? 0) > 0,
   };
@@ -29,7 +31,7 @@ export async function getInviteInfo(token: string): Promise<InviteInfo | null> {
 
 export type JoinResult =
   | { ok: true; classId: string }
-  | { ok: false; error: "invalidInvite" | "teacherAccount" | "classFull" | "generic" };
+  | { ok: false; error: "invalidInvite" | "teacherAccount" | "classFull" | "teacherLimit" | "teacherInactive" | "generic" };
 
 /**
  * Adds the user to the class of this invite as a student. A user without a
@@ -52,6 +54,9 @@ export async function joinByInvite(userId: string, token: string): Promise<JoinR
     .maybeSingle();
   if (existing) return { ok: true, classId: info.classId };
   if (info.full) return { ok: false, error: "classFull" };
+  // The teacher's plan: access and a free place for a new student.
+  const seat = await checkStudentSeat(info.teacherId, userId);
+  if (seat !== "ok") return { ok: false, error: seat === "limit" ? "teacherLimit" : "teacherInactive" };
 
   if (profile.role === null) {
     const { error } = await admin.from("profiles").update({ role: "student" }).eq("id", userId).is("role", null);

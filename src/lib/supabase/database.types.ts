@@ -964,6 +964,33 @@ export type Database = {
         }
         Relationships: []
       }
+      promo_codes: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          extra_days: number
+          max_uses: number | null
+          uses: number
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          extra_days: number
+          max_uses?: number | null
+          uses?: number
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          extra_days?: number
+          max_uses?: number | null
+          uses?: number
+        }
+        Relationships: []
+      }
       schedule_events: {
         Row: {
           class_id: string
@@ -1087,6 +1114,47 @@ export type Database = {
             columns: ["lesson_id"]
             isOneToOne: false
             referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          note: string
+          paid_until: string | null
+          plan: string
+          promo_code: string | null
+          teacher_id: string
+          trial_ends_at: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          note?: string
+          paid_until?: string | null
+          plan?: string
+          promo_code?: string | null
+          teacher_id: string
+          trial_ends_at?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          note?: string
+          paid_until?: string | null
+          plan?: string
+          promo_code?: string | null
+          teacher_id?: string
+          trial_ends_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -1336,6 +1404,10 @@ export type Database = {
           class_id: string
           unread: number
         }[]
+      }
+      redeem_promo_code: {
+        Args: { p_code: string; p_teacher: string }
+        Returns: string
       }
       reorder_exercises: {
         Args: { p_ids: string[]; p_section: string }

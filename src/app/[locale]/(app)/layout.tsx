@@ -11,16 +11,24 @@ import type { Locale } from "@/i18n/routing";
 import { listStudentLiveClasses } from "@/features/classes/queries";
 import { StudentLiveProvider } from "@/features/live/student-live";
 import { getUser, requireProfile } from "@/lib/auth";
+import { AccessBadge } from "@/components/billing/access-badge";
+import { AccessGate } from "@/components/billing/access-gate";
+import { getMyTeacherAccess, isStudentBlocked } from "@/features/billing/access";
+import { hasAccess } from "@/features/billing/plans";
 
 export default async function AppLayout({ children, params }: LayoutProps<"/[locale]">) {
   const { locale } = (await params) as { locale: Locale };
   setRequestLocale(locale);
   const profile = await requireProfile(locale);
-  const [user, unread, liveClasses] = await Promise.all([
+  const [user, unread, liveClasses, teacherAccess, studentBlocked] = await Promise.all([
     getUser(),
     countUnreadNotifications(),
     profile.role === "student" ? listStudentLiveClasses(profile.id) : Promise.resolve(null),
+    getMyTeacherAccess(),
+    isStudentBlocked(),
   ]);
+  // After the trial (or the paid period), the teacher and their students see a "subscription" screen.
+  const blocked = teacherAccess ? !hasAccess(teacherAccess) : studentBlocked;
   const name = profile.full_name || user?.email || "";
 
   return (
@@ -35,20 +43,23 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
           {/* Pages can put their own title and buttons here (e.g. a lesson). */}
           <div id="page-header-slot" className="flex min-w-0 flex-1 items-center gap-2" />
           <div className="ml-auto flex shrink-0 items-center gap-1">
+            {teacherAccess && <AccessBadge access={teacherAccess} />}
             <LanguageSwitcher signedIn />
             <NotificationBell userId={profile.id} initialUnread={unread} />
-            <UserMenu name={name} role={profile.role} />
+            <UserMenu name={name} role={profile.role} isAdmin={profile.is_admin} />
           </div>
         </header>
         <div className="app-content mx-auto w-full max-w-5xl flex-1 p-4 sm:p-6">
-          {liveClasses ? (
-            // Students follow their classes live: lessons open by themselves, "Show to students".
-            <StudentLiveProvider userId={profile.id} classes={liveClasses}>
-              {children}
-            </StudentLiveProvider>
-          ) : (
-            children
-          )}
+          <AccessGate blocked={blocked} role={profile.role}>
+            {liveClasses && !blocked ? (
+              // Students follow their classes live: lessons open by themselves, "Show to students".
+              <StudentLiveProvider userId={profile.id} classes={liveClasses}>
+                {children}
+              </StudentLiveProvider>
+            ) : (
+              children
+            )}
+          </AccessGate>
         </div>
       </SidebarInset>
     </SidebarProvider>
