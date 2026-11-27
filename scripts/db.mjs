@@ -14,7 +14,7 @@
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-const ref = process.env.SUPABASE_PROJECT_REF ?? "osbcxscnvoejxpxjaldu";
+const ref = process.env.SUPABASE_PROJECT_REF ?? "fqqwmeznlkdatinpmyne";
 const token = process.env.SUPABASE_ACCESS_TOKEN ?? "proxy-injected";
 const api = `https://api.supabase.com/v1/projects/${ref}`;
 const dir = path.resolve("supabase/migrations");

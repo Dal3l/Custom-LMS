@@ -11,12 +11,13 @@ import { createClient } from "@/lib/supabase/server";
 import { generateInviteToken, generatePassword } from "./credentials";
 import { ANSWER_BUCKET } from "@/features/exercises/types/voice_answer/schema";
 import { joinByInvite } from "./join";
+import { checkStudentSeat } from "@/features/billing/access";
 import { classSchema, idSchema, registerStudentSchema } from "./schemas";
 
 // Every action re-checks the user; the database rules (RLS) are the final guard.
 // The secret key (admin client) is used only after the teacher's access is checked.
 
-export type ClassActionError = "generic" | "forbidden" | "classFull" | "otherTeacher";
+export type ClassActionError = "generic" | "forbidden" | "classFull" | "otherTeacher" | "studentLimit" | "subscriptionInactive";
 export type ActionResult<T = undefined> = { ok: true; data: T } | { ok: false; error: ClassActionError };
 
 export type ClassFormState = {
@@ -158,6 +159,10 @@ export async function registerStudent(
   if (cls && cls.kind === "individual" && cls.studentCount > 0) {
     return { status: "error", formError: "classFull", values };
   }
+
+  // The plan limits how many students a teacher can have.
+  const seat = await checkStudentSeat(ctx.profile.id, null);
+  if (seat !== "ok") return { status: "error", formError: seat === "limit" ? "studentLimit" : "subscriptionInactive", values };
 
   const { fullName, email, timezone } = parsed.data;
   const password = generatePassword();
@@ -330,7 +335,7 @@ export async function regenerateInvite(classId: string): Promise<ActionResult<st
 // Joining (signed-in user on the invite page)
 // ---------------------------------------------------------------------------
 
-export type JoinState = { status: "idle" | "error"; error?: "invalidInvite" | "teacherAccount" | "classFull" | "generic" };
+export type JoinState = { status: "idle" | "error"; error?: "invalidInvite" | "teacherAccount" | "classFull" | "teacherLimit" | "teacherInactive" | "generic" };
 
 export async function joinClass(_prev: JoinState, formData: FormData): Promise<JoinState> {
   const locale = await getLocale();

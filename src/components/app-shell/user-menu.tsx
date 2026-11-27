@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, UserRound } from "lucide-react";
+import { CreditCard, LogOut, ShieldCheck, UserRound } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ import { Link } from "@/i18n/navigation";
 import { initials } from "@/lib/initials";
 import type { UserRole } from "@/lib/supabase/database.types";
 
-export function UserMenu({ name, role }: { name: string; role: UserRole }) {
+export function UserMenu({ name, role, isAdmin = false }: { name: string; role: UserRole; isAdmin?: boolean }) {
   const t = useTranslations();
   const locale = useLocale();
 
@@ -42,6 +42,22 @@ export function UserMenu({ name, role }: { name: string; role: UserRole }) {
             {t("nav.profile")}
           </Link>
         </DropdownMenuItem>
+        {role === "teacher" && (
+          <DropdownMenuItem asChild>
+            <Link href="/billing">
+              <CreditCard aria-hidden="true" />
+              {t("nav.billing")}
+            </Link>
+          </DropdownMenuItem>
+        )}
+        {isAdmin && (
+          <DropdownMenuItem asChild>
+            <Link href="/admin">
+              <ShieldCheck aria-hidden="true" />
+              {t("nav.admin")}
+            </Link>
+          </DropdownMenuItem>
+        )}
         <form action={signOut}>
           <input type="hidden" name="locale" value={locale} />
           <DropdownMenuItem asChild>

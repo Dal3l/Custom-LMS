@@ -1,5 +1,6 @@
 import { ClipboardCheck, Languages, MonitorPlay } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { PlanCards } from "@/components/billing/plan-cards";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -68,6 +69,21 @@ export default async function LandingPage({ params }: PageProps<"/[locale]">) {
               </CardContent>
             </Card>
           ))}
+        </section>
+
+        <section id="pricing" className="flex w-full flex-col gap-4">
+          <div className="flex flex-col items-center gap-2 text-center">
+            <h2 className="text-2xl font-bold sm:text-3xl">{t("pricingTitle")}</h2>
+            <p className="text-muted-foreground text-balance">{t("pricingText")}</p>
+          </div>
+          <PlanCards />
+          {!user && (
+            <div className="flex justify-center">
+              <Button asChild size="lg">
+                <Link href="/signup">{t("pricingCta")}</Link>
+              </Button>
+            </div>
+          )}
         </section>
       </main>
     </div>
