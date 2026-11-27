@@ -1,7 +1,6 @@
 import {
   box,
   choose,
-  drag,
   gaps,
   homework,
   lesson,

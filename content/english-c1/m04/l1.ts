@@ -10,7 +10,6 @@ import {
   quiz,
   record,
   section,
-  sort,
   table,
   text,
   tip,
