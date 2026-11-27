@@ -40,7 +40,7 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
             <UserMenu name={name} role={profile.role} />
           </div>
         </header>
-        <div className="mx-auto w-full max-w-5xl flex-1 p-4 sm:p-6">
+        <div className="app-content mx-auto w-full max-w-5xl flex-1 p-4 sm:p-6">
           {liveClasses ? (
             // Students follow their classes live: lessons open by themselves, "Show to students".
             <StudentLiveProvider userId={profile.id} classes={liveClasses}>
