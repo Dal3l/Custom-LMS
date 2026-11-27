@@ -78,6 +78,7 @@ export const SPEAKERS: Record<string, string> = {
   Sanzhar: "Eric",
   Marco: "George",
   Priya: "Jessica",
+  Samal: "Sarah",
   Agent: "Brian",
   Timur: "Will",
   "Speaker 1": "Matilda",
