@@ -250,3 +250,83 @@
     color: inherit;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Soft look: gentle shadows instead of hard outlines, and calm motion.
+   Outside any @layer on purpose, so it wins over the utility classes on
+   cards and buttons without editing every component. To go back to the old
+   look, delete this block.
+   --------------------------------------------------------------------------- */
+:root {
+  --shadow-soft: 0 1px 3px oklch(0.3 0.04 270 / 0.06), 0 10px 30px -12px oklch(0.3 0.08 270 / 0.24);
+  --shadow-soft-hover: 0 2px 6px oklch(0.3 0.04 270 / 0.07), 0 18px 36px -14px oklch(0.3 0.1 270 / 0.32);
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Cards (shadcn) and card-like panels (exercises, lists): a faint edge plus a soft shadow. */
+[data-slot="card"] {
+  box-shadow: 0 0 0 1px oklch(0.3 0.04 270 / 0.06), var(--shadow-soft);
+  transition: box-shadow 0.25s var(--ease-soft), transform 0.25s var(--ease-soft);
+}
+.bg-card.border:not(.border-dashed):not([class*="ring-"]) {
+  border-color: oklch(0.3 0.04 270 / 0.07);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Clickable cards (course covers, links) float up a little on hover. */
+a:hover > [data-slot="card"],
+a[data-slot="card"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 1px oklch(0.3 0.04 270 / 0.08), var(--shadow-soft-hover);
+}
+
+/* "Show to students" flashes an exercise with a ring — keep it on top of the shadow. */
+[data-flash="true"] [data-slot="card"],
+[data-flash="true"] .bg-card.border {
+  box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 50%, transparent), var(--shadow-soft);
+}
+
+/* Buttons: smooth colors; the main ones lift slightly on hover and press in on click. */
+[data-slot="button"] {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-duration: 0.2s;
+  transition-timing-function: var(--ease-soft);
+}
+[data-slot="button"][data-variant="default"]:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px -8px color-mix(in oklch, var(--primary) 70%, transparent);
+}
+[data-slot="button"]:not(:disabled):active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Fields: a soft glow on focus. */
+input, textarea, select, [data-slot="input"] {
+  transition: border-color 0.2s var(--ease-soft), box-shadow 0.2s var(--ease-soft), background-color 0.2s var(--ease-soft);
+}
+
+/* Each new page fades in gently (the header and menu stay still). */
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.app-content > * {
+  animation: page-in 0.35s var(--ease-soft) both;
+}
+
+/* People who switched off animations in their system settings get none. */
+@media (prefers-reduced-motion: reduce) {
+  .app-content > *,
+  [data-slot="card"],
+  [data-slot="button"] {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}

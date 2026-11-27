@@ -10,7 +10,7 @@ export async function CourseCard({ course, href }: { course: CourseListItem; hre
   const [t, locale] = await Promise.all([getTranslations("courses"), getLocale()]);
   return (
     <Link href={href ?? `/courses/${course.id}`} className="group block h-full rounded-2xl focus-visible:outline-2 focus-visible:outline-ring">
-      <Card className="h-full gap-3 rounded-2xl p-3 transition-shadow group-hover:shadow-md">
+      <Card className="h-full gap-3 rounded-2xl p-3">
         <CourseCover path={course.cover_path} language={course.language} />
         <div className="flex flex-col gap-2 px-1 pb-1">
           <h2 className="line-clamp-2 font-semibold">{course.title}</h2>
