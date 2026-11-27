@@ -126,4 +126,58 @@ export const tables: GrammarTable[] = [
     ],
     note: "Accept one or two POIs per speech — refusing all of them looks weak; accepting all of them loses time.",
   },
+  // 3.1
+  {
+    name: "hedging",
+    title: "Hedging and distancing",
+    subtitle: "how to report what you're not sure about",
+    color: "teal",
+    columns: ["Tool", "Example", "Effect"],
+    rows: [
+      ["🌫️ It would appear / seem that…", "**It would appear that** the video was filmed abroad.", "careful, not 100% sure"],
+      ["🗞️ apparently / seemingly / reportedly", "The mayor has **reportedly** resigned.", "I heard it — not my claim"],
+      ["📣 It is said / thought / believed that…", "**It is thought that** about 200 people were there.", "general opinion, impersonal"],
+      ["📣 X is said / believed + to-inf.", "He **is believed to be** abroad. She **is alleged to have lied**.", "the same — subject first"],
+      ["📣 There is thought to be / There are said to be…", "**There are said to be** problems with the data.", "impersonal, about existence"],
+      ["🤏 may well / could conceivably / might", "This **may well** be true. It **could conceivably** be a fake.", "possible — degrees of probability"],
+      ["🧮 tend to / appear to / seem to", "Such stories **tend to** spread fast.", "a general pattern, softer"],
+      ["🔎 to some extent / in some cases / arguably", "The article is, **to some extent**, misleading.", "limits the claim"],
+    ],
+    note: "Perfect infinitive for the past: He is said to have left. She appears to have been misquoted.",
+  },
+  // 3.2
+  {
+    name: "comment-adverbs",
+    title: "Comment adverbs, intensifiers and softeners",
+    subtitle: "say what you think about what you're saying",
+    color: "orange",
+    columns: ["Type", "Examples", "Use"],
+    rows: [
+      ["💬 honesty", "**frankly**, **to be (perfectly) honest**, **quite honestly**", "before something direct or unwelcome"],
+      ["🤝 concession", "**admittedly**, **granted**, **to be fair**", "accept a point before you argue"],
+      ["⚖️ opinion", "**arguably**, **understandably**, **predictably**", "your view of the fact"],
+      ["😮 understatement", "**to say the least**, **to put it mildly**", "the reality is stronger"],
+      ["🔊 strong intensifiers", "**utterly**, **totally**, **completely** + extreme adj. (exhausted, ridiculous)", "with non-gradable adjectives"],
+      ["🔉 normal intensifiers", "**extremely**, **highly**, **deeply** + gradable adj. (likely, grateful)", "with gradable adjectives"],
+      ["🌸 softeners", "**somewhat**, **slightly**, **a tad**, **a bit of a**, **rather**", "make criticism gentler"],
+    ],
+    note: "✅ utterly exhausted, extremely tired ❌ utterly tired, extremely exhausted. Collocations: highly unlikely, deeply grateful, bitterly disappointed.",
+  },
+  // 3.4
+  {
+    name: "negotiating",
+    title: "Negotiating: firm but friendly",
+    subtitle: "from opening to agreement",
+    color: "blue",
+    columns: ["Stage", "Useful language"],
+    rows: [
+      ["🎯 open and explore interests", "What matters most to you here? · Could you walk me through your priorities?"],
+      ["💡 propose", "What if we…? · We could consider… provided that… · How would you feel about…?"],
+      ["🔄 concede (and get something back)", "We could be flexible on…, as long as… · If you can…, then we can…"],
+      ["✋ say no politely", "I'm afraid that's not something we can agree to. · That would be difficult for us, unless…"],
+      ["⏸️ gain time", "Let me think about that. · I'll need to check with my team."],
+      ["✅ summarize and close", "So, just to recap: … · Shall we put that in writing? · I think we have a deal."],
+    ],
+    note: "Never give something for nothing: every concession comes with a condition (if… then…, provided that…).",
+  },
 ];
